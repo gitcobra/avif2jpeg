@@ -49,13 +49,13 @@
         @prevent="onPrevent"
       >
 
-        <div style="text-align:center">
+        <div style="text-align:center; color:silver; ">
           <h3>{{Labels.droptarget}}</h3>
           <p>
           <n-icon size="64" color="silver"><DragDrop /></n-icon>
           </p>
 
-          <ul style="font-size:small; color:gray; margin:20px;">
+          <ul style="font-size:small; margin:20px; color:gray;">
             <li v-for="text in Labels.descriptions" :key="text" style="text-align:left" v-html="text"></li>
           </ul>
         </div>
@@ -163,8 +163,8 @@ const LabelsEnUS = {
   droptarget: 'Drag & Drop AVIF Images to Convert Here',
   descriptions: [
     'This is a web application to convert AVIF(or WebP, etc) images into common image formats such as JPEG、PNG',
-    'Required <a href="https://caniuse.com/?search=avif" target="_self" style="color:red">latest</a> FireFox or Chrome to load AVIF images',
-    'It loads and converts and outputs your images on the client side, so <strong>no data is sent</strong> to the server',
+    'Requires <a href="https://caniuse.com/?search=avif" target="_self" style="color:red">latest</a> FireFox or Chrome to load AVIF images',
+    'It loads and converts and outputs your images on the client side, so <strong>no data will be sent</strong> to the server',
     'The converted images will be output as a zip file when multiple images are loaded',
     'Besides AVIF, it could load any other image formats <a href="https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Image_types" target="_self" style="color:red">supported</a> by your browser',
   ],
@@ -398,6 +398,8 @@ html, body {
   padding: 0px;
   margin: 0px;
   height: 100%;
+  background-color: white;
+  color: black;
 }
 ul, div, li {
   box-sizing: border-box;

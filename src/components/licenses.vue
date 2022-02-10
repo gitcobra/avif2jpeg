@@ -25,14 +25,5 @@ const Licenses = {
 </script>
 
 <style scoped>
-.droptarget {
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: large;
-  font-weight: bolder;
-  width: 100%;
-  height: 100%;
-}
+
 </style>
