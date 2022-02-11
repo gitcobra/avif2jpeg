@@ -105,7 +105,7 @@
     </n-space>
 
     <!-- processing modal dialog -->
-    <n-modal v-model:show="showProcess" @after-leave="sendMessage=['destroy']" @mask-click="sendMessage=['destroy']" preset="dialog" :title="processingMessage" :type="processingType" :mask-closable="false">
+    <n-modal v-model:show="showProcess" :closable="!processing" :close-on-esc="!processing" @after-leave="sendMessage=['destroy']" @mask-click="sendMessage=['destroy']" preset="dialog" :title="processingMessage" :type="processingType" :mask-closable="false">
       <template #default>
       <n-space vertical align="center">
 
