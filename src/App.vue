@@ -23,7 +23,7 @@
       </n-space>
 
       <n-space vertical align="center" justify="center">
-        <h1>AVIF to JPEG Converter</h1>
+        <h1 style="text-decoration:underline; text-decoration-style: double;">AVIF to JPEG Converter</h1>
         <n-tooltip trigger="hover">
           <template #trigger>
             <n-button round @click="fileinput.click()">
