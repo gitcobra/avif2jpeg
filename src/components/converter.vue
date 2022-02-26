@@ -18,7 +18,7 @@ let disturbed = false;
 let formats: string[] = ['image/png'];
 export default {
   name: 'converter',
-  emits: ['mounted', 'start', 'progress', 'success', 'failure', 'complete', 'prevent'],
+  emits: ['mounted', 'start', 'progress', 'success', 'failure', 'complete', 'prevent', 'noimage'],
   props: {
     target: [HTMLElement, HTMLDocument],
     format: {
@@ -35,11 +35,13 @@ export default {
         return val >= 0 && val <= 100;
       }
     },
+    ignoreExtension: Boolean,
     processing: Boolean,
     input: Array,
     sendmessage: Array,
     style: Object
   },
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   setup(props, context): any {
     const canvas = ref(null);
     let target: Node;
@@ -111,14 +113,29 @@ function setDropEvent(droptarget: HTMLElement, ctx, instance, props) {
   };
 }
 
+const ImageFileExtensions = ['.tif', '.tiff', '.ico', '.cur', '.bmp', '.webp', '.svg', '.png', '.jpg', '.jpeg', '.jfif', '.pjpeg', '.pjp', '.gif', '.avif', '.apng'];
 function startConvert(dat, ctx, instance, props) {
   if( processing ) {
     instance.emit('prevent');
     return;
   }
+
+  let list = getFile(dat);
+  // check file extension
+  if( !props.ignoreExtension ) {
+    list = list.filter(item => {
+      const ext = item.name.replace(/^.+(?=\.[^./\\]+$)/, '');
+      return ImageFileExtensions.includes(ext);
+    });
+    if( !list.length ) {
+      //alert('could not find image files');
+      instance.emit('noimage');
+      return;
+    }
+  }
+
   processing = true;
   disturbed = false;
-  const list = getFile(dat);
   convertImages(list, ctx, instance, props);
 }
 
@@ -159,6 +176,7 @@ async function convertImages(list, ctx, instance, props) {
       break;
 
     const name = file.name;
+    const path = file.relativePath || file.webkitRelativePath;
     const reader = new FileReader();
     instance.emit('progress', {file, name, success, failure, index, length});
     index++;
@@ -204,7 +222,7 @@ async function convertImages(list, ctx, instance, props) {
     const b64 = canvas.toDataURL(type, quality);
     const bstr = atob( b64.split(',')[1] );
     const bin = Uint8Array.from(bstr, str => str.charCodeAt(0));
-    const fname = name.replace(RegExp('\\.'+ext+'$', 'i'), '') /*.replace(/\.(jpe?g|gif|png|avif|webp|bmp)$/i, '')*/ + '.' + ext;
+    const fname = (path || name).replace(RegExp('\\.'+ext+'$', 'i'), '') /*.replace(/\.(jpe?g|gif|png|avif|webp|bmp)$/i, '')*/ + '.' + ext;
     azip.add(fname, bin);
 
     success++;

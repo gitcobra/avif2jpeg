@@ -3,7 +3,7 @@
     <n-space vertical align="stretch" justify="space-between" style="padding:0px; margin:0px; height:100%; box-sizing:border-box;">
       <n-space justify="end" align="center" style="box-sizing:border-box; width:100%; padding:4px; margin:0px;">
         <n-button-group size="tiny" style="padding:4px;">
-          <n-tooltip trigger="hover">
+          <n-tooltip trigger="hover" :keep-alive-on-hover="false">
             <template #trigger>
               <n-button round :color="!langJA? 'red':''" @click="langJA=false">
                 <n-icon><World /></n-icon> English
@@ -11,7 +11,7 @@
             </template>
             Switch to English
           </n-tooltip>
-          <n-tooltip trigger="hover">
+          <n-tooltip trigger="hover" :keep-alive-on-hover="false">
             <template #trigger>
               <n-button round :color="langJA? 'red':''" @click="langJA=true">
                 日本語 <n-icon><UserNinja /></n-icon>
@@ -24,18 +24,42 @@
 
       <n-space vertical align="center" justify="center">
         <h1 style="text-decoration:underline; text-decoration-style: double;">AVIF to JPEG Converter</h1>
-        <n-tooltip trigger="hover">
-          <template #trigger>
-            <n-button round @click="fileinput.click()">
-              <n-icon size="large" color="gray"><FileImageRegular /></n-icon>
-              {{Labels.loadbutton}}
-            </n-button>
-          </template>
-          {{Labels.loadbuttontooltip}}
-        </n-tooltip>
-        <input id="fileinput" ref="fileinput" type="file" multiple accept=".jpg,.jpeg,.gif,.png,.webp,.avif,.bmp" style="display:none">
+
+        <n-space vertical align="stretch" justify="center">
+          <n-tooltip trigger="hover" :keep-alive-on-hover="false">
+            <template #trigger>
+              <n-button round @click="fileinput.click()" style="width:100%;">
+                <n-icon size="large" color="gray"><FileImageRegular /></n-icon>
+                {{Labels.loadbutton}}
+              </n-button>
+            </template>
+            <div v-html="Labels.loadbuttontooltip"></div>
+          </n-tooltip>
+          <input id="fileinput" ref="fileinput" type="file" multiple accept=".jpg,.jpeg,.gif,.png,.webp,.avif,.bmp" style="display:none">
+
+          <n-tooltip trigger="hover" placement="bottom" :keep-alive-on-hover="false">
+            <template #trigger>
+              <n-button round @click="folderinput.click()" style="width:100%;">
+                <n-icon size="large" color="gray"><FolderOpenOutline /></n-icon>
+                {{Labels.loadfolderbutton}}
+              </n-button>
+            </template>
+            <div v-html="Labels.loadfoldertooltip"></div>
+          </n-tooltip>
+          <input webkitdirectory directory id="folderinput" ref="folderinput" type="file" style="display:none">
+
+          <n-tooltip trigger="hover" placement="bottom" :keep-alive-on-hover="false">
+            <template #trigger>
+              <n-checkbox v-model:checked="ignoreFileExtensions">
+                {{Labels.ignoreFileExtensions}}
+              </n-checkbox>
+            </template>
+            <div v-html="Labels.ignoreExtTooltip"></div>
+          </n-tooltip>
+        </n-space>
       </n-space>
 
+      <!-- CONVERTER -->
       <n-notification-provider placement="top-right">
       <n-message-provider placement="top-right" :closable="true" container-style="font-size:xx-small;">
       <converter
@@ -45,10 +69,11 @@
         :input="inputFiles"
         :sendmessage="sendMessage"
         :processing="processing"
+        :ignoreExtension="ignoreFileExtensions"
         @mounted="onConverterReady" @start="onStart" @progress="onProgress" @success="onSuccess" @failure="onFailure" @complete="onComplete"
-        @prevent="onPrevent"
+        @prevent="prevented = true;"
+        @noimage="noimage = true"
       >
-
         <div style="text-align:center; color:silver; ">
           <h3>{{Labels.droptarget}}</h3>
           <p>
@@ -62,6 +87,8 @@
       </converter>
       </n-message-provider>
       </n-notification-provider>
+      <!-- no image dialog -->
+      <n-modal v-model:show="noimage" preset="dialog" :title="Labels.noimage" type="error"></n-modal>
 
       <n-space align="end" justify="space-between" style="box-sizing: border-box; width:100%; padding:8px;">
         <n-space align="center">
@@ -76,7 +103,7 @@
 
         <n-space vertical>
 
-          <n-tooltip trigger="hover" placement="left-start">
+          <n-tooltip trigger="hover" :placement="landscape ? 'left-start' : 'top-start'" :keep-alive-on-hover="false">
             <template #trigger>
               <n-space align="center">
                 <n-icon><FileImageRegular /></n-icon>{{Labels.imageType}}:
@@ -86,11 +113,11 @@
             {{Labels.imageTypeTooltip}}
           </n-tooltip>
 
-          <n-tooltip trigger="hover" placement="left-start">
+          <n-tooltip trigger="hover" :placement="landscape ? 'left-start' : 'top-start'" :keep-alive-on-hover="false">
             <template #trigger>
             <n-space align="center">
               <n-icon><MdImage /></n-icon>{{Labels.quality}}:
-              <n-slider :tooltip="false" v-model:value="quality" step="1" style="width:120px;" :disabled="/png/.test(imageFormat)" />
+              <n-slider :tooltip="false" v-model:value="quality" step="1" style="width:120px;" :disabled="/png|bmp/.test(imageFormat)" />
               <n-input-number style="width:90px;" size="small" v-model:value="quality" step="1" min="0" max="100" :disabled="/png/.test(imageFormat)" />
             </n-space>
             </template>
@@ -149,12 +176,12 @@ import Converter from './components/converter.vue'
 import Licenses from './components/licenses.vue'
 import { ref, reactive, watch, computed, onMounted, getCurrentScope, h } from 'vue'
 
-import { NButton, NButtonGroup, NInput, NSelect, NSpace, NSlider, NInputNumber, NSwitch, NIcon, NProgress, NModal, NTooltip, NIon, NSpin } from 'naive-ui'
+import { NButton, NButtonGroup, NInput, NSelect, NSpace, NSlider, NInputNumber, NSwitch, NIcon, NProgress, NModal, NTooltip, NIon, NSpin, NCheckbox } from 'naive-ui'
 import { NMessageProvider, NNotificationProvider } from 'naive-ui'
 import { NConfigProvider, enUS, dateEnUS, jaJP, dateJaJP } from 'naive-ui'
 
 import 'vfonts/RobotoSlab.css'
-import { LogInOutline as LogInIcon, LogoGithub as Github, ImageOutline as FileImageRegular, ImageSharp as MdImage } from '@vicons/ionicons5'
+import { LogInOutline as LogInIcon, LogoGithub as Github, ImageOutline as FileImageRegular, ImageSharp as MdImage, FolderOpenOutline } from '@vicons/ionicons5'
 import { DragDrop, World, Circle as UserNinja } from '@vicons/tabler'
 
 import { NThemeEditor } from 'naive-ui'
@@ -164,23 +191,32 @@ const LabelsEnUS = {
   descriptions: [
     'This is a web application to convert AVIF(or WebP, etc) images into common image formats such as JPEG、PNG',
     'Requires <a href="https://caniuse.com/?search=avif" target="_self" style="color:red">latest</a> FireFox or Chrome to load AVIF images',
-    'It loads and converts and outputs your images on the client side, so <strong>no data will be sent</strong> to the server',
-    'The converted images will be output as a zip file when multiple images are loaded',
+    'It loads and converts and outputs your images completely offline, so <strong>no data will be sent</strong> to the server',
+    'The converted images will be output as <strong>a zip file</strong> when multiple images are loaded',
     'Besides AVIF, it could load any other image formats <a href="https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Image_types" target="_self" style="color:red">supported</a> by your browser',
   ],
   quality: 'Image Quality',
   qualitytooltip: 'Set Image Quality',
   imageType: 'Image Type',
-  imageTypeTooltip: 'Choose Image Type to Export',
+  imageTypeTooltip: 'Choose image type to export',
+  ignoreFileExtensions: 'Load All File Types',
+  ignoreExtTooltip: 'Try to load files that don\'t have image file extension',
+
   loadbutton: 'Load Images',
-  loadbuttontooltip: 'Select Your Images from a dialog window',
+  loadbuttontooltip: 'Select your images from a dialog window',
+  loadfolderbutton: 'Load Folder',
+  loadfoldertooltip: `
+    Convert all images in the selected folder and its subfolders, add them to a zip file with relative path<br>
+    *It will show "Upload" button, but it actually doesn't upload anything
+  `,
 
   processing: 'Converting images',
   aborted: 'Aborted',
   incomplete: 'Some files failed to convert',
   completed: 'Completed',
   interfered: 'Currently Busy',
-  cancel: 'cancel',
+  noimage: 'No image files',
+  cancel: 'Cancel',
 
   save: 'Save',
   close: 'Close',
@@ -191,23 +227,32 @@ const LabelsJaJP = {
   descriptions: [
     'これはAVIFやWebP等の画像をJPEG、PNG等へ変換するためのWebアプリです',
     'AVIF画像のロードには<a href="https://caniuse.com/?search=avif" target="_self" style="color:red">最新</a>のFireFox又はChromeが必要です',
-    '変換処理は全てこのページ上で行われるため、データがサーバ等へ<strong>送信される事はありません</strong>',
-    '複数枚の画像が読み込まれた場合、変換した画像はZIPファイルに纏めて出力されます',
+    '変換処理は全てオフラインで行われるため、データがサーバ等へ<strong>送信される事はありません</strong>',
+    '複数枚の画像が読み込まれた場合、変換した画像は<strong>ZIPファイル</strong>に纏めて出力されます',
     'AVIF以外の画像でも、ブラウザが<a href="https://developer.mozilla.org/ja/docs/Web/Media/Formats/Image_types" target="_self" style="color:red">対応している形式</a>であれば変換が実行されます',
   ],
 
   quality: '画質設定',
-  qualitytooltip: '出力画像のクオリティを指定する',
+  qualitytooltip: '出力する画像のクオリティを指定します',
   imageType: '画像形式',
-  imageTypeTooltip: '出力画像形式を指定する',
-  loadbutton: '画像を開く',
-  loadbuttontooltip: 'ダイアログを開いて画像を選択',
+  imageTypeTooltip: '出力する画像の形式を指定します',
+  ignoreFileExtensions: '全ての拡張子を読み込む',
+  ignoreExtTooltip: '画像拡張子以外のファイルもロードできるか試行します',
+
+  loadbutton: '画像をロード',
+  loadbuttontooltip: 'ダイアログを開いて画像を選択します',
+  loadfolderbutton: 'フォルダをロード',
+  loadfoldertooltip: `
+    選択したフォルダとサブフォルダの全ての画像に対して変換処理を行い、ZIPファイルへ相対パスで格納します<br>
+    ※「アップロード」というボタンが表示されますがファイルのアップロード処理は行われません
+  `,
 
   processing: '画像変換中',
   aborted: '中断',
   incomplete: '変換に失敗したファイルがあります',
   completed: '変換終了',
   interfered: '既に処理中です',
+  noimage: '画像ファイルがありません',
   cancel: 'キャンセル',
 
   save: '保存',
@@ -223,13 +268,17 @@ const formatList = ref([{
   label: 'image/png',
   value: 'image/png',
 }]);
+const ignoreFileExtensions = ref(false);
+
 const percentage = ref(0);
 const currentIndex = ref(0);
 const currentSuccess = ref(0);
 const currentLength = ref(0);
+const landscape = ref(true);
 
 const processing = ref(false);
 const prevented = ref(false);
+const noimage = ref(false);
 const showProcess = ref(false);
 
 const processingMessage = ref('');
@@ -256,6 +305,7 @@ const sendMessage = ref([]);
 const downloadbutton = ref(null);
 const downloadlink = ref(null);
 const fileinput = ref(null);
+const folderinput = ref(null);
 
 const Labels = ref(LabelsEnUS);
 const langJA = ref(false);
@@ -264,11 +314,15 @@ let locale = ref(enUS);
 let dateLocale = ref(dateEnUS);
 
 onMounted(() => {
-  document.getElementById('fileinput').oninput = (ev) => {
+  document.getElementById('fileinput').oninput = document.getElementById('folderinput').oninput = (ev) => {
     const list = [...(ev.target as HTMLInputElement).files as FileList];
     inputFiles.value = list;
     document.getElementById('fileinput').value = '';
+    document.getElementById('folderinput').value = '';
   };
+
+  checkLandScape();
+  window.addEventListener('resize', checkLandScape);
 });
 
 watch(langJA, (newValue, oldValue) => {
@@ -360,8 +414,11 @@ function onComplete({index, zip, aborted, success, length, img, name}) {
 
   processing.value = false;
 }
-function onPrevent() {
-  prevented.value = true;
+
+function checkLandScape() {
+  const w = document.documentElement.offsetWidth;
+  const h = document.documentElement.offsetHeight;
+  landscape.value = w > h;
 }
 
 function download() {
@@ -396,7 +453,7 @@ function getLanguage(): string {
 <style>
 html, body {
   padding: 0px;
-  margin: 0px;
+  margin: 0px 16px;
   height: 100%;
   background-color: white;
   color: black;
