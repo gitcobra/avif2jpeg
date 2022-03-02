@@ -72,6 +72,7 @@ export default {
     });
 
     watch(() => props.input, (val) => {
+      //if( val.length )
       if( val.length )
         startConvert(val, ctx, context, props);
     });
@@ -124,7 +125,7 @@ function startConvert(dat, ctx, instance, props) {
   // check file extension
   if( !props.ignoreExtension ) {
     list = list.filter(item => {
-      const ext = item.name.replace(/^.+(?=\.[^./\\]+$)/, '');
+      const ext = item.name.replace(/^.+(?=\.[^./\\]+$)/, '').toLowerCase();
       return ImageFileExtensions.includes(ext);
     });
     if( !list.length ) {

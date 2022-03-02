@@ -1,7 +1,7 @@
 <template>
-  <n-config-provider :locale="locale" :date-locale="dateLocale" style="max-width:800px; height:100%; box-sizing:border-box; margin:0px auto; padding:0px;">
+  <n-config-provider :locale="locale" :date-locale="dateLocale" style="height:100%; box-sizing:border-box; margin:0px auto; padding:0px;">
     <n-space vertical align="stretch" justify="space-between" style="padding:0px; margin:0px; height:100%; box-sizing:border-box;">
-      <n-space justify="end" align="center" style="box-sizing:border-box; width:100%; padding:4px; margin:0px;">
+      <n-space justify="end" align="center" style="box-sizing:border-box; padding:4px; margin:0px;">
         <n-button-group size="tiny" style="padding:4px;">
           <n-tooltip trigger="hover" :keep-alive-on-hover="false">
             <template #trigger>
@@ -23,7 +23,7 @@
       </n-space>
 
       <n-space vertical align="center" justify="center">
-        <h1 style="text-decoration:underline; text-decoration-style: double;">AVIF to JPEG Converter</h1>
+        <h1 style="text-decoration:underline; text-decoration-style: double; text-align:center;">AVIF to JPEG Converter</h1>
 
         <n-space vertical align="stretch" justify="center">
           <n-tooltip trigger="hover" :keep-alive-on-hover="false">
@@ -37,7 +37,7 @@
           </n-tooltip>
           <input id="fileinput" ref="fileinput" type="file" multiple accept=".jpg,.jpeg,.gif,.png,.webp,.avif,.bmp" style="display:none">
 
-          <n-tooltip trigger="hover" placement="bottom" :keep-alive-on-hover="false">
+          <n-tooltip v-if="!IS_SP" trigger="hover" placement="bottom" :keep-alive-on-hover="false">
             <template #trigger>
               <n-button round @click="folderinput.click()" style="width:100%;">
                 <n-icon size="large" color="gray"><FolderOpenOutline /></n-icon>
@@ -206,7 +206,7 @@ const LabelsEnUS = {
   loadbuttontooltip: 'Select your images from a dialog window',
   loadfolderbutton: 'Load Folder',
   loadfoldertooltip: `
-    Convert all images in the selected folder and its subfolders, add them to a zip file with relative path<br>
+    Convert all images in the selected folder and its subfolders, and add them to a ZIP archive with relative path<br>
     *It will show "Upload" button, but it actually doesn't upload anything
   `,
 
@@ -227,7 +227,7 @@ const LabelsJaJP = {
   descriptions: [
     'これはAVIFやWebP等の画像をJPEG、PNG等へ変換するためのWebアプリです',
     'AVIF画像のロードには<a href="https://caniuse.com/?search=avif" target="_self" style="color:red">最新</a>のFireFox又はChromeが必要です',
-    '変換処理は全てオフラインで行われるため、データがサーバ等へ<strong>送信される事はありません</strong>',
+    '変換処理は全てオフラインで行われるため、データがサーバー等へ<strong>送信される事はありません</strong>',
     '複数枚の画像が読み込まれた場合、変換した画像は<strong>ZIPファイル</strong>に纏めて出力されます',
     'AVIF以外の画像でも、ブラウザが<a href="https://developer.mozilla.org/ja/docs/Web/Media/Formats/Image_types" target="_self" style="color:red">対応している形式</a>であれば変換が実行されます',
   ],
@@ -243,8 +243,8 @@ const LabelsJaJP = {
   loadbuttontooltip: 'ダイアログを開いて画像を選択します',
   loadfolderbutton: 'フォルダをロード',
   loadfoldertooltip: `
-    選択したフォルダとサブフォルダの全ての画像に対して変換処理を行い、ZIPファイルへ相対パスで格納します<br>
-    ※「アップロード」というボタンが表示されますがファイルのアップロード処理は行われません
+    選択したフォルダとサブフォルダの全ての画像に対して変換処理を行い、ZIP書庫へ相対パスで格納します<br>
+    ※「アップロード」というボタンが表示されますが実際にサーバーへのアップロード処理が行われる事はありません
   `,
 
   processing: '画像変換中',
@@ -261,7 +261,7 @@ const LabelsJaJP = {
 };
 
 
-
+const IS_SP = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/.test(navigator.userAgent);
 const doc = document;
 const imageFormat = ref('image/png');
 const formatList = ref([{
@@ -453,7 +453,8 @@ function getLanguage(): string {
 <style>
 html, body {
   padding: 0px;
-  margin: 0px 16px;
+  margin: 0px auto;
+  max-width: 1000px;
   height: 100%;
   background-color: white;
   color: black;
