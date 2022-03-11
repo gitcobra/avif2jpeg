@@ -241,14 +241,15 @@ async function convertImages(list, ctx, instance, props) {
   processing = false;
 }
 
-async function checkAvifSupport() {
+function checkAvifSupport(): Promise<boolean> {
   const TestAVIFData = 'data:image/avif;base64,AAAAHGZ0eXBtaWYxAAAAAG1pZjFhdmlmbWlhZgAAAPJtZXRhAAAAAAAAACFoZGxyAAAAAAAAAABwaWN0AAAAAAAAAAAAAAAAAAAAAA5waXRtAAAAAAABAAAAHmlsb2MAAAAABEAAAQABAAAAAAEWAAEAAAAgAAAAKGlpbmYAAAAAAAEAAAAaaW5mZQIAAAAAAQAAYXYwMUltYWdlAAAAAHFpcHJwAAAAUmlwY28AAAAUaXNwZQAAAAAAAAAIAAAACAAAABBwYXNwAAAAAQAAAAEAAAAWYXYxQ4EgAAAKCDgIv2kBDQAgAAAAEHBpeGkAAAAAAwgICAAAABdpcG1hAAAAAAAAAAEAAQQBAoOEAAAAKG1kYXQKCDgIv2kBDQAgMhQWQAAASAAADAZuZXHwA9LzjNWygA==';
   const img = document.createElement('img');
   const prom = getAsPromise(img).then(() => true, () => false);
   img.src = TestAVIFData;
 
-  return await prom;
+  return prom;
 }
+
 function checkSupportedImageFormats(): string[] {
   const Formats = [
     'image/png',

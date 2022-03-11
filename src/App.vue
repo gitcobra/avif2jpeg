@@ -1,7 +1,8 @@
 <template>
   <n-config-provider :locale="locale" :date-locale="dateLocale" style="height:100%; box-sizing:border-box; margin:0px auto; padding:0px;">
     <n-space vertical align="stretch" justify="space-between" style="padding:0px; margin:0px; height:100%; box-sizing:border-box;">
-      <n-space justify="end" align="center" style="box-sizing:border-box; padding:4px; margin:0px;">
+
+      <n-space justify="end" align="end" style="box-sizing:border-box; padding:4px; margin:0px;">
         <n-button-group size="tiny" style="padding:4px;">
           <n-tooltip trigger="hover" :keep-alive-on-hover="false">
             <template #trigger>
@@ -80,10 +81,6 @@
           <p>
           <n-icon size="64" color="silver"><DragDrop /></n-icon>
           </p>
-
-          <ul style="font-size:small; margin:20px; color:gray;">
-            <li v-for="text in Labels.descriptions" :key="text" style="text-align:left" v-html="text"></li>
-          </ul>
         </div>
       </converter>
       </n-message-provider>
@@ -92,19 +89,9 @@
       <n-modal v-model:show="noimage" preset="dialog" :title="Labels.noimage" type="error"></n-modal>
       <n-modal v-model:show="avifUnsupported" preset="dialog" :title="Labels.avifUnsupported" type="warning"></n-modal>
 
-      <n-space align="end" justify="space-between" style="box-sizing: border-box; width:100%; padding:8px;">
-        <n-space align="center">
-          <n-space align="center">
-            <a href="https://github.com/gitcobra/avif2jpeg" style="color:black; font-size:small;"><n-icon><Github /></n-icon>GitHub</a>
-          </n-space>
-          <n-space align="center">
-            <licenses />
-          </n-space>
-        </n-space>
-
-
-        <n-space vertical>
-
+      <!-- output settings -->
+      <n-space justify="center">
+        <n-space vertical align="start">
           <n-tooltip trigger="hover" :placement="landscape ? 'left-start' : 'top-start'" :keep-alive-on-hover="false">
             <template #trigger>
               <n-space align="center">
@@ -126,8 +113,24 @@
             {{Labels.qualitytooltip}}
           </n-tooltip>
         </n-space>
+      </n-space>
 
+      <!-- descriptions -->
+      <n-space justify="center">
+        <ul style="font-size:small; margin:20px; color:gray;">
+          <li v-for="text in Labels.descriptions" :key="text" style="text-align:left" v-html="text"></li>
+        </ul>
+      </n-space>
 
+      <n-space justify="center">
+        <n-space align="center">
+          <n-space align="center">
+            <a href="https://github.com/gitcobra/avif2jpeg" style="color:black; font-size:small;"><n-icon><Github /></n-icon>GitHub</a>
+          </n-space>
+          <n-space align="center">
+            <licenses />
+          </n-space>
+        </n-space>
       </n-space>
 
 
@@ -141,7 +144,7 @@
         <n-progress type="circle" :percentage="percentage" color="lime" indicator-text-color="black" rail-color="silver">
           <n-space vertical align="center" justify="center">
             <div style="font-size:x-large;">{{percentage}}%</div>
-            <div>{{currentSuccess}}/{{currentLength}}</div>
+            <div style="white-space:nowrap;">{{currentSuccess}}/{{currentLength}}</div>
           </n-space>
         </n-progress>
 
@@ -191,14 +194,14 @@ import { NThemeEditor } from 'naive-ui'
 const LabelsEnUS = {
   droptarget: 'Drag & Drop AVIF Images to Convert Here',
   descriptions: [
-    'This is a web application to convert AVIF(or WebP, etc) images into common image formats such as JPEG、PNG',
-    'Requires <a href="https://caniuse.com/?search=avif" target="_self" style="color:red">latest</a> FireFox or Chrome to load AVIF images',
-    'It loads and converts and outputs your images completely offline, so <strong>no data will be sent</strong> to the server',
-    'The converted images will be output as <strong>a zip file</strong> when multiple images are loaded',
-    'Besides AVIF, it could load any other image formats <a href="https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Image_types" target="_self" style="color:red">supported</a> by your browser',
+    'This is a web application to convert AVIF(or WebP, etc) images into common image formats such as JPEG、PNG.',
+    'It loads and converts and outputs your images <strong>completely offline</strong>, so <strong>no data will be sent</strong> to the server.',
+    'The converted images will be output as <strong>a zip file</strong> when multiple images are loaded.',
+    //'Besides AVIF, it could load any other image formats <a href="https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Image_types" target="_self" style="color:red">supported</a> by your browser.',
+    'Requires <a href="https://caniuse.com/?search=avif" target="_self" style="color:red">latest</a> version of Firefox or Chrome to load AVIF images.',
   ],
   quality: 'Image Quality',
-  qualitytooltip: 'Set Image Quality',
+  qualitytooltip: 'Set image quality to export',
   imageType: 'Image Type',
   imageTypeTooltip: 'Choose image type to export',
   ignoreFileExtensions: 'Load All File Types',
@@ -206,10 +209,10 @@ const LabelsEnUS = {
 
   loadbutton: 'Load Images',
   loadbuttontooltip: 'Select your images from a dialog window',
-  loadfolderbutton: 'Load Folder',
+  loadfolderbutton: 'Load A Whole Folder',
   loadfoldertooltip: `
-    Convert all images in the selected folder and its subfolders, and add the converted images to a ZIP archive with relative path<br>
-    *It will show "Upload" button, but it actually doesn't upload anything
+    Convert all images in the selected folder and its subfolders, and add the converted images to a ZIP archive with relative path.<br>
+    *It will show "Upload" button, but it actually doesn't upload anything.
   `,
 
   processing: 'Converting images',
@@ -218,7 +221,7 @@ const LabelsEnUS = {
   completed: 'Completed',
   interfered: 'Currently Busy',
   noimage: 'No image files',
-  avifUnsupported: 'Your browser does not support AVIF. Please use latest Firefox or Google Chrome.',
+  avifUnsupported: 'Your browser does not support AVIF. Please use latest version of Firefox or Google Chrome to convert AVIF images.',
   cancel: 'Cancel',
 
   save: 'Save',
@@ -228,11 +231,11 @@ const LabelsEnUS = {
 const LabelsJaJP = {
   droptarget: '変換したいAVIF画像をドラッグ&ドロップして下さい',
   descriptions: [
-    'これはAVIFやWebP等の画像をJPEG、PNG等へ変換するためのWebアプリです',
-    'AVIF画像のロードには<a href="https://caniuse.com/?search=avif" target="_self" style="color:red">最新</a>のFireFox又はChromeが必要です',
-    '変換処理は全てオフラインで行われるため、データがサーバー等へ<strong>送信される事はありません</strong>',
-    '複数枚の画像が読み込まれた場合、変換した画像は<strong>ZIPファイル</strong>に纏めて出力されます',
-    'AVIF以外の画像でも、ブラウザが<a href="https://developer.mozilla.org/ja/docs/Web/Media/Formats/Image_types" target="_self" style="color:red">対応している形式</a>であれば変換が実行されます',
+    'これはAVIFやWebP等の画像を、JPEG・PNG等の一般的な形式へ変換するためのWebアプリです。',
+    '変換処理は<strong>完全にオフライン</strong>で行われ、読み込まれたデータが外部へ<strong>送信される事はありません</strong>。',
+    '複数枚の画像が読み込まれた場合、変換した画像は<strong>ZIPファイル</strong>に纏めて出力されます。',
+    //'AVIF以外の画像も、ブラウザが<a href="https://developer.mozilla.org/ja/docs/Web/Media/Formats/Image_types" target="_self" style="color:red">対応している形式</a>であれば変換が実行されます。',
+    'AVIF画像のロードには<a href="https://caniuse.com/?search=avif" target="_self" style="color:red">最新</a>のFirefox又はChromeが必要です。',
   ],
 
   quality: '画質設定',
@@ -244,10 +247,10 @@ const LabelsJaJP = {
 
   loadbutton: '画像をロード',
   loadbuttontooltip: 'ダイアログを開いて画像を選択します',
-  loadfolderbutton: 'フォルダをロード',
+  loadfolderbutton: 'フォルダごとロード',
   loadfoldertooltip: `
-    選択したフォルダとサブフォルダの全ての画像に対して変換処理を行い、ZIP書庫へ相対パスで格納します<br>
-    ※「アップロード」というボタンが表示されますが実際にサーバーへのアップロード処理が行われる事はありません
+    選択したフォルダとサブフォルダの全ての画像に対して変換処理を行い、ZIP書庫へ相対パスで格納します。<br>
+    ※「アップロード」というボタンが表示されますが実際にサーバーへのアップロードが行われる事はありません。
   `,
 
   processing: '画像変換中',
@@ -256,7 +259,7 @@ const LabelsJaJP = {
   completed: '変換終了',
   interfered: '既に処理中です',
   noimage: '画像ファイルがありません',
-  avifUnsupported: 'お使いのブラウザはAVIF画像に対応していません。最新版のFirefox又はGoogle Chromeでご利用下さい。',
+  avifUnsupported: 'このブラウザはAVIF形式に対応していません。AVIF画像を変換する場合は最新版のFirefox又はGoogle Chromeを使用して下さい。',
   cancel: 'キャンセル',
 
   save: '保存',
@@ -457,7 +460,7 @@ function getLanguage(): string {
 
 <style>
 html, body {
-  padding: 0px;
+  padding: 0px 16px;
   margin: 0px auto;
   max-width: 1000px;
   height: 100%;
