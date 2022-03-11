@@ -18,7 +18,7 @@ let disturbed = false;
 let formats: string[] = ['image/png'];
 export default {
   name: 'converter',
-  emits: ['mounted', 'start', 'progress', 'success', 'failure', 'complete', 'prevent', 'noimage'],
+  emits: ['mounted', 'start', 'progress', 'success', 'failure', 'complete', 'prevent', 'noimage', 'avifsupport'],
   props: {
     target: [HTMLElement, HTMLDocument],
     format: {
@@ -69,6 +69,8 @@ export default {
 
       formats = checkSupportedImageFormats();
       context.emit('mounted', {formats});
+
+      context.emit('avifsupport', await checkAvifSupport());
     });
 
     watch(() => props.input, (val) => {
@@ -239,7 +241,14 @@ async function convertImages(list, ctx, instance, props) {
   processing = false;
 }
 
+async function checkAvifSupport() {
+  const TestAVIFData = 'data:image/avif;base64,AAAAHGZ0eXBtaWYxAAAAAG1pZjFhdmlmbWlhZgAAAPJtZXRhAAAAAAAAACFoZGxyAAAAAAAAAABwaWN0AAAAAAAAAAAAAAAAAAAAAA5waXRtAAAAAAABAAAAHmlsb2MAAAAABEAAAQABAAAAAAEWAAEAAAAgAAAAKGlpbmYAAAAAAAEAAAAaaW5mZQIAAAAAAQAAYXYwMUltYWdlAAAAAHFpcHJwAAAAUmlwY28AAAAUaXNwZQAAAAAAAAAIAAAACAAAABBwYXNwAAAAAQAAAAEAAAAWYXYxQ4EgAAAKCDgIv2kBDQAgAAAAEHBpeGkAAAAAAwgICAAAABdpcG1hAAAAAAAAAAEAAQQBAoOEAAAAKG1kYXQKCDgIv2kBDQAgMhQWQAAASAAADAZuZXHwA9LzjNWygA==';
+  const img = document.createElement('img');
+  const prom = getAsPromise(img).then(() => true, () => false);
+  img.src = TestAVIFData;
 
+  return await prom;
+}
 function checkSupportedImageFormats(): string[] {
   const Formats = [
     'image/png',

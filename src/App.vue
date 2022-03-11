@@ -23,7 +23,7 @@
       </n-space>
 
       <n-space vertical align="center" justify="center">
-        <h1 style="text-decoration:underline; text-decoration-style: double; text-align:center;">AVIF to JPEG Converter</h1>
+        <h1 style="text-decoration:underline; text-decoration-style: double; text-align:center;">AVIF to JPEG "Offline" Converter</h1>
 
         <n-space vertical align="stretch" justify="center">
           <n-tooltip trigger="hover" :keep-alive-on-hover="false">
@@ -73,6 +73,7 @@
         @mounted="onConverterReady" @start="onStart" @progress="onProgress" @success="onSuccess" @failure="onFailure" @complete="onComplete"
         @prevent="prevented = true;"
         @noimage="noimage = true"
+        @avifsupport="flag => avifUnsupported = !flag"
       >
         <div style="text-align:center; color:silver; ">
           <h3>{{Labels.droptarget}}</h3>
@@ -89,6 +90,7 @@
       </n-notification-provider>
       <!-- no image dialog -->
       <n-modal v-model:show="noimage" preset="dialog" :title="Labels.noimage" type="error"></n-modal>
+      <n-modal v-model:show="avifUnsupported" preset="dialog" :title="Labels.avifUnsupported" type="warning"></n-modal>
 
       <n-space align="end" justify="space-between" style="box-sizing: border-box; width:100%; padding:8px;">
         <n-space align="center">
@@ -206,7 +208,7 @@ const LabelsEnUS = {
   loadbuttontooltip: 'Select your images from a dialog window',
   loadfolderbutton: 'Load Folder',
   loadfoldertooltip: `
-    Convert all images in the selected folder and its subfolders, and add them to a ZIP archive with relative path<br>
+    Convert all images in the selected folder and its subfolders, and add the converted images to a ZIP archive with relative path<br>
     *It will show "Upload" button, but it actually doesn't upload anything
   `,
 
@@ -216,6 +218,7 @@ const LabelsEnUS = {
   completed: 'Completed',
   interfered: 'Currently Busy',
   noimage: 'No image files',
+  avifUnsupported: 'Your browser does not support AVIF. Please use latest Firefox or Google Chrome.',
   cancel: 'Cancel',
 
   save: 'Save',
@@ -253,6 +256,7 @@ const LabelsJaJP = {
   completed: '変換終了',
   interfered: '既に処理中です',
   noimage: '画像ファイルがありません',
+  avifUnsupported: 'お使いのブラウザはAVIF画像に対応していません。最新版のFirefox又はGoogle Chromeでご利用下さい。',
   cancel: 'キャンセル',
 
   save: '保存',
@@ -279,6 +283,7 @@ const landscape = ref(true);
 const processing = ref(false);
 const prevented = ref(false);
 const noimage = ref(false);
+const avifUnsupported = ref(false);
 const showProcess = ref(false);
 
 const processingMessage = ref('');
