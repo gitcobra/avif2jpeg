@@ -179,6 +179,7 @@ async function convertImages(list, ctx, instance, props) {
       break;
 
     const name = file.name;
+    const inputSize = file.size;
     const path = file.relativePath || file.webkitRelativePath;
     const reader = new FileReader();
     instance.emit('progress', {file, name, success, failure, index, length});
@@ -225,13 +226,14 @@ async function convertImages(list, ctx, instance, props) {
     const b64 = canvas.toDataURL(type, quality);
     const bstr = atob( b64.split(',')[1] );
     const bin = Uint8Array.from(bstr, str => str.charCodeAt(0));
+    const outputSize = bin.length;
     const fname = (path || name).replace(RegExp('\\.'+ext+'$', 'i'), '') /*.replace(/\.(jpe?g|gif|png|avif|webp|bmp)$/i, '')*/ + '.' + ext;
     azip.add(fname, bin);
 
     success++;
     lastImage = b64;
     lastName = fname;
-    instance.emit('success', {file, name, img:b64, success, failure, index, length});
+    instance.emit('success', {file, name, img:b64, success, failure, index, length, inputSize, outputSize});
   }
 
   // emit as ZIP
