@@ -7,10 +7,20 @@
     <!-- <link rel="icon" href="<%= BASE_URL %>favicon.ico"> -->
     <meta name="twitter:card" content="summary" />
     <meta property="og:url" content="https://github.com/gitcobra/avif2jpeg/" />
-    <meta property="og:title" content="AVIF to JPEG 'Offline' Converter" />
+    <meta property="og:title" content='<%= htmlWebpackPlugin.options.title %>' />
     <meta property="og:description" content="It is a web application to convert AVIF images to other common image formats such as JPEG or PNG offline" />
     <meta property="og:image" content="./card.jpg" />
     <title><%= htmlWebpackPlugin.options.title %></title>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-T9YF63PVEL"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-T9YF63PVEL');
+    </script>
   </head>
   <body>
     <noscript>
@@ -26,8 +36,9 @@
             setTimeout(function(){
               if( app.contains(disclaimer) ) {
                 disclaimer.innerHTML =
+                  '<p>Sorry, <strong><%= htmlWebpackPlugin.options.title %></strong> is not working properly.</p>'+
                   '<p>If you can still see this text even after reloading, perhaps this page does not support your web browser.</p>'+
-                  '<p>Please use latest version of Firefox or Chrome.</p>';
+                  '<p>Please consider using the latest version of the modern web browser.</p>'
               }
               app = null;
               disclaimer = null;
@@ -36,17 +47,6 @@
         })();
       </script>
     </div>
-
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-T9YF63PVEL"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-T9YF63PVEL');
-    </script>
-
     <!-- built files will be auto injected -->
   </body>
 </html>

@@ -1,12 +1,12 @@
 <template>
-<div ref="container" class="droptarget" :style="style">
-  <slot></slot>
-</div>
-<canvas ref="canvas" width="1" height="1" style="display:none"></canvas>
+  <div ref="container" class="droptarget" :style="style">
+    <slot></slot>
+  </div>
+  <canvas ref="canvas" width="1" height="1" style="display:none"></canvas>
 </template>
 
 <script lang="ts">
-import { ref, watch, onMounted, getCurrentInstance, VueElement } from 'vue';
+import { ref, watch, onMounted, getCurrentInstance, VueElement, defineComponent } from 'vue';
 import { useMessage, useNotification, NotificationType } from 'naive-ui';
 
 // eslint-disable-next-line
@@ -16,7 +16,7 @@ var AnZip=function(){"object"==typeof module&&"object"==typeof exports&&(module.
 let processing = false;
 let disturbed = false;
 let formats: string[] = ['image/png'];
-export default {
+export default defineComponent({
   name: 'converter',
   emits: ['mounted', 'start', 'progress', 'success', 'failure', 'complete', 'prevent', 'noimage', 'avifsupport'],
   props: {
@@ -35,14 +35,15 @@ export default {
         return val >= 0 && val <= 100;
       }
     },
-    ignoreExtension: Boolean,
+    //ignoreExtension: Boolean,
+    accept: String, // accepted file types
     processing: Boolean,
     input: Array,
     sendmessage: Array,
     style: Object
   },
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-  setup(props, context): any {
+  setup(props: any, context: any): any {
     const canvas = ref(null);
     let target: Node;
     let ctx: CanvasRenderingContext2D;
@@ -105,7 +106,7 @@ export default {
       //download,
     };
   }
-}
+});
 
 function setDropEvent(droptarget: HTMLElement, ctx, instance, props) {
   document.ondragstart = (ev) => ev.preventDefault();
@@ -125,6 +126,7 @@ function startConvert(dat, ctx, instance, props) {
 
   let list = getFile(dat);
   // check file extension
+  /*
   if( !props.ignoreExtension ) {
     list = list.filter(item => {
       const ext = item.name.replace(/^.+(?=\.[^./\\]+$)/, '').toLowerCase();
@@ -132,6 +134,15 @@ function startConvert(dat, ctx, instance, props) {
     });
     if( !list.length ) {
       //alert('could not find image files');
+      instance.emit('noimage');
+      return;
+    }
+  }
+  */
+  if( props.accept ) {
+    const accept = String(props.accept).toLowerCase();
+    list = list.filter( item => props.accept.includes(item.name.replace(/^.+(\.[^.]+)$/, '$1').toLowerCase()) );
+    if( !list.length ) {
       instance.emit('noimage');
       return;
     }
@@ -165,6 +176,7 @@ async function convertImages(list, ctx, instance, props) {
   const azip = new AnZip;
   const type = props.format;
   const quality = props.quality / 100;
+  //const accept = props.accept || '';
   const ext = [...type.matchAll(/.+\/(.+)/g)][0][1].replace(/jpeg/, 'jpg');
   instance.emit('start', {list, length: list.length});
 
