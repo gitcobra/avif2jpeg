@@ -250,7 +250,7 @@ async function convertImages(list, ctx, instance, props) {
   // emit as ZIP
   const url = azip.url();
   //instance.refs.download.href = src;
-  instance.emit('complete', {aborted:disturbed, success, failure, index, length, zip:url, img:lastImage, name:lastName});
+  instance.emit('complete', {aborted:disturbed, success, failure, index, length, zip:url, img64:lastImage, name:lastName});
   processing = false;
 }
 

@@ -2,8 +2,8 @@ var __getOwnPropNames = Object.getOwnPropertyNames;
 var __commonJS = (cb, mod) => function __require() {
   return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
 };
-var require_app_f7bb4d3b = __commonJS({
-  "assets/app.f7bb4d3b.js"(exports, module) {
+var require_app_a674ca9f = __commonJS({
+  "assets/app.a674ca9f.js"(exports, module) {
     (function polyfill() {
       const relList = document.createElement("link").relList;
       if (relList && relList.supports && relList.supports("modulepreload")) {
@@ -4502,11 +4502,6 @@ var require_app_f7bb4d3b = __commonJS({
     function createTextVNode(text = " ", flag = 0) {
       return createVNode(Text, null, text, flag);
     }
-    function createStaticVNode(content, numberOfNodes) {
-      const vnode = createVNode(Static, null, content);
-      vnode.staticCount = numberOfNodes;
-      return vnode;
-    }
     function createCommentVNode(text = "", asBlock = false) {
       return asBlock ? (openBlock(), createBlock(Comment, null, text)) : createVNode(Comment, null, text);
     }
@@ -7382,6 +7377,13 @@ var require_app_f7bb4d3b = __commonJS({
         }
       }
     };
+    var injectHead = () => {
+      const head = inject(PROVIDE_KEY);
+      if (!head) {
+        throw new Error(`You may forget to apply app.use(head)`);
+      }
+      return head;
+    };
     var acceptFields = [
       "title",
       "meta",
@@ -7613,6 +7615,21 @@ var require_app_f7bb4d3b = __commonJS({
       };
       return head;
     };
+    var IS_BROWSER = typeof window !== "undefined";
+    var useHead = (obj) => {
+      const head = injectHead();
+      const headObj = ref(obj);
+      head.addHeadObjs(headObj);
+      if (IS_BROWSER) {
+        watchEffect(() => {
+          head.updateDOM();
+        });
+        onBeforeUnmount(() => {
+          head.removeHeadObjs(headObj);
+          head.updateDOM();
+        });
+      }
+    };
     function deserializeState(state) {
       try {
         return JSON.parse(state || "{}");
@@ -7642,7 +7659,7 @@ var require_app_f7bb4d3b = __commonJS({
       const {
         transformState,
         registerComponents = true,
-        useHead = true,
+        useHead: useHead2 = true,
         rootContainer = "#app"
       } = options;
       const isClient = typeof window !== "undefined";
@@ -7650,7 +7667,7 @@ var require_app_f7bb4d3b = __commonJS({
         var _a2;
         const app = client ? createApp(App) : createSSRApp(App);
         let head;
-        if (useHead) {
+        if (useHead2) {
           head = createHead();
           app.use(head);
         }
@@ -28790,6 +28807,177 @@ ${style2}
         return h("a", { class: [`${this.mergedClsPrefix}-a`, this.themeClass], style: this.cssVars }, this.$slots);
       }
     });
+    const RobotoSlab = "";
+    const _hoisted_1$7 = {
+      xmlns: "http://www.w3.org/2000/svg",
+      "xmlns:xlink": "http://www.w3.org/1999/xlink",
+      viewBox: "0 0 512 512"
+    };
+    const _hoisted_2$6 = /* @__PURE__ */ createBaseVNode(
+      "path",
+      {
+        d: "M48 399.26C48 335.19 62.44 284 90.91 247c34.38-44.67 88.68-68.77 161.56-71.75V72L464 252L252.47 432V329.35c-44.25 1.19-77.66 7.58-104.27 19.84c-28.75 13.25-49.6 33.05-72.08 58.7L48 440z",
+        fill: "currentColor"
+      },
+      null,
+      -1
+    );
+    const _hoisted_3$5 = [_hoisted_2$6];
+    const ArrowRedoSharp = defineComponent({
+      name: "ArrowRedoSharp",
+      render: function render2(_ctx, _cache) {
+        return openBlock(), createElementBlock("svg", _hoisted_1$7, _hoisted_3$5);
+      }
+    });
+    const _hoisted_1$6 = {
+      xmlns: "http://www.w3.org/2000/svg",
+      "xmlns:xlink": "http://www.w3.org/1999/xlink",
+      viewBox: "0 0 512 512"
+    };
+    const _hoisted_2$5 = /* @__PURE__ */ createBaseVNode(
+      "path",
+      {
+        d: "M64 192v-72a40 40 0 0 1 40-40h75.89a40 40 0 0 1 22.19 6.72l27.84 18.56a40 40 0 0 0 22.19 6.72H408a40 40 0 0 1 40 40v40",
+        fill: "none",
+        stroke: "currentColor",
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round",
+        "stroke-width": "32"
+      },
+      null,
+      -1
+    );
+    const _hoisted_3$4 = /* @__PURE__ */ createBaseVNode(
+      "path",
+      {
+        d: "M479.9 226.55L463.68 392a40 40 0 0 1-39.93 40H88.25a40 40 0 0 1-39.93-40L32.1 226.55A32 32 0 0 1 64 192h384.1a32 32 0 0 1 31.8 34.55z",
+        fill: "none",
+        stroke: "currentColor",
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round",
+        "stroke-width": "32"
+      },
+      null,
+      -1
+    );
+    const _hoisted_4$2 = [_hoisted_2$5, _hoisted_3$4];
+    const FolderOpenOutline = defineComponent({
+      name: "FolderOpenOutline",
+      render: function render2(_ctx, _cache) {
+        return openBlock(), createElementBlock("svg", _hoisted_1$6, _hoisted_4$2);
+      }
+    });
+    const _hoisted_1$5 = {
+      xmlns: "http://www.w3.org/2000/svg",
+      "xmlns:xlink": "http://www.w3.org/1999/xlink",
+      viewBox: "0 0 512 512"
+    };
+    const _hoisted_2$4 = /* @__PURE__ */ createBaseVNode(
+      "rect",
+      {
+        x: "48",
+        y: "80",
+        width: "416",
+        height: "352",
+        rx: "48",
+        ry: "48",
+        fill: "none",
+        stroke: "currentColor",
+        "stroke-linejoin": "round",
+        "stroke-width": "32"
+      },
+      null,
+      -1
+    );
+    const _hoisted_3$3 = /* @__PURE__ */ createBaseVNode(
+      "circle",
+      {
+        cx: "336",
+        cy: "176",
+        r: "32",
+        fill: "none",
+        stroke: "currentColor",
+        "stroke-miterlimit": "10",
+        "stroke-width": "32"
+      },
+      null,
+      -1
+    );
+    const _hoisted_4$1 = /* @__PURE__ */ createBaseVNode(
+      "path",
+      {
+        d: "M304 335.79l-90.66-90.49a32 32 0 0 0-43.87-1.3L48 352",
+        fill: "none",
+        stroke: "currentColor",
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round",
+        "stroke-width": "32"
+      },
+      null,
+      -1
+    );
+    const _hoisted_5$1 = /* @__PURE__ */ createBaseVNode(
+      "path",
+      {
+        d: "M224 432l123.34-123.34a32 32 0 0 1 43.11-2L464 368",
+        fill: "none",
+        stroke: "currentColor",
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round",
+        "stroke-width": "32"
+      },
+      null,
+      -1
+    );
+    const _hoisted_6$1 = [_hoisted_2$4, _hoisted_3$3, _hoisted_4$1, _hoisted_5$1];
+    const FileImageRegular = defineComponent({
+      name: "ImageOutline",
+      render: function render2(_ctx, _cache) {
+        return openBlock(), createElementBlock("svg", _hoisted_1$5, _hoisted_6$1);
+      }
+    });
+    const _hoisted_1$4 = {
+      xmlns: "http://www.w3.org/2000/svg",
+      "xmlns:xlink": "http://www.w3.org/1999/xlink",
+      viewBox: "0 0 512 512"
+    };
+    const _hoisted_2$3 = /* @__PURE__ */ createBaseVNode(
+      "path",
+      {
+        d: "M456 64H56a24 24 0 0 0-24 24v336a24 24 0 0 0 24 24h400a24 24 0 0 0 24-24V88a24 24 0 0 0-24-24zm-124.38 64.2a48 48 0 1 1-43.42 43.42a48 48 0 0 1 43.42-43.42zM76 416a12 12 0 0 1-12-12v-87.63L192.64 202l96.95 96.75L172.37 416zm372-12a12 12 0 0 1-12 12H217.63l149.53-149.53L448 333.84z",
+        fill: "currentColor"
+      },
+      null,
+      -1
+    );
+    const _hoisted_3$2 = [_hoisted_2$3];
+    const MdImage = defineComponent({
+      name: "ImageSharp",
+      render: function render2(_ctx, _cache) {
+        return openBlock(), createElementBlock("svg", _hoisted_1$4, _hoisted_3$2);
+      }
+    });
+    const _hoisted_1$3 = {
+      xmlns: "http://www.w3.org/2000/svg",
+      "xmlns:xlink": "http://www.w3.org/1999/xlink",
+      viewBox: "0 0 512 512"
+    };
+    const _hoisted_2$2 = /* @__PURE__ */ createBaseVNode(
+      "path",
+      {
+        d: "M256 32C132.3 32 32 134.9 32 261.7c0 101.5 64.2 187.5 153.2 217.9a17.56 17.56 0 0 0 3.8.4c8.3 0 11.5-6.1 11.5-11.4c0-5.5-.2-19.9-.3-39.1a102.4 102.4 0 0 1-22.6 2.7c-43.1 0-52.9-33.5-52.9-33.5c-10.2-26.5-24.9-33.6-24.9-33.6c-19.5-13.7-.1-14.1 1.4-14.1h.1c22.5 2 34.3 23.8 34.3 23.8c11.2 19.6 26.2 25.1 39.6 25.1a63 63 0 0 0 25.6-6c2-14.8 7.8-24.9 14.2-30.7c-49.7-5.8-102-25.5-102-113.5c0-25.1 8.7-45.6 23-61.6c-2.3-5.8-10-29.2 2.2-60.8a18.64 18.64 0 0 1 5-.5c8.1 0 26.4 3.1 56.6 24.1a208.21 208.21 0 0 1 112.2 0c30.2-21 48.5-24.1 56.6-24.1a18.64 18.64 0 0 1 5 .5c12.2 31.6 4.5 55 2.2 60.8c14.3 16.1 23 36.6 23 61.6c0 88.2-52.4 107.6-102.3 113.3c8 7.1 15.2 21.1 15.2 42.5c0 30.7-.3 55.5-.3 63c0 5.4 3.1 11.5 11.4 11.5a19.35 19.35 0 0 0 4-.4C415.9 449.2 480 363.1 480 261.7C480 134.9 379.7 32 256 32z",
+        fill: "currentColor"
+      },
+      null,
+      -1
+    );
+    const _hoisted_3$1 = [_hoisted_2$2];
+    const Github = defineComponent({
+      name: "LogoGithub",
+      render: function render2(_ctx, _cache) {
+        return openBlock(), createElementBlock("svg", _hoisted_1$3, _hoisted_3$1);
+      }
+    });
     var AnZip = function() {
       "object" == typeof module && "object" == typeof exports && (module.exports = AnZip2);
       for (var UseTA = "undefined" != typeof Uint8Array, A8 = UseTA ? Uint8Array : Array, CRC32Table = new (UseTA ? Uint32Array : Array)(256), i = 0; i < 256; i++) {
@@ -29034,7 +29222,7 @@ ${style2}
         instance.emit("success", { file, name, img: b64, success, failure, index, length, inputSize, outputSize });
       }
       const url = azip.url();
-      instance.emit("complete", { aborted: disturbed, success, failure, index, length, zip: url, img: lastImage, name: lastName });
+      instance.emit("complete", { aborted: disturbed, success, failure, index, length, zip: url, img64: lastImage, name: lastName });
       processing = false;
     }
     function checkAvifSupport() {
@@ -29073,7 +29261,7 @@ ${style2}
         onloadableElement.onerror = rej;
       });
     }
-    const converter_vue_vue_type_style_index_0_scoped_fc6f134d_lang = "";
+    const converter_vue_vue_type_style_index_0_scoped_f2d34fc1_lang = "";
     const _export_sfc = (sfc, props) => {
       const target = sfc.__vccOpts || sfc;
       for (const [key, val] of props) {
@@ -29081,7 +29269,7 @@ ${style2}
       }
       return target;
     };
-    const _hoisted_1$9 = {
+    const _hoisted_1$2 = {
       ref: "canvas",
       width: "1",
       height: "1",
@@ -29096,12 +29284,12 @@ ${style2}
         }, [
           renderSlot(_ctx.$slots, "default", {}, void 0, true)
         ], 4),
-        createBaseVNode("canvas", _hoisted_1$9, null, 512)
+        createBaseVNode("canvas", _hoisted_1$2, null, 512)
       ], 64);
     }
-    const Converter = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["render", _sfc_render], ["__scopeId", "data-v-fc6f134d"]]);
-    const _hoisted_1$8 = /* @__PURE__ */ createBaseVNode("h3", null, "Used Framework and Libraries", -1);
-    const _hoisted_2$8 = ["href"];
+    const Converter = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["render", _sfc_render], ["__scopeId", "data-v-f2d34fc1"]]);
+    const _hoisted_1$1 = /* @__PURE__ */ createBaseVNode("h3", null, "Used Framework and Libraries", -1);
+    const _hoisted_2$1 = ["href"];
     const _sfc_main$1 = /* @__PURE__ */ defineComponent({
       __name: "licenses",
       setup(__props) {
@@ -29111,7 +29299,6 @@ ${style2}
           "Vite": "https://github.com/vitejs/vite/blob/main/LICENSE",
           "Vite SSG": "https://github.com/antfu/vite-ssg/blob/main/LICENSE",
           "Naive UI": "https://github.com/TuSimple/naive-ui/blob/main/LICENSE",
-          "tabler": "https://github.com/tabler/tabler-icons/blob/master/LICENSE",
           "Ionicons": "https://github.com/ionic-team/ionicons/blob/main/LICENSE"
         };
         return (_ctx, _cache) => {
@@ -29130,11 +29317,11 @@ ${style2}
               title: "Licenses"
             }, {
               default: withCtx(() => [
-                _hoisted_1$8,
+                _hoisted_1$1,
                 createBaseVNode("ul", null, [
                   (openBlock(), createElementBlock(Fragment, null, renderList(Licenses, (value, key) => {
                     return createBaseVNode("li", null, [
-                      createBaseVNode("a", { href: value }, toDisplayString(key), 9, _hoisted_2$8)
+                      createBaseVNode("a", { href: value }, toDisplayString(key), 9, _hoisted_2$1)
                     ]);
                   }), 64))
                 ])
@@ -29145,241 +29332,37 @@ ${style2}
         };
       }
     });
-    const RobotoSlab = "";
-    const _hoisted_1$7 = {
-      xmlns: "http://www.w3.org/2000/svg",
-      "xmlns:xlink": "http://www.w3.org/1999/xlink",
-      viewBox: "0 0 512 512"
-    };
-    const _hoisted_2$7 = /* @__PURE__ */ createBaseVNode(
-      "path",
-      {
-        d: "M64 192v-72a40 40 0 0 1 40-40h75.89a40 40 0 0 1 22.19 6.72l27.84 18.56a40 40 0 0 0 22.19 6.72H408a40 40 0 0 1 40 40v40",
-        fill: "none",
-        stroke: "currentColor",
-        "stroke-linecap": "round",
-        "stroke-linejoin": "round",
-        "stroke-width": "32"
-      },
-      null,
-      -1
-    );
-    const _hoisted_3$7 = /* @__PURE__ */ createBaseVNode(
-      "path",
-      {
-        d: "M479.9 226.55L463.68 392a40 40 0 0 1-39.93 40H88.25a40 40 0 0 1-39.93-40L32.1 226.55A32 32 0 0 1 64 192h384.1a32 32 0 0 1 31.8 34.55z",
-        fill: "none",
-        stroke: "currentColor",
-        "stroke-linecap": "round",
-        "stroke-linejoin": "round",
-        "stroke-width": "32"
-      },
-      null,
-      -1
-    );
-    const _hoisted_4$2 = [_hoisted_2$7, _hoisted_3$7];
-    const FolderOpenOutline = defineComponent({
-      name: "FolderOpenOutline",
-      render: function render2(_ctx, _cache) {
-        return openBlock(), createElementBlock("svg", _hoisted_1$7, _hoisted_4$2);
-      }
-    });
-    const _hoisted_1$6 = {
-      xmlns: "http://www.w3.org/2000/svg",
-      "xmlns:xlink": "http://www.w3.org/1999/xlink",
-      viewBox: "0 0 512 512"
-    };
-    const _hoisted_2$6 = /* @__PURE__ */ createBaseVNode(
-      "rect",
-      {
-        x: "48",
-        y: "80",
-        width: "416",
-        height: "352",
-        rx: "48",
-        ry: "48",
-        fill: "none",
-        stroke: "currentColor",
-        "stroke-linejoin": "round",
-        "stroke-width": "32"
-      },
-      null,
-      -1
-    );
-    const _hoisted_3$6 = /* @__PURE__ */ createBaseVNode(
-      "circle",
-      {
-        cx: "336",
-        cy: "176",
-        r: "32",
-        fill: "none",
-        stroke: "currentColor",
-        "stroke-miterlimit": "10",
-        "stroke-width": "32"
-      },
-      null,
-      -1
-    );
-    const _hoisted_4$1 = /* @__PURE__ */ createBaseVNode(
-      "path",
-      {
-        d: "M304 335.79l-90.66-90.49a32 32 0 0 0-43.87-1.3L48 352",
-        fill: "none",
-        stroke: "currentColor",
-        "stroke-linecap": "round",
-        "stroke-linejoin": "round",
-        "stroke-width": "32"
-      },
-      null,
-      -1
-    );
-    const _hoisted_5$1 = /* @__PURE__ */ createBaseVNode(
-      "path",
-      {
-        d: "M224 432l123.34-123.34a32 32 0 0 1 43.11-2L464 368",
-        fill: "none",
-        stroke: "currentColor",
-        "stroke-linecap": "round",
-        "stroke-linejoin": "round",
-        "stroke-width": "32"
-      },
-      null,
-      -1
-    );
-    const _hoisted_6$1 = [_hoisted_2$6, _hoisted_3$6, _hoisted_4$1, _hoisted_5$1];
-    const FileImageRegular = defineComponent({
-      name: "ImageOutline",
-      render: function render2(_ctx, _cache) {
-        return openBlock(), createElementBlock("svg", _hoisted_1$6, _hoisted_6$1);
-      }
-    });
-    const _hoisted_1$5 = {
-      xmlns: "http://www.w3.org/2000/svg",
-      "xmlns:xlink": "http://www.w3.org/1999/xlink",
-      viewBox: "0 0 512 512"
-    };
-    const _hoisted_2$5 = /* @__PURE__ */ createBaseVNode(
-      "path",
-      {
-        d: "M456 64H56a24 24 0 0 0-24 24v336a24 24 0 0 0 24 24h400a24 24 0 0 0 24-24V88a24 24 0 0 0-24-24zm-124.38 64.2a48 48 0 1 1-43.42 43.42a48 48 0 0 1 43.42-43.42zM76 416a12 12 0 0 1-12-12v-87.63L192.64 202l96.95 96.75L172.37 416zm372-12a12 12 0 0 1-12 12H217.63l149.53-149.53L448 333.84z",
-        fill: "currentColor"
-      },
-      null,
-      -1
-    );
-    const _hoisted_3$5 = [_hoisted_2$5];
-    const MdImage = defineComponent({
-      name: "ImageSharp",
-      render: function render2(_ctx, _cache) {
-        return openBlock(), createElementBlock("svg", _hoisted_1$5, _hoisted_3$5);
-      }
-    });
-    const _hoisted_1$4 = {
-      xmlns: "http://www.w3.org/2000/svg",
-      "xmlns:xlink": "http://www.w3.org/1999/xlink",
-      viewBox: "0 0 512 512"
-    };
-    const _hoisted_2$4 = /* @__PURE__ */ createBaseVNode(
-      "path",
-      {
-        d: "M256 32C132.3 32 32 134.9 32 261.7c0 101.5 64.2 187.5 153.2 217.9a17.56 17.56 0 0 0 3.8.4c8.3 0 11.5-6.1 11.5-11.4c0-5.5-.2-19.9-.3-39.1a102.4 102.4 0 0 1-22.6 2.7c-43.1 0-52.9-33.5-52.9-33.5c-10.2-26.5-24.9-33.6-24.9-33.6c-19.5-13.7-.1-14.1 1.4-14.1h.1c22.5 2 34.3 23.8 34.3 23.8c11.2 19.6 26.2 25.1 39.6 25.1a63 63 0 0 0 25.6-6c2-14.8 7.8-24.9 14.2-30.7c-49.7-5.8-102-25.5-102-113.5c0-25.1 8.7-45.6 23-61.6c-2.3-5.8-10-29.2 2.2-60.8a18.64 18.64 0 0 1 5-.5c8.1 0 26.4 3.1 56.6 24.1a208.21 208.21 0 0 1 112.2 0c30.2-21 48.5-24.1 56.6-24.1a18.64 18.64 0 0 1 5 .5c12.2 31.6 4.5 55 2.2 60.8c14.3 16.1 23 36.6 23 61.6c0 88.2-52.4 107.6-102.3 113.3c8 7.1 15.2 21.1 15.2 42.5c0 30.7-.3 55.5-.3 63c0 5.4 3.1 11.5 11.4 11.5a19.35 19.35 0 0 0 4-.4C415.9 449.2 480 363.1 480 261.7C480 134.9 379.7 32 256 32z",
-        fill: "currentColor"
-      },
-      null,
-      -1
-    );
-    const _hoisted_3$4 = [_hoisted_2$4];
-    const Github = defineComponent({
-      name: "LogoGithub",
-      render: function render2(_ctx, _cache) {
-        return openBlock(), createElementBlock("svg", _hoisted_1$4, _hoisted_3$4);
-      }
-    });
-    const _hoisted_1$3 = {
-      xmlns: "http://www.w3.org/2000/svg",
-      "xmlns:xlink": "http://www.w3.org/1999/xlink",
-      viewBox: "0 0 24 24"
-    };
-    const _hoisted_2$3 = /* @__PURE__ */ createBaseVNode(
-      "circle",
-      {
-        cx: "12",
-        cy: "12",
-        r: "9",
-        fill: "none",
-        stroke: "currentColor",
-        "stroke-width": "2",
-        "stroke-linecap": "round",
-        "stroke-linejoin": "round"
-      },
-      null,
-      -1
-    );
-    const _hoisted_3$3 = [_hoisted_2$3];
-    const UserNinja = defineComponent({
-      name: "Circle",
-      render: function render2(_ctx, _cache) {
-        return openBlock(), createElementBlock("svg", _hoisted_1$3, _hoisted_3$3);
-      }
-    });
-    const _hoisted_1$2 = {
-      xmlns: "http://www.w3.org/2000/svg",
-      "xmlns:xlink": "http://www.w3.org/1999/xlink",
-      viewBox: "0 0 24 24"
-    };
-    const _hoisted_2$2 = /* @__PURE__ */ createStaticVNode('<g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 11V9a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path><path d="M13 13l9 3l-4 2l-2 4l-3-9"></path><path d="M3 3v.01"></path><path d="M7 3v.01"></path><path d="M11 3v.01"></path><path d="M15 3v.01"></path><path d="M3 7v.01"></path><path d="M3 11v.01"></path><path d="M3 15v.01"></path></g>', 1);
-    const _hoisted_3$2 = [_hoisted_2$2];
-    const DragDrop = defineComponent({
-      name: "DragDrop",
-      render: function render2(_ctx, _cache) {
-        return openBlock(), createElementBlock("svg", _hoisted_1$2, _hoisted_3$2);
-      }
-    });
-    const _hoisted_1$1 = {
-      xmlns: "http://www.w3.org/2000/svg",
-      "xmlns:xlink": "http://www.w3.org/1999/xlink",
-      viewBox: "0 0 24 24"
-    };
-    const _hoisted_2$1 = /* @__PURE__ */ createStaticVNode('<g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M3.6 9h16.8"></path><path d="M3.6 15h16.8"></path><path d="M11.5 3a17 17 0 0 0 0 18"></path><path d="M12.5 3a17 17 0 0 1 0 18"></path></g>', 1);
-    const _hoisted_3$1 = [_hoisted_2$1];
-    const World = defineComponent({
-      name: "World",
-      render: function render2(_ctx, _cache) {
-        return openBlock(), createElementBlock("svg", _hoisted_1$1, _hoisted_3$1);
-      }
-    });
     const _hoisted_1 = /* @__PURE__ */ createTextVNode(" English ");
     const _hoisted_2 = /* @__PURE__ */ createTextVNode(" Switch to English ");
     const _hoisted_3 = /* @__PURE__ */ createTextVNode(" \u65E5\u672C\u8A9E ");
     const _hoisted_4 = /* @__PURE__ */ createTextVNode(" \u65E5\u672C\u8A9E\u306B\u5207\u308A\u66FF\u3048 ");
     const _hoisted_5 = { style: { "text-decoration": "underline", "padding": "0px", "margin": "0px", "text-decoration-style": "double", "text-align": "center" } };
     const _hoisted_6 = {
-      style: { "color": "black" },
+      style: { "color": "black", "word-break": "keep-all", "overflow-wrap": "break-word" },
       href: "https://gitcobra.github.io/avif2jpeg/dist/"
     };
     const _hoisted_7 = ["accept"];
     const _hoisted_8 = ["innerHTML"];
     const _hoisted_9 = ["innerHTML"];
-    const _hoisted_10 = /* @__PURE__ */ createBaseVNode("div", null, [
-      /* @__PURE__ */ createTextVNode(" Drag & Drop"),
-      /* @__PURE__ */ createBaseVNode("br"),
-      /* @__PURE__ */ createTextVNode(" AVIF Images ")
-    ], -1);
-    const _hoisted_11 = ["innerHTML"];
-    const _hoisted_12 = /* @__PURE__ */ createBaseVNode("br", null, null, -1);
+    const _hoisted_10 = /* @__PURE__ */ createBaseVNode("span", null, "Drag & Drop", -1);
+    const _hoisted_11 = /* @__PURE__ */ createBaseVNode("span", null, "AVIF Images", -1);
+    const _hoisted_12 = ["innerHTML"];
     const _hoisted_13 = { style: { "white-space": "nowrap" } };
     const _hoisted_14 = { style: { "color": "gray", "padding-left": "20px" } };
     const _hoisted_15 = ["innerHTML"];
     const _hoisted_16 = /* @__PURE__ */ createTextVNode("GitHub");
-    const _hoisted_17 = { style: { "font-size": "x-large" } };
+    const _hoisted_17 = /* @__PURE__ */ createBaseVNode("br", null, null, -1);
+    const _hoisted_18 = { style: { "text-align": "right" } };
+    const _hoisted_19 = { style: { "text-align": "right" } };
     const _sfc_main = /* @__PURE__ */ defineComponent({
       __name: "App",
       setup(__props) {
         const LabelsEnUS = {
           title: 'AVIF to JPEG "Offline" Batch Converter',
+          metaDescription: "It is a free web application to convert AVIF or WebP images to other common image formats such as JPEG or PNG without server communication.",
           droptarget: "Drag & Drop AVIF Images to Convert",
           descriptions: [
-            "This is a web application to batch convert AVIF(or WebP, etc) images to common image formats such as JPEG, PNG.",
+            "This is a free web application to batch convert AVIF(or WebP, etc) images to common image formats such as JPEG, PNG.",
             `It uses a browser's built-in function for the conversions, so <strong>no data will be sent</strong> to a server and is therefore <strong>fast</strong> and <strong>safe</strong>.`,
             "The converted images will be output as <strong>a zip file</strong> when multiple images are loaded.",
             'Requires <a href="https://caniuse.com/?search=avif" target="_self" style="color:red">latest</a> version of Firefox or Chrome to load AVIF images.'
@@ -29391,11 +29374,11 @@ ${style2}
             all_files: "All Types"
           },
           quality: "Image Quality",
-          qualitytooltip: "Set image quality to convert",
+          qualitytooltip: "Set image quality for output",
           imageType: "Image Type",
-          imageTypeTooltip: "Choose image type to convert",
-          retainOriginalExtension: "Keep Original Extension",
-          retainExtTooltip: "New extension is appended to original extension",
+          imageTypeTooltip: "Choose image format for output",
+          retainOriginalExtension: "Keep Original File Extension",
+          retainExtTooltip: "New extension will be appended to original extension",
           ignoreFileExtensions: "Load All File Types",
           ignoreExtTooltip: "Try to load files that don't have image file extension",
           loadbutton: "Load Images",
@@ -29403,7 +29386,7 @@ ${style2}
           loadfolderbutton: "Load A Whole Folder",
           loadfoldertooltip: `
     Convert all images in the selected folder and its subfolders, and add the converted images to a ZIP archive with relative path.<br>
-    *It will show "Upload" button, but it actually doesn't upload anything.
+    *It will show "Upload" button, but it actually doesn't upload anything to a server.
   `,
           processing: "Converting images",
           aborted: "Aborted",
@@ -29411,20 +29394,22 @@ ${style2}
           completed: "Completed",
           interfered: "Currently Busy",
           noimage: "No files with the extentions were found.",
-          avifUnsupported: "Your browser does not support AVIF. Please use latest version of Firefox or Google Chrome to convert AVIF images.",
+          avifUnsupported: "Your browser does not support AVIF format. Please use latest version of Firefox or Chrome to convert AVIF images.",
           cancel: "Cancel",
           inputSize: "Input Size",
           outputSize: "Output Size",
           save: "Save",
           close: "Close",
-          open: "Open the Image",
-          confirmCloseDialog: `You have not saved the converted images yet.`
+          open: "Open",
+          confirmCloseDialog: `You have not saved the converted images yet.`,
+          confirmCloseDialogTitle: "Data have not been saved"
         };
         const LabelsJaJP = {
-          title: "AVIF\u753B\u50CF\u3092JPEG\u753B\u50CF\u3078\u300C\u30AA\u30D5\u30E9\u30A4\u30F3\u300D\u3067\u4E00\u62EC\u5909\u63DB",
+          title: "AVIF\u304B\u3089JPEG\u3078 \u30AA\u30D5\u30E9\u30A4\u30F3\u4E00\u62EC\u753B\u50CF\u5909\u63DB",
+          metaDescription: "AVIF\u30FBWebP\u5F62\u5F0F\u306E\u753B\u50CF\u3092JPEG\u3084PNG\u7B49\u3078\u30AA\u30D5\u30E9\u30A4\u30F3\u3067\u4E00\u62EC\u5909\u63DB\u3059\u308B\u7121\u6599\u30C4\u30FC\u30EB",
           droptarget: "\u5909\u63DB\u3057\u305F\u3044AVIF\u753B\u50CF\u3092\u30C9\u30E9\u30C3\u30B0&\u30C9\u30ED\u30C3\u30D7\u3057\u3066\u4E0B\u3055\u3044",
           descriptions: [
-            "\u3053\u308C\u306FAVIF\u3001\u53C8\u306FWebP\u5F62\u5F0F\u306E\u753B\u50CF\u3092\u3001JPEG\u3001PNG\u7B49\u306E\u4E00\u822C\u7684\u306A\u5F62\u5F0F\u3078\u4E00\u62EC\u5909\u63DB\u3059\u308B\u305F\u3081\u306EWeb\u30A2\u30D7\u30EA\u3067\u3059\u3002",
+            "\u3053\u308C\u306FAVIF\u3001\u53C8\u306FWebP\u5F62\u5F0F\u306E\u753B\u50CF\u3092\u3001JPEG\u3001PNG\u7B49\u306E\u4E00\u822C\u7684\u306A\u5F62\u5F0F\u3078\u4E00\u62EC\u5909\u63DB\u3059\u308B\u305F\u3081\u306E\u7121\u6599Web\u30A2\u30D7\u30EA\u3067\u3059\u3002",
             `\u5909\u63DB\u51E6\u7406\u306F\u30D6\u30E9\u30A6\u30B6\u306E\u7D44\u307F\u8FBC\u307F\u6A5F\u80FD\u3092\u5229\u7528\u3059\u308B\u305F\u3081\u3001\u753B\u50CF\u30C7\u30FC\u30BF\u304C\u30B5\u30FC\u30D0\u30FC\u3078<strong>\u9001\u4FE1\u3055\u308C\u308B\u4E8B\u306F\u306A\u304F</strong>\u3001\u307E\u305F\u305D\u308C\u3086\u3048\u306B<strong>\u9AD8\u901F</strong>\u304B\u3064<strong>\u5B89\u5168</strong>\u3067\u3059\u3002`,
             "\u8907\u6570\u679A\u306E\u753B\u50CF\u304C\u8AAD\u307F\u8FBC\u307E\u308C\u305F\u5834\u5408\u3001\u5909\u63DB\u3057\u305F\u753B\u50CF\u306F<strong>ZIP\u30D5\u30A1\u30A4\u30EB</strong>\u306B\u7E8F\u3081\u3066\u51FA\u529B\u3055\u308C\u307E\u3059\u3002",
             'AVIF\u753B\u50CF\u306E\u30ED\u30FC\u30C9\u306B\u306F<a href="https://caniuse.com/?search=avif" target="_self" style="color:red">\u6700\u65B0</a>\u306EFirefox\u53C8\u306FChrome\u304C\u5FC5\u8981\u3067\u3059\u3002'
@@ -29462,10 +29447,11 @@ ${style2}
           outputSize: "\u51FA\u529B\u30B5\u30A4\u30BA",
           save: "\u4FDD\u5B58",
           close: "\u9589\u3058\u308B",
-          open: "\u753B\u50CF\u3092\u958B\u304F",
-          confirmCloseDialog: `\u307E\u3060\u5909\u63DB\u3057\u305F\u30D5\u30A1\u30A4\u30EB\u3092\u4FDD\u5B58\u3057\u3066\u3044\u307E\u305B\u3093\u3002`
+          open: "\u958B\u304F",
+          confirmCloseDialog: `\u307E\u3060\u5909\u63DB\u3057\u305F\u30D5\u30A1\u30A4\u30EB\u3092\u4FDD\u5B58\u3057\u3066\u3044\u307E\u305B\u3093\u3002`,
+          confirmCloseDialogTitle: "\u5909\u63DB\u30D5\u30A1\u30A4\u30EB\u304C\u672A\u4FDD\u5B58"
         };
-        const VERSION = "0.010";
+        const VERSION = "0.011";
         const IS_SP = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile Safari/.test(navigator.userAgent);
         const doc2 = document;
         const formatList = ref([{
@@ -29501,7 +29487,6 @@ ${style2}
         const processingFileName = ref("");
         const inputTotalSize = ref(0);
         const outputTotalSize = ref(0);
-        const imageLink = ref(null);
         const thumbnail = ref(null);
         const processingType = computed(() => {
           switch (processingMessage.value) {
@@ -29518,6 +29503,7 @@ ${style2}
         const inputFiles = ref(null);
         const sendMessage = ref([]);
         const downloadlink = ref(null);
+        const convertedImageUrl = ref("");
         const fileinput = ref(null);
         const folderinput = ref(null);
         const Labels = ref(LabelsEnUS);
@@ -29540,7 +29526,23 @@ ${style2}
         const currentPath = router.currentRoute.value.path;
         if (/\/ja\b/.test(currentPath) || /^\/?$/.test(currentPath) && /^ja\b/i.test(getLanguage())) {
           langJA.value = true;
+          locale2.value = jaJP$1;
+          dateLocale.value = dateJaJP$1;
+          Labels.value = LabelsJaJP;
         }
+        useHead({
+          title: Labels.value.title,
+          meta: [
+            {
+              property: "og:title",
+              content: Labels.value.title
+            },
+            {
+              property: `og:description`,
+              content: Labels.value.metaDescription
+            }
+          ]
+        });
         onMounted(() => {
           fileinput.value.oninput = folderinput.value.oninput = onInputFile;
           checkLandScape();
@@ -29585,7 +29587,7 @@ ${style2}
           showProcess.value = true;
           processing2.value = true;
           percentage.value = 0;
-          imageLink.value = null;
+          convertedImageUrl.value = "";
           inputTotalSize.value = 0;
           outputTotalSize.value = 0;
           downloadButtonClicked = false;
@@ -29621,14 +29623,15 @@ ${style2}
         function onFailure({ name }) {
           sendMessage.value = [{ description: `${name}`, duration: 0 }, "warning"];
         }
-        function onComplete({ index, zip, aborted, success, length, img, name }) {
+        function onComplete({ index, zip, aborted, success, length, img64, name }) {
           const a = downloadlink.value;
           if (success === 1) {
             a.download = name;
-            a.href = img;
+            a.href = img64;
+            convertedImageUrl.value = img64;
           } else {
             const d = new Date();
-            a.download = "converted_" + UserSettings.imageFormat.replace(/^image\//, "") + "_" + d.getTime() + ".zip";
+            a.download = "avif2jpeg_" + UserSettings.imageFormat.replace(/^image\//, "") + "_" + d.getTime() + ".zip";
             a.href = zip;
           }
           if (!aborted) {
@@ -29643,26 +29646,25 @@ ${style2}
           processing2.value = false;
         }
         function checkLandScape() {
-          const w = document.body.clientWidth * 0.7;
+          const w = document.body.clientWidth;
           const h2 = document.body.clientHeight;
-          LANDSCAPE.value = w > h2;
+          LANDSCAPE.value = w * 0.75 > h2 || w > 900;
+        }
+        function beforeClose() {
+          sendMessage.value = ["destroy"];
+          if (currentSuccess.value > 1 && !downloadButtonClicked) {
+            unsaved.value = true;
+          } else {
+            downloadlink.value.href = "";
+          }
         }
         function download() {
           const a = downloadlink.value;
           a.click();
           downloadButtonClicked = true;
         }
-        function beforeClose() {
-          if (currentSuccess.value && !downloadButtonClicked) {
-            unsaved.value = true;
-          } else {
-            downloadlink.value.href = "";
-          }
-        }
-        async function openImage(url) {
-          const w = window.open("about:blank", "_openimage");
-          await new Promise((r) => setTimeout(r, 1e3));
-          w.document.write(`<img src="${url}">`);
+        function openImage(url) {
+          window.open(url, "_blank").document.write(`<img src="${url}">`);
         }
         function getLanguage() {
           const navigator2 = window.navigator;
@@ -29703,12 +29705,6 @@ ${style2}
                                       onClick: _cache[0] || (_cache[0] = ($event) => langJA.value = false)
                                     }, {
                                       default: withCtx(() => [
-                                        createVNode(unref(NIcon), null, {
-                                          default: withCtx(() => [
-                                            createVNode(unref(World))
-                                          ]),
-                                          _: 1
-                                        }),
                                         _hoisted_1
                                       ]),
                                       _: 1
@@ -29737,13 +29733,7 @@ ${style2}
                                   onClick: _cache[1] || (_cache[1] = ($event) => langJA.value = true)
                                 }, {
                                   default: withCtx(() => [
-                                    _hoisted_3,
-                                    createVNode(unref(NIcon), null, {
-                                      default: withCtx(() => [
-                                        createVNode(unref(UserNinja))
-                                      ]),
-                                      _: 1
-                                    })
+                                    _hoisted_3
                                   ]),
                                   _: 1
                                 }, 8, ["color"])
@@ -29795,7 +29785,10 @@ ${style2}
                         }, null, 8, _hoisted_7),
                         createVNode(unref(NTooltip), {
                           trigger: "hover",
-                          "keep-alive-on-hover": false
+                          "keep-alive-on-hover": false,
+                          placement: LANDSCAPE.value ? "left" : "top",
+                          duration: 0,
+                          delay: 300
                         }, {
                           trigger: withCtx(() => [
                             createVNode(unref(NButton), {
@@ -29824,7 +29817,7 @@ ${style2}
                             }, null, 8, _hoisted_8)
                           ]),
                           _: 1
-                        }),
+                        }, 8, ["placement"]),
                         createBaseVNode("input", {
                           webkitdirectory: "",
                           directory: "",
@@ -29838,7 +29831,9 @@ ${style2}
                           trigger: "hover",
                           placement: "bottom",
                           "keep-alive-on-hover": false,
-                          style: { "max-width": "90vw" }
+                          style: { "max-width": "90vw" },
+                          duration: 0,
+                          delay: 300
                         }, {
                           trigger: withCtx(() => [
                             createVNode(unref(NButton), {
@@ -29927,7 +29922,6 @@ ${style2}
                 createVNode(unref(NNotificationProvider), { placement: "top-right" }, {
                   default: withCtx(() => [
                     createVNode(unref(NMessageProvider), {
-                      placement: "top-right",
                       closable: true,
                       "container-style": "font-size:xx-small;"
                     }, {
@@ -29958,31 +29952,38 @@ ${style2}
                             !unref(IS_SP) ? (openBlock(), createBlock(unref(NTooltip), {
                               key: 0,
                               trigger: "hover",
-                              "keep-alive-on-hover": false
+                              "keep-alive-on-hover": false,
+                              placement: "bottom",
+                              duration: 0,
+                              delay: 300
                             }, {
                               trigger: withCtx(() => [
                                 createVNode(unref(NSpace), {
-                                  align: "center",
-                                  style: { "text-align": "center", "color": "silver", "margin": "1em", "padding": "2em", "overflow-wrap": "break-word", "word-break": "keep-all", "border": "6px dashed #EEE", "border-radius": "1em" }
+                                  align: "stretch",
+                                  style: { "text-align": "center", "color": "silver", "padding": "2em", "overflow-wrap": "break-word", "word-break": "keep-all", "border": "6px dashed #EEE", "border-radius": "1em" }
                                 }, {
                                   default: withCtx(() => [
                                     createVNode(unref(NSpace), null, {
                                       default: withCtx(() => [
                                         createVNode(unref(NIcon), {
-                                          size: "48",
+                                          size: "64",
                                           color: "silver"
                                         }, {
                                           default: withCtx(() => [
-                                            createVNode(unref(DragDrop))
+                                            createVNode(unref(ArrowRedoSharp))
                                           ]),
                                           _: 1
                                         })
                                       ]),
                                       _: 1
                                     }),
-                                    createVNode(unref(NSpace), { style: { "font-weight": "bold", "font-size": "x-large" } }, {
+                                    createVNode(unref(NSpace), {
+                                      vertical: "",
+                                      style: { "font-weight": "bold", "font-size": "x-large" }
+                                    }, {
                                       default: withCtx(() => [
-                                        _hoisted_10
+                                        _hoisted_10,
+                                        _hoisted_11
                                       ]),
                                       _: 1
                                     })
@@ -29993,7 +29994,7 @@ ${style2}
                               default: withCtx(() => [
                                 createBaseVNode("h3", {
                                   innerHTML: Labels.value.droptarget
-                                }, null, 8, _hoisted_11)
+                                }, null, 8, _hoisted_12)
                               ]),
                               _: 1
                             })) : createCommentVNode("", true)
@@ -30006,50 +30007,6 @@ ${style2}
                   ]),
                   _: 1
                 }),
-                createVNode(unref(NModal), {
-                  show: noimage.value,
-                  "onUpdate:show": _cache[8] || (_cache[8] = ($event) => noimage.value = $event),
-                  preset: "dialog",
-                  type: "error",
-                  title: "Images Not Found",
-                  "positive-text": "OK"
-                }, {
-                  default: withCtx(() => [
-                    createTextVNode(toDisplayString(Labels.value.noimage), 1),
-                    _hoisted_12,
-                    createTextVNode(toDisplayString(AcceptFileTypes[imageTypeOption.value] || "*."), 1)
-                  ]),
-                  _: 1
-                }, 8, ["show"]),
-                createVNode(unref(NModal), {
-                  show: avifUnsupported.value,
-                  "onUpdate:show": _cache[9] || (_cache[9] = ($event) => avifUnsupported.value = $event),
-                  preset: "dialog",
-                  type: "warning",
-                  title: "Unsupported",
-                  "positive-text": "OK"
-                }, {
-                  default: withCtx(() => [
-                    createTextVNode(toDisplayString(Labels.value.avifUnsupported), 1)
-                  ]),
-                  _: 1
-                }, 8, ["show"]),
-                createVNode(unref(NModal), {
-                  show: unsaved.value,
-                  "onUpdate:show": _cache[10] || (_cache[10] = ($event) => unsaved.value = $event),
-                  preset: "dialog",
-                  type: "warning",
-                  title: "Images have not been saved",
-                  "positive-text": Labels.value.save,
-                  "negative-text": Labels.value.close,
-                  maskClosable: false,
-                  onPositiveClick: download
-                }, {
-                  default: withCtx(() => [
-                    createTextVNode(toDisplayString(Labels.value.confirmCloseDialog), 1)
-                  ]),
-                  _: 1
-                }, 8, ["show", "positive-text", "negative-text"]),
                 createVNode(unref(NSpace), { justify: "center" }, {
                   default: withCtx(() => [
                     createVNode(unref(NSpace), {
@@ -30059,8 +30016,10 @@ ${style2}
                       default: withCtx(() => [
                         createVNode(unref(NTooltip), {
                           trigger: "hover",
-                          placement: LANDSCAPE.value ? "left-start" : "top-start",
-                          "keep-alive-on-hover": false
+                          placement: LANDSCAPE.value ? "left" : "top-start",
+                          "keep-alive-on-hover": false,
+                          duration: 0,
+                          delay: 300
                         }, {
                           trigger: withCtx(() => [
                             createVNode(unref(NSpace), { align: "center" }, {
@@ -30075,7 +30034,7 @@ ${style2}
                                 createVNode(unref(NSelect), {
                                   size: "small",
                                   value: UserSettings.imageFormat,
-                                  "onUpdate:value": _cache[11] || (_cache[11] = ($event) => UserSettings.imageFormat = $event),
+                                  "onUpdate:value": _cache[8] || (_cache[8] = ($event) => UserSettings.imageFormat = $event),
                                   options: formatList.value,
                                   "consistent-menu-width": false
                                 }, null, 8, ["value", "options"])
@@ -30090,8 +30049,10 @@ ${style2}
                         }, 8, ["placement"]),
                         createVNode(unref(NTooltip), {
                           trigger: "hover",
-                          placement: LANDSCAPE.value ? "left-start" : "top-start",
-                          "keep-alive-on-hover": false
+                          placement: LANDSCAPE.value ? "left" : "top-start",
+                          "keep-alive-on-hover": false,
+                          duration: 0,
+                          delay: 300
                         }, {
                           trigger: withCtx(() => [
                             createVNode(unref(NSpace), { align: "center" }, {
@@ -30116,7 +30077,7 @@ ${style2}
                                         createVNode(unref(NSlider), {
                                           tooltip: false,
                                           value: UserSettings.imageQuality,
-                                          "onUpdate:value": _cache[12] || (_cache[12] = ($event) => UserSettings.imageQuality = $event),
+                                          "onUpdate:value": _cache[9] || (_cache[9] = ($event) => UserSettings.imageQuality = $event),
                                           step: 1,
                                           style: { "width": "120px" },
                                           disabled: /png|bmp/.test(UserSettings.imageFormat)
@@ -30125,7 +30086,7 @@ ${style2}
                                           style: { "width": "90px" },
                                           size: "small",
                                           value: UserSettings.imageQuality,
-                                          "onUpdate:value": _cache[13] || (_cache[13] = ($event) => UserSettings.imageQuality = $event),
+                                          "onUpdate:value": _cache[10] || (_cache[10] = ($event) => UserSettings.imageQuality = $event),
                                           step: "1",
                                           min: "0",
                                           max: "100",
@@ -30148,13 +30109,15 @@ ${style2}
                         }, 8, ["placement"]),
                         createVNode(unref(NTooltip), {
                           trigger: "hover",
-                          placement: LANDSCAPE.value ? "left-start" : "top-start",
-                          "keep-alive-on-hover": false
+                          placement: LANDSCAPE.value ? "left" : "bottom-start",
+                          "keep-alive-on-hover": false,
+                          duration: 0,
+                          delay: 300
                         }, {
                           trigger: withCtx(() => [
                             createVNode(unref(NCheckbox), {
                               checked: UserSettings.retainExtension,
-                              "onUpdate:checked": _cache[14] || (_cache[14] = ($event) => UserSettings.retainExtension = $event)
+                              "onUpdate:checked": _cache[11] || (_cache[11] = ($event) => UserSettings.retainExtension = $event)
                             }, {
                               default: withCtx(() => [
                                 createTextVNode(toDisplayString(Labels.value.retainOriginalExtension), 1)
@@ -30231,12 +30194,55 @@ ${style2}
               _: 1
             }),
             createVNode(unref(NModal), {
+              show: noimage.value,
+              "onUpdate:show": _cache[12] || (_cache[12] = ($event) => noimage.value = $event),
+              preset: "dialog",
+              type: "error",
+              title: "Images Not Found",
+              "positive-text": "OK"
+            }, {
+              default: withCtx(() => [
+                createTextVNode(toDisplayString(Labels.value.noimage), 1),
+                _hoisted_17,
+                createTextVNode(toDisplayString(AcceptFileTypes[imageTypeOption.value] || "*."), 1)
+              ]),
+              _: 1
+            }, 8, ["show"]),
+            createVNode(unref(NModal), {
+              show: avifUnsupported.value,
+              "onUpdate:show": _cache[13] || (_cache[13] = ($event) => avifUnsupported.value = $event),
+              preset: "dialog",
+              type: "warning",
+              title: "Unsupported",
+              "positive-text": "OK"
+            }, {
+              default: withCtx(() => [
+                createTextVNode(toDisplayString(Labels.value.avifUnsupported), 1)
+              ]),
+              _: 1
+            }, 8, ["show"]),
+            createVNode(unref(NModal), {
+              show: unsaved.value,
+              "onUpdate:show": _cache[14] || (_cache[14] = ($event) => unsaved.value = $event),
+              preset: "dialog",
+              type: "warning",
+              title: Labels.value.confirmCloseDialogTitle,
+              "positive-text": Labels.value.save,
+              "negative-text": Labels.value.close,
+              maskClosable: false,
+              onPositiveClick: download
+            }, {
+              default: withCtx(() => [
+                createTextVNode(toDisplayString(Labels.value.confirmCloseDialog), 1)
+              ]),
+              _: 1
+            }, 8, ["show", "title", "positive-text", "negative-text"]),
+            createVNode(unref(NModal), {
               show: showProcess.value,
               "onUpdate:show": _cache[17] || (_cache[17] = ($event) => showProcess.value = $event),
               closable: !processing2.value,
               "close-on-esc": !processing2.value,
-              onAfterLeave: _cache[18] || (_cache[18] = ($event) => sendMessage.value = ["destroy"]),
-              onMaskClick: _cache[19] || (_cache[19] = ($event) => sendMessage.value = ["destroy"]),
+              onMaskClick: _cache[18] || (_cache[18] = ($event) => sendMessage.value = ["destroy"]),
               preset: "dialog",
               title: processingMessage.value,
               type: unref(processingType),
@@ -30263,7 +30269,18 @@ ${style2}
                           justify: "center"
                         }, {
                           default: withCtx(() => [
-                            createBaseVNode("div", _hoisted_17, toDisplayString(percentage.value) + "%", 1)
+                            createVNode(unref(NSpace), { style: { "font-size": "x-large" } }, {
+                              default: withCtx(() => [
+                                createTextVNode(toDisplayString(percentage.value) + "%", 1)
+                              ]),
+                              _: 1
+                            }),
+                            createVNode(unref(NSpace), { style: { "font-size": "xx-small" } }, {
+                              default: withCtx(() => [
+                                createTextVNode("( " + toDisplayString(currentSuccess.value) + " / " + toDisplayString(currentLength.value) + " )", 1)
+                              ]),
+                              _: 1
+                            })
                           ]),
                           _: 1
                         })
@@ -30278,7 +30295,6 @@ ${style2}
                       default: withCtx(() => [
                         createVNode(unref(NSpace), { style: { "font-size": "x-small" } }, {
                           default: withCtx(() => [
-                            createBaseVNode("span", null, "( " + toDisplayString(currentSuccess.value) + " / " + toDisplayString(currentLength.value) + " )", 1),
                             createBaseVNode("span", null, toDisplayString(processingFileName.value), 1)
                           ]),
                           _: 1
@@ -30288,10 +30304,11 @@ ${style2}
                           ref_key: "thumbnail",
                           ref: thumbnail
                         }, null, 512),
-                        imageLink.value ? (openBlock(), createBlock(unref(NButton), {
+                        convertedImageUrl.value ? (openBlock(), createBlock(unref(NButton), {
                           key: 0,
-                          size: "small",
-                          onClick: _cache[15] || (_cache[15] = ($event) => openImage(imageLink.value.href))
+                          round: "",
+                          size: "tiny",
+                          onClick: _cache[15] || (_cache[15] = ($event) => openImage(convertedImageUrl.value))
                         }, {
                           default: withCtx(() => [
                             createTextVNode(toDisplayString(Labels.value.open), 1)
@@ -30301,7 +30318,16 @@ ${style2}
                       ]),
                       _: 1
                     }),
-                    createBaseVNode("p", null, toDisplayString(Labels.value.inputSize) + ": " + toDisplayString((inputTotalSize.value / 1024 | 0).toLocaleString()) + "KB " + toDisplayString(Labels.value.outputSize) + ": " + toDisplayString((outputTotalSize.value / 1024 | 0).toLocaleString()) + "KB", 1),
+                    createBaseVNode("table", null, [
+                      createBaseVNode("tr", null, [
+                        createBaseVNode("td", null, toDisplayString(Labels.value.inputSize) + ": ", 1),
+                        createBaseVNode("td", _hoisted_18, toDisplayString((inputTotalSize.value / 1024 | 0).toLocaleString()) + "KB", 1)
+                      ]),
+                      createBaseVNode("tr", null, [
+                        createBaseVNode("td", null, toDisplayString(Labels.value.outputSize) + ": ", 1),
+                        createBaseVNode("td", _hoisted_19, toDisplayString((outputTotalSize.value / 1024 | 0).toLocaleString()) + "KB", 1)
+                      ])
+                    ]),
                     processing2.value ? (openBlock(), createBlock(unref(NButton), {
                       key: 0,
                       size: "large",
@@ -30322,7 +30348,6 @@ ${style2}
                         !processing2.value && currentSuccess.value ? (openBlock(), createBlock(unref(NButton), {
                           key: 0,
                           size: "large",
-                          style: { "font-size": "large" },
                           round: "",
                           onClick: download,
                           color: "lime"
@@ -30353,15 +30378,16 @@ ${style2}
               ]),
               _: 1
             }, 8, ["show", "closable", "close-on-esc", "title", "type"]),
-            createBaseVNode("a", {
-              href: "#",
+            withDirectives(createBaseVNode("a", {
               ref_key: "downloadlink",
               ref: downloadlink,
-              stlye: "display:none"
-            }, null, 512),
+              href: ""
+            }, null, 512), [
+              [vShow, false]
+            ]),
             createVNode(unref(NModal), {
               show: prevented.value,
-              "onUpdate:show": _cache[20] || (_cache[20] = ($event) => prevented.value = $event),
+              "onUpdate:show": _cache[19] || (_cache[19] = ($event) => prevented.value = $event),
               preset: "dialog",
               type: "error",
               "positive-text": "OK",
@@ -30407,4 +30433,4 @@ ${style2}
     );
   }
 });
-export default require_app_f7bb4d3b();
+export default require_app_a674ca9f();

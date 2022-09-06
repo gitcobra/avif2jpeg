@@ -1911,27 +1911,11 @@
     "/avif2jpeg/dist/assets/RobotoSlab-Regular.46ecd6df.ttf",
     "/avif2jpeg/dist/assets/RobotoSlab-Medium.df4026fa.ttf"
   ],
-  "src/components/converter.vue?vue&type=script&lang.ts": [
-    "/avif2jpeg/dist/assets/RobotoSlab-Regular.46ecd6df.ttf",
-    "/avif2jpeg/dist/assets/RobotoSlab-Medium.df4026fa.ttf"
-  ],
-  "src/components/converter.vue?vue&type=style&index=0&scoped=fc6f134d&lang.css": [
-    "/avif2jpeg/dist/assets/RobotoSlab-Regular.46ecd6df.ttf",
-    "/avif2jpeg/dist/assets/RobotoSlab-Medium.df4026fa.ttf"
-  ],
-  "\u0000plugin-vue:export-helper": [
-    "/avif2jpeg/dist/assets/RobotoSlab-Regular.46ecd6df.ttf",
-    "/avif2jpeg/dist/assets/RobotoSlab-Medium.df4026fa.ttf"
-  ],
-  "src/components/converter.vue": [
-    "/avif2jpeg/dist/assets/RobotoSlab-Regular.46ecd6df.ttf",
-    "/avif2jpeg/dist/assets/RobotoSlab-Medium.df4026fa.ttf"
-  ],
-  "src/components/licenses.vue?vue&type=script&setup=true&lang.ts": [
-    "/avif2jpeg/dist/assets/RobotoSlab-Regular.46ecd6df.ttf",
-    "/avif2jpeg/dist/assets/RobotoSlab-Medium.df4026fa.ttf"
-  ],
   "node_modules/vfonts/RobotoSlab.css": [
+    "/avif2jpeg/dist/assets/RobotoSlab-Regular.46ecd6df.ttf",
+    "/avif2jpeg/dist/assets/RobotoSlab-Medium.df4026fa.ttf"
+  ],
+  "node_modules/@vicons/ionicons5/es/ArrowRedoSharp.js": [
     "/avif2jpeg/dist/assets/RobotoSlab-Regular.46ecd6df.ttf",
     "/avif2jpeg/dist/assets/RobotoSlab-Medium.df4026fa.ttf"
   ],
@@ -1951,15 +1935,23 @@
     "/avif2jpeg/dist/assets/RobotoSlab-Regular.46ecd6df.ttf",
     "/avif2jpeg/dist/assets/RobotoSlab-Medium.df4026fa.ttf"
   ],
-  "node_modules/@vicons/tabler/es/Circle.js": [
+  "src/components/converter.vue?vue&type=script&lang.ts": [
     "/avif2jpeg/dist/assets/RobotoSlab-Regular.46ecd6df.ttf",
     "/avif2jpeg/dist/assets/RobotoSlab-Medium.df4026fa.ttf"
   ],
-  "node_modules/@vicons/tabler/es/DragDrop.js": [
+  "src/components/converter.vue?vue&type=style&index=0&scoped=f2d34fc1&lang.css": [
     "/avif2jpeg/dist/assets/RobotoSlab-Regular.46ecd6df.ttf",
     "/avif2jpeg/dist/assets/RobotoSlab-Medium.df4026fa.ttf"
   ],
-  "node_modules/@vicons/tabler/es/World.js": [
+  "\u0000plugin-vue:export-helper": [
+    "/avif2jpeg/dist/assets/RobotoSlab-Regular.46ecd6df.ttf",
+    "/avif2jpeg/dist/assets/RobotoSlab-Medium.df4026fa.ttf"
+  ],
+  "src/components/converter.vue": [
+    "/avif2jpeg/dist/assets/RobotoSlab-Regular.46ecd6df.ttf",
+    "/avif2jpeg/dist/assets/RobotoSlab-Medium.df4026fa.ttf"
+  ],
+  "src/components/licenses.vue?vue&type=script&setup=true&lang.ts": [
     "/avif2jpeg/dist/assets/RobotoSlab-Regular.46ecd6df.ttf",
     "/avif2jpeg/dist/assets/RobotoSlab-Medium.df4026fa.ttf"
   ],

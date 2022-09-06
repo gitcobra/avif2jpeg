@@ -25,7 +25,7 @@ export default defineConfig({
   build: {
     minify: false,
     rollupOptions: {
-      ...(process.env.VITE_SSG ? { treeshake: false } : {}),
+      //...(process.env.VITE_SSG ? { treeshake: false } : {}),
       output: {
         ...(process.env.VITE_SSG
           ? {

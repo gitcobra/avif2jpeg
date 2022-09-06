@@ -1,4 +1,4 @@
-<template>
+<template v-cloak>
   <n-space vertical align="stretch" justify="space-between" style="height:100%; width:100%;">
     <n-space justify="end" align="end" style="box-sizing:border-box; padding:4px; margin:0px;">
       <n-button-group size="tiny" style="padding:4px;">
@@ -7,7 +7,7 @@
             <router-link :to="{ path: '/en'}">
             <n-a>
             <n-button :color="!langJA? 'red':''" @click="langJA=false">
-                <n-icon><World /></n-icon> English
+                English
             </n-button>
             </n-a>
             </router-link>
@@ -21,7 +21,7 @@
         <n-tooltip trigger="hover" :keep-alive-on-hover="false">
           <template #trigger>
             <n-button :color="langJA? 'red':''" @click="langJA=true">
-                日本語 <n-icon><UserNinja /></n-icon>
+                日本語
             </n-button>
           </template>
           日本語に切り替え
@@ -32,14 +32,14 @@
     </n-space>
 
     <n-space vertical justify="center">
-      <h1 style="text-decoration:underline; padding:0px; margin:0px; text-decoration-style: double; text-align:center;"><a style="color:black;" href="https://gitcobra.github.io/avif2jpeg/dist/">{{Labels.title}}</a></h1>
+      <h1 style="text-decoration:underline; padding:0px; margin:0px; text-decoration-style: double; text-align:center;"><a style="color:black; word-break: keep-all; overflow-wrap: break-word;" href="https://gitcobra.github.io/avif2jpeg/dist/">{{Labels.title}}</a></h1>
     </n-space>
 
     <n-space vertical align="center" justify="center">
       <n-space vertical align="stretch" justify="center">
         <!-- file select -->
         <input ref="fileinput" type="file" multiple :accept="AcceptFileTypes[imageTypeOption]" style="display:none">
-        <n-tooltip trigger="hover" :keep-alive-on-hover="false">
+        <n-tooltip trigger="hover" :keep-alive-on-hover="false" :placement="LANDSCAPE ? 'left' : 'top'" :duration="0" :delay="300">
           <template #trigger>
             <n-button round @click="fileinput.click()" style="width:100%;">
               <n-icon size="large" color="gray"><FileImageRegular /></n-icon>
@@ -51,7 +51,7 @@
 
         <!-- folder select -->
         <input webkitdirectory directory ref="folderinput" type="file" style="display:none">
-        <n-tooltip v-if="!IS_SP" trigger="hover" placement="bottom" :keep-alive-on-hover="false" style="max-width:90vw;">
+        <n-tooltip v-if="!IS_SP" trigger="hover" placement="bottom" :keep-alive-on-hover="false" style="max-width:90vw;" :duration="0" :delay="300">
           <template #trigger>
             <n-button round @click="folderinput.click()" style="width:100%;">
               <n-icon size="large" color="gray"><FolderOpenOutline /></n-icon>
@@ -94,7 +94,7 @@
 
     <!-- CONVERTER -->
     <n-notification-provider placement="top-right">
-      <n-message-provider placement="top-right" :closable="true" container-style="font-size:xx-small;">
+      <n-message-provider :closable="true" container-style="font-size:xx-small;">
         <converter
           :target="doc"
           :format="UserSettings.imageFormat"
@@ -110,17 +110,15 @@
           @avifsupport="flag => avifUnsupported = !flag"
           @imgload="onImgLoad"
         >
-          <n-tooltip v-if="!IS_SP" trigger="hover" :keep-alive-on-hover="false">
+          <n-tooltip v-if="!IS_SP" trigger="hover" :keep-alive-on-hover="false" placement="bottom" :duration="0" :delay="300">
             <template #trigger>
-              <n-space align="center" style="text-align:center; color:silver; margin:1em; padding:2em; overflow-wrap: break-word; word-break: keep-all; border: 6px dashed #EEE; border-radius: 1em;">
+              <n-space align="stretch" style="text-align:center; color:silver; padding:2em; overflow-wrap: break-word; word-break: keep-all; border: 6px dashed #EEE; border-radius: 1em;">
                 <n-space>
-                  <n-icon size="48" color="silver"><DragDrop /></n-icon>
+                  <n-icon size="64" color="silver"><ArrowRedoSharp /></n-icon>
                 </n-space>
-                <n-space style="font-weight:bold; font-size:x-large;">
-                  <div>
-                    Drag & Drop<br>
-                    AVIF Images
-                  </div>
+                <n-space vertical style="font-weight:bold; font-size:x-large;">
+                  <span>Drag & Drop</span>
+                  <span>AVIF Images</span>
                 </n-space>
               </n-space>
             </template>
@@ -129,24 +127,12 @@
         </converter>
       </n-message-provider>
     </n-notification-provider>
-    <!-- no image dialog -->
-    <n-modal v-model:show="noimage" preset="dialog" type="error" title="Images Not Found" positive-text="OK">{{Labels.noimage}}<br>{{AcceptFileTypes[imageTypeOption] || '*.'}}</n-modal>
-    <!-- <n-modal v-model:show="nofiles" preset="dialog" type="error">{{Labels.noimage}}</n-modal>-->
-    <!-- AVIF unsupported dialog -->
-    <n-modal v-model:show="avifUnsupported" preset="dialog" type="warning" title="Unsupported" positive-text="OK">{{Labels.avifUnsupported}}</n-modal>
-    <!-- unsaved image dialog -->
-    <n-modal v-model:show="unsaved" preset="dialog" type="warning" title="Images have not been saved"
-      :positive-text="Labels.save" :negative-text="Labels.close" :maskClosable="false"
-      :onPositiveClick="download"
-      >
-      {{Labels.confirmCloseDialog}}
-    </n-modal>
 
     <!-- output settings -->
     <n-space justify="center">
       <n-space vertical align="start">
 
-        <n-tooltip trigger="hover" :placement="LANDSCAPE ? 'left-start' : 'top-start'" :keep-alive-on-hover="false">
+        <n-tooltip trigger="hover" :placement="LANDSCAPE ? 'left' : 'top-start'" :keep-alive-on-hover="false" :duration="0" :delay="300">
           <template #trigger>
             <n-space align="center">
               <n-icon><FileImageRegular /></n-icon>{{Labels.imageType}}:
@@ -156,7 +142,7 @@
           {{Labels.imageTypeTooltip}}
         </n-tooltip>
 
-        <n-tooltip trigger="hover" :placement="LANDSCAPE ? 'left-start' : 'top-start'" :keep-alive-on-hover="false">
+        <n-tooltip trigger="hover" :placement="LANDSCAPE ? 'left' : 'top-start'" :keep-alive-on-hover="false" :duration="0" :delay="300">
           <template #trigger>
             <n-space align="center">
               <n-space align="start" :wrap="false">
@@ -171,7 +157,7 @@
           {{Labels.qualitytooltip}}
         </n-tooltip>
 
-        <n-tooltip trigger="hover" :placement="LANDSCAPE ? 'left-start' : 'top-start'" :keep-alive-on-hover="false">
+        <n-tooltip trigger="hover" :placement="LANDSCAPE ? 'left' : 'bottom-start'" :keep-alive-on-hover="false" :duration="0" :delay="300">
           <template #trigger><n-checkbox v-model:checked="UserSettings.retainExtension">{{Labels.retainOriginalExtension}}</n-checkbox></template>
           {{Labels.retainExtTooltip}}
         </n-tooltip>
@@ -206,14 +192,31 @@
 
   </n-space>
 
+  <!-- no image dialog -->
+  <n-modal v-model:show="noimage" preset="dialog" type="error" title="Images Not Found" positive-text="OK">
+    {{Labels.noimage}}<br>{{AcceptFileTypes[imageTypeOption] || '*.'}}
+  </n-modal>
+  <!-- AVIF unsupported dialog -->
+  <n-modal v-model:show="avifUnsupported" preset="dialog" type="warning" title="Unsupported" positive-text="OK">
+    {{Labels.avifUnsupported}}
+  </n-modal>
+  <!-- unsaved image dialog -->
+  <n-modal v-model:show="unsaved" preset="dialog" type="warning" :title="Labels.confirmCloseDialogTitle"
+    :positive-text="Labels.save" :negative-text="Labels.close" :maskClosable="false"
+    :onPositiveClick="download"
+    >
+    {{Labels.confirmCloseDialog}}
+  </n-modal>
+
   <!-- processing modal dialog -->
-  <n-modal v-model:show="showProcess" :closable="!processing" :close-on-esc="!processing" @after-leave="sendMessage=['destroy']" @mask-click="sendMessage=['destroy']" preset="dialog" :title="processingMessage" :type="processingType" :mask-closable="false" :on-after-leave="beforeClose">
+  <n-modal v-model:show="showProcess" :closable="!processing" :close-on-esc="!processing" @mask-click="sendMessage=['destroy']" preset="dialog" :title="processingMessage" :type="processingType" :mask-closable="false" :on-after-leave="beforeClose">
     <template #default>
     <n-space vertical align="center">
 
       <n-progress type="circle" :percentage="percentage" color="lime" indicator-text-color="black" rail-color="silver">
         <n-space vertical align="center" justify="center">
-          <div style="font-size:x-large;">{{percentage}}%</div>
+          <n-space style="font-size:x-large;">{{percentage}}%</n-space>
+          <n-space style="font-size:xx-small">( {{currentSuccess}} / {{currentLength}} )</n-space>
         </n-space>
       </n-progress>
 
@@ -221,20 +224,22 @@
       <n-space vertical align="center" item-style="overflow:hidden; text-overflow: ellipsis; white-space:nowrap;">
         <!-- <n-spin v-if="processing" size="small" /> -->
         <n-space style="font-size:x-small;">
-          <span>( {{currentSuccess}} / {{currentLength}} )</span>
           <span>{{processingFileName}}</span>
         </n-space>
         <div style="height:90px;" ref="thumbnail"></div>
-        <n-button size="small" v-if="imageLink" @click="openImage(imageLink.href)">{{Labels.open}}</n-button>
+        <n-button round size="tiny" v-if="convertedImageUrl" @click="openImage(convertedImageUrl)">{{Labels.open}}</n-button>
       </n-space>
 
-      <p>{{Labels.inputSize}}: {{(inputTotalSize / 1024 |0).toLocaleString()}}KB {{Labels.outputSize}}: {{(outputTotalSize / 1024 |0).toLocaleString()}}KB</p>
+      <table>
+      <tr><td>{{Labels.inputSize}}: </td><td style="text-align:right">{{(inputTotalSize / 1024 |0).toLocaleString()}}KB</td></tr>
+      <tr><td>{{Labels.outputSize}}: </td><td style="text-align:right">{{(outputTotalSize / 1024 |0).toLocaleString()}}KB</td></tr>
+      </table>
 
       <!-- button cancel -->
       <n-button v-if="processing" size="large" ref="cancelbutton" round @click="onCancel">{{Labels.cancel}}</n-button>
       <n-space align="center" vertical>
         <!-- button save -->
-        <n-button v-if="!processing && currentSuccess" size="large" style="font-size: large" round @click="download" color="lime">{{Labels.save}}</n-button>
+        <n-button v-if="!processing && currentSuccess" size="large" round @click="download" color="lime">{{Labels.save}}</n-button>
 
         <!-- button close -->
         <n-button v-if="!processing" @click="showProcess = false" round size="small" style="font-size: small; margin-top:1em;">{{Labels.close}}</n-button>
@@ -244,7 +249,7 @@
     </n-space>
     </template>
   </n-modal>
-  <a href="#" ref="downloadlink" stlye="display:none"></a>
+  <a ref="downloadlink" href="" v-show="false"></a>
 
   <!-- prevented error -->
   <n-modal v-model:show="prevented" preset="dialog" type="error" positive-text="OK" title="Busy">{{Labels.interfered}}</n-modal>
@@ -253,25 +258,26 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import Converter from './components/converter.vue'
-import Licenses from './components/licenses.vue'
 import { ref, reactive, watch, computed, onMounted, getCurrentScope, h } from 'vue'
+import { useHead } from "@vueuse/head"
+
 import { NButton, NButtonGroup, NInput, NSelect, NSpace, NSlider, NInputNumber, NSwitch, NIcon, NProgress, NModal, NTooltip, NSpin, NCheckbox, NRadio, NRadioGroup, NCollapse, NCollapseItem } from 'naive-ui'
 import { NMessageProvider, NNotificationProvider } from 'naive-ui'
 import { NA, enUS, dateEnUS, jaJP, dateJaJP } from 'naive-ui'
 import 'vfonts/RobotoSlab.css'
-import { LogInOutline as LogInIcon, LogoGithub as Github, ImageOutline as FileImageRegular, ImageSharp as MdImage, FolderOpenOutline } from '@vicons/ionicons5'
-import { DragDrop, World, Circle as UserNinja } from '@vicons/tabler'
+import { LogInOutline as LogInIcon, LogoGithub as Github, ImageOutline as FileImageRegular, ImageSharp as MdImage, FolderOpenOutline, ArrowRedoSharp } from '@vicons/ionicons5'
 
+import Converter from './components/converter.vue'
+import Licenses from './components/licenses.vue'
 
 const LabelsEnUS = {
   title: 'AVIF to JPEG "Offline" Batch Converter',
+  metaDescription: "It is a free web application to convert AVIF or WebP images to other common image formats such as JPEG or PNG without server communication.",
   droptarget: 'Drag & Drop AVIF Images to Convert',
   descriptions: [
-    'This is a web application to batch convert AVIF(or WebP, etc) images to common image formats such as JPEG, PNG.',
+    'This is a free web application to batch convert AVIF(or WebP, etc) images to common image formats such as JPEG, PNG.',
     `It uses a browser's built-in function for the conversions, so <strong>no data will be sent</strong> to a server and is therefore <strong>fast</strong> and <strong>safe</strong>.`,
     'The converted images will be output as <strong>a zip file</strong> when multiple images are loaded.',
-    //'Besides AVIF, it could load any other image formats <a href="https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Image_types" target="_self" style="color:red">supported</a> by your browser.',
     'Requires <a href="https://caniuse.com/?search=avif" target="_self" style="color:red">latest</a> version of Firefox or Chrome to load AVIF images.',
   ],
   fileTypeRadioTitle: 'Choose Target File Extentions',
@@ -281,11 +287,11 @@ const LabelsEnUS = {
     all_files: 'All Types',
   },
   quality: 'Image Quality',
-  qualitytooltip: 'Set image quality to convert',
+  qualitytooltip: 'Set image quality for output',
   imageType: 'Image Type',
-  imageTypeTooltip: 'Choose image type to convert',
-  retainOriginalExtension: 'Keep Original Extension',
-  retainExtTooltip: 'New extension is appended to original extension',
+  imageTypeTooltip: 'Choose image format for output',
+  retainOriginalExtension: 'Keep Original File Extension',
+  retainExtTooltip: 'New extension will be appended to original extension',
 
   ignoreFileExtensions: 'Load All File Types',
   ignoreExtTooltip: 'Try to load files that don\'t have image file extension',
@@ -294,7 +300,7 @@ const LabelsEnUS = {
   loadfolderbutton: 'Load A Whole Folder',
   loadfoldertooltip: `
     Convert all images in the selected folder and its subfolders, and add the converted images to a ZIP archive with relative path.<br>
-    *It will show "Upload" button, but it actually doesn't upload anything.
+    *It will show "Upload" button, but it actually doesn't upload anything to a server.
   `,
   processing: 'Converting images',
   aborted: 'Aborted',
@@ -302,22 +308,24 @@ const LabelsEnUS = {
   completed: 'Completed',
   interfered: 'Currently Busy',
   noimage: 'No files with the extentions were found.',
-  avifUnsupported: 'Your browser does not support AVIF. Please use latest version of Firefox or Google Chrome to convert AVIF images.',
+  avifUnsupported: 'Your browser does not support AVIF format. Please use latest version of Firefox or Chrome to convert AVIF images.',
   cancel: 'Cancel',
   inputSize: 'Input Size',
   outputSize: 'Output Size',
   save: 'Save',
   close: 'Close',
-  open: 'Open the Image',
+  open: 'Open',
 
   confirmCloseDialog: `You have not saved the converted images yet.`,
+  confirmCloseDialogTitle:'Data have not been saved',
 };
 
 const LabelsJaJP = {
-  title: 'AVIF画像をJPEG画像へ「オフライン」で一括変換',
+  title: 'AVIFからJPEGへ オフライン一括画像変換',
+  metaDescription: 'AVIF・WebP形式の画像をJPEGやPNG等へオフラインで一括変換する無料ツール',
   droptarget: '変換したいAVIF画像をドラッグ&ドロップして下さい',
   descriptions: [
-    'これはAVIF、又はWebP形式の画像を、JPEG、PNG等の一般的な形式へ一括変換するためのWebアプリです。',
+    'これはAVIF、又はWebP形式の画像を、JPEG、PNG等の一般的な形式へ一括変換するための無料Webアプリです。',
     `変換処理はブラウザの組み込み機能を利用するため、画像データがサーバーへ<strong>送信される事はなく</strong>、またそれゆえに<strong>高速</strong>かつ<strong>安全</strong>です。`,
     '複数枚の画像が読み込まれた場合、変換した画像は<strong>ZIPファイル</strong>に纏めて出力されます。',
     //'AVIF以外の画像も、ブラウザが<a href="https://developer.mozilla.org/ja/docs/Web/Media/Formats/Image_types" target="_self" style="color:red">対応している形式</a>であれば変換が実行されます。',
@@ -357,12 +365,13 @@ const LabelsJaJP = {
   outputSize: '出力サイズ',
   save: '保存',
   close: '閉じる',
-  open: '画像を開く',
+  open: '開く',
 
   confirmCloseDialog: `まだ変換したファイルを保存していません。`,
+  confirmCloseDialogTitle: '変換ファイルが未保存',
 };
 
-const VERSION = '0.010';
+const VERSION = '0.011';
 const IS_SP = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile Safari/.test(navigator.userAgent);
 const doc = document;
 //const imageFormat = ref('image/png');
@@ -403,7 +412,6 @@ const processingMessage = ref('');
 const processingFileName = ref('');
 const inputTotalSize = ref(0);
 const outputTotalSize = ref(0);
-const imageLink = ref(null);
 const thumbnail = ref(null);
 const processingType = computed(() => {
   switch(processingMessage.value) {
@@ -420,6 +428,7 @@ const processingType = computed(() => {
 const inputFiles = ref(null);
 const sendMessage = ref([]);
 const downloadlink = ref(null);
+const convertedImageUrl = ref('');
 const fileinput = ref(null);
 const folderinput = ref(null);
 //const Directory_Available = ref(false);
@@ -451,7 +460,26 @@ const router = useRouter();
 const currentPath = router.currentRoute.value.path;
 if( /\/ja\b/.test(currentPath) || /^\/?$/.test(currentPath) && /^ja\b/i.test(getLanguage()) ) {
   langJA.value = true;
+  locale.value = jaJP;
+  dateLocale.value = dateJaJP;
+  Labels.value = LabelsJaJP;
 }
+
+// insert meta tags
+useHead({
+  // Can be static or computed
+  title: Labels.value.title,
+  meta: [
+    {
+      property: "og:title",
+      content: Labels.value.title,
+    },
+    {
+      property: `og:description`,
+      content: Labels.value.metaDescription,
+    }
+  ],
+});
 
 onMounted(() => {
   fileinput.value.oninput = folderinput.value.oninput = onInputFile;
@@ -510,7 +538,7 @@ function onStart({length}) {
   showProcess.value = true;
   processing.value = true;
   percentage.value = 0;
-  imageLink.value = null;
+  convertedImageUrl.value = '';
   inputTotalSize.value = 0;
   outputTotalSize.value = 0;
   downloadButtonClicked = false;
@@ -545,38 +573,31 @@ function onSuccess({img, name, index, success, inputSize, outputSize}) {
   currentSuccess.value = success;
   inputTotalSize.value += inputSize;
   outputTotalSize.value += outputSize;
-  //const size = img.width > img.height ? 'width="48"' : 'height="48"';
-  //sendMessage.value = [{content: ()=>h('div', {style:{fontSize:'xx-small'}, innerHTML:`${index}:<img src="${img.src}" ${size}>${name}`}), duration:0, placement:'bottom'}, 'success'];
 }
 function onFailure({name}) {
   //console.log("fail")
   sendMessage.value = [{description:`${name}`, duration:0}, 'warning'];
 }
-function onComplete({index, zip, aborted, success, length, img, name}) {
+function onComplete({index, zip, aborted, success, length, img64, name}) {
   //console.log("complete")
   const a = downloadlink.value;
+  
   // set link to image file if the succeeded count is 1
-  /*
-  if( success ) {
-    imageLink.value = {
-      href: img,
-      name
-    };
-    processingFileName.value = name;
-  }
-  */
   if( success === 1 ) {
     a.download = name;
-    a.href = img;
+    a.href = img64;
+    convertedImageUrl.value = img64;
   }
   else {
     const d = new Date();
-    a.download = 'converted_'+(UserSettings.imageFormat.replace(/^image\//, ''))+'_'+d.getTime()+'.zip';
+    a.download = 'avif2jpeg_'+(UserSettings.imageFormat.replace(/^image\//, ''))+'_'+d.getTime()+'.zip';
     a.href = zip;
   }
+  
   if( !aborted ) {
     percentage.value = 100;
   }
+  
   currentIndex.value = index;
   if( success === length ) {
     processingMessage.value = Labels.value.completed;
@@ -584,39 +605,33 @@ function onComplete({index, zip, aborted, success, length, img, name}) {
   else {
     processingMessage.value = aborted? Labels.value.aborted : Labels.value.incomplete;
   }
+  
   processing.value = false;
 }
 function checkLandScape() {
-  const w = document.body.clientWidth * 0.7;
+  const w = document.body.clientWidth;
   const h = document.body.clientHeight;
-  LANDSCAPE.value = w > h;
-}
-function download() {
-  const a = downloadlink.value;
-  a.click();
-  downloadButtonClicked = true;
+  LANDSCAPE.value = w * 0.75 > h || w > 900;
 }
 function close() {
 
 }
 function beforeClose() {
-  if( currentSuccess.value && !downloadButtonClicked ) {
+  sendMessage.value = ['destroy'];
+  if( currentSuccess.value > 1 && !downloadButtonClicked ) {
     unsaved.value = true;
   }
   else {
     downloadlink.value.href= '';
   }
 }
-async function openImage(url) {
-  //if( /\bmsie\b|\bedge\b/.test(navigator.userAgent.toLowerCase()) ) {
-  const w = window.open('about:blank', '_openimage');
-  await new Promise(r => setTimeout(r, 1000));
-  w.document.write(`<img src="${url}">`);
-  /*
-  }
-  else
-    window.open(url, '_openimage');
-  */
+function download() {
+  const a = downloadlink.value;
+  a.click();
+  downloadButtonClicked = true;
+}
+function openImage(url) {
+  window.open(url, '_blank').document.write(`<img src="${url}">`);
 }
 function getLanguage(): string {
   const navigator = window.navigator as any;

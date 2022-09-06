@@ -1,13 +1,3 @@
-
-.droptarget[data-v-fc6f134d] {
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: large;
-  width: 100%;
-  height: 100%;
-}
 @font-face {
   font-family: "v-sans";
   font-weight: 400;
@@ -18,6 +8,16 @@
   font-family: "v-sans";
   font-weight: 500;
   src: url("/avif2jpeg/dist/assets/RobotoSlab-Medium.df4026fa.ttf");
+}
+
+.droptarget[data-v-f2d34fc1] {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: large;
+  width: 100%;
+  height: 100%;
 }
 
 html, body {

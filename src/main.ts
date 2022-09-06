@@ -1,8 +1,9 @@
 //import { createApp } from "vue";
 import { RouterOptions, ViteSSG } from 'vite-ssg'
+import { RouteRecordRaw } from 'vue-router'
 import App from "./App.vue";
 
-const routes: any[] = [
+const routes: RouteRecordRaw[] = [
   {
     path: "/",
     name: "Home",

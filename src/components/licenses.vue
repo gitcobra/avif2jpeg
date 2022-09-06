@@ -20,7 +20,7 @@ const Licenses = {
   'Vite': 'https://github.com/vitejs/vite/blob/main/LICENSE',
   'Vite SSG': 'https://github.com/antfu/vite-ssg/blob/main/LICENSE',
   'Naive UI': 'https://github.com/TuSimple/naive-ui/blob/main/LICENSE',
-  'tabler': 'https://github.com/tabler/tabler-icons/blob/master/LICENSE',
+  //'tabler': 'https://github.com/tabler/tabler-icons/blob/master/LICENSE',
   'Ionicons': 'https://github.com/ionic-team/ionicons/blob/main/LICENSE',
 };
 
