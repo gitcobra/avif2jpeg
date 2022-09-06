@@ -6,7 +6,7 @@
           <template #trigger>
             <router-link :to="{ path: '/en'}">
             <n-a>
-            <n-button :color="!langJA? 'red':''" @click="langJA=false" tag="a" href="/en">
+            <n-button :color="!langJA? 'red':''" @click="langJA=false">
                 <n-icon><World /></n-icon> English
             </n-button>
             </n-a>
@@ -17,7 +17,7 @@
         </n-tooltip>
       
       
-        <router-link :to="{ path: '/ja'}" :style="{color:langJA? 'white':'black'}">
+        <router-link :to="{ path: '/ja'}">
         <n-tooltip trigger="hover" :keep-alive-on-hover="false">
           <template #trigger>
             <n-button :color="langJA? 'red':''" @click="langJA=true">
@@ -32,7 +32,7 @@
     </n-space>
 
     <n-space vertical justify="center">
-      <h1 style="text-decoration:underline; padding:0px; margin:0px; text-decoration-style: double; text-align:center;">{{Labels.title}}</h1>
+      <h1 style="text-decoration:underline; padding:0px; margin:0px; text-decoration-style: double; text-align:center;"><a style="color:black;" href="https://gitcobra.github.io/avif2jpeg/dist/">{{Labels.title}}</a></h1>
     </n-space>
 
     <n-space vertical align="center" justify="center">

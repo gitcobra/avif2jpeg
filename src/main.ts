@@ -25,7 +25,10 @@ const routes: any[] = [
 export const createApp = ViteSSG(
   App,
   // vue-router options
-  { routes },
+  {
+    routes,
+    base: '/avif2jpeg/dist/'
+  },
   // function to have custom setups
   ({ app, router, routes, isClient, initialState }) => {
     // install plugins etc.

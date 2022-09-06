@@ -11,13 +11,13 @@
 @font-face {
   font-family: "v-sans";
   font-weight: 400;
-  src: url("/assets/RobotoSlab-Regular.46ecd6df.ttf");
+  src: url("/avif2jpeg/dist/assets/RobotoSlab-Regular.46ecd6df.ttf");
 }
 
 @font-face {
   font-family: "v-sans";
   font-weight: 500;
-  src: url("/assets/RobotoSlab-Medium.df4026fa.ttf");
+  src: url("/avif2jpeg/dist/assets/RobotoSlab-Medium.df4026fa.ttf");
 }
 
 html, body {

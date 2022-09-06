@@ -7,7 +7,42 @@
     <title>AVIF to JPEG "Offline" Batch Converter</title>
   </head>
   <body>
-    <div id="app"></div>
+
+    <noscript>
+      <strong>We're sorry but AVIF to JPEG "Offline" Batch Converter doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+    </noscript>
+    <div id="app">
+      <script>
+        (function(){
+          var disclaimer = document.createElement('div');
+          var app = document.getElementById('app');
+          app.appendChild(disclaimer);
+          addEventListener('load', function(){
+            setTimeout(function(){
+              if( app.contains(disclaimer) ) {
+                disclaimer.innerHTML =
+                  '<p>Sorry, <strong>AVIF to JPEG "Offline" Batch Converter</strong> is not working properly.</p>'+
+                  '<p>If you can still see this text even after reloading, perhaps this page does not support your web browser.</p>'+
+                  '<p>Please consider using the latest version of the modern web browser.</p>'
+              }
+              app = null;
+              disclaimer = null;
+            }, 1000);
+          });
+        })();
+      </script>
+    </div>
+
     <script type="module" src="/src/main.ts"></script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-T9YF63PVEL"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-T9YF63PVEL');
+    </script>
   </body>
 </html>

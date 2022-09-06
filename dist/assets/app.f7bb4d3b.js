@@ -2,8 +2,8 @@ var __getOwnPropNames = Object.getOwnPropertyNames;
 var __commonJS = (cb, mod) => function __require() {
   return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
 };
-var require_app_13eeab80 = __commonJS({
-  "assets/app.13eeab80.js"(exports, module) {
+var require_app_f7bb4d3b = __commonJS({
+  "assets/app.f7bb4d3b.js"(exports, module) {
     (function polyfill() {
       const relList = document.createElement("link").relList;
       if (relList && relList.supports && relList.supports("modulepreload")) {
@@ -29353,21 +29353,25 @@ ${style2}
     const _hoisted_3 = /* @__PURE__ */ createTextVNode(" \u65E5\u672C\u8A9E ");
     const _hoisted_4 = /* @__PURE__ */ createTextVNode(" \u65E5\u672C\u8A9E\u306B\u5207\u308A\u66FF\u3048 ");
     const _hoisted_5 = { style: { "text-decoration": "underline", "padding": "0px", "margin": "0px", "text-decoration-style": "double", "text-align": "center" } };
-    const _hoisted_6 = ["accept"];
-    const _hoisted_7 = ["innerHTML"];
+    const _hoisted_6 = {
+      style: { "color": "black" },
+      href: "https://gitcobra.github.io/avif2jpeg/dist/"
+    };
+    const _hoisted_7 = ["accept"];
     const _hoisted_8 = ["innerHTML"];
-    const _hoisted_9 = /* @__PURE__ */ createBaseVNode("div", null, [
+    const _hoisted_9 = ["innerHTML"];
+    const _hoisted_10 = /* @__PURE__ */ createBaseVNode("div", null, [
       /* @__PURE__ */ createTextVNode(" Drag & Drop"),
       /* @__PURE__ */ createBaseVNode("br"),
       /* @__PURE__ */ createTextVNode(" AVIF Images ")
     ], -1);
-    const _hoisted_10 = ["innerHTML"];
-    const _hoisted_11 = /* @__PURE__ */ createBaseVNode("br", null, null, -1);
-    const _hoisted_12 = { style: { "white-space": "nowrap" } };
-    const _hoisted_13 = { style: { "color": "gray", "padding-left": "20px" } };
-    const _hoisted_14 = ["innerHTML"];
-    const _hoisted_15 = /* @__PURE__ */ createTextVNode("GitHub");
-    const _hoisted_16 = { style: { "font-size": "x-large" } };
+    const _hoisted_11 = ["innerHTML"];
+    const _hoisted_12 = /* @__PURE__ */ createBaseVNode("br", null, null, -1);
+    const _hoisted_13 = { style: { "white-space": "nowrap" } };
+    const _hoisted_14 = { style: { "color": "gray", "padding-left": "20px" } };
+    const _hoisted_15 = ["innerHTML"];
+    const _hoisted_16 = /* @__PURE__ */ createTextVNode("GitHub");
+    const _hoisted_17 = { style: { "font-size": "x-large" } };
     const _sfc_main = /* @__PURE__ */ defineComponent({
       __name: "App",
       setup(__props) {
@@ -29696,9 +29700,7 @@ ${style2}
                                   default: withCtx(() => [
                                     createVNode(unref(NButton), {
                                       color: !langJA.value ? "red" : "",
-                                      onClick: _cache[0] || (_cache[0] = ($event) => langJA.value = false),
-                                      tag: "a",
-                                      href: "/en"
+                                      onClick: _cache[0] || (_cache[0] = ($event) => langJA.value = false)
                                     }, {
                                       default: withCtx(() => [
                                         createVNode(unref(NIcon), null, {
@@ -29723,10 +29725,7 @@ ${style2}
                           ]),
                           _: 1
                         }),
-                        createVNode(_component_router_link, {
-                          to: { path: "/ja" },
-                          style: normalizeStyle({ color: langJA.value ? "white" : "black" })
-                        }, {
+                        createVNode(_component_router_link, { to: { path: "/ja" } }, {
                           default: withCtx(() => [
                             createVNode(unref(NTooltip), {
                               trigger: "hover",
@@ -29756,7 +29755,7 @@ ${style2}
                             })
                           ]),
                           _: 1
-                        }, 8, ["style"])
+                        })
                       ]),
                       _: 1
                     })
@@ -29768,7 +29767,9 @@ ${style2}
                   justify: "center"
                 }, {
                   default: withCtx(() => [
-                    createBaseVNode("h1", _hoisted_5, toDisplayString(Labels.value.title), 1)
+                    createBaseVNode("h1", _hoisted_5, [
+                      createBaseVNode("a", _hoisted_6, toDisplayString(Labels.value.title), 1)
+                    ])
                   ]),
                   _: 1
                 }),
@@ -29791,7 +29792,7 @@ ${style2}
                           multiple: "",
                           accept: AcceptFileTypes[imageTypeOption.value],
                           style: { "display": "none" }
-                        }, null, 8, _hoisted_6),
+                        }, null, 8, _hoisted_7),
                         createVNode(unref(NTooltip), {
                           trigger: "hover",
                           "keep-alive-on-hover": false
@@ -29820,7 +29821,7 @@ ${style2}
                           default: withCtx(() => [
                             createBaseVNode("div", {
                               innerHTML: Labels.value.loadbuttontooltip
-                            }, null, 8, _hoisted_7)
+                            }, null, 8, _hoisted_8)
                           ]),
                           _: 1
                         }),
@@ -29863,7 +29864,7 @@ ${style2}
                           default: withCtx(() => [
                             createBaseVNode("div", {
                               innerHTML: Labels.value.loadfoldertooltip
-                            }, null, 8, _hoisted_8)
+                            }, null, 8, _hoisted_9)
                           ]),
                           _: 1
                         })) : createCommentVNode("", true)
@@ -29981,7 +29982,7 @@ ${style2}
                                     }),
                                     createVNode(unref(NSpace), { style: { "font-weight": "bold", "font-size": "x-large" } }, {
                                       default: withCtx(() => [
-                                        _hoisted_9
+                                        _hoisted_10
                                       ]),
                                       _: 1
                                     })
@@ -29992,7 +29993,7 @@ ${style2}
                               default: withCtx(() => [
                                 createBaseVNode("h3", {
                                   innerHTML: Labels.value.droptarget
-                                }, null, 8, _hoisted_10)
+                                }, null, 8, _hoisted_11)
                               ]),
                               _: 1
                             })) : createCommentVNode("", true)
@@ -30015,7 +30016,7 @@ ${style2}
                 }, {
                   default: withCtx(() => [
                     createTextVNode(toDisplayString(Labels.value.noimage), 1),
-                    _hoisted_11,
+                    _hoisted_12,
                     createTextVNode(toDisplayString(AcceptFileTypes[imageTypeOption.value] || "*."), 1)
                   ]),
                   _: 1
@@ -30106,7 +30107,7 @@ ${style2}
                                       ]),
                                       _: 1
                                     }),
-                                    createBaseVNode("span", _hoisted_12, toDisplayString(Labels.value.quality) + ":", 1),
+                                    createBaseVNode("span", _hoisted_13, toDisplayString(Labels.value.quality) + ":", 1),
                                     createVNode(unref(NSpace), {
                                       align: "center",
                                       justify: "space-between"
@@ -30174,13 +30175,13 @@ ${style2}
                 }),
                 createVNode(unref(NSpace), { justify: "center" }, {
                   default: withCtx(() => [
-                    createBaseVNode("ul", _hoisted_13, [
+                    createBaseVNode("ul", _hoisted_14, [
                       (openBlock(true), createElementBlock(Fragment, null, renderList(Labels.value.descriptions, (text) => {
                         return openBlock(), createElementBlock("li", {
                           key: text,
                           style: { "text-align": "left" },
                           innerHTML: text
-                        }, null, 8, _hoisted_14);
+                        }, null, 8, _hoisted_15);
                       }), 128))
                     ])
                   ]),
@@ -30207,7 +30208,7 @@ ${style2}
                                   ]),
                                   _: 1
                                 }),
-                                _hoisted_15
+                                _hoisted_16
                               ]),
                               _: 1
                             })
@@ -30262,7 +30263,7 @@ ${style2}
                           justify: "center"
                         }, {
                           default: withCtx(() => [
-                            createBaseVNode("div", _hoisted_16, toDisplayString(percentage.value) + "%", 1)
+                            createBaseVNode("div", _hoisted_17, toDisplayString(percentage.value) + "%", 1)
                           ]),
                           _: 1
                         })
@@ -30397,10 +30398,13 @@ ${style2}
     ];
     ViteSSG(
       _sfc_main,
-      { routes },
+      {
+        routes,
+        base: "/avif2jpeg/dist/"
+      },
       ({ app, router, routes: routes2, isClient, initialState }) => {
       }
     );
   }
 });
-export default require_app_13eeab80();
+export default require_app_f7bb4d3b();
