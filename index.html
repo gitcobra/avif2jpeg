@@ -9,34 +9,22 @@
     <meta name="twitter:card" content="summary">
     <meta property="og:url" content="https://gitcobra.github.io/avif2jpeg/dist/">
     <meta property="og:image" content="/avif2jpeg/dist/card.jpg">
+
+    <style>
+      .icon svg {
+        max-width: 24px;
+        max-height: 24px;
+      }
+    </style>
+
   </head>
   <body>
 
     <noscript>
       <strong>We're sorry but AVIF to JPEG "Offline" Batch Converter doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
-    <div id="app">
-      <script>
-        (function(){
-          var disclaimer = document.createElement('div');
-          var app = document.getElementById('app');
-          app.appendChild(disclaimer);
-          addEventListener('load', function(){
-            setTimeout(function(){
-              if( app.contains(disclaimer) ) {
-                disclaimer.innerHTML =
-                  '<p>Sorry, <strong>AVIF to JPEG "Offline" Batch Converter</strong> is not working properly.</p>'+
-                  '<p>If you can still see this text even after reloading, perhaps this page does not support your web browser.</p>'+
-                  '<p>Please consider using the latest version of the modern web browser.</p>'
-              }
-              app = null;
-              disclaimer = null;
-            }, 1000);
-          });
-        })();
-      </script>
-    </div>
-
+    <div id="app"></div>
+    <script src="/unsupported.js"></script>
     <script type="module" src="/src/main.ts"></script>
 
     <!-- Global site tag (gtag.js) - Google Analytics -->

@@ -1,4 +1,4 @@
-<template v-cloak>
+<template>
   <n-space vertical align="stretch" justify="space-between" style="height:100%; width:100%;">
     <n-space justify="end" align="end" style="box-sizing:border-box; padding:4px; margin:0px;">
       <n-button-group size="tiny" style="padding:4px;">
@@ -226,7 +226,9 @@
         <n-space style="font-size:x-small;">
           <span>{{processingFileName}}</span>
         </n-space>
-        <div style="height:90px;" ref="thumbnail"></div>
+        <n-space vertical style="height:90px;" align="center" justify="center">
+          <div ref="thumbnail"></div>
+        </n-space>
         <n-button round size="tiny" v-if="convertedImageUrl" @click="openImage(convertedImageUrl)">{{Labels.open}}</n-button>
       </n-space>
 
@@ -239,7 +241,15 @@
       <n-button v-if="processing" size="large" ref="cancelbutton" round @click="onCancel">{{Labels.cancel}}</n-button>
       <n-space align="center" vertical>
         <!-- button save -->
-        <n-button v-if="!processing && currentSuccess" size="large" round @click="download" color="lime">{{Labels.save}}</n-button>
+        <div>
+          <n-button v-if="!processing && currentSuccess" size="large" round @click="download" color="lime">{{Labels.save}}</n-button>
+          <span  v-show="zipArchived" style="position:relative; width:1px; height:1px; overflow:visible">
+            <span style="position:absolute; left:4px; top:-16px; transform: rotate(25deg); overflow:visible">
+              <n-icon depth="4" size="30" color="lime"><Archive /></n-icon>
+              <span style="position:absolute; left:28px; bottom:4px; transform: rotate(25deg); white-space:nowrap; font-size:small; font-family:impact; color:rgba(0,255,0, 0.5)">ZIP</span>
+            </span>
+          </span>
+        </div>
 
         <!-- button close -->
         <n-button v-if="!processing" @click="showProcess = false" round size="small" style="font-size: small; margin-top:1em;">{{Labels.close}}</n-button>
@@ -265,7 +275,7 @@ import { NButton, NButtonGroup, NInput, NSelect, NSpace, NSlider, NInputNumber, 
 import { NMessageProvider, NNotificationProvider } from 'naive-ui'
 import { NA, enUS, dateEnUS, jaJP, dateJaJP } from 'naive-ui'
 import 'vfonts/RobotoSlab.css'
-import { LogInOutline as LogInIcon, LogoGithub as Github, ImageOutline as FileImageRegular, ImageSharp as MdImage, FolderOpenOutline, ArrowRedoSharp } from '@vicons/ionicons5'
+import { LogInOutline as LogInIcon, LogoGithub as Github, ImageOutline as FileImageRegular, ImageSharp as MdImage, FolderOpenOutline, ArrowRedoSharp, Archive } from '@vicons/ionicons5'
 
 import Converter from './components/converter.vue'
 import Licenses from './components/licenses.vue'
@@ -296,7 +306,7 @@ const LabelsEnUS = {
   ignoreFileExtensions: 'Load All File Types',
   ignoreExtTooltip: 'Try to load files that don\'t have image file extension',
   loadbutton: 'Load Images',
-  loadbuttontooltip: 'Select your images from a dialog window',
+  loadbuttontooltip: 'Select your images from a dialog window.<br>*Multiple selection allowed.',
   loadfolderbutton: 'Load A Whole Folder',
   loadfoldertooltip: `
     Convert all images in the selected folder and its subfolders, and add the converted images to a ZIP archive with relative path.<br>
@@ -347,7 +357,7 @@ const LabelsJaJP = {
   ignoreFileExtensions: '全ての拡張子を読み込む',
   ignoreExtTooltip: '画像拡張子以外のファイルもロードできるか試行します',
   loadbutton: '画像をロード',
-  loadbuttontooltip: 'ダイアログを開いて画像を選択します',
+  loadbuttontooltip: 'ダイアログを開いて画像を選択します<br>※複数ファイル選択可',
   loadfolderbutton: 'フォルダごとロード',
   loadfoldertooltip: `
     選択したフォルダとサブフォルダの全ての画像に対して変換処理を行い、ZIP書庫へ相対パスで格納します。<br>
@@ -371,7 +381,7 @@ const LabelsJaJP = {
   confirmCloseDialogTitle: '変換ファイルが未保存',
 };
 
-const VERSION = '0.011';
+const VERSION = '0.013';
 const IS_SP = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile Safari/.test(navigator.userAgent);
 const doc = document;
 //const imageFormat = ref('image/png');
@@ -404,6 +414,7 @@ const LANDSCAPE = ref(true);
 const processing = ref(false);
 const prevented = ref(false);
 const noimage = ref(false);
+const zipArchived = ref(false);
 const unsaved = ref(false);
 const nofiles = ref(false);
 const avifUnsupported = ref(false);
@@ -537,11 +548,13 @@ function onStart({length}) {
   currentLength.value = length;
   showProcess.value = true;
   processing.value = true;
+  unsaved.value = false;
   percentage.value = 0;
   convertedImageUrl.value = '';
   inputTotalSize.value = 0;
   outputTotalSize.value = 0;
   downloadButtonClicked = false;
+  zipArchived.value = false;
   //console.log("start")
   processingMessage.value = Labels.value.processing;
 }
@@ -582,16 +595,23 @@ function onComplete({index, zip, aborted, success, length, img64, name}) {
   //console.log("complete")
   const a = downloadlink.value;
   
-  // set link to image file if the succeeded count is 1
+  // set link to an image if the succeeded count is 1
   if( success === 1 ) {
     a.download = name;
-    a.href = img64;
+    let url = img64;
+    // For Firefox, change the MIME-type of the DataURI. Because Firefox opens an image link that has download attribute in new tab for uncertain reason.
+    if( navigator.userAgent.indexOf('Firefox') !== -1 ) {
+      url = img64.replace(/(?<=data:image\/)[^;]+(?=;)/, 'octet/stream');
+    }
+    a.href = url;
     convertedImageUrl.value = img64;
   }
+  // link to zip file if multiple files
   else {
     const d = new Date();
     a.download = 'avif2jpeg_'+(UserSettings.imageFormat.replace(/^image\//, ''))+'_'+d.getTime()+'.zip';
     a.href = zip;
+    zipArchived.value = true;
   }
   
   if( !aborted ) {

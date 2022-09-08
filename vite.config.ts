@@ -23,7 +23,7 @@ export default defineConfig({
   // TypeError: createApp is not a function · Issue #112 · antfu/vite-ssg · GitHub
   // https://github.com/antfu/vite-ssg/issues/112
   build: {
-    minify: false,
+    //minify: false,
     rollupOptions: {
       //...(process.env.VITE_SSG ? { treeshake: false } : {}),
       output: {
