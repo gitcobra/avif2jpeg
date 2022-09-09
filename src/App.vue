@@ -114,7 +114,7 @@
             <template #trigger>
               <n-space align="stretch" style="text-align:center; color:silver; padding:2em; overflow-wrap: break-word; word-break: keep-all; border: 6px dashed #EEE; border-radius: 1em;">
                 <n-space>
-                  <n-icon size="64" color="silver"><ArrowRedoSharp /></n-icon>
+                  <n-icon size="64" color="silver" class="test"><ArrowRedoSharp /></n-icon>
                 </n-space>
                 <n-space vertical style="font-weight:bold; font-size:x-large;">
                   <span>Drag & Drop</span>
@@ -493,6 +493,9 @@ useHead({
 });
 
 onMounted(() => {
+  // remove style for svg size fix
+  document.querySelector('head').removeChild(document.getElementById('svgfix'));
+  
   fileinput.value.oninput = folderinput.value.oninput = onInputFile;
   checkLandScape();
   window.addEventListener('resize', checkLandScape);
@@ -662,7 +665,7 @@ function log(msg) {
 }
 </script>
 
-<style>
+<style lang="scss">
 html, body {
   box-sizing: border-box;
   height: 100%;

@@ -1,11 +1,14 @@
 import { ViteSSG } from 'vite-ssg'
 import { defineConfig } from 'vite'
+import { splitVendorChunkPlugin } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
-// https://vitejs.dev/config/
 export default defineConfig({
   base: '/avif2jpeg/dist/',
-  plugins: [vue()],
+  plugins: [
+    vue(),
+    splitVendorChunkPlugin()
+  ],
   server: {
     port: 8080,
   },

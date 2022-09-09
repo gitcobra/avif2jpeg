@@ -1,4 +1,8 @@
 (function(){
+  if( navigator.userAgent.toLowerCase().indexOf('googlebot') !== -1 ) {
+    return;
+  }
+
   var disclaimer = document.createElement('div');
   var app = document.getElementById('app');
   app.appendChild(disclaimer);
