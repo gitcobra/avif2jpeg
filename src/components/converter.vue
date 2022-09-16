@@ -182,8 +182,9 @@ async function convertImages(list, ctx, instance, props) {
   let index = 0;
   let success = 0;
   let failure = 0;
-  let lastImage = null;
+  let lastImageBlob = null;
   let lastName = '';
+  let url = '';
   for( const file of list ) {
     if( disturbed )
       break;
@@ -191,32 +192,24 @@ async function convertImages(list, ctx, instance, props) {
     const name = file.name;
     const inputSize = file.size;
     const path = file.relativePath || file.webkitRelativePath;
-    const reader = new FileReader();
     const img: HTMLImageElement = document.createElement('img');
     instance.emit('progress', {file, name, success, failure, index, length});
     index++;
 
+    // clear previous object url
+    URL.revokeObjectURL(url);
+    
     // convert to dataURI
-    let p: Promise<any> = getAsPromise(reader);
-    reader.readAsDataURL(file);
-    p = p.then((ev:any) => {
-      const url = ev.target?.result as string;
-      return url;
-    });
-    //const url = (await p) as string;
+    url = URL.createObjectURL(file);
 
     // load img element
-    p = p.then(url => {
-      const p = getAsPromise(img);
-      (img as any).src = url;
-      return p;
-    }).then(() => {
-      return true;
-    }).catch(() => {
-      return false;
-    });
+    const p = getAsPromise(img)
+    .then(() => true)
+    .catch(() => false);
+    
+    img.src = url;
 
-    // wait for the promise
+    // wait for resolve
     const imgloaded: boolean = await p as boolean;
     if( disturbed )
       break;
@@ -234,23 +227,54 @@ async function convertImages(list, ctx, instance, props) {
     instance.emit('imgload', {width:img.width, height:img.height, img});
 
     // add to zip
+    /*
     const b64 = canvas.toDataURL(type, quality);
     const bstr = atob( b64.split(',')[1] );
     const bin = Uint8Array.from(bstr, str => str.charCodeAt(0));
     const outputSize = bin.length;
-    const fname = (path || name).replace(RegExp('\\.'+ext+'$', 'i'), '').replace(props.retainExtension? '' : /\.(jpe?g|gif|png|avif|webp|bmp)$/i, '') + '.' + ext;
+    */
+    const bin = await new Promise<ArrayBuffer>(resolve => {
+      const callback = blob => {
+        lastImageBlob = blob;
+        resolve( blob?.arrayBuffer() );
+      }
+      canvas.toBlob(callback, type, quality);
+    });
+
+    // toBlob failure
+    if( !bin ) {
+      console.log('failed to toBlob', name);
+      failure++;
+      instance.emit('failure', {name});
+      continue;
+    }
+
+    const outputSize = bin.byteLength;
+    
+    //const fname = (path || name).replace(RegExp('\\.'+ext+'$', 'i'), '').replace(props.retainExtension? '' : /\.(jpe?g|gif|png|avif|webp|bmp)$/i, '') + '.' + ext;
+    const fname = (path || name).replace(props.retainExtension? '' : /\.(jpe?g|gif|png|avif|webp|bmp)$/i, '') + '.' + ext;
     azip.add(fname, bin);
 
     success++;
-    lastImage = b64;
+    //lastImage = b64;
     lastName = fname;
-    instance.emit('success', {file, name, img:b64, success, failure, index, length, inputSize, outputSize});
+    instance.emit('success', {file, name, success, failure, index, length, inputSize, outputSize});
+  }
+
+  // convert last image buffer to DataURI
+  let lastImage;
+  let lastImageDataURL;
+  if( lastImageBlob ) {
+    lastImage = URL.createObjectURL(lastImageBlob);
+    const reader = new FileReader;
+    reader.readAsDataURL(lastImageBlob);
+    lastImageDataURL = await getAsPromise(reader).then((ev:any) => ev.target.result);
   }
 
   // emit as ZIP
-  const url = azip.url();
-  //instance.refs.download.href = src;
-  instance.emit('complete', {aborted:disturbed, success, failure, index, length, zip:url, img64:lastImage, name:lastName});
+  const zipUrl = azip.url();
+  instance.emit('complete', {aborted:disturbed, success, failure, index, length, zip:zipUrl, lastImage, lastImageDataURL, name:lastName});
+
   processing = false;
 }
 

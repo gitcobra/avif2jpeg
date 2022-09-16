@@ -74,8 +74,8 @@
         <div v-html="Labels.ignoreExtTooltip"></div>
       </n-tooltip>
       -->
-      <n-collapse display-directive="show">
-        <n-collapse-item :title="Labels.fileTypeRadioTitle">
+      <n-collapse display-directive="show" :expanded-names="UserSettings.expandExtButtons ? ['extItem'] : ''" :on-update:expanded-names="names => UserSettings.expandExtButtons = !!String(names)">
+        <n-collapse-item :title="Labels.fileTypeRadioTitle" name="extItem">
           <n-radio-group v-model:value="imageTypeOption" name="filetyperadios" size="small">
             <n-space vertical style="padding-left:1em;">
 
@@ -229,7 +229,11 @@
         <n-space vertical style="height:90px;" align="center" justify="center">
           <div ref="thumbnail"></div>
         </n-space>
-        <n-button round size="tiny" v-if="convertedImageUrl" @click="openImage(convertedImageUrl)">{{Labels.open}}</n-button>
+        <n-space>
+          <!-- <n-button round size="tiny" v-if="!!convertedImageUrl" @click="openImage(convertedImageUrl)">{{Labels.open}}</n-button> -->
+          <a :href="convertedImageUrl" v-if="!!convertedImageUrl" target="_blank"><n-button round size="tiny">{{Labels.open}}</n-button></a>
+          <n-button round size="tiny" v-if="!!convertedImageDataUrl" @click="copyDataURL(convertedImageDataUrl)">DataURI</n-button>
+        </n-space>
       </n-space>
 
       <table>
@@ -394,6 +398,8 @@ const UserSettings = reactive({
   imageFormat: 'image/png',
   imageQuality: 90,
   retainExtension: false,
+
+  expandExtButtons: false,
 });
 
 const retainExtension = ref(false);
@@ -436,12 +442,16 @@ const processingType = computed(() => {
       return 'info';
   }
 });
+
+// HTML Element references
 const inputFiles = ref(null);
 const sendMessage = ref([]);
 const downloadlink = ref(null);
 const convertedImageUrl = ref('');
+const convertedImageDataUrl = ref('');
 const fileinput = ref(null);
 const folderinput = ref(null);
+
 //const Directory_Available = ref(false);
 const Labels = ref(LabelsEnUS);
 const langJA = ref(false);
@@ -554,12 +564,14 @@ function onStart({length}) {
   unsaved.value = false;
   percentage.value = 0;
   convertedImageUrl.value = '';
+  convertedImageDataUrl.value = '';
   inputTotalSize.value = 0;
   outputTotalSize.value = 0;
   downloadButtonClicked = false;
   zipArchived.value = false;
   //console.log("start")
   processingMessage.value = Labels.value.processing;
+  prevLoadedImg = null;
 }
 function onProgress({length, index, name}) {
   currentIndex.value = index;
@@ -567,7 +579,14 @@ function onProgress({length, index, name}) {
   processingMessage.value = Labels.value.processing;
   processingFileName.value = `${name}`;
 }
+
+let prevLoadedImg = null;
 function onImgLoad({img, width, height}) {
+  if( prevLoadedImg ) {
+    prevLoadedImg.remove();
+    prevLoadedImg.src = '';
+  };
+  
   const ratio = width / height;
   if( width > height ) {
     width = 120;
@@ -584,8 +603,9 @@ function onImgLoad({img, width, height}) {
     thumbnail.value.innerHTML = '';
     thumbnail.value.appendChild(img);
   }
+  prevLoadedImg = img;
 }
-function onSuccess({img, name, index, success, inputSize, outputSize}) {
+function onSuccess({name, index, success, inputSize, outputSize}) {
   currentSuccess.value = success;
   inputTotalSize.value += inputSize;
   outputTotalSize.value += outputSize;
@@ -594,20 +614,25 @@ function onFailure({name}) {
   //console.log("fail")
   sendMessage.value = [{description:`${name}`, duration:0}, 'warning'];
 }
-function onComplete({index, zip, aborted, success, length, img64, name}) {
+function onComplete({index, zip, aborted, success, length, lastImage, lastImageDataURL, name}) {
   //console.log("complete")
   const a = downloadlink.value;
   
   // set link to an image if the succeeded count is 1
   if( success === 1 ) {
     a.download = name;
-    let url = img64;
+    let url = lastImage;
+    /*
     // For Firefox, change the MIME-type of the DataURI. Because Firefox opens an image link that has download attribute in new tab for uncertain reason.
     if( navigator.userAgent.indexOf('Firefox') !== -1 ) {
-      url = img64.replace(/(?<=data:image\/)[^;]+(?=;)/, 'octet/stream');
+      url = lastImage.replace(/(?<=data:image\/)[^;]+(?=;)/, 'octet/stream');
     }
+    */
     a.href = url;
-    convertedImageUrl.value = img64;
+    convertedImageUrl.value = lastImage;
+    if( lastImageDataURL ) {
+      convertedImageDataUrl.value = lastImageDataURL;
+    }
   }
   // link to zip file if multiple files
   else {
@@ -653,9 +678,17 @@ function download() {
   a.click();
   downloadButtonClicked = true;
 }
+
 function openImage(url) {
   window.open(url, '_blank').document.write(`<img src="${url}">`);
 }
+
+function copyDataURL(url) {
+  try {
+    navigator.clipboard.writeText(url);
+  } catch(e) {}
+}
+
 function getLanguage(): string {
   const navigator = window.navigator as any;
   return navigator.language || navigator.userLanguage || navigator.browserLanguage;
