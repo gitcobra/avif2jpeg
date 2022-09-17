@@ -36,9 +36,12 @@
     </n-space>
 
     <n-space vertical align="center" justify="center">
+      
+      <!-- file selectors -->
+      <input ref="fileinput" type="file" multiple :accept="AcceptFileTypes[imageTypeOption]" style="display:none">
+      <input webkitdirectory directory ref="folderinput" type="file" style="display:none">
       <n-space vertical align="stretch" justify="center">
         <!-- file select -->
-        <input ref="fileinput" type="file" multiple :accept="AcceptFileTypes[imageTypeOption]" style="display:none">
         <n-tooltip trigger="hover" :keep-alive-on-hover="false" :placement="LANDSCAPE ? 'left' : 'top'" :duration="0" :delay="300">
           <template #trigger>
             <n-button round @click="fileinput.click()" style="width:100%;">
@@ -50,7 +53,6 @@
         </n-tooltip>
 
         <!-- folder select -->
-        <input webkitdirectory directory ref="folderinput" type="file" style="display:none">
         <n-tooltip v-if="!IS_SP" trigger="hover" placement="bottom" :keep-alive-on-hover="false" style="max-width:90vw;" :duration="0" :delay="300">
           <template #trigger>
             <n-button round @click="folderinput.click()" style="width:100%;">
@@ -60,7 +62,6 @@
           </template>
           <div v-html="Labels.loadfoldertooltip"></div>
         </n-tooltip>
-
       </n-space>
 
       <!-- file type options -->
@@ -112,13 +113,15 @@
         >
           <n-tooltip v-if="!IS_SP" trigger="hover" :keep-alive-on-hover="false" placement="bottom" :duration="0" :delay="300">
             <template #trigger>
-              <n-space align="stretch" style="text-align:center; color:silver; padding:2em; overflow-wrap: break-word; word-break: keep-all; border: 6px dashed #EEE; border-radius: 1em;">
-                <n-space>
-                  <n-icon size="64" color="silver" class="test"><ArrowRedoSharp /></n-icon>
-                </n-space>
-                <n-space vertical style="font-weight:bold; font-size:x-large;">
-                  <span>Drag & Drop</span>
-                  <span>AVIF Images</span>
+              <n-space vertical style="border: 6px dashed #EEE; border-radius: 1em; padding:2em; ">
+                <n-space align="stretch" style="color:silver; overflow-wrap: break-word; word-break: keep-all;">
+                  <n-space>
+                    <n-icon size="64" color="silver" class="test"><ArrowRedoSharp /></n-icon>
+                  </n-space>
+                  <n-space vertical style="font-weight:bold; font-size:x-large;">
+                    <span>Drag & Drop</span>
+                    <span>AVIF Images</span>
+                  </n-space>
                 </n-space>
               </n-space>
             </template>
@@ -127,6 +130,15 @@
         </converter>
       </n-message-provider>
     </n-notification-provider>
+
+    <n-space justify="center" align="center">
+      <n-tooltip v-if="inputFiles?.length" trigger="hover" placement="top" :keep-alive-on-hover="false" :duration="0" :delay="300">
+        <template #trigger>
+          <n-button @click="sendMessage=['reconvert']" color="#888" round>{{Labels.reconvert}}</n-button>
+        </template>
+        <div v-html="`${inputFiles?.length} ${Labels.files}<br>${Labels.reconvertTip}`"></div>
+      </n-tooltip>
+    </n-space>
 
     <!-- output settings -->
     <n-space justify="center">
@@ -209,7 +221,7 @@
   </n-modal>
 
   <!-- processing modal dialog -->
-  <n-modal v-model:show="showProcess" :closable="!processing" :close-on-esc="!processing" @mask-click="sendMessage=['destroy']" preset="dialog" :title="processingMessage" :type="processingType" :mask-closable="false" :on-after-leave="beforeClose">
+  <n-modal v-model:show="showProcess" :closable="!processing && processCompleted" :close-on-esc="!processing && processCompleted" @mask-click="sendMessage=['destroy']" preset="dialog" :title="processingMessage" :type="processingType" :mask-closable="false" :on-after-leave="beforeClose">
     <template #default>
     <n-space vertical align="center">
 
@@ -230,7 +242,6 @@
           <div ref="thumbnail"></div>
         </n-space>
         <n-space>
-          <!-- <n-button round size="tiny" v-if="!!convertedImageUrl" @click="openImage(convertedImageUrl)">{{Labels.open}}</n-button> -->
           <a :href="convertedImageUrl" v-if="!!convertedImageUrl" target="_blank"><n-button round size="tiny">{{Labels.open}}</n-button></a>
           <n-button round size="tiny" v-if="!!convertedImageDataUrl" @click="copyDataURL(convertedImageDataUrl)">DataURI</n-button>
         </n-space>
@@ -247,7 +258,7 @@
         <!-- button save -->
         <div>
           <n-button v-if="!processing && currentSuccess" size="large" round @click="download" color="lime">{{Labels.save}}</n-button>
-          <span  v-show="zipArchived" style="position:relative; width:1px; height:1px; overflow:visible">
+          <span v-if="zipArchived" style="position:relative; width:1px; height:1px; overflow:visible">
             <span style="position:absolute; left:4px; top:-16px; transform: rotate(25deg); overflow:visible">
               <n-icon depth="4" size="30" color="lime"><Archive /></n-icon>
               <span style="position:absolute; left:28px; bottom:4px; transform: rotate(25deg); white-space:nowrap; font-size:small; font-family:impact; color:rgba(0,255,0, 0.5)">ZIP</span>
@@ -256,7 +267,7 @@
         </div>
 
         <!-- button close -->
-        <n-button v-if="!processing" @click="showProcess = false" round size="small" style="font-size: small; margin-top:1em;">{{Labels.close}}</n-button>
+        <n-button v-if="!processing && processCompleted" @click="showProcess = false" round size="small" style="font-size: small; margin-top:1em;">{{Labels.close}}</n-button>
       </n-space>
 
 
@@ -330,6 +341,9 @@ const LabelsEnUS = {
   save: 'Save',
   close: 'Close',
   open: 'Open',
+  reconvert: 'Reconvert',
+  reconvertTip: 'Reconvert previous selected files.',
+  files: 'Files',
 
   confirmCloseDialog: `You have not saved the converted images yet.`,
   confirmCloseDialogTitle:'Data have not been saved',
@@ -381,6 +395,9 @@ const LabelsJaJP = {
   save: '保存',
   close: '閉じる',
   open: '開く',
+  reconvert: '再変換',
+  reconvertTip: '前回選択したファイルを再変換します。',
+  files: 'ファイル',
 
   confirmCloseDialog: `まだ変換したファイルを保存していません。`,
   confirmCloseDialogTitle: '変換ファイルが未保存',
@@ -418,6 +435,7 @@ const currentSuccess = ref(0);
 const currentLength = ref(0);
 const LANDSCAPE = ref(true);
 const processing = ref(false);
+const processCompleted = ref(false);
 const prevented = ref(false);
 const noimage = ref(false);
 const zipArchived = ref(false);
@@ -562,6 +580,7 @@ function onStart({length}) {
   currentLength.value = length;
   showProcess.value = true;
   processing.value = true;
+  processCompleted.value = false;
   unsaved.value = false;
   percentage.value = 0;
   convertedImageUrl.value = '';
@@ -620,32 +639,35 @@ function onFailure({name}) {
 function onComplete({index, zip, aborted, success, length, lastImage, lastImageDataURL, name}) {
   //console.log("complete")
   const a = downloadlink.value;
-  
-  // set link to an image if the succeeded count is 1
-  if( success === 1 ) {
-    a.download = name;
-    let url = lastImage;
-    /*
-    // For Firefox, change the MIME-type of the DataURI. Because Firefox opens an image link that has download attribute in new tab for uncertain reason.
-    if( navigator.userAgent.indexOf('Firefox') !== -1 ) {
-      url = lastImage.replace(/(?<=data:image\/)[^;]+(?=;)/, 'octet/stream');
+  const lastPercentage = index / length * 100 |0;
+
+  if( success ) {
+    // set link to an image if the succeeded count is 1
+    if( success === 1 ) {
+      a.download = name;
+      let url = lastImage;
+      /*
+      // For Firefox, change the MIME-type of the DataURI. Because Firefox opens an image link that has download attribute in new tab for uncertain reason.
+      if( navigator.userAgent.indexOf('Firefox') !== -1 ) {
+        url = lastImage.replace(/(?<=data:image\/)[^;]+(?=;)/, 'octet/stream');
+      }
+      */
+      a.href = url;
+      convertedImageUrl.value = lastImage;
+      if( lastImageDataURL ) {
+        convertedImageDataUrl.value = lastImageDataURL;
+      }
     }
-    */
-    a.href = url;
-    convertedImageUrl.value = lastImage;
-    if( lastImageDataURL ) {
-      convertedImageDataUrl.value = lastImageDataURL;
+    // link to zip file if multiple files
+    else {
+      const d = new Date();
+      a.download = 'avif2jpeg_'+(UserSettings.imageFormat.replace(/^image\//, ''))+'_'+d.getTime()+'.zip';
+      a.href = zip;
+      zipArchived.value = true;
     }
   }
-  // link to zip file if multiple files
-  else {
-    const d = new Date();
-    a.download = 'avif2jpeg_'+(UserSettings.imageFormat.replace(/^image\//, ''))+'_'+d.getTime()+'.zip';
-    a.href = zip;
-    zipArchived.value = true;
-  }
   
-  if( !aborted ) {
+  if( !aborted || lastPercentage === 100 ) {
     percentage.value = 100;
   }
   else
@@ -660,6 +682,7 @@ function onComplete({index, zip, aborted, success, length, lastImage, lastImageD
   }
   
   processing.value = false;
+  processCompleted.value = true;
 }
 function checkLandScape() {
   const w = document.body.clientWidth;

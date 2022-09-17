@@ -3,8 +3,8 @@
     <slot></slot>
   </div>
   
-  <!-- Firefox (v104) doesn't free memory when the canvas is invisible for some reason -->
-  <canvas ref="canvas" style="position:absolute; width:1px; height:1px;"></canvas>
+  <!-- Firefox (currently v104) doesn't free memory when the canvas is invisible -->
+  <canvas ref="canvas" style="position:absolute; width:1px; height:1px; z-index:-999;"></canvas>
 </template>
 
 <script lang="ts">
@@ -77,16 +77,20 @@ export default defineComponent({
     });
 
     watch(() => props.input, (val) => {
-      //if( val.length )
-      if( val.length )
+      if( val?.length )
         startConvert(val, ctx, context, props);
     });
 
     watch(() => props.sendmessage, ([opt={}, type='info']) => {
       if( /destroy/.test(opt) ) {
-        //message.destroyAll();
         notification.destroyAll();
         return;
+      }
+      // reconvert
+      if( /reconvert/.test(opt) ) {
+        const list = props.input;
+        if( list?.length )
+          startConvert(list, ctx, context, props);
       }
       //message[type](opt.content, opt);
       notification[type](opt);
@@ -199,7 +203,7 @@ async function convertImages(list, ctx, instance, props) {
     index++;
 
     // clear previous object url
-    URL.revokeObjectURL(url);
+    //URL.revokeObjectURL(url);
     
     // convert to Object URL
     url = URL.createObjectURL(file);
@@ -241,6 +245,9 @@ async function convertImages(list, ctx, instance, props) {
       };
       canvas.toBlob(callback, type, quality);
     });
+
+    if( disturbed )
+      break;
 
     // toBlob failure
     if( !bin ) {
