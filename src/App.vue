@@ -132,11 +132,11 @@
     </n-notification-provider>
 
     <n-space justify="center" align="center">
-      <n-tooltip v-if="inputFiles?.length" trigger="hover" placement="top" :keep-alive-on-hover="false" :duration="0" :delay="300">
+      <n-tooltip v-if="processCompleted" trigger="hover" placement="top" :keep-alive-on-hover="false" :duration="0" :delay="300">
         <template #trigger>
           <n-button @click="sendMessage=['reconvert']" color="#888" round>{{Labels.reconvert}}</n-button>
         </template>
-        <div v-html="`${inputFiles?.length} ${Labels.files}<br>${Labels.reconvertTip}`"></div>
+        <div v-html="`${inputFileCount} ${Labels.files}<br>${Labels.reconvertTip}`"></div>
       </n-tooltip>
     </n-space>
 
@@ -460,6 +460,7 @@ const processingType = computed(() => {
   }
 });
 const progressColor = ref('lime');
+const inputFileCount = ref(0);
 
 // HTML Element references
 const inputFiles = ref(null);
@@ -589,10 +590,11 @@ function onStart({length}) {
   outputTotalSize.value = 0;
   downloadButtonClicked = false;
   zipArchived.value = false;
-  //console.log("start")
+  console.log("start")
   processingMessage.value = Labels.value.processing;
   prevLoadedImg = null;
   progressColor.value = 'lime';
+  inputFileCount.value = 0;
 }
 function onProgress({length, index, name, success}) {
   currentIndex.value = index;
@@ -636,10 +638,11 @@ function onFailure({name}) {
   sendMessage.value = [{description:`${name}`, duration:0}, 'warning'];
   progressColor.value = 'orange';
 }
-function onComplete({index, zip, aborted, success, length, lastImage, lastImageDataURL, name}) {
+function onComplete({index, zip, aborted, success, length, lastImage, lastImageDataURL, name, inputFileCount:fcount}) {
   //console.log("complete")
   const a = downloadlink.value;
   const lastPercentage = index / length * 100 |0;
+  inputFileCount.value = fcount;
 
   if( success ) {
     // set link to an image if the succeeded count is 1

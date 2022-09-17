@@ -19,6 +19,7 @@ var AnZip=function(){"object"==typeof module&&"object"==typeof exports&&(module.
 let processing = false;
 let disturbed = false;
 let formats: string[] = ['image/png'];
+let targetFiles = [];
 export default defineComponent({
   name: 'converter',
   emits: ['mounted', 'start', 'progress', 'success', 'failure', 'complete', 'prevent', 'noimage', 'avifsupport', 'imgload'],
@@ -77,22 +78,32 @@ export default defineComponent({
     });
 
     watch(() => props.input, (val) => {
-      if( val?.length )
+      if( val?.length ) {
+        targetFiles = val;
         startConvert(val, ctx, context, props);
+      }
     });
 
     watch(() => props.sendmessage, ([opt={}, type='info']) => {
-      if( /destroy/.test(opt) ) {
-        notification.destroyAll();
+      // do commands
+      if( typeof opt === 'string' ) {
+        switch(opt) {
+          // remove all notifications
+          case 'destroy':
+            notification.destroyAll();
+            break;
+          // reconvert
+          case 'reconvert':
+            const list = targetFiles;
+            if( list?.length ) {
+              startConvert(list, ctx, context, props);
+            }
+            break;
+        }
         return;
       }
-      // reconvert
-      if( /reconvert/.test(opt) ) {
-        const list = props.input;
-        if( list?.length )
-          startConvert(list, ctx, context, props);
-      }
-      //message[type](opt.content, opt);
+      
+      // show notification
       notification[type](opt);
     });
 
@@ -117,6 +128,7 @@ function setDropEvent(droptarget: HTMLElement, ctx, instance, props) {
   document.ondragover = (ev) => ev.preventDefault();
   droptarget.ondrop = async (ev: DragEvent) => {
       ev.preventDefault();
+      targetFiles = [...(ev.dataTransfer?.files||[])];
       startConvert(ev.dataTransfer?.files as FileList, ctx, instance, props);
   };
 }
@@ -281,7 +293,7 @@ async function convertImages(list, ctx, instance, props) {
 
   // emit as ZIP
   const zipUrl = azip.url();
-  instance.emit('complete', {aborted:disturbed, success, failure, index, length, zip:zipUrl, lastImage, lastImageDataURL, name:lastName});
+  instance.emit('complete', {aborted:disturbed, success, failure, index, length, zip:zipUrl, lastImage, lastImageDataURL, name:lastName, inputFileCount:targetFiles.length});
 
   processing = false;
 }
