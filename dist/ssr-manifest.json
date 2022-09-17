@@ -11,7 +11,7 @@
     "/avif2jpeg/dist/assets/RobotoSlab-Regular.46ecd6df.ttf",
     "/avif2jpeg/dist/assets/RobotoSlab-Medium.df4026fa.ttf"
   ],
-  "src/components/converter.vue?vue&type=style&index=0&scoped=fdeaa45b&lang.css": [
+  "src/components/converter.vue?vue&type=style&index=0&scoped=db3b391d&lang.css": [
     "/avif2jpeg/dist/assets/RobotoSlab-Regular.46ecd6df.ttf",
     "/avif2jpeg/dist/assets/RobotoSlab-Medium.df4026fa.ttf"
   ],
@@ -24,6 +24,14 @@
     "/avif2jpeg/dist/assets/RobotoSlab-Medium.df4026fa.ttf"
   ],
   "src/components/licenses.vue?vue&type=script&setup=true&lang.ts": [
+    "/avif2jpeg/dist/assets/RobotoSlab-Regular.46ecd6df.ttf",
+    "/avif2jpeg/dist/assets/RobotoSlab-Medium.df4026fa.ttf"
+  ],
+  "src/components/version.json": [
+    "/avif2jpeg/dist/assets/RobotoSlab-Regular.46ecd6df.ttf",
+    "/avif2jpeg/dist/assets/RobotoSlab-Medium.df4026fa.ttf"
+  ],
+  "src/components/version.vue?vue&type=script&setup=true&lang.ts": [
     "/avif2jpeg/dist/assets/RobotoSlab-Regular.46ecd6df.ttf",
     "/avif2jpeg/dist/assets/RobotoSlab-Medium.df4026fa.ttf"
   ],

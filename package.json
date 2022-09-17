@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite-ssg build && js-beautify --file dist/**/*.html --type html --replace",
+    "build": "node version.js && vite-ssg build && js-beautify --file dist/**/*.html --type html --replace",
     "preview": "vite preview"
   },
   "devDependencies": {

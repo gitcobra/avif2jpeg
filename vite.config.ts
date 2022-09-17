@@ -14,6 +14,8 @@ export default defineConfig({
   },
   ssgOptions: {
     dirStyle: 'nested',
+    onFinished() {
+    },
     
     // build error issue
     // The requested module 'naive-ui' is a CommonJS module, which may not support all module.exports as named exports.

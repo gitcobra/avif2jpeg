@@ -175,7 +175,7 @@
     <!-- footer -->
     <n-space justify="center" align="baseline">
       <p style="font-size:x-small; text-align:center; margin:0px;">
-        v{{VERSION}}
+        <version />
       </p>
 
       <n-space align="center">
@@ -213,7 +213,7 @@
     <template #default>
     <n-space vertical align="center">
 
-      <n-progress type="circle" :percentage="percentage" color="lime" indicator-text-color="black" rail-color="silver">
+      <n-progress type="circle" :percentage="percentage" :color="progressColor" indicator-text-color="black" rail-color="silver">
         <n-space vertical align="center" justify="center">
           <n-space style="font-size:x-large;">{{percentage}}%</n-space>
           <n-space style="font-size:xx-small">( {{currentSuccess}} / {{currentLength}} )</n-space>
@@ -283,6 +283,7 @@ import { LogInOutline as LogInIcon, LogoGithub as Github, ImageOutline as FileIm
 
 import Converter from './components/converter.vue'
 import Licenses from './components/licenses.vue'
+import version from './components/version.vue'
 
 const LabelsEnUS = {
   title: 'AVIF to JPEG "Offline" Batch Converter',
@@ -385,7 +386,6 @@ const LabelsJaJP = {
   confirmCloseDialogTitle: '変換ファイルが未保存',
 };
 
-const VERSION = '0.013';
 const IS_SP = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile Safari/.test(navigator.userAgent);
 const doc = document;
 //const imageFormat = ref('image/png');
@@ -429,7 +429,6 @@ const processingMessage = ref('');
 const processingFileName = ref('');
 const inputTotalSize = ref(0);
 const outputTotalSize = ref(0);
-const thumbnail = ref(null);
 const processingType = computed(() => {
   switch(processingMessage.value) {
     case Labels.value.completed:
@@ -442,6 +441,7 @@ const processingType = computed(() => {
       return 'info';
   }
 });
+const progressColor = ref('lime');
 
 // HTML Element references
 const inputFiles = ref(null);
@@ -451,6 +451,7 @@ const convertedImageUrl = ref('');
 const convertedImageDataUrl = ref('');
 const fileinput = ref(null);
 const folderinput = ref(null);
+const thumbnail = ref(null);
 
 //const Directory_Available = ref(false);
 const Labels = ref(LabelsEnUS);
@@ -572,10 +573,11 @@ function onStart({length}) {
   //console.log("start")
   processingMessage.value = Labels.value.processing;
   prevLoadedImg = null;
+  progressColor.value = 'lime';
 }
-function onProgress({length, index, name}) {
+function onProgress({length, index, name, success}) {
   currentIndex.value = index;
-  percentage.value = index / length * 100 |0;//currentSuccess.value / length * 100 |0;
+  percentage.value = index / length * 100 |0;
   processingMessage.value = Labels.value.processing;
   processingFileName.value = `${name}`;
 }
@@ -613,6 +615,7 @@ function onSuccess({name, index, success, inputSize, outputSize}) {
 function onFailure({name}) {
   //console.log("fail")
   sendMessage.value = [{description:`${name}`, duration:0}, 'warning'];
+  progressColor.value = 'orange';
 }
 function onComplete({index, zip, aborted, success, length, lastImage, lastImageDataURL, name}) {
   //console.log("complete")
@@ -645,6 +648,8 @@ function onComplete({index, zip, aborted, success, length, lastImage, lastImageD
   if( !aborted ) {
     percentage.value = 100;
   }
+  else
+    progressColor.value = 'red';
   
   currentIndex.value = index;
   if( success === length ) {

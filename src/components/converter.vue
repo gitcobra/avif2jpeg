@@ -2,7 +2,9 @@
   <div ref="container" class="droptarget" :style="style">
     <slot></slot>
   </div>
-  <canvas ref="canvas" width="1" height="1" style="display:none"></canvas>
+  
+  <!-- Firefox (v104) doesn't free memory when the canvas is invisible for some reason -->
+  <canvas ref="canvas" style="position:absolute; width:1px; height:1px;"></canvas>
 </template>
 
 <script lang="ts">
@@ -193,37 +195,36 @@ async function convertImages(list, ctx, instance, props) {
     const inputSize = file.size;
     const path = file.relativePath || file.webkitRelativePath;
     const img: HTMLImageElement = document.createElement('img');
-    instance.emit('progress', {file, name, success, failure, index, length});
+    instance.emit('progress', {name, index, length, success, failure});
     index++;
 
     // clear previous object url
     URL.revokeObjectURL(url);
     
-    // convert to dataURI
+    // convert to Object URL
     url = URL.createObjectURL(file);
 
     // load img element
-    const p = getAsPromise(img)
-    .then(() => true)
-    .catch(() => false);
-    
     img.src = url;
+    const imgloaded: boolean = await getAsPromise(img).then(() => true).catch(() => false);
 
-    // wait for resolve
-    const imgloaded: boolean = await p as boolean;
-    if( disturbed )
-      break;
-
-    if( !img.complete || !imgloaded ) {
+    // fail to load or disturbed
+    if( !img.complete || !imgloaded || disturbed ) {
       failure++;
       instance.emit('failure', {file, name, success, failure, index, length});
-      continue;
+      
+      if( disturbed )
+        break;
+      else
+        continue;
     }
 
     // draw to canvas
-    canvas.width = img.width;
-    canvas.height = img.height;
-    ctx.drawImage(img, 0, 0);
+    const w = img.width;
+    const h = img.height;
+    canvas.width = w;
+    canvas.height = h;
+    ctx.drawImage(img, 0, 0, w, h, 0, 0, w, h);
     instance.emit('imgload', {width:img.width, height:img.height, img});
 
     // add to zip
@@ -237,7 +238,7 @@ async function convertImages(list, ctx, instance, props) {
       const callback = blob => {
         lastImageBlob = blob;
         resolve( blob?.arrayBuffer() );
-      }
+      };
       canvas.toBlob(callback, type, quality);
     });
 
@@ -258,7 +259,7 @@ async function convertImages(list, ctx, instance, props) {
     success++;
     //lastImage = b64;
     lastName = fname;
-    instance.emit('success', {file, name, success, failure, index, length, inputSize, outputSize});
+    instance.emit('success', {name, success, failure, index, length, inputSize, outputSize});
   }
 
   // convert last image buffer to DataURI

@@ -16,7 +16,7 @@ import { NModal } from 'naive-ui';
 const visible = ref(false);
 
 const Licenses = {
-  //'Vue': 'https://github.com/vuejs/core/blob/main/LICENSE',
+  'Vue': 'https://github.com/vuejs/core/blob/main/LICENSE',
   'Vite': 'https://github.com/vitejs/vite/blob/main/LICENSE',
   'Vite SSG': 'https://github.com/antfu/vite-ssg/blob/main/LICENSE',
   'Naive UI': 'https://github.com/TuSimple/naive-ui/blob/main/LICENSE',

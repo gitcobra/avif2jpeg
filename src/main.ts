@@ -23,6 +23,7 @@ const routes: RouteRecordRaw[] = [
   },
 ];
 
+//createApp(App).use(router).mount("#app");
 export const createApp = ViteSSG(
   App,
   // vue-router options
@@ -35,4 +36,3 @@ export const createApp = ViteSSG(
     // install plugins etc.
   }
 );
-//createApp(App).use(router).mount("#app");
