@@ -2,6 +2,7 @@
 import { RouterOptions, ViteSSG } from 'vite-ssg'
 import { RouteRecordRaw } from 'vue-router'
 import App from "./App.vue";
+import { createI18n } from './i18n'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -34,5 +35,7 @@ export const createApp = ViteSSG(
   // function to have custom setups
   ({ app, router, routes, isClient, initialState }) => {
     // install plugins etc.
+    const i18n = createI18n();
+    app.use(i18n);
   }
 );
