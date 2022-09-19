@@ -38,7 +38,7 @@
     <n-space vertical align="center" justify="center">
       
       <!-- file selectors -->
-      <input ref="fileinput" type="file" multiple :accept="AcceptFileTypes[imageTypeOption]" style="display:none">
+      <input ref="fileinput" type="file" multiple :accept="AcceptFileTypes[UserSettings.acceptTypeValue]" style="display:none">
       <input webkitdirectory directory ref="folderinput" type="file" style="display:none">
       <n-space vertical align="stretch" justify="center">
         <!-- file select -->
@@ -77,7 +77,7 @@
       -->
       <n-collapse display-directive="show" :expanded-names="UserSettings.expandExtButtons ? ['extItem'] : ''" :on-update:expanded-names="names => UserSettings.expandExtButtons = !!String(names)">
         <n-collapse-item :title="Labels.fileTypeRadioTitle" name="extItem">
-          <n-radio-group v-model:value="imageTypeOption" name="filetyperadios" size="small">
+          <n-radio-group v-model:value="UserSettings.acceptTypeValue" name="filetyperadios" size="small">
             <n-space vertical style="padding-left:1em;">
 
               <n-tooltip v-for="(val) in FileTypeRadioValues" :key="val" trigger="hover" :keep-alive-on-hover="false">
@@ -85,6 +85,14 @@
                   <n-radio :value="val">{{Labels.fileTypeRadioOptions[val]}}</n-radio>
                 </template>
                 {{AcceptFileTypes[val] || '.*'}}
+              </n-tooltip>
+              <n-tooltip trigger="hover" :keep-alive-on-hover="false" placement="bottom-start">
+                <template #trigger>
+                  <div style="padding-left:1em;">
+                    <n-input v-model:value="UserSettings.editedAcceptTypes" @input="onInputTypes" status="success" :disabled="UserSettings.acceptTypeValue !== 'edit_type'" size="small" placeholder=".jpg, .gif, .png"/>
+                  </div>
+                </template>
+                <span v-html="Labels.editAcceptTypes"></span>
               </n-tooltip>
 
             </n-space>
@@ -103,13 +111,14 @@
           :input="inputFiles"
           :sendmessage="sendMessage"
           :processing="processing"
-          :accept="AcceptFileTypes[imageTypeOption]"
+          :accept="AcceptFileTypes[UserSettings.acceptTypeValue]"
           :retain-extension="UserSettings.retainExtension"
           @mounted="onConverterReady" @start="onStart" @progress="onProgress" @success="onSuccess" @failure="onFailure" @complete="onComplete"
           @prevent="prevented = true;"
           @noimage="noimage = true"
           @avifsupport="flag => avifUnsupported = !flag"
           @imgload="onImgLoad"
+          @consumeMessage="onCosumeMessage"
         >
           <n-tooltip v-if="!IS_SP" trigger="hover" :keep-alive-on-hover="false" placement="bottom" :duration="0" :delay="300">
             <template #trigger>
@@ -134,9 +143,9 @@
     <n-space justify="center" align="center">
       <n-tooltip v-if="processCompleted" trigger="hover" placement="top" :keep-alive-on-hover="false" :duration="0" :delay="300">
         <template #trigger>
-          <n-button @click="sendMessage=['reconvert']" color="#888" round>{{Labels.reconvert}}</n-button>
+          <n-button @click="sendMessage='reconvert'" color="#888" round>{{Labels.reconvert}}</n-button>
         </template>
-        <div v-html="`${inputFileCount} ${Labels.files}<br>${Labels.reconvertTip}`"></div>
+        <div v-html="`${Labels.reconvertTip}<br>(${inputFileCount} ${Labels.files})`"></div>
       </n-tooltip>
     </n-space>
 
@@ -206,7 +215,7 @@
 
   <!-- no image dialog -->
   <n-modal v-model:show="noimage" preset="dialog" type="error" title="Images Not Found" positive-text="OK">
-    {{Labels.noimage}}<br>{{AcceptFileTypes[imageTypeOption] || '*.'}}
+    {{Labels.noimage}}<br>{{AcceptFileTypes[UserSettings.acceptTypeValue] || '.*'}}
   </n-modal>
   <!-- AVIF unsupported dialog -->
   <n-modal v-model:show="avifUnsupported" preset="dialog" type="warning" title="Unsupported" positive-text="OK">
@@ -221,7 +230,7 @@
   </n-modal>
 
   <!-- processing modal dialog -->
-  <n-modal v-model:show="showProcess" :closable="!processing && processCompleted" :close-on-esc="!processing && processCompleted" @mask-click="sendMessage=['destroy']" preset="dialog" :title="processingMessage" :type="processingType" :mask-closable="false" :on-after-leave="beforeClose">
+  <n-modal v-model:show="showProcess" :closable="!processing && processCompleted" :close-on-esc="!processing && processCompleted" @mask-click="sendMessage='destroy'" preset="dialog" :title="processingMessage" :type="processingType" :mask-closable="false" :on-after-leave="beforeClose">
     <template #default>
     <n-space vertical align="center">
 
@@ -287,7 +296,7 @@ import { ref, reactive, watch, computed, onMounted, getCurrentScope, h } from 'v
 import { useHead } from "@vueuse/head"
 
 import { NButton, NButtonGroup, NInput, NSelect, NSpace, NSlider, NInputNumber, NSwitch, NIcon, NProgress, NModal, NTooltip, NSpin, NCheckbox, NRadio, NRadioGroup, NCollapse, NCollapseItem } from 'naive-ui'
-import { NMessageProvider, NNotificationProvider } from 'naive-ui'
+import { NScrollbar, NMessageProvider, NNotificationProvider } from 'naive-ui'
 import { NA, enUS, dateEnUS, jaJP, dateJaJP } from 'naive-ui'
 import 'vfonts/RobotoSlab.css'
 import { LogInOutline as LogInIcon, LogoGithub as Github, ImageOutline as FileImageRegular, ImageSharp as MdImage, FolderOpenOutline, ArrowRedoSharp, Archive } from '@vicons/ionicons5'
@@ -311,7 +320,10 @@ const LabelsEnUS = {
     avif_only: 'Only ".avif" or ".webp"',
     all_images: 'All Image Types',
     all_files: 'All Types',
+    edit_type: 'Input File Extensions',
   },
+  editAcceptTypes: 'Input list of comma separated file extentions to load.<br>e.g.) .jpg,.gif,.png',
+
   quality: 'Image Quality',
   qualitytooltip: 'Set image quality for output',
   imageType: 'Image Type',
@@ -350,7 +362,7 @@ const LabelsEnUS = {
 };
 
 const LabelsJaJP = {
-  title: 'AVIFからJPEGへ オフライン一括画像変換',
+  title: 'AVIFからJPEGへ "オフライン"一括画像変換',
   metaDescription: 'AVIF・WebP形式の画像をJPEGやPNG等へオフラインで一括変換する無料ツール',
   droptarget: '変換したいAVIF画像をドラッグ&ドロップして下さい',
   descriptions: [
@@ -365,7 +377,10 @@ const LabelsJaJP = {
     avif_only: '".avif" 又は ".webp" のみ',
     all_images: '全ての画像形式',
     all_files: '全ての形式',
+    edit_type: '拡張子を入力して指定',
   },
+  editAcceptTypes: 'ロードするファイルの拡張子のリストをカンマ区切りで指定して下さい。<br>例) .jpg,.gif,.png',
+
   quality: '画質設定',
   qualitytooltip: '出力する画像のクオリティを指定します',
   imageType: '画像形式',
@@ -411,24 +426,27 @@ const formatList = ref([{
   value: 'image/png',
 }]);
 
+//const ignoreFileExtensions = ref(false);
+const FileTypeRadioValues = ['avif_only', 'all_images', 'all_files', 'edit_type'];
+//const imageTypeOption = ref(FileTypeRadioValues[0]);
+const AcceptFileTypes = ref({
+  avif_only: '.avif,.webp',
+  all_images: ".jpg,.jpeg,.jfif,.pjpeg,.pjp,.gif,.png,.webp,.avif,.bmp,.apng,.ico",
+  all_files: '',
+  edit_type: '',
+});
+
 const UserSettings = reactive({
   imageFormat: 'image/png',
   imageQuality: 90,
   retainExtension: false,
 
   expandExtButtons: false,
+  acceptTypeValue: FileTypeRadioValues[0],
+  editedAcceptTypes: '',
 });
 
 const retainExtension = ref(false);
-//const ignoreFileExtensions = ref(false);
-const FileTypeRadioValues = ['avif_only', 'all_images', 'all_files'];
-const imageTypeOption = ref(FileTypeRadioValues[0]);
-const AcceptFileTypes = {
-  avif_only: '.avif,.webp',
-  all_images: ".jpg,.jpeg,.gif,.png,.webp,.avif,.bmp",
-  all_files: ''
-};
-
 const percentage = ref(0);
 const currentIndex = ref(0);
 const currentSuccess = ref(0);
@@ -461,10 +479,11 @@ const processingType = computed(() => {
 });
 const progressColor = ref('lime');
 const inputFileCount = ref(0);
+let elapsedTime = 0;
 
 // HTML Element references
 const inputFiles = ref(null);
-const sendMessage = ref([]);
+const sendMessage = ref<string | any[]>('');
 const downloadlink = ref(null);
 const convertedImageUrl = ref('');
 const convertedImageDataUrl = ref('');
@@ -539,7 +558,8 @@ onMounted(() => {
       UserSettings[p] = dat[p];
     }
   }
-  // save UserSettings
+  onInputTypes(UserSettings.editedAcceptTypes || '');
+
   window.addEventListener('unload', () => {
     const dat = {};
     for( const p in UserSettings ) {
@@ -563,6 +583,9 @@ function onInputFile(ev) {
   inputFiles.value = list;
   fileinput.value.value = '';
   folderinput.value.value = '';
+}
+function onInputTypes(value) {
+  AcceptFileTypes.value['edit_type'] = value;
 }
 function onConverterReady({formats}) {
   formatList.value = formats.map(val => {
@@ -590,11 +613,11 @@ function onStart({length}) {
   outputTotalSize.value = 0;
   downloadButtonClicked = false;
   zipArchived.value = false;
-  console.log("start")
   processingMessage.value = Labels.value.processing;
   prevLoadedImg = null;
   progressColor.value = 'lime';
   inputFileCount.value = 0;
+  elapsedTime = 0;
 }
 function onProgress({length, index, name, success}) {
   currentIndex.value = index;
@@ -638,11 +661,12 @@ function onFailure({name}) {
   sendMessage.value = [{description:`${name}`, duration:0}, 'warning'];
   progressColor.value = 'orange';
 }
-function onComplete({index, zip, aborted, success, length, lastImage, lastImageDataURL, name, inputFileCount:fcount}) {
+function onComplete({index, zip, aborted, success, length, lastImage, lastImageDataURL, name, inputFileCount:fcount, elapsedTime:etime}) {
   //console.log("complete")
   const a = downloadlink.value;
   const lastPercentage = index / length * 100 |0;
   inputFileCount.value = fcount;
+  elapsedTime = etime;
 
   if( success ) {
     // set link to an image if the succeeded count is 1
@@ -687,6 +711,11 @@ function onComplete({index, zip, aborted, success, length, lastImage, lastImageD
   processing.value = false;
   processCompleted.value = true;
 }
+
+function onCosumeMessage() {
+  sendMessage.value = '';
+}
+
 function checkLandScape() {
   const w = document.body.clientWidth;
   const h = document.body.clientHeight;
@@ -696,8 +725,9 @@ function close() {
 
 }
 function beforeClose() {
-  sendMessage.value = ['destroy'];
-  if( currentSuccess.value > 1 && !downloadButtonClicked ) {
+  sendMessage.value = 'destroy';
+  // show a prompt to save the converted file if more than 10 seconds have elapsed for the conversion
+  if( elapsedTime > 1000 * 10 && !downloadButtonClicked ) {
     unsaved.value = true;
   }
   else {
