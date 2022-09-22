@@ -9,18 +9,17 @@
 
 <script lang="ts">
 /*
-defineProps() in <script setup> cannot reference locally declared variables because it will be hoisted outside of the setup() function. If your component options require initialization in the module scope, use a separate normal <script> to export the options instead.
+https://github.com/vuejs/core/issues/4644
+defineProps() in <script setup> cannot reference locally declared variables because it will be hoisted outside of the setup() function.
+If your component options require initialization in the module scope, use a separate normal <script> to export the options instead.
 */
-let formats: string[] = ['image/png'];
-
-// uncompressed zip library
-// @ts-ignore
-var AnZip=function(){"object"==typeof module&&"object"==typeof exports&&(module.exports=AnZip);for(var UseTA="undefined"!=typeof Uint8Array,A8=UseTA?Uint8Array:Array,CRC32Table=new(UseTA?Uint32Array:Array)(256),i=0;i<256;i++){for(var val=i,j=0;j<8;j++)val=1&val?3988292384^val>>>1:val>>>1;CRC32Table[i]=val}function strToUTF8(str){var a=[];return encodeURIComponent(str).replace(/%(..)|(.)/g,function(m,$1,$2){a.push($1?parseInt($1,16):$2.charCodeAt(0))}),UseTA?new A8(a):a}function getLE32(num){return[255&num,num>>8&255,num>>16&255,num>>24&255]}function AnZip(){this._d={},this._lfh=[],this._curLFHind=0,this._cdh=[],this._cdhLen=0,this._c=0}return AnZip.prototype={add:function(path,dat){if(!path)throw new Error("path is empty");if(path=String(path).replace(/\\/g,"/"),/\/{2,}|\\|^\/|^[a-z]+:/i.test(path))throw new Error('invalid path. containing a drive letter, a leading slash, or empty directory name: "'+path+'"');var size=0,crc=0;if(void 0!==dat){if(!/[^/]+$/.test(path))throw new Error('needs a file name: "'+path+'"');if(!((dat="string"==typeof dat?strToUTF8(dat):dat)instanceof A8))try{if(!(dat.buffer||dat instanceof Array||dat instanceof ArrayBuffer||dat instanceof Buffer))throw new Error;dat=new Uint8Array(dat.buffer||dat)}catch(e){throw new Error("data must be one of type Array, TypedArray, ArrayBuffer, Buffer, or string.")}if(this.has(path))throw new Error("the file already exists: "+path);size=dat.length,crc=function(dat){for(var crc=4294967295,i=0,len=dat.length;i<len;i++)crc=CRC32Table[255&(crc^dat[i])]^crc>>>8;return(4294967295^crc)>>>0}(dat)}for(var d=new Date,date=getLE32(d.getFullYear()-1980<<25|d.getMonth()+1<<21|d.getDate()<<16|d.getHours()<<11|d.getMinutes()<<5|d.getSeconds()/2),dirs=path.replace(/\/+$/,"").split("/"),pathstack="";dirs.length;){pathstack+=dirs.shift();var pathbin,pathLen,dsize,dup,isFile=dat&&0===dirs.length;pathstack+=isFile?"":"/",this._d[pathstack]||(this._d[pathstack]=!0,this._c++,pathLen=(pathbin=strToUTF8(pathstack)).length,dup=getLE32(dsize=isFile?size:0),this._lfh.push([80,75,3,4]),dup=[10,0,0,8,0,0].concat(date,getLE32(isFile?crc:0),dup,dup,[255&pathLen,pathLen>>8&255,0,0]),this._lfh.push(dup,pathbin),this._cdh.push([80,75,1,2,10,0].concat(dup,[0,0,0,0,0,0,isFile?0:16,0,0,0],getLE32(this._curLFHind)),pathbin),this._cdhLen+=46+pathLen,this._curLFHind+=30+pathLen+dsize)}dat&&this._lfh.push(dat)},has:function(path){return!!this._d[path.replace(/\/+$/,"")]},zip:function(){var ecd=[80,75,5,6,0,0,0,0,255&this._c,this._c>>8,255&this._c,this._c>>8].concat(getLE32(this._cdhLen),getLE32(this._curLFHind),[0,0]),arrayChain=this._lfh.concat(this._cdh,[ecd]);if(A8===Array)output=[].concat.apply([],arrayChain);else for(var offset=0,output=new A8(this._curLFHind+this._cdhLen+ecd.length),i=0;i<arrayChain.length;i++){var n=arrayChain[i];output.set(n,offset),offset+=n.length}return output},url:function(){if("function"!=typeof Blob||"function"!=typeof URL)return null;var blob=this.zip(),blob=new Blob([blob],{type:"application/zip"});return window.URL.createObjectURL(blob)}},AnZip}();
+let formats: string[] = ['image/png']; // image file formats for saving supported by canvas
 </script>
 
 <script setup lang="ts">
 import { ref, watch, onMounted, getCurrentInstance, VueElement, defineComponent } from 'vue';
 import { useMessage, useNotification, NotificationType } from 'naive-ui';
+import AnZip from '@gitcobra/anzip';
 
 let processing = false;
 let disturbed = false;

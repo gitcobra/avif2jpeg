@@ -2,34 +2,10 @@
   <n-space vertical align="stretch" justify="space-between" style="height:100%; width:100%;">
     
     <!-- language switches -->
-    <n-space justify="end" align="end" style="box-sizing:border-box; padding:4px; margin:0px;">
-      <n-button-group size="tiny" style="padding:4px;">
-        <n-tooltip trigger="hover" :keep-alive-on-hover="false">
-          <template #trigger>
-            <router-link :to="{ path: '/en'}">
-            <n-a>
-            <n-button :color="!langJA? 'red':''" @click="langJA=false">
-                English
-            </n-button>
-            </n-a>
-            </router-link>
-            
-          </template>
-          Switch to English
-        </n-tooltip>
-      
-        <router-link :to="{ path: '/ja'}">
-        <n-tooltip trigger="hover" :keep-alive-on-hover="false">
-          <template #trigger>
-            <n-button :color="langJA? 'red':''" @click="langJA=true">
-              日本語
-            </n-button>
-          </template>
-          日本語に切り替え
-        </n-tooltip>
-        </router-link>
-      
-      </n-button-group>
+    <n-space justify="end" align="end" style="box-sizing:border-box; padding:4px; margin:0px;">      
+      <n-space align="center" style="font-size: x-small;">
+        <n-icon size="large"><GlobeOutline /></n-icon><n-select size="tiny" v-model:value="locale" :options="langOptions" :consistent-menu-width="false" @change="changeRoute" style="width: 100%;" />
+      </n-space>
     </n-space>
 
     <n-space vertical justify="center">
@@ -43,10 +19,12 @@
       <input webkitdirectory directory ref="folderinput" type="file" style="display:none">
       <n-space vertical align="stretch" justify="center">
         <!-- file select -->
-        <n-tooltip trigger="hover" :keep-alive-on-hover="false" :placement="LANDSCAPE ? 'left' : 'top'" :duration="0" :delay="300">
+        <n-tooltip trigger="hover" :keep-alive-on-hover="false" :placement="LANDSCAPE ? 'left' : 'top'" :duration="0" :delay="50">
           <template #trigger>
             <n-button round @click="fileinput.click()" style="width:100%;">
-              <n-icon size="large" color="gray"><FileImageRegular /></n-icon>
+              <template #icon>
+                <n-icon size="large" color="gray"><FileImageRegular /></n-icon>
+              </template>
               {{t('loadbutton')}}
             </n-button>
           </template>
@@ -54,10 +32,12 @@
         </n-tooltip>
 
         <!-- folder select -->
-        <n-tooltip v-if="!IS_SP" trigger="hover" placement="bottom" :keep-alive-on-hover="false" style="max-width:90vw;" :duration="0" :delay="300">
+        <n-tooltip v-if="!IS_SP" trigger="hover" placement="bottom" :keep-alive-on-hover="false" style="max-width:90vw;" :duration="0" :delay="50">
           <template #trigger>
             <n-button round @click="folderinput.click()" style="width:100%;">
-              <n-icon size="large" color="gray"><FolderOpenOutline /></n-icon>
+              <template #icon>
+                <n-icon size="large" color="gray"><FolderOpenOutline /></n-icon>
+              </template>
               {{t('loadfolderbutton')}}
             </n-button>
           </template>
@@ -121,7 +101,7 @@
           @imgload="onImgLoad"
           @consumeMessage="onCosumeMessage"
         >
-          <n-tooltip v-if="!IS_SP" trigger="hover" :keep-alive-on-hover="false" placement="bottom" :duration="0" :delay="300">
+          <n-tooltip v-if="!IS_SP" trigger="hover" :keep-alive-on-hover="false" placement="bottom" :duration="0" :delay="50">
             <template #trigger>
               <n-space vertical style="border: 6px dashed #EEE; border-radius: 1em; padding:2em; ">
                 <n-space align="stretch" style="color:silver; overflow-wrap: break-word; word-break: keep-all;">
@@ -142,7 +122,7 @@
     </n-notification-provider>
 
     <n-space justify="center" align="center">
-      <n-tooltip v-if="processCompleted" trigger="hover" placement="top" :keep-alive-on-hover="false" :duration="0" :delay="300">
+      <n-tooltip v-if="processCompleted" trigger="hover" placement="top" :keep-alive-on-hover="false" :duration="0" :delay="50">
         <template #trigger>
           <n-button @click="sendMessage='reconvert'" color="#888" round>{{t('reconvert')}}</n-button>
         </template>
@@ -154,7 +134,7 @@
     <n-space justify="center">
       <n-space vertical align="start">
 
-        <n-tooltip trigger="hover" :placement="LANDSCAPE ? 'left' : 'top-start'" :keep-alive-on-hover="false" :duration="0" :delay="300">
+        <n-tooltip trigger="hover" :placement="LANDSCAPE ? 'left' : 'top-start'" :keep-alive-on-hover="false" :duration="0" :delay="50">
           <template #trigger>
             <n-space align="center">
               <n-icon><FileImageRegular /></n-icon>{{t('imageType')}}:
@@ -164,7 +144,7 @@
           {{t('imageTypeTooltip')}}
         </n-tooltip>
 
-        <n-tooltip trigger="hover" :placement="LANDSCAPE ? 'left' : 'top-start'" :keep-alive-on-hover="false" :duration="0" :delay="300">
+        <n-tooltip trigger="hover" :placement="LANDSCAPE ? 'left' : 'top-start'" :keep-alive-on-hover="false" :duration="0" :delay="50">
           <template #trigger>
             <n-space align="center">
               <n-space align="start" :wrap="false">
@@ -179,7 +159,7 @@
           {{t('qualitytooltip')}}
         </n-tooltip>
 
-        <n-tooltip trigger="hover" :placement="LANDSCAPE ? 'left' : 'bottom-start'" :keep-alive-on-hover="false" :duration="0" :delay="300">
+        <n-tooltip trigger="hover" :placement="LANDSCAPE ? 'left' : 'bottom-start'" :keep-alive-on-hover="false" :duration="0" :delay="50">
           <template #trigger><n-checkbox v-model:checked="UserSettings.retainExtension">{{t('retainOriginalExtension')}}</n-checkbox></template>
           {{t('retainExtTooltip')}}
         </n-tooltip>
@@ -299,15 +279,30 @@ import { useHead } from "@vueuse/head"
 import { NButton, NButtonGroup, NInput, NSelect, NSpace, NSlider, NInputNumber, NSwitch, NIcon, NProgress, NModal, NTooltip, NCheckbox, NRadio, NRadioGroup, NCollapse, NCollapseItem, NA } from 'naive-ui'
 import { NScrollbar, NMessageProvider, NNotificationProvider } from 'naive-ui'
 import 'vfonts/RobotoSlab.css'
-import { LogInOutline as LogInIcon, LogoGithub as Github, ImageOutline as FileImageRegular, ImageSharp as MdImage, FolderOpenOutline, ArrowRedoSharp, Archive } from '@vicons/ionicons5'
+import { LogInOutline as LogInIcon, LogoGithub as Github, ImageOutline as FileImageRegular, ImageSharp as MdImage, FolderOpenOutline, ArrowRedoSharp, Archive, GlobeOutline } from '@vicons/ionicons5'
 
 import Converter from './components/converter.vue'
 import Licenses from './components/licenses.vue'
 import version from './components/version.vue'
 
 import { useI18n } from 'vue-i18n'
+import { LANG_LIST, LANGUAGES_JSON } from './i18n';
 
 const { locale, t } = useI18n();
+const langList = [];
+const langOptions = ref(langList);
+for( const lang of LANG_LIST ) {
+  langList.push({
+    label: LANGUAGES_JSON[lang],
+    value: lang,
+  });
+}
+langList.sort((a, b) => {
+  const c = a.label;
+  const d = b.label;
+  return c > d ? 1 : c < d ? -1 : 0;
+});
+
 
 const IS_SP = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile Safari/.test(navigator.userAgent);
 const doc = document;
@@ -384,14 +379,15 @@ const thumbnail = ref(null);
 
 //const Directory_Available = ref(false);
 //const Labels = ref(LabelsEnUS);
-const langJA = ref(false);
+const lang = ref('en');
+
 //const quality = ref(90);
 let downloadButtonClicked = false;
 
 // switch language
-watch(langJA, (newValue, oldValue) => {
+watch(lang, (newValue, oldValue) => {
   if( newValue ) {
-    locale.value = 'ja';
+    locale.value = newValue;
   }
   else {
     locale.value = 'en';
@@ -402,11 +398,19 @@ watch(langJA, (newValue, oldValue) => {
 // initialize language
 // "location.pathname" doesn't work while vite-ssg generates html files so use router's parameter instead.
 const router = useRouter();
-const currentPath = router.currentRoute.value.path;
-if( /\/ja\b/.test(currentPath) || /^\/?$/.test(currentPath) && /^ja\b/i.test(getLanguage()) ) {
-  langJA.value = true;
-  locale.value = 'ja';
+const currentPath = router.currentRoute.value.path || '';
+const langPath = String(currentPath.match(/(?<=^\/)[^/]+/) || '');
+if( langPath && LANG_LIST.includes(langPath) ) {
+  //\/ja\b/.test(currentPath) || /^\/?$/.test(currentPath) && /^ja\b/i.test(getBrowserLanguage()) ) {);
+  locale.value = langPath;
 }
+else {
+  const userlang = getBrowserLanguage().split('-')[0];
+  if( LANG_LIST.includes(userlang) ) {
+    locale.value = userlang;
+  }
+}
+
 
 // insert meta tags
 useHead({
@@ -453,6 +457,9 @@ onMounted(() => {
 });
 
 
+function changeRoute(val) {
+  router.push('./' + val);
+}
 
 function onInputFile(ev) {
   const input = ev.target as HTMLInputElement;
@@ -633,7 +640,7 @@ function copyDataURL(url) {
   } catch(e) {}
 }
 
-function getLanguage(): string {
+function getBrowserLanguage(): string {
   const navigator = window.navigator as any;
   return navigator.language || navigator.userLanguage || navigator.browserLanguage;
 }

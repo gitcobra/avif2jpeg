@@ -2,13 +2,31 @@
 import { RouterOptions, ViteSSG } from 'vite-ssg'
 import { RouteRecordRaw } from 'vue-router'
 import App from "./App.vue";
-import { createI18n } from './i18n'
+import { createI18n, LANG_LIST } from './i18n'
 
 const routes: RouteRecordRaw[] = [
   {
     path: "/",
     name: "Home",
     component: App,
+  }
+];
+
+// add path for each language
+for(const lang of LANG_LIST) {
+  routes.push({
+    path: '/' + lang,
+    name: lang,
+    component: App,
+  });
+}
+
+/*
+  {
+    path: "/en",
+    name: "English",
+    component: App,
+    meta: {title: 'eng',}
   },
   {
     path: "/ja",
@@ -17,12 +35,13 @@ const routes: RouteRecordRaw[] = [
     meta: {title: 'jpn',}
   },
   {
-    path: "/en",
-    name: "English",
+    path: "/kr",
+    name: "Korean",
     component: App,
-    meta: {title: 'eng',}
+    meta: {title: 'kor',}
   },
 ];
+*/
 
 //createApp(App).use(router).mount("#app");
 export const createApp = ViteSSG(

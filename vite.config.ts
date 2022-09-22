@@ -2,12 +2,14 @@ import { ViteSSG } from 'vite-ssg'
 import { defineConfig } from 'vite'
 import { splitVendorChunkPlugin } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import generateSitemap from 'vite-ssg-sitemap'
 
 export default defineConfig({
   base: '/avif2jpeg/dist/',
   plugins: [
     vue(),
-    splitVendorChunkPlugin()
+    splitVendorChunkPlugin(),
+    
   ],
   server: {
     port: 8080,
@@ -15,6 +17,10 @@ export default defineConfig({
   ssgOptions: {
     dirStyle: 'nested',
     onFinished() {
+      generateSitemap({
+        hostname: 'https://gitcobra.github.io',
+        basePath: '/avif2jpeg/dist',
+      });
     },
     
     // build error issue

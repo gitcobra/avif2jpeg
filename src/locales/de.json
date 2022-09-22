@@ -1,0 +1,53 @@
+{
+    "lang": "German",
+    "title": "AVIF zu JPEG \"Offline\" Batch-Konverter",
+    "metaDescription": "Es ist eine kostenlose Webanwendung zur Konvertierung von AVIF- oder WebP-Bildern in andere gängige Bildformate wie JPEG oder PNG ohne Serverkommunikation.",
+    "droptarget": "AVIF-Bilder per Drag & Drop umwandeln",
+    "descriptions": [
+      "Dies ist eine kostenlose Webanwendung zur Stapelkonvertierung von AVIF-Bildern (oder WebP-Bildern usw.) in gängige Bildformate wie JPEG und PNG.",
+      "It uses a browser's built-in function for the conversions, so no data is sent to any server and therefore it is fast and safe.",
+      "Die konvertierten Bilder werden als <strong>eine Zip-Datei</strong> ausgegeben, wenn mehrere Bilder geladen sind.",
+      "Benötigt die <a href=\"https://caniuse.com/avif\" target=\"_self\" style=\"color:red\">neueste</a> Version von Firefox oder Chrome, um AVIF-Bilder zu laden."
+    ],
+    "fileTypeRadioTitle": "Zieldateierweiterungen wählen",
+    "fileTypeRadioOptions": {
+      "avif_only": "Nur \".avif\" oder \".webp\"",
+      "all_images": "Alle Bildtypen",
+      "all_files": "Alle Typen",
+      "edit_type": "Liste der Dateierweiterungen bearbeiten"
+    },
+    "editAcceptTypes": "Geben Sie eine Liste von durch Kommata getrennten Dateierweiterungen ein, die geladen werden sollen.<br>z.B.) .jpg,.gif,.png",
+  
+    "quality": "Bildqualität",
+    "qualitytooltip": "Bildqualität für die Ausgabe festlegen",
+    "imageType": "Bildtyp",
+    "imageTypeTooltip": "Wählen Sie das Bildformat für die Ausgabe",
+    "retainOriginalExtension": "Original-Dateierweiterung beibehalten",
+    "retainExtTooltip": "Die neue Erweiterung wird an die ursprüngliche Erweiterung angehängt",
+  
+    "ignoreFileExtensions": "Alle Dateitypen laden",
+    "ignoreExtTooltip": "Versuchen Sie, Dateien zu laden, die keine Bilddateierweiterung haben",
+    "loadbutton": "Bilder laden",
+    "loadbuttontooltip": "Wählen Sie Ihre Bilder in einem Dialogfenster aus.<br>*Mehrfachauswahl erlaubt.",
+    "loadfolderbutton": "Einen ganzen Ordner laden",
+    "loadfoldertooltip": "Konvertiert alle Bilder im ausgewählten Ordner und seinen Unterordnern und fügt die konvertierten Bilder in ein ZIP-Archiv mit relativem Pfad ein.<br>*Es wird die Schaltfläche \"Hochladen\" angezeigt, aber es wird nichts auf einen Server hochgeladen.",
+    "processing": "Bilder konvertieren",
+    "aborted": "Abgebrochen",
+    "incomplete": "Einige Dateien konnten nicht konvertiert werden",
+    "completed": "Abgeschlossen",
+    "interfered": "Derzeit beschäftigt",
+    "noimage": "Es wurden keine Dateien mit den Erweiterungen gefunden",
+    "avifUnsupported": "Ihr Browser unterstützt das AVIF-Format nicht. Bitte verwenden Sie die neueste Version von Firefox oder Chrome, um AVIF-Bilder zu konvertieren.",
+    "cancel": "Abbrechen",
+    "inputSize": "Eingabegröße",
+    "outputSize": "Ausgabegröße",
+    "save": "Speichern",
+    "close": "Schließen",
+    "open": "Öffnen",
+    "reconvert": "Rückwandeln",
+    "reconvertTip": "Reconvert previous selected {n} @:files",
+    "files": "Datei | Dateien",
+  
+    "confirmCloseDialog": "Sie haben die konvertierten Bilder noch nicht gespeichert.",
+    "confirmCloseDialogTitle": "Die Daten wurden noch nicht gespeichert"
+  }

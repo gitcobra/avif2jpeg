@@ -1,0 +1,53 @@
+{
+    "lang": "Chinese",
+    "title": "AVIF 转 JPEG \"离线 \"批量转换器",
+    "metaDescription": "这是一款免费的网络应用程序，可将 AVIF 或 WebP 图像转换为 JPEG 或 PNG 等其他常见图像格式，而无需进行服务器通信",
+    "droptarget": "拖放 AVIF 图像进行转换",
+    "descriptions": [
+      "这是一款免费的网络应用程序，可将 AVIF（或 WebP 等）图像批量转换为 JPEG、PNG 等常见图像格式",
+      "它使用浏览器的内置功能进行转换，因此<strong>不会向任何服务器发送数据</strong>，既快速又安全",
+      "当加载多个图像时，转换后的图像将以 <strong>zip 文件</strong>的形式输出",
+      "需要 <a href=\"https://caniuse.com/avif\" target=\"_self\" style=\"color:red\">最新</a> 版本的 Firefox 或 Chrome 浏览器才能加载 AVIF 图像"
+    ],
+    "fileTypeRadioTitle": "选择目标文件扩展名",
+    "fileTypeRadioOptions": {
+      "avif_only": "只有 \".avif\" 或 \".webp\"",
+      "all_images": "所有图像类型",
+      "all_files": "所有类型",
+      "edit_type": "编辑文件扩展名列表"
+    },
+    "editAcceptTypes": "输入要加载的逗号分隔的文件扩展名列表。<br>例如）.jpg、.gif、.png",
+  
+    "quality": "图像质量",
+    "qualitytooltip": "设置输出图像质量",
+    "imageType": "图像类型",
+    "imageTypeTooltip": "选择输出图像格式",
+    "retainOriginalExtension": "保留原始文件扩展名",
+    "retainExtTooltip": "新扩展名将附加到原始扩展名上",
+  
+    "ignoreFileExtensions": "加载所有文件类型",
+    "ignoreExtTooltip": "尝试加载没有图像文件扩展名的文件",
+    "loadbutton": "加载图像",
+    "loadbuttontooltip": "从对话窗口中选择图像<br>*允许多重选择",
+    "loadfolderbutton": "加载整个文件夹",
+    "loadfoldertooltip": "转换所选文件夹及其子文件夹中的所有图像，并将转换后的图像添加到具有相对路径的 ZIP 压缩包中。<br>*它会显示 \"Upload（上传）\"按钮，但实际上它不会将任何东西上传到任何服务器上",
+    "processing": "转换图像",
+    "aborted": "已中止",
+    "incomplete": "某些文件转换失败",
+    "completed": "已完成",
+    "interfered": "当前正忙",
+    "noimage": "未找到具有扩展名的文件",
+    "avifUnsupported": "您的浏览器不支持 AVIF 格式。请使用最新版本的 Firefox 或 Chrome 浏览器转换 AVIF 图像",
+    "cancel": "取消",
+    "inputSize": "输入大小",
+    "outputSize": "输出大小",
+    "save": "保存",
+    "close": "关闭",
+    "open": "打开",
+    "reconvert": "重新转换",
+    "reconvertTip": "重新转换之前选定的 {n} @:files",
+    "files": "文件 | 文件",
+  
+    "confirmCloseDialog": "您尚未保存转换后的图像",
+    "confirmCloseDialogTitle": "数据尚未保存"
+  }

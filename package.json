@@ -1,7 +1,7 @@
 {
   "name": "avif2jpeg",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.070",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@gitcobra/anzip": "^1.0.8",
     "@vicons/ionicons5": "^0.12.0",
     "@vicons/tabler": "^0.12.0",
     "@vitejs/plugin-vue": "^3.0.3",
@@ -20,6 +21,7 @@
     "vfonts": "^0.0.3",
     "vite": "^3.0.7",
     "vite-ssg": "^0.20.2",
+    "vite-ssg-sitemap": "^0.6.1",
     "vue-i18n": "^9.2.2",
     "vue-tsc": "^0.39.5"
   }
