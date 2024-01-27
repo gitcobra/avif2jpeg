@@ -47,11 +47,27 @@
     "/avif2jpeg/dist/assets/RobotoSlab-Regular.46ecd6df.ttf",
     "/avif2jpeg/dist/assets/RobotoSlab-Medium.df4026fa.ttf"
   ],
+  "src/locales/fr.json": [
+    "/avif2jpeg/dist/assets/RobotoSlab-Regular.46ecd6df.ttf",
+    "/avif2jpeg/dist/assets/RobotoSlab-Medium.df4026fa.ttf"
+  ],
+  "src/locales/it.json": [
+    "/avif2jpeg/dist/assets/RobotoSlab-Regular.46ecd6df.ttf",
+    "/avif2jpeg/dist/assets/RobotoSlab-Medium.df4026fa.ttf"
+  ],
   "src/locales/ja.json": [
     "/avif2jpeg/dist/assets/RobotoSlab-Regular.46ecd6df.ttf",
     "/avif2jpeg/dist/assets/RobotoSlab-Medium.df4026fa.ttf"
   ],
   "src/locales/kr.json": [
+    "/avif2jpeg/dist/assets/RobotoSlab-Regular.46ecd6df.ttf",
+    "/avif2jpeg/dist/assets/RobotoSlab-Medium.df4026fa.ttf"
+  ],
+  "src/locales/ru.json": [
+    "/avif2jpeg/dist/assets/RobotoSlab-Regular.46ecd6df.ttf",
+    "/avif2jpeg/dist/assets/RobotoSlab-Medium.df4026fa.ttf"
+  ],
+  "src/locales/uk.json": [
     "/avif2jpeg/dist/assets/RobotoSlab-Regular.46ecd6df.ttf",
     "/avif2jpeg/dist/assets/RobotoSlab-Medium.df4026fa.ttf"
   ],

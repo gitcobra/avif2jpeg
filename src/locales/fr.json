@@ -1,0 +1,53 @@
+{
+    "lang": "French",
+    "title": "AVIF to JPEG \"Offline\" Batch Converter",
+    "metaDescription": "Il s'agit d'une application Web gratuite permettant de convertir des images AVIF ou WebP en d'autres formats d'image courants tels que JPEG ou PNG sans communication avec le serveur",
+    "droptarget": "Glisser-déposer des images AVIF pour les convertir",
+    "descriptions": [
+      "Il s'agit d'une application web gratuite permettant de convertir par lots des images AVIF (ou WebP, etc.) vers des formats d'image courants tels que JPEG, PNG",
+      "Il utilise la fonction intégrée du navigateur pour les conversions, de sorte qu'aucune donnée n'est envoyée à un serveur et qu'il est donc rapide et sûr",
+      "The converted images will be output as <strong>a zip file</strong> when multiple images are loaded.",
+      "Requiert <a href=\"https://caniuse.com/avif\" target=\"_self\" style=\"color:red\">la dernière</a> version de Firefox ou Chrome pour charger les images AVIF"
+    ],
+    "fileTypeRadioTitle": "Choisissez les extensions de fichiers cibles",
+    "fileTypeRadioOptions": {
+      "avif_only": "Seulement \".avif\" ou \".webp\"",
+      "all_images": "Tous les types d'images",
+      "all_files": "Tous les types",
+      "edit_type": "Editer la liste des extensions de fichiers"
+    },
+    "editAcceptTypes": "Entrez une liste d'extensions de fichiers séparées par des virgules à charger (par exemple, .jpg, .gif, .png)",
+  
+    "quality": "Qualité de l'image",
+    "qualitytooltip": "Définir la qualité de l'image pour la sortie",
+    "imageType": "Type d'image",
+    "imageTypeTooltip": "Choisir le format de l'image pour la sortie",
+    "retainOriginalExtension": "Conserver l'extension du fichier d'origine",
+    "retainExtTooltip":  "La nouvelle extension sera ajoutée à l'extension d'origine",
+  
+    "ignoreFileExtensions": "Charger tous les types de fichiers",
+    "ignoreExtTooltip": "Essayer de charger les fichiers qui n'ont pas d'extension de fichier image",
+    "loadbutton": "Charger les images",
+    "loadbuttontooltip": "Sélectionnez vos images dans une fenêtre de dialogue.<br>*Sélection multiple autorisée.",
+    "loadfolderbutton": "Charger un dossier entier",
+    "loadfoldertooltip": "Convertit toutes les images du dossier sélectionné et de ses sous-dossiers, et ajoute les images converties à une archive ZIP avec un chemin relatif.<br>*Il affichera le bouton \"Upload\", mais il ne télécharge rien vers aucun serveur.",
+    "processing": "Convertir les images",
+    "aborted": "Aborted",
+    "incomplete": "Certains fichiers n'ont pas été convertis",
+    "completed": "Terminé",
+    "interfered": "Actuellement occupé",
+    "noimage": "Aucun fichier contenant les extensions n'a été trouvé",
+    "avifUnsupported": "Votre navigateur ne prend pas en charge le format AVIF. Veuillez utiliser la dernière version de Firefox ou Chrome pour convertir les images AVIF",
+    "cancel": "Annuler",
+    "inputSize": "Taille d'entrée",
+    "outputSize": "Taille de sortie",
+    "save": "Sauver",
+    "close": "Fermer",
+    "open": "Ouvert",
+    "reconvert": "Reconvertir",
+    "reconvertTip": "Reconvertir les {n} sélectionnés précédemment @:files",
+    "files": "Fichier | Fichiers",
+  
+    "confirmCloseDialog": "Vous n'avez pas encore enregistré les images converties",
+    "confirmCloseDialogTitle": "Les données n'ont pas été sauvegardées"
+  }

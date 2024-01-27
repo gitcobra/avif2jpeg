@@ -45,7 +45,7 @@
     "close": "Schließen",
     "open": "Öffnen",
     "reconvert": "Rückwandeln",
-    "reconvertTip": "Reconvert previous selected {n} @:files",
+    "reconvertTip": "Vorherige ausgewählte Dateien {n} @:files",
     "files": "Datei | Dateien",
   
     "confirmCloseDialog": "Sie haben die konvertierten Bilder noch nicht gespeichert.",
