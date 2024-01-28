@@ -1,0 +1,53 @@
+{
+    "lang": "Indonesian",
+    "title": "Konversi Batch Offline dari AVIF ke JPEG",
+    "metaDescription": "Ini adalah aplikasi web gratis untuk mengonversi gambar AVIF atau WebP ke format gambar umum lainnya seperti JPEG atau PNG tanpa komunikasi server.",
+    "droptarget": "Drag & Drop Avif gambar untuk dikonversi",
+    "descriptions": [
+      "Ini adalah aplikasi web gratis untuk mengonversi batch convert avif (atau webp, dll) gambar ke format gambar umum seperti jpeg, png.",
+      "Ini menggunakan fungsi bawaan browser untuk konversi, jadi <strong>tidak ada data yang dikirim ke server mana pun</strong> dan oleh karena itu cepat dan aman.",
+      "Gambar yang dikonversi akan di-output sebagai file zip apabila beberapa gambar dimuat.",
+      "Membutuhkan <a href=\"https://caniuse.com/avif\" target=\"_self\" style=\"color:red\" >versi terbaru dari Firefox atau Chrome untuk memuat gambar AVIF."
+    ],
+    "fileTypeRadioTitle": "Pilih Ekstensi File Target",
+    "fileTypeRadioOptions": {
+      "avif_only": "hanya \".avif\" atau \".webp\"",
+      "all_images": "semua tipe gambar",
+      "all_files": "semua jenis",
+      "edit_Type": "Edit Daftar Ekstensi File"
+    },
+    "editAcceptTypes": "Masukkan daftar ekstensi file yang dipisahkan koma untuk dimuat, misalnya .jpg,.gif,.png",
+  
+    "quality": "kualitas gambar",
+    "qualitytooltip": "Tetapkan kualitas gambar untuk output",
+    "imageType": "tipe gambar",
+    "imageTypeTooltip": "Pilih format gambar untuk output",
+    "retainOriginalExtension": "Simpan Ekstensi File Asli",
+    "retainExtTooltip": "ekstensi baru akan ditambahkan ke ekstensi asli",
+  
+    "ignoreFileExtensions": "Muat Semua Jenis File",
+    "ignoreExtTooltip": "Coba muat file yang tidak memiliki ekstensi file gambar",
+    "loadbutton": "Muat Gambar",
+    "loadbuttontooltip": "Pilih gambar Anda dari jendela dialog.<br>*Pilihan ganda diperbolehkan.",
+    "loadfolderbutton": "Memuat Seluruh Folder",
+    "loadfoldertooltip": "Mengkonversi semua gambar dalam folder yang dipilih dan subfoldernya, dan menambahkan gambar yang dikonversi ke arsip ZIP dengan jalur relatif.<br>*Ini akan menampilkan tombol \"Unggah\", tetapi sebenarnya tidak mengunggah apa pun ke server mana pun.",
+    "processing": "Mengonversi gambar",
+    "aborted": "Dibatalkan",
+    "incomplete": "Beberapa file gagal dikonversi",
+    "completed": "Selesai",
+    "interfered": "Sedang sibuk",
+    "noimage": "Tidak ada file dengan ekstensi yang ditemukan.",
+    "avifUnsupported": "Browser Anda tidak mendukung format AVIF. Silakan gunakan Firefox atau Chrome versi terbaru untuk mengonversi gambar AVIF.",
+    "cancel": "Batal",
+    "inputSize": "Ukuran masukan",
+    "outputSize": "Ukuran Keluaran",
+    "save": "Simpan",
+    "close": "Tutup",
+    "open": "Buka",
+    "reconvert": "Mengubah kembali",
+    "reconvertTip": "Ubah kembali {n} yang dipilih sebelumnya @:files",
+    "files": "File | Files",
+  
+    "confirmCloseDialog": "Anda belum menyimpan gambar yang dikonversi.",
+    "confirmCloseDialogTitle": "Data belum disimpan"
+  }

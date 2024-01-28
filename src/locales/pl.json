@@ -1,0 +1,53 @@
+{
+    "lang": "Polish",
+    "title": "Konwerter wsadowy AVIF do JPEG \"Offline\"",
+     "metaDescription": "Jest to bezpłatna aplikacja internetowa służąca do konwersji obrazów AVIF lub WebP do innych popularnych formatów obrazów, takich jak JPEG lub PNG, bez komunikacji z serwerem.",
+     "droptarget": "Przeciągnij i upuść obrazy AVIF, aby je przekonwertować",
+     "descriptions": [
+       "To bezpłatna aplikacja internetowa służąca do zbiorczego konwertowania obrazów AVIF (lub WebP itp.) do popularnych formatów obrazów, takich jak JPEG, PNG.",
+       "Do konwersji wykorzystuje wbudowaną funkcję przeglądarki, dzięki czemu <strong>żadne dane nie są wysyłane na żaden serwer</strong>, dzięki czemu jest <strong>szybkie</strong> i <strong>bezpieczne</strong>. ",
+       "Przekonwertowane obrazy zostaną zapisane jako <strong>plik ZIP</strong>, gdy zostanie załadowanych wiele obrazów.",
+       "Wymaga <a href=\"https://caniuse.com/avif\" target=\"_self\" style=\"color:red\">najnowszej</a> wersji przeglądarki Firefox lub Chrome, aby załadować obrazy AVIF ."
+     ],
+     "fileTypeRadioTitle": "Wybierz rozszerzenia plików docelowych",
+     "fileTypeRadioOptions": {
+       "avif_only": "Tylko \".avif\" lub \".webp\"",
+       "all_images": "Wszystkie typy obrazów",
+       "all_files": "Wszystkie typy",
+       "edit_type": "Edytuj listę rozszerzeń plików"
+     },
+     "editAcceptTypes": "Wprowadź listę rozdzielonych przecinkami rozszerzeń plików do załadowania.<br>np.) .jpg,.gif,.png",
+  
+     "quality": "Jakość obrazu",
+     "qualitytooltip": "Ustaw jakość obrazu wyjściowego",
+     "imageType": "Typ obrazu",
+     "imageTypeTooltip": "Wybierz format obrazu wyjściowego",
+     "retainOriginalExtension": "Zachowaj oryginalne rozszerzenie pliku",
+     "retainExtTooltip": "Nowe rozszerzenie zostanie dołączone do oryginalnego rozszerzenia",
+  
+     "ignoreFileExtensions": "Załaduj wszystkie typy plików",
+     "ignoreExtTooltip": "Spróbuj załadować pliki, które nie mają rozszerzenia pliku obrazu",
+     "loadbutton": "Załaduj obrazy",
+     "loadbuttontooltip": "Wybierz obrazy z okna dialogowego.<br>*Dopuszczalny wielokrotny wybór.",
+     "loadfolderbutton": "Załaduj cały folder",
+     "loadfoldertooltip": "Konwertuj wszystkie obrazy w wybranym folderze i jego podfolderach, a następnie dodaj przekonwertowane obrazy do archiwum ZIP ze ścieżką względną.<br>*Wyświetli się przycisk „Prześlij”, ale w rzeczywistości nie zostanie przesłany cokolwiek na dowolny serwer.",
+     "processing": "Konwertowanie obrazów",
+     "interrupted": "Przerwano",
+     "incomplete": "Nie udało się skonwertować niektórych plików",
+     "finished": "Ukończone",
+     "interfered": "Aktualnie zajęty",
+     "noimage": "Nie znaleziono plików z rozszerzeniami.",
+     "avifUnsupported": "Twoja przeglądarka nie obsługuje formatu AVIF. Użyj najnowszej wersji przeglądarki Firefox lub Chrome, aby przekonwertować obrazy AVIF.",
+     "cancel": "Anuluj",
+     "inputSize": "Rozmiar wejściowy",
+     "outputSize": "Rozmiar wyjściowy",
+     "save": "Zapisz",
+     "close": "Zamknij",
+     "open": "Otwarte",
+     "reconvert": "Przekonwertuj ponownie",
+     "reconvertTip": "Przekonwertuj ponownie poprzednio wybrane {n} @:files",
+     "files": "Plik | Pliki",
+  
+     "confirmCloseDialog": "Nie zapisałeś jeszcze przekonwertowanych obrazów.",
+     "confirmCloseDialogTitle": "Dane nie zostały zapisane"
+  }

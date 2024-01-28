@@ -1,6 +1,6 @@
 {
     "lang": "French",
-    "title": "AVIF to JPEG \"Offline\" Batch Converter",
+    "title": "Convertisseur AVIF à JPEG \"Hors Ligne\" Par Lots",
     "metaDescription": "Il s'agit d'une application Web gratuite permettant de convertir des images AVIF ou WebP en d'autres formats d'image courants tels que JPEG ou PNG sans communication avec le serveur",
     "droptarget": "Glisser-déposer des images AVIF pour les convertir",
     "descriptions": [

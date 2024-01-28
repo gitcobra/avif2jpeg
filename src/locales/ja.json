@@ -5,7 +5,7 @@
     "droptarget": "変換したいAVIF画像をドラッグ&ドロップして下さい",
     "descriptions": [
       "これはAVIF、又はWebP形式の画像を、JPEG、PNG等の一般的な形式へ一括変換するための無料Webアプリです。",
-      "変換処理はブラウザの組み込み機能を利用するため、画像データがサーバーへ<strong>送信される事はなく</strong>、またそれゆえに<strong>高速</strong>かつ<strong>安全</strong>です。",
+      "変換処理はブラウザの組み込み機能を利用するため画像データがサーバーへ<strong>送信される事はなく</strong>、それゆえに<strong>高速</strong>かつ<strong>安全</strong>です。",
       "複数枚の画像が読み込まれた場合、変換した画像は<strong>ZIPファイル</strong>に纏めて出力されます。",
       "AVIF画像のロードには<a href=\"https://caniuse.com/avif\" target=\"_self\" style=\"color:red\">最新</a>のFirefox又はChromeが必要です。"
     ],

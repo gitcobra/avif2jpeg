@@ -4,13 +4,20 @@
     <!-- language switches -->
     <n-space justify="end" align="end" style="box-sizing:border-box; padding:4px; margin:0px;">      
       <n-space align="center" style="font-size: x-small;">
-        <n-icon size="large"><GlobeOutline /></n-icon><n-select size="tiny" v-model:value="locale" :options="langOptions" :consistent-menu-width="false" @change="changeRoute" style="width: 100%;" />
+        <n-select ref="langselect" size="tiny" v-model:value="locale" :options="langOptions" :consistent-menu-width="false" @change="changeRoute" style="width: 100%;">
+          <template #arrow>
+            <n-icon size="large"><GlobeOutline /></n-icon>
+          </template>
+        </n-select>
       </n-space>
     </n-space>
-
-    <n-space vertical justify="center">
-      <h1 style="text-decoration:underline; padding:0px; margin:0px; text-decoration-style: double; text-align:center;"><a style="color:black; word-break: keep-all; overflow-wrap: break-word;" href="https://gitcobra.github.io/avif2jpeg/dist/">{{t('title')}}</a></h1>
+    
+    <!-- title -->
+    <n-space vertical justify="center" style="margin:0px;">
+      <h1 style="padding:0px; margin:0px; text-align:center;"><a style="color:black; word-break: keep-all; overflow-wrap: break-word;" href="https://gitcobra.github.io/avif2jpeg/dist/">{{t('title')}}</a></h1>
     </n-space>
+
+    <n-divider style="margin:0px;" />
 
     <n-space vertical align="center" justify="center">
       
@@ -166,6 +173,8 @@
 
       </n-space>
     </n-space>
+    
+    <n-divider />
 
     <!-- descriptions -->
     <n-space justify="center">
@@ -277,7 +286,7 @@ import { ref, reactive, watch, computed, onMounted, getCurrentScope, h } from 'v
 import { useHead } from "@vueuse/head"
 
 import { NButton, NButtonGroup, NInput, NSelect, NSpace, NSlider, NInputNumber, NSwitch, NIcon, NProgress, NModal, NTooltip, NCheckbox, NRadio, NRadioGroup, NCollapse, NCollapseItem, NA } from 'naive-ui'
-import { NScrollbar, NMessageProvider, NNotificationProvider } from 'naive-ui'
+import { NScrollbar, NMessageProvider, NNotificationProvider, NDivider } from 'naive-ui'
 import 'vfonts/RobotoSlab.css'
 import { LogInOutline as LogInIcon, LogoGithub as Github, ImageOutline as FileImageRegular, ImageSharp as MdImage, FolderOpenOutline, ArrowRedoSharp, Archive, GlobeOutline } from '@vicons/ionicons5'
 
@@ -376,6 +385,7 @@ const convertedImageDataUrl = ref('');
 const fileinput = ref(null);
 const folderinput = ref(null);
 const thumbnail = ref(null);
+const langselect = ref(null);
 
 //const Directory_Available = ref(false);
 //const Labels = ref(LabelsEnUS);
