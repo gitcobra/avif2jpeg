@@ -1,0 +1,53 @@
+{
+    "lang": "Dutch",
+    "title": "AVIF naar JPEG Offline batchconverter",
+    "metaDescription": "Het is een gratis webapplicatie om AVIF- of WebP-afbeeldingen te converteren naar andere gangbare afbeeldingsformaten zoals JPEG of PNG zonder servercommunicatie.",
+    "droptarget": "AVIF-afbeeldingen slepen en neerzetten om te converteren",
+    "descriptions": [
+      "Dit is een gratis webapplicatie om AVIF (of WebP, etc) afbeeldingen in batch te converteren naar gangbare afbeeldingsformaten zoals JPEG, PNG.",
+      "Het gebruikt de ingebouwde functie van een browser voor de conversies, dus <strong>er worden geen gegevens naar een server gestuurd</strong> en daarom is het snel en veilig.",
+      "De geconverteerde afbeeldingen worden uitgevoerd als <strong>een zip-bestand</strong> wanneer meerdere afbeeldingen worden geladen.",
+      "Vereist <a href=\"https://caniuse.com/avif\" target=\"_self\" style=\"color:red\">laatste</a> versie van Firefox of Chrome om AVIF-afbeeldingen te laden."
+    ],
+    "fileTypeRadioTitle": "Kies Doelbestand Extenties",
+    "fileTypeRadioOptions": {
+      "avif_only": "Alleen \"avif\" of \"webp\"",
+      "all_images": "Alle afbeeldingstypen",
+      "all_files": "Alle typen",
+      "edit_type": "Lijst bestandsextensies bewerken"
+    },
+    "editAcceptTypes": "Voer een lijst in met door komma's gescheiden bestandsuitbreidingen om te laden.<br>bijv.) .jpg,.gif,.png",
+  
+    "quality": "Beeldkwaliteit",
+    "qualitytooltip": "Beeldkwaliteit instellen voor uitvoer",
+    "imageType": "Beeldtype",
+    "imageTypeTooltip": "Kies afbeeldingsformaat voor uitvoer",
+    "retainOriginalExtension": "Keep Original File Extension",
+    "retainExtTooltip": "Nieuwe extensie wordt toegevoegd aan originele extensie",
+  
+    "ignoreFileExtensions": "Alle bestandstypen laden",
+    "ignoreExtTooltip": "Probeer bestanden te laden die geen afbeeldingsbestandsextensie hebben",
+    "loadbutton": "Afbeeldingen laden",
+    "loadbuttontooltip": "Selecteer uw afbeeldingen in een dialoogvenster.<br>*Meervoudige selectie toegestaan.",
+    "loadfolderbutton": "Een hele map laden",
+    "loadfoldertooltip": "Converteer alle afbeeldingen in de geselecteerde map en de submappen, en voeg de geconverteerde afbeeldingen toe aan een ZIP-archief met relatief pad.<br>*Het zal de knop \"Uploaden\" tonen, maar het uploadt eigenlijk niets naar een server.",
+    "processing": "Afbeeldingen converteren",
+    "aborted": "Afgebroken",
+    "incomplete": "Sommige bestanden zijn niet geconverteerd",
+    "completed": "Completed",
+    "interfered":  "Momenteel Bezig",
+    "noimage": "Er zijn geen bestanden met de uitbreidingen gevonden.",
+    "avifUnsupported": "Uw browser ondersteunt de AVIF-indeling niet. Gebruik de nieuwste versie van Firefox of Chrome om AVIF-afbeeldingen te converteren.",
+    "cancel": "Cancel",
+    "inputSize": "Input Size",
+    "outputSize": "Uitvoergrootte",
+    "save": "Save",
+    "close": "Close",
+    "open": "Openen",
+    "reconvert": "Reconvert",
+    "reconvertTip": "Eerder geselecteerde {n} @:files",
+    "files": "Bestand | Bestanden",
+  
+    "confirmCloseDialog": "Je hebt de geconverteerde afbeeldingen nog niet opgeslagen.",
+    "confirmCloseDialogTitle": "Gegevens zijn niet opgeslagen"
+  }

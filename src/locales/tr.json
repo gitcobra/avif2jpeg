@@ -1,0 +1,55 @@
+{
+    "lang": "Turkish",
+    "title": "AVIF'ten JPEG'e \"Çevrimdışı\" Toplu Dönüştürücü",
+    "metaDescription": "AVIF veya WebP görüntülerini sunucu iletişimi olmadan JPEG veya PNG gibi diğer yaygın görüntü formatlarına dönüştürmek için ücretsiz bir web uygulamasıdır.",
+    "droptarget": "AVIF Görüntülerini Sürükle ve Bırak Dönüştür",
+    "descriptions": [
+      "Bu, AVIF (veya WebP, vb.) görüntülerini JPEG, PNG gibi yaygın görüntü formatlarına toplu olarak dönüştürmek için ücretsiz bir web uygulamasıdır.",
+      "Dönüşümler için tarayıcının yerleşik işlevini kullanır, böylece <strong>hiçbir sunucuya veri gönderilmez</strong> ve bu nedenle hızlı ve güvenlidir",
+      "Birden fazla görüntü yüklendiğinde dönüştürülen görüntüler <strong>bir zip dosyası</strong> olarak çıkarılacaktır.",
+      "AVIF görüntülerini yüklemek için <a href=\"https://caniuse.com/avif\" target=\"_self\" style=\"color:red\">en son</a> Firefox veya Chrome sürümünü gerektirir."
+    ],
+    "fileTypeRadioTitle": "Hedef Dosya Uzantılarını Seçin",
+    "fileTypeRadioOptions": {
+      "avif_only": "Sadece \".avif\" veya \".webp\"",
+      "all_images": "Tüm Resim Türleri",
+      "all_files": "Tüm Türler",
+      "edit_type": "Dosya Uzantısı Listesini Düzenle"
+    },
+    "editAcceptTypes": "Yüklenecek virgülle ayrılmış dosya uzantılarının bir listesini girin.<br>e.g.) .jpg,.gif,.png",
+  
+    "quality": "Görüntü Kalitesi",
+    "qualitytooltip": "Çıktı için görüntü kalitesini ayarla",
+    "imageType": "Görüntü Türü",
+    "imageTypeTooltip": "Çıktı için görüntü formatı seçin",
+    "retainOriginalExtension": "Orijinal Dosya Uzantısını Koru",
+    "retainExtTooltip": "Yeni uzantı orijinal uzantıya eklenecektir",
+  
+    "ignoreFileExtensions": "tüm dosya türlerini yükle",
+    "ignoreExtTooltip": "resim dosyası uzantısına sahip olmayan dosyaları yükle",
+    "loadbutton": "Resimleri Yükle",
+    "loadbuttontooltip": "Resimlerinizi bir iletişim penceresinden seçin.<br>*Çoklu seçime izin verilir.",
+    "loadfolderbutton": "Tüm Klasörü Yükle",
+    "loadfoldertooltip": "Seçili klasördeki ve alt klasörlerindeki tüm görüntüleri dönüştürün ve dönüştürülen görüntüleri göreli yolla bir ZIP arşivine ekleyin.<br>*\"Yükle\" düğmesini gösterecektir, ancak aslında herhangi bir sunucuya hiçbir şey yüklemez.",
+    
+    "processing": "Görüntüleri dönüştürme",
+    "aborted": "İptal edildi",
+    "incomplete": "Bazı dosyalar dönüştürülemedi",
+    "completed": "Tamamlandı",
+    "interfered": "Şu Anda Meşgul",
+    "noimage": "Uzantılara sahip hiçbir dosya bulunamadı.",
+
+    "avifUnsupported": "Tarayıcınız AVIF formatını desteklemiyor. AVIF görüntülerini dönüştürmek için lütfen Firefox veya Chrome'un en son sürümünü kullanın.",
+    "cancel": "İptal",
+    "inputSize": "Girdi Boyutu",
+    "outputSize": "Çıktı Boyutu",
+    "save": "Kaydet",
+    "close": "Kapat",
+    "open": "Açık",
+    "reconvert": "Yeniden dönüştür",
+    "reconvertTip": "Önceki seçili {n}'yi yeniden dönüştür @:files",
+    "files": "Dosya | Dosyalar",
+  
+    "confirmCloseDialog": "Dönüştürülen görüntüleri henüz kaydetmediniz.",
+    "confirmCloseDialogTitle": "Veriler kaydedilmedi"
+  }
