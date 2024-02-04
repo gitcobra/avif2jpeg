@@ -468,7 +468,7 @@ onMounted(() => {
 
 
 function changeRoute(val) {
-  router.push('./' + val);
+  router.push('/' + val);
 }
 
 function onInputFile(ev) {
