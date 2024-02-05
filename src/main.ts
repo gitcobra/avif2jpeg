@@ -15,7 +15,7 @@ const routes: RouteRecordRaw[] = [
 // add path for each language
 for(const lang of LANG_LIST) {
   routes.push({
-    path: '/' + lang,
+    path: '/' + lang + '/',
     name: lang,
     component: App,
   });

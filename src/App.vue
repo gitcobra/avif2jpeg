@@ -4,7 +4,7 @@
     <!-- language switches -->
     <n-space justify="end" align="end" style="box-sizing:border-box; padding:4px; margin:0px;">      
       <n-space align="center" style="font-size: x-small;">
-        <n-select ref="langselect" size="tiny" v-model:value="locale" :options="langOptions" :consistent-menu-width="false" @change="changeRoute" style="width: 100%;">
+        <n-select ref="langselect" size="tiny" v-model:value="locale" :options="langOptions" :consistent-menu-width="false" @update:value="changeRoute" style="width: 100%;">
           <template #arrow>
             <n-icon size="large"><GlobeOutline /></n-icon>
           </template>
@@ -468,7 +468,7 @@ onMounted(() => {
 
 
 function changeRoute(val) {
-  router.push('/' + val);
+  router.push('/' + val + '/');
 }
 
 function onInputFile(ev) {
