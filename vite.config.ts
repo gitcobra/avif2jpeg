@@ -20,6 +20,7 @@ export default defineConfig({
       generateSitemap({
         hostname: 'https://gitcobra.github.io',
         basePath: '/avif2jpeg/dist',
+        readable: true,
       });
     },
     
