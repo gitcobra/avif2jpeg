@@ -21,27 +21,7 @@ for(const lang of LANG_LIST) {
   });
 }
 
-/*
-  {
-    path: "/en",
-    name: "English",
-    component: App,
-    meta: {title: 'eng',}
-  },
-  {
-    path: "/ja",
-    name: "Japanese",
-    component: App,
-    meta: {title: 'jpn',}
-  },
-  {
-    path: "/kr",
-    name: "Korean",
-    component: App,
-    meta: {title: 'kor',}
-  },
-];
-*/
+
 
 //createApp(App).use(router).mount("#app");
 export const createApp = ViteSSG(
