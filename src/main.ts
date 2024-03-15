@@ -2,7 +2,7 @@
 import { RouterOptions, ViteSSG } from 'vite-ssg'
 import { RouteRecordRaw } from 'vue-router'
 import App from "./App.vue";
-import { createI18n, LANG_LIST } from './i18n'
+import { createI18n, LANG_ID_LIST } from './i18n'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -13,7 +13,7 @@ const routes: RouteRecordRaw[] = [
 ];
 
 // add path for each language
-for(const lang of LANG_LIST) {
+for(const lang of LANG_ID_LIST) {
   routes.push({
     path: '/' + lang + '/',
     strict: true,
@@ -30,7 +30,7 @@ export const createApp = ViteSSG(
   // vue-router options
   {
     routes,
-    base: '/avif2jpeg/dist/'
+    base: '/avif2jpeg/dist/',
   },
   // function to have custom setups
   ({ app, router, routes, isClient, initialState }) => {

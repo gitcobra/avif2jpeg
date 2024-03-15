@@ -295,14 +295,14 @@ import Licenses from './components/licenses.vue'
 import version from './components/version.vue'
 
 import { useI18n } from 'vue-i18n'
-import { LANG_LIST, LANGUAGES_JSON } from './i18n';
+import { LANG_ID_LIST, LANG_NAMES } from './i18n';
 
 const { locale, t } = useI18n();
 const langList = [];
 const langOptions = ref(langList);
-for( const lang of LANG_LIST ) {
+for( const lang of LANG_ID_LIST ) {
   langList.push({
-    label: LANGUAGES_JSON[lang],
+    label: LANG_NAMES[lang],
     value: lang,
   });
 }
@@ -394,14 +394,17 @@ const lang = ref('en');
 //const quality = ref(90);
 let downloadButtonClicked = false;
 
+
 // switch language
-watch(lang, (newValue, oldValue) => {
+watch(locale, (newValue, oldValue) => {
+  /*
   if( newValue ) {
     locale.value = newValue;
   }
   else {
     locale.value = 'en';
   }
+  */
   document.title = t('title');
 });
 
@@ -410,13 +413,13 @@ watch(lang, (newValue, oldValue) => {
 const router = useRouter();
 const currentPath = router.currentRoute.value.path || '';
 const langPath = String(currentPath.match(/(?<=^\/)[^/]+/) || '');
-if( langPath && LANG_LIST.includes(langPath) ) {
+if( langPath && LANG_ID_LIST.includes(langPath) ) {
   //\/ja\b/.test(currentPath) || /^\/?$/.test(currentPath) && /^ja\b/i.test(getBrowserLanguage()) ) {);
   locale.value = langPath;
 }
 else {
   const userlang = getBrowserLanguage().split('-')[0];
-  if( LANG_LIST.includes(userlang) ) {
+  if( LANG_ID_LIST.includes(userlang) ) {
     locale.value = userlang;
   }
 }

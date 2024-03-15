@@ -4,8 +4,13 @@ import en from './locales/en.json'
 import ja from './locales/ja.json'
 */
 
-export const LANG_LIST = [];
-export const LANGUAGES_JSON = [];
+
+// language id list
+export const LANG_ID_LIST = [];
+// language name list
+export const LANG_NAMES = [];
+// language json list
+export const LANG_JSONS = [];
 
 // load language files
 const messages = {};
@@ -16,8 +21,9 @@ for(const path in messageImports) {
   const json = raw; //JSON.parse(raw);
   
   messages[lang] = json;
-  LANG_LIST.push(lang);
-  LANGUAGES_JSON[lang] = json['lang'];
+  LANG_ID_LIST.push(lang);
+  LANG_NAMES[lang] = json['lang'];
+  LANG_JSONS[lang] = json;
 }
 
 
