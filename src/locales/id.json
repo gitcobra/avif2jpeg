@@ -7,7 +7,7 @@
       "Ini adalah aplikasi web gratis untuk mengonversi batch convert avif (atau webp, dll) gambar ke format gambar umum seperti jpeg, png.",
       "Ini menggunakan fungsi bawaan browser untuk konversi, jadi <strong>tidak ada data yang dikirim ke server mana pun</strong> dan oleh karena itu cepat dan aman.",
       "Gambar yang dikonversi akan di-output sebagai file zip apabila beberapa gambar dimuat.",
-      "Membutuhkan <a href=\"https://caniuse.com/avif\" target=\"_self\" style=\"color:red\" >versi terbaru dari Firefox atau Chrome untuk memuat gambar AVIF."
+      "Membutuhkan <a href=\"https://caniuse.com/avif\" target=\"_self\" style=\"color:red\" >versi terbaru dari</a> Firefox atau Chrome untuk memuat gambar AVIF."
     ],
     "fileTypeRadioTitle": "Pilih Ekstensi File Target",
     "fileTypeRadioOptions": {

@@ -1,23 +1,39 @@
 <template>
   <n-space vertical align="stretch" justify="space-between" style="height:100%; width:100%;">
     
-    <!-- language switches -->
-    <n-space justify="end" align="end" style="box-sizing:border-box; padding:4px; margin:0px;">      
-      <n-space align="center" style="font-size: x-small;">
-        <n-select ref="langselect" size="tiny" v-model:value="locale" :options="langOptions" :consistent-menu-width="false" @update:value="changeRoute" style="width: 100%;">
-          <template #arrow>
-            <n-icon size="large"><GlobeOutline /></n-icon>
-          </template>
-        </n-select>
+    <!-- header -->
+    <n-space vertical justify="start">
+      <n-space justify="space-between" style="box-sizing:border-box; padding:4px; margin:0px;">      
+
+        <n-space align="start">
+          <!-- github -->
+          <n-a href="https://github.com/gitcobra/avif2jpeg" style="color:black; font-size:small; font-weight: bolder;"><n-icon><Github /></n-icon>GitHub</n-a>
+
+          <span style="font-size:x-small;"><version/></span>
+          
+          <n-space align="center">
+            <licenses/>
+          </n-space>
+
+        </n-space>
+        
+        <!-- language switches -->
+        <n-space align="end" style="font-size: x-small;">
+          <n-select ref="langselect" size="tiny" v-model:value="locale" :options="langOptions" :consistent-menu-width="false" @update:value="changeRoute" style="width: 100%;">
+            <template #arrow>
+              <n-icon size="large"><GlobeOutline /></n-icon>
+            </template>
+          </n-select>
+        </n-space>
       </n-space>
+
+      <n-divider style="margin:0px;" />
     </n-space>
     
     <!-- title -->
     <n-space vertical justify="center" style="margin:0px;">
       <h1 style="padding:0px; margin:0px; text-align:center;"><a style="color:black; word-break: keep-all; overflow-wrap: break-word;" href="https://gitcobra.github.io/avif2jpeg/dist/">{{t('title')}}</a></h1>
     </n-space>
-
-    <n-divider style="margin:0px;" />
 
     <n-space vertical align="center" justify="center">
       
@@ -173,35 +189,31 @@
 
       </n-space>
     </n-space>
-    
-    <n-divider />
 
-    <!-- descriptions -->
-    <n-space justify="center">
-      <ul style="color:gray; padding-left:20px;">
-        <li v-for="text in $tm('descriptions')" :key="text" style="text-align:left" v-html="text"></li>
-      </ul>
-    </n-space>
+    <n-space vertical justify="end">
+      <n-divider style="margin:0px;" />
 
-    <!-- footer -->
-    <n-space justify="center" align="baseline">
-      <p style="font-size:x-small; text-align:center; margin:0px;">
-        <version />
-      </p>
-
-      <n-space align="center">
-        <n-space align="center">
-          <n-a href="https://github.com/gitcobra/avif2jpeg" style="color:black; font-size:small;"><n-icon><Github /></n-icon>GitHub</n-a>
-        </n-space>
-
-        <n-space align="center">
-          <licenses />
-        </n-space>
+      <!-- descriptions -->
+      <n-space justify="center">
+        <ul style="color:gray; padding-left:20px;">
+          <li v-for="text in $tm('descriptions')" :key="text" style="text-align:left" v-html="text"></li>
+        </ul>
       </n-space>
     </n-space>
-
-
+    
   </n-space>
+
+
+
+
+
+
+
+
+
+
+
+  <!-- dialogs -->
 
   <!-- no image dialog -->
   <n-modal v-model:show="noimage" preset="dialog" type="error" title="Images Not Found" positive-text="OK">
@@ -275,9 +287,12 @@
   </n-modal>
   <a ref="downloadlink" href="" v-show="false"></a>
 
-  <!-- prevented error -->
+  <!-- errors -->
   <n-modal v-model:show="prevented" preset="dialog" type="error" positive-text="OK" title="Busy">{{t('interfered')}}</n-modal>
 </template>
+
+
+
 
 
 <script setup lang="ts">
