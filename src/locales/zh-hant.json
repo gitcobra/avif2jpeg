@@ -1,0 +1,54 @@
+{
+    "lang": "Chinese(hant)",
+    "title": "AVIF到JPEG“離線”批處理轉換器",
+    "metaDescription": "它是一個免費的Web應用程序，可將AVIF或WebP圖像轉換為其他常見的圖像格式，例如JPEG或PNG，而無需服務器通信。",
+    "droptarget": "拖動avif圖像轉換",
+    "descriptions": [
+      "這是一個免費的Web應用程序，可將AVIF（或WebP等）批量轉換為常見圖像格式，例如JPEG，PNG。",
+      "它對轉換使用瀏覽器的內置功能，因此<strong>沒有將數據發送到任何服務器</strong>，因此它是快速且安全的。",
+      "加載多個圖像時，轉換後的圖像將作為<strong> zip文件</strong>輸出。",
+      "需要<a href=\"https://caniuse.com/avif\" target=\"_self\" style=\"color:red\">最新版本的</a>Firefox或Chrome來加載AVIF圖像"
+    ],
+    "selectLanguage": "選擇您的語言",
+    "fileTypeRadioTitle": "選擇目標文件範圍",
+    "fileTypeRadioOptions": {
+      "avif_only": "唯一 \".avif\" 或 \".webp\"",
+      "all_images": "所有圖像類型",
+      "all_files": "所有類型",
+      "edit_type": "編輯文件擴展名列表"
+    },
+    "editAcceptTypes": "輸入逗號分隔的文件擴展名的列表。<br>例如）.jpg，.gif，.png“",
+  
+    "quality": "圖像質量",
+    "qualitytooltip": "設置輸出的圖像質量",
+    "imageType": "圖像類型",
+    "imageTypeTooltip": "為輸出選擇圖像格式",
+    "retainOriginalExtension": "保持原始文件擴展名",
+    "retainExtTooltip": "新擴展名將附加到原始擴展名",
+  
+    "ignoreFileExtensions": "加載所有文件類型",
+    "ignoreExtTooltip": "嘗試加載沒有圖像文件擴展名的文件",
+    "loadbutton": "加載圖像",
+    "loadbuttontooltip": "從對話框窗口中選擇您的圖像。<br>*允許多個選擇。",
+    "loadfolderbutton": "加載一個完整的文件夾",
+    "loadfoldertooltip": "將所選文件夾及其子文件夾中的所有圖像轉換，並將轉換的圖像添加到帶有相對路徑的ZIP檔案中。<br>*它將顯示“ upload ”按鈕，但實際上並未將任何服務器上傳到任何服務器。",
+    "processing": "轉換圖像",
+    "aborted": "已中止",
+    "incomplete": "某些文件無法轉換",
+    "completed": "已完成",
+    "interfered": "當前很忙",
+    "noimage": "沒有找到範圍的文件。",
+    "avifUnsupported": "您的瀏覽器不支持AVIF格式。請使用最新版本的Firefox或Chrome轉換AVIF圖像。",
+    "cancel": "取消",
+    "inputSize": "輸入大小",
+    "outputSize": "輸出大小小",
+    "save": "保存",
+    "close": "關閉",
+    "open": "打開",
+    "reconvert": "重新經營",
+    "reconvertTip": "重新重新轉換 {n} @:files",
+    "files": "文件 | 文件",
+  
+    "confirmCloseDialog": "您還沒有保存轉換後的圖像。",
+    "confirmCloseDialogTitle": "尚未保存數據"
+  }

@@ -18,12 +18,17 @@
         </n-space>
         
         <!-- language switches -->
-        <n-space align="end" style="font-size: x-small;">
-          <n-select ref="langselect" size="tiny" v-model:value="locale" :options="langOptions" :consistent-menu-width="false" @update:value="changeRoute" style="width: 100%;">
-            <template #arrow>
-              <n-icon size="large"><GlobeOutline /></n-icon>
+        <n-space align="end" style="font-size: x-small;">          
+          <n-tooltip trigger="hover" :keep-alive-on-hover="false" :placement="LANDSCAPE ? 'left' : 'top'" :duration="0" :delay="50">
+            <template #trigger>
+              <n-select ref="langselect" size="tiny" v-model:value="locale" :options="langOptions" :consistent-menu-width="false" @update:value="changeRoute" style="width: 100%;">
+                <template #arrow>
+                  <n-icon size="large"><GlobeOutline /></n-icon>
+                </template>
+              </n-select>
             </template>
-          </n-select>
+            <div v-html="t('selectLanguage')"></div>
+          </n-tooltip>
         </n-space>
       </n-space>
 
@@ -429,13 +434,27 @@ const router = useRouter();
 const currentPath = router.currentRoute.value.path || '';
 const langPath = String(currentPath.match(/(?<=^\/)[^/]+/) || '');
 if( langPath && LANG_ID_LIST.includes(langPath) ) {
-  //\/ja\b/.test(currentPath) || /^\/?$/.test(currentPath) && /^ja\b/i.test(getBrowserLanguage()) ) {);
   locale.value = langPath;
 }
 else {
-  const userlang = getBrowserLanguage().split('-')[0];
-  if( LANG_ID_LIST.includes(userlang) ) {
-    locale.value = userlang;
+  const userlang = getBrowserLanguage().toLowerCase();
+  const langhead = userlang.split(/[-_]/)[0];
+  
+  $LANG:
+  if( LANG_ID_LIST.includes(langhead) ) {
+    // choose traditional or simplified chinese
+    if( langhead === 'zh' ) {
+      switch( userlang ) {
+        case 'zh-hant':
+        case 'zh-mo':
+        case 'zh-hk':
+        case 'zh-tw':
+          locale.value = 'zh-hant';
+          break $LANG;
+      }
+    }
+
+    locale.value = langhead;
   }
 }
 

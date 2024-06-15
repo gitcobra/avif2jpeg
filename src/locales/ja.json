@@ -9,6 +9,7 @@
       "複数枚の画像が読み込まれた場合、変換した画像は<strong>ZIPファイル</strong>に纏めて出力されます。",
       "AVIF画像のロードには<a href=\"https://caniuse.com/avif\" target=\"_self\" style=\"color:red\">最新</a>のFirefox又はChromeが必要です。"
     ],
+    "selectLanguage": "言語を選択",
     "fileTypeRadioTitle": "変換対象ファイルの拡張子を指定",
     "fileTypeRadioOptions": {
       "avif_only": "\".avif\" 又は \".webp\" のみ",
