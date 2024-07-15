@@ -26,7 +26,11 @@ let disturbed = false;
 //let formats: string[] = ['image/png'];
 let targetFiles = [];
 
-const emit = defineEmits(['mounted', 'start', 'progress', 'success', 'failure', 'complete', 'prevent', 'noimage', 'avifsupport', 'imgload', 'consumeMessage']);
+let currentImgBlobUrl = '';
+let lastImage = '';
+let lastZipUrl = '';
+
+const emit = defineEmits(['mounted', 'start', 'progress', 'success', 'failure', 'complete', 'prevent', 'noimage', 'avifsupport', 'imgload', 'consumeMessage', 'pushZip']);
 const props = defineProps({
   target: [HTMLElement, Document],
   format: {
@@ -50,6 +54,7 @@ const props = defineProps({
   sendmessage: [Array, String],
   style: Object,
   retainExtension: Boolean,
+  maxZipSize: Number,
 });
 
 const canvas = ref(null);
@@ -195,11 +200,20 @@ function startConvert(dat, ctx) {
 
 async function convertImages(list, ctx) {
   const canvas = ctx.canvas;
-  const azip = new AnZip;
+  let azip = new AnZip;
   const type = props.format;
   const quality = props.quality / 100;
   //const accept = props.accept || '';
   const ext = [...type.matchAll(/.+\/(.+)/g)][0][1].replace(/jpeg/, 'jpg');
+  
+  if( lastImage )
+    URL.revokeObjectURL( lastImage );
+  if( lastZipUrl )
+    URL.revokeObjectURL( lastZipUrl );
+  if( currentImgBlobUrl ) {
+    URL.revokeObjectURL(currentImgBlobUrl);
+  }
+
   emit('start', {list, length: list.length});
 
   const startTime = new Date().getTime();
@@ -209,7 +223,11 @@ async function convertImages(list, ctx) {
   let failure = 0;
   let lastImageBlob = null;
   let lastName = '';
-  let url = '';
+  lastImage = '';
+  lastZipUrl = '';
+  currentImgBlobUrl = '';
+  let currentOutputSizeSum = 0;
+  let memoryProblemOccurred = false;
   for( const file of list ) {
     if( disturbed )
       break;
@@ -222,13 +240,16 @@ async function convertImages(list, ctx) {
     index++;
 
     // clear previous object url
-    //URL.revokeObjectURL(url);
+    if( currentImgBlobUrl ) {
+      URL.revokeObjectURL(currentImgBlobUrl);
+      currentImgBlobUrl = '';
+    }
     
     // convert to Object URL
-    url = URL.createObjectURL(file);
+    currentImgBlobUrl = URL.createObjectURL(file);
 
     // load img element
-    img.src = url;
+    img.src = currentImgBlobUrl;
     const imgloaded: boolean = await getAsPromise(img).then(() => true).catch(() => false);
 
     // fail to load or disturbed
@@ -278,9 +299,48 @@ async function convertImages(list, ctx) {
 
     const outputSize = bin.byteLength;
     
+    // emit a zip when the current total size exceeds maxZipSize
+    currentOutputSizeSum += outputSize;
+    const restItemCount = length - index;
+    if( restItemCount > 5 && currentOutputSizeSum > 1024 * 1024 * props.maxZipSize ) {
+      try {
+        lastZipUrl = azip.url();
+      } catch(e: any) {
+        failure++;
+        emit('failure', {name: e.message});
+        memoryProblemOccurred = true;
+        alert("memory problem");
+        break;
+      }
+      
+      emit('pushZip', {zip: lastZipUrl, size: currentOutputSizeSum});
+      
+      currentOutputSizeSum = 0;
+      azip.clear();
+      azip = new AnZip();
+    }
+    
     //const fname = (path || name).replace(RegExp('\\.'+ext+'$', 'i'), '').replace(props.retainExtension? '' : /\.(jpe?g|gif|png|avif|webp|bmp)$/i, '') + '.' + ext;
-    const fname = (path || name).replace(props.retainExtension? '' : /\.(jpe?g|gif|png|avif|webp|bmp)$/i, '') + '.' + ext;
-    azip.add(fname, bin);
+    const basename = (path || name);
+    let fname: string;
+    // add a number to the filname if the name already exists in the zip file
+    for( let dupCounter = 1; dupCounter < 0xFF; dupCounter++ ) {
+      fname = basename.replace(props.retainExtension? '' : /\.(jpe?g|gif|png|avif|webp|bmp)$/i, '') + (dupCounter > 1 ? `(${dupCounter})` : '') + '.' + ext;
+      if( azip.has(fname) ) {
+        continue;
+      }
+      break;
+    }
+
+    try {
+      azip.add(fname, bin);
+    }
+    catch(e: any) {
+      console.error(e.message);
+      failure++;
+      emit('failure', {name});
+      continue;
+    }
 
     success++;
     //lastImage = b64;
@@ -289,8 +349,8 @@ async function convertImages(list, ctx) {
   }
 
   // convert last image buffer to DataURI
-  let lastImage;
-  let lastImageDataURL;
+  lastImage = '';
+  let lastImageDataURL = '';
   if( lastImageBlob ) {
     lastImage = URL.createObjectURL(lastImageBlob);
     const reader = new FileReader;
@@ -301,11 +361,24 @@ async function convertImages(list, ctx) {
   const elapsedTime = new Date().getTime() - startTime;
 
   // emit as ZIP
-  const zipUrl = azip.url();
-  emit('complete', {aborted:disturbed, success, failure, index, length, zip:zipUrl, lastImage, lastImageDataURL, name:lastName, inputFileCount:targetFiles.length, elapsedTime});
+  try {
+    if( memoryProblemOccurred )
+      throw new Error();
+    lastZipUrl = azip.url();
+  } catch(e: any) {
+    console.error(e.message);
+    failure++;
+    success = 0;
+    lastZipUrl = (new AnZip()).url();
+    emit('failure', {name: e.message});
+    emit('failure', {name: `failed to create a zip file. open the Advanced Settings and limit the max zip file size.`});
+  }
+  emit('complete', {aborted:disturbed, success, failure, index, size:currentOutputSizeSum, length, zip: lastZipUrl, lastImage, lastImageDataURL, name:lastName, inputFileCount:targetFiles.length, elapsedTime});
 
   processing = false;
 }
+
+
 
 function checkAvifSupport(): Promise<boolean> {
   const TestAVIFData = 'data:image/avif;base64,AAAAHGZ0eXBtaWYxAAAAAG1pZjFhdmlmbWlhZgAAAPJtZXRhAAAAAAAAACFoZGxyAAAAAAAAAABwaWN0AAAAAAAAAAAAAAAAAAAAAA5waXRtAAAAAAABAAAAHmlsb2MAAAAABEAAAQABAAAAAAEWAAEAAAAgAAAAKGlpbmYAAAAAAAEAAAAaaW5mZQIAAAAAAQAAYXYwMUltYWdlAAAAAHFpcHJwAAAAUmlwY28AAAAUaXNwZQAAAAAAAAAIAAAACAAAABBwYXNwAAAAAQAAAAEAAAAWYXYxQ4EgAAAKCDgIv2kBDQAgAAAAEHBpeGkAAAAAAwgICAAAABdpcG1hAAAAAAAAAAEAAQQBAoOEAAAAKG1kYXQKCDgIv2kBDQAgMhQWQAAASAAADAZuZXHwA9LzjNWygA==';

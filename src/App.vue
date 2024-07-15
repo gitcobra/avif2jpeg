@@ -23,7 +23,7 @@
             <template #trigger>
               <n-select ref="langselect" size="tiny" v-model:value="locale" :options="langOptions" :consistent-menu-width="false" @update:value="changeRoute" style="width: 100%;">
                 <template #arrow>
-                  <n-icon size="large"><GlobeOutline /></n-icon>
+                  <n-icon><GlobeOutline /></n-icon>
                 </template>
               </n-select>
             </template>
@@ -85,6 +85,7 @@
       </n-tooltip>
       -->
       <n-collapse display-directive="show" :expanded-names="UserSettings.expandExtButtons ? ['extItem'] : ''" :on-update:expanded-names="names => UserSettings.expandExtButtons = !!String(names)">
+        <template #header-extra><n-icon size="large"><SearchCircle /></n-icon></template>
         <n-collapse-item :title="t('fileTypeRadioTitle')" name="extItem">
           <n-radio-group v-model:value="UserSettings.acceptTypeValue" name="filetyperadios" size="small">
             <n-space vertical style="padding-left:1em;">
@@ -122,12 +123,14 @@
           :processing="processing"
           :accept="AcceptFileTypes[UserSettings.acceptTypeValue]"
           :retain-extension="UserSettings.retainExtension"
+          :max-zip-size="UserSettings.maxZipSizeMB"
           @mounted="onConverterReady" @start="onStart" @progress="onProgress" @success="onSuccess" @failure="onFailure" @complete="onComplete"
           @prevent="prevented = true;"
           @noimage="noimage = true"
           @avifsupport="flag => avifUnsupported = !flag"
           @imgload="onImgLoad"
           @consumeMessage="onCosumeMessage"
+          @pushZip="onPushZip"
         >
           <n-tooltip v-if="!IS_SP" trigger="hover" :keep-alive-on-hover="false" placement="bottom" :duration="0" :delay="50">
             <template #trigger>
@@ -179,7 +182,7 @@
                 <n-icon><MdImage /></n-icon><span style="white-space: nowrap;">{{t('quality')}}:</span>
                 <n-space align="center" justify="space-between">
                   <n-slider :tooltip="false" v-model:value="UserSettings.imageQuality" :step="1" style="width:120px;" :disabled="/png|bmp/.test(UserSettings.imageFormat)" />
-                  <n-input-number style="width:90px;" size="small" v-model:value="UserSettings.imageQuality" step="1" min="0" max="100" :disabled="/png/.test(UserSettings.imageFormat)" />
+                  <n-input-number style="width:90px;" size="small" v-model:value="UserSettings.imageQuality" step="1" min="0" max="100" :disabled="/png|bmp/.test(UserSettings.imageFormat)" />
                 </n-space>
               </n-space>
             </n-space>
@@ -187,22 +190,19 @@
           {{t('qualitytooltip')}}
         </n-tooltip>
 
-        <n-tooltip trigger="hover" :placement="LANDSCAPE ? 'left' : 'bottom-start'" :keep-alive-on-hover="false" :duration="0" :delay="50">
-          <template #trigger><n-checkbox v-model:checked="UserSettings.retainExtension">{{t('retainOriginalExtension')}}</n-checkbox></template>
-          {{t('retainExtTooltip')}}
-        </n-tooltip>
-
       </n-space>
     </n-space>
 
+    <!-- advanced settings -->
+    <n-space justify="center" item-style="margin-top:4px;">
+      <advanced-settings v-model:retain-ext="UserSettings.retainExtension" v-model:max-zip-size="UserSettings.maxZipSizeMB" v-model:expanded="UserSettings.expandAdvSettings"/>
+    </n-space>
+
+    <!-- descriptions -->
     <n-space vertical justify="end">
       <n-divider style="margin:0px;" />
-
-      <!-- descriptions -->
       <n-space justify="center">
-        <ul style="color:gray; padding-left:20px;">
-          <li v-for="text in $tm('descriptions')" :key="text" style="text-align:left" v-html="text"></li>
-        </ul>
+        <descriptions/>
       </n-space>
     </n-space>
     
@@ -229,22 +229,22 @@
     {{t('avifUnsupported')}}
   </n-modal>
   <!-- unsaved image dialog -->
-  <n-modal v-model:show="unsaved" preset="dialog" type="warning" :title="t('confirmCloseDialogTitle')"
+  <n-modal v-model:show="showUnsavedDialog" preset="dialog" type="warning" :title="t('confirmCloseDialogTitle')"
     :positive-text="t('save')" :negative-text="t('close')" :maskClosable="false"
-    :onPositiveClick="download"
+    :onPositiveClick="() => showProcess = true"
     >
     {{t('confirmCloseDialog')}}
   </n-modal>
 
   <!-- processing modal dialog -->
-  <n-modal v-model:show="showProcess" :closable="!processing && processCompleted" :close-on-esc="!processing && processCompleted" @mask-click="sendMessage='destroy'" preset="dialog" :title="processingMessage" :type="processingType" :mask-closable="false" :on-after-leave="beforeClose">
+  <n-modal v-model:show="showProcess" :closable="!processing && processCompleted" :close-on-esc="!processing && processCompleted" @mask-click="sendMessage='destroy'" preset="dialog" :title="processingMessage" :type="processingType" :mask-closable="false" :on-after-leave="onBeforeProcessingDialogClose">
     <template #default>
     <n-space vertical align="center">
 
       <n-progress type="circle" :percentage="percentage" :color="progressColor" indicator-text-color="black" rail-color="silver">
         <n-space vertical align="center" justify="center">
-          <n-space style="font-size:x-large;">{{percentage}}%</n-space>
-          <n-space style="font-size:xx-small">( {{currentSuccess}} / {{currentLength}} )</n-space>
+          <n-space style="font-size:x-large; white-space: nowrap;">{{percentage}}%</n-space>
+          <n-space style="font-size:xx-small; white-space: nowrap;">( {{currentSuccess}} / {{currentLength}} )</n-space>
         </n-space>
       </n-progress>
 
@@ -270,16 +270,21 @@
 
       <!-- button cancel -->
       <n-button v-if="processing" size="large" ref="cancelbutton" round @click="onCancel">{{t('cancel')}}</n-button>
-      <n-space align="center" vertical>
+
+      <!-- converted image buttons -->
+      <n-space align="center" vertical>  
+        
+        <!-- zip list -->
+        <n-space justify="center">
+          <div v-for="(item, index) in pushedZipList">
+            <n-button size="small" round :color="item.clicked? 'gray':'lime'" :title="item.name + '('+(item.size/1024/1024|0)+'MB)'" @click="downloadPushedZip(item);">ZIP {{index + 1}}</n-button>
+          </div>
+        </n-space>
+        
         <!-- button save -->
         <div>
           <n-button v-if="!processing && currentSuccess" size="large" round @click="download" color="lime">{{t('save')}}</n-button>
-          <span v-if="zipArchived" style="position:relative; width:1px; height:1px; overflow:visible">
-            <span style="position:absolute; left:4px; top:-16px; transform: rotate(25deg); overflow:visible">
-              <n-icon depth="4" size="30" color="lime"><Archive /></n-icon>
-              <span style="position:absolute; left:28px; bottom:4px; transform: rotate(25deg); white-space:nowrap; font-size:small; font-family:impact; color:rgba(0,255,0, 0.5)">ZIP</span>
-            </span>
-          </span>
+          <ZipIcon v-if="zipArchived"/>
         </div>
 
         <!-- button close -->
@@ -308,11 +313,14 @@ import { useHead } from "@vueuse/head"
 import { NButton, NButtonGroup, NInput, NSelect, NSpace, NSlider, NInputNumber, NSwitch, NIcon, NProgress, NModal, NTooltip, NCheckbox, NRadio, NRadioGroup, NCollapse, NCollapseItem, NA } from 'naive-ui'
 import { NScrollbar, NMessageProvider, NNotificationProvider, NDivider } from 'naive-ui'
 import 'vfonts/RobotoSlab.css'
-import { LogInOutline as LogInIcon, LogoGithub as Github, ImageOutline as FileImageRegular, ImageSharp as MdImage, FolderOpenOutline, ArrowRedoSharp, Archive, GlobeOutline } from '@vicons/ionicons5'
+import { LogInOutline as LogInIcon, LogoGithub as Github, ImageOutline as FileImageRegular, ImageSharp as MdImage, FolderOpenOutline, ArrowRedoSharp, Archive, GlobeOutline, SearchCircle } from '@vicons/ionicons5'
 
 import Converter from './components/converter.vue'
 import Licenses from './components/licenses.vue'
-import version from './components/version.vue'
+import Descriptions from './components/descriptions.vue';
+import AdvancedSettings from './components/advsettings.vue'
+import ZipIcon from './components/zipicon.vue'
+import version from './components/version.vue';
 
 import { useI18n } from 'vue-i18n'
 import { LANG_ID_LIST, LANG_NAMES } from './i18n';
@@ -332,6 +340,7 @@ langList.sort((a, b) => {
   return c > d ? 1 : c < d ? -1 : 0;
 });
 
+const ELAPSED_SECONDS_TO_CONFIRM_BEFORE_CLOSING = 10;
 
 const IS_SP = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile Safari/.test(navigator.userAgent);
 const doc = document;
@@ -354,11 +363,14 @@ const AcceptFileTypes = ref({
 const UserSettings = reactive({
   imageFormat: 'image/png',
   imageQuality: 90,
-  retainExtension: false,
 
   expandExtButtons: false,
   acceptTypeValue: FileTypeRadioValues[0],
   editedAcceptTypes: '',
+
+  expandAdvSettings: false,
+  retainExtension: false,
+  maxZipSizeMB: 1000,
 });
 
 const retainExtension = ref(false);
@@ -372,7 +384,7 @@ const processCompleted = ref(false);
 const prevented = ref(false);
 const noimage = ref(false);
 const zipArchived = ref(false);
-const unsaved = ref(false);
+const showUnsavedDialog = ref(false);
 const nofiles = ref(false);
 const avifUnsupported = ref(false);
 const showProcess = ref(false);
@@ -406,6 +418,8 @@ const fileinput = ref(null);
 const folderinput = ref(null);
 const thumbnail = ref(null);
 const langselect = ref(null);
+
+const pushedZipList = ref<{ name: string, url: string, size: number, clicked?: boolean }[]>([]);
 
 //const Directory_Available = ref(false);
 //const Labels = ref(LabelsEnUS);
@@ -542,7 +556,7 @@ function onStart({length}) {
   showProcess.value = true;
   processing.value = true;
   processCompleted.value = false;
-  unsaved.value = false;
+  showUnsavedDialog.value = false;
   percentage.value = 0;
   convertedImageUrl.value = '';
   convertedImageDataUrl.value = '';
@@ -555,6 +569,12 @@ function onStart({length}) {
   progressColor.value = 'lime';
   inputFileCount.value = 0;
   elapsedTime = 0;
+  
+  for( const item of pushedZipList.value ) {
+    URL.revokeObjectURL(item.url);
+  }
+  pushedZipList.value.length = 0;
+  decideCurrentOutputFileName();
 }
 function onProgress({length, index, name, success}) {
   currentIndex.value = index;
@@ -594,20 +614,24 @@ function onSuccess({name, index, success, inputSize, outputSize}) {
   outputTotalSize.value += outputSize;
 }
 function onFailure({name}) {
-  //console.log("fail")
   sendMessage.value = [{description:`${name}`, duration:0}, 'warning'];
   progressColor.value = 'orange';
 }
-function onComplete({index, zip, aborted, success, length, lastImage, lastImageDataURL, name, inputFileCount:fcount, elapsedTime:etime}) {
-  //console.log("complete")
+
+function onComplete({index, zip, aborted, success, length, lastImage, lastImageDataURL, name, inputFileCount:fcount, elapsedTime:etime, size}) {
   const a = downloadlink.value;
   const lastPercentage = index / length * 100 |0;
   inputFileCount.value = fcount;
   elapsedTime = etime;
 
   if( success ) {
+    // splited zips
+    if( pushedZipList.value.length > 0 ) {
+      onPushZip({zip, size});
+      //zipArchived.value = true;
+    }
     // set link to an image if the succeeded count is 1
-    if( success === 1 ) {
+    else if( success === 1 ) {
       a.download = name;
       let url = lastImage;
       /*
@@ -622,10 +646,10 @@ function onComplete({index, zip, aborted, success, length, lastImage, lastImageD
         convertedImageDataUrl.value = lastImageDataURL;
       }
     }
-    // link to zip file if multiple files
+    // link to the zip file if multiple files were converted
     else {
       const d = new Date();
-      a.download = 'avif2jpeg_'+(UserSettings.imageFormat.replace(/^image\//, ''))+'_'+d.getTime()+'.zip';
+      a.download = currentOutputFileName + '.zip';
       a.href = zip;
       zipArchived.value = true;
     }
@@ -649,9 +673,33 @@ function onComplete({index, zip, aborted, success, length, lastImage, lastImageD
   processCompleted.value = true;
 }
 
+function onPushZip({zip, size}) {
+  // link to the zip file if multiple files were converted
+  //const d = new Date();
+  //const a = downloadlink.value;
+  /*a.download = 'avif2jpeg_'+(UserSettings.imageFormat.replace(/^image\//, ''))+'_'+d.getTime()+'.zip';
+  a.href = zip;
+  zipArchived.value = true;*/
+
+  pushedZipList.value.push({name: currentOutputFileName + '_' + String(pushedZipList.value.length + 1).padStart(2, '0') + '.zip', url: zip, size});
+}
+
 function onCosumeMessage() {
   sendMessage.value = '';
 }
+
+function downloadPushedZip(item) {
+  item.clicked = true;
+  downloadUrl(item.url, item.name);
+}
+function downloadUrl(url: string, fileName: string) {
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = fileName;
+  a.click();
+}
+
+
 
 function checkLandScape() {
   const w = document.body.clientWidth;
@@ -661,20 +709,45 @@ function checkLandScape() {
 function close() {
 
 }
-function beforeClose() {
+function onBeforeProcessingDialogClose() {
   sendMessage.value = 'destroy';
   // show a prompt to save the converted file if more than 10 seconds have elapsed for the conversion
-  if( elapsedTime > 1000 * 10 && !downloadButtonClicked ) {
-    unsaved.value = true;
+  if( !downloadButtonClicked && elapsedTime > 1000 * ELAPSED_SECONDS_TO_CONFIRM_BEFORE_CLOSING ) {
+    
+    if( pushedZipList.value.length > 0 ) {
+      // when pushed zip buttons exist, check if all zip file button were clicked
+      for( const item of pushedZipList.value ) {
+        if( !item.clicked ) {
+          showUnsavedDialog.value = true;    
+          break;
+        }
+      }
+    }
+    else
+      showUnsavedDialog.value = true;
   }
   else {
     downloadlink.value.href= '';
   }
 }
 function download() {
-  const a = downloadlink.value;
-  a.click();
-  downloadButtonClicked = true;
+  if( pushedZipList.value.length > 0 ) {
+    for( const item of pushedZipList.value ) {
+      downloadPushedZip(item);
+    }
+  }
+  else {
+    const a = downloadlink.value;
+    a.click();
+    downloadButtonClicked = true;
+  }
+}
+
+let currentOutputFileName = '';
+function decideCurrentOutputFileName() {
+  const d = new Date();
+  currentOutputFileName = 'avif2jpeg_' + (UserSettings.imageFormat.replace(/^image\//, '')) + '_' + d.getTime();
+  return currentOutputFileName;
 }
 
 function openImage(url) {
