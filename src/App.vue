@@ -19,7 +19,7 @@
         
         <!-- language switches -->
         <n-space align="end" style="font-size: x-small;">          
-          <n-tooltip trigger="hover" :keep-alive-on-hover="false" :placement="LANDSCAPE ? 'left' : 'top'" :duration="0" :delay="50">
+          <n-tooltip :to="false" display-directive="show" :show="showBeforeMounted" trigger="hover" :keep-alive-on-hover="false" :placement="LANDSCAPE ? 'left' : 'bottom'" :duration="0" :delay="50">
             <template #trigger>
               <n-select ref="langselect" size="tiny" v-model:value="locale" :options="langOptions" :consistent-menu-width="false" @update:value="changeRoute" style="width: 100%;">
                 <template #arrow>
@@ -47,7 +47,7 @@
       <input webkitdirectory directory ref="folderinput" type="file" style="display:none">
       <n-space vertical align="stretch" justify="center">
         <!-- file select -->
-        <n-tooltip trigger="hover" :keep-alive-on-hover="false" :placement="LANDSCAPE ? 'left' : 'top'" :duration="0" :delay="50">
+        <n-tooltip :to="false" display-directive="show" :show="showBeforeMounted" trigger="hover" :keep-alive-on-hover="false" :placement="LANDSCAPE ? 'left' : 'top'" :duration="0" :delay="50" :z-index="10">
           <template #trigger>
             <n-button round @click="fileinput.click()" style="width:100%;">
               <template #icon>
@@ -60,7 +60,7 @@
         </n-tooltip>
 
         <!-- folder select -->
-        <n-tooltip v-if="!IS_SP" trigger="hover" placement="bottom" :keep-alive-on-hover="false" style="max-width:90vw;" :duration="0" :delay="50">
+        <n-tooltip :to="false" display-directive="show" :show="showBeforeMounted" v-if="!IS_SP" trigger="hover" placement="bottom" :keep-alive-on-hover="false" style="max-width:90vw;" :delay="0" :z-index="10">
           <template #trigger>
             <n-button round @click="folderinput.click()" style="width:100%;">
               <template #icon>
@@ -73,29 +73,19 @@
         </n-tooltip>
       </n-space>
 
-      <!-- file type options -->
-      <!--
-      <n-tooltip trigger="hover" placement="bottom" :keep-alive-on-hover="false">
-        <template #trigger>
-          <n-checkbox v-model:checked="ignoreFileExtensions">
-            {{t('ignoreFileExtensions')}}
-          </n-checkbox>
-        </template>
-        <div v-html="t('ignoreExtTooltip')"></div>
-      </n-tooltip>
-      -->
       <n-collapse display-directive="show" :expanded-names="UserSettings.expandExtButtons ? ['extItem'] : ''" :on-update:expanded-names="names => UserSettings.expandExtButtons = !!String(names)">
         <template #header-extra><n-icon size="large"><SearchCircle /></n-icon></template>
         <n-collapse-item :title="t('fileTypeRadioTitle')" name="extItem">
           <n-radio-group v-model:value="UserSettings.acceptTypeValue" name="filetyperadios" size="small">
             <n-space vertical style="padding-left:1em;">
 
-              <n-tooltip v-for="(val) in FileTypeRadioValues" :key="val" trigger="hover" :keep-alive-on-hover="false">
+              <n-tooltip v-for="(val) in FileTypeRadioValues" :key="val" trigger="hover" :keep-alive-on-hover="false" :z-index="5">
                 <template #trigger>
                   <n-radio :value="val">{{t('fileTypeRadioOptions.'+val)}}</n-radio>
                 </template>
                 {{AcceptFileTypes[val] || '.*'}}
               </n-tooltip>
+
               <n-tooltip trigger="hover" :keep-alive-on-hover="false" placement="bottom-start">
                 <template #trigger>
                   <div style="padding-left:1em;">
@@ -132,7 +122,7 @@
           @consumeMessage="onCosumeMessage"
           @pushZip="onPushZip"
         >
-          <n-tooltip v-if="!IS_SP" trigger="hover" :keep-alive-on-hover="false" placement="bottom" :duration="0" :delay="50">
+          <n-tooltip :to="false" display-directive="show" :show="showBeforeMounted" v-if="!IS_SP" trigger="hover" placement="left" overlap :duration="0" :delay="50">
             <template #trigger>
               <n-space vertical style="border: 6px dashed #EEE; border-radius: 1em; padding:2em; ">
                 <n-space align="stretch" style="color:silver; overflow-wrap: break-word; word-break: keep-all;">
@@ -165,7 +155,7 @@
     <n-space justify="center">
       <n-space vertical align="start">
 
-        <n-tooltip trigger="hover" :placement="LANDSCAPE ? 'left' : 'top-start'" :keep-alive-on-hover="false" :duration="0" :delay="50">
+        <n-tooltip :to="false" display-directive="show" :show="showBeforeMounted" trigger="hover" :placement="LANDSCAPE ? 'left' : 'top-start'" :keep-alive-on-hover="false" :duration="0" :delay="50">
           <template #trigger>
             <n-space align="center">
               <n-icon><FileImageRegular /></n-icon>{{t('imageType')}}:
@@ -175,7 +165,7 @@
           {{t('imageTypeTooltip')}}
         </n-tooltip>
 
-        <n-tooltip trigger="hover" :placement="LANDSCAPE ? 'left' : 'top-start'" :keep-alive-on-hover="false" :duration="0" :delay="50">
+        <n-tooltip :to="false" display-directive="show" :show="showBeforeMounted" trigger="hover" :placement="LANDSCAPE ? 'left' : 'top-start'" :keep-alive-on-hover="false" :duration="0" :delay="50">
           <template #trigger>
             <n-space align="center">
               <n-space align="start" :wrap="false">
@@ -307,7 +297,7 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import { ref, reactive, watch, computed, onMounted, getCurrentScope, h } from 'vue'
+import { ref, reactive, watch, computed, onMounted, getCurrentScope, h, nextTick } from 'vue'
 import { useHead } from "@vueuse/head"
 
 import { NButton, NButtonGroup, NInput, NSelect, NSpace, NSlider, NInputNumber, NSwitch, NIcon, NProgress, NModal, NTooltip, NCheckbox, NRadio, NRadioGroup, NCollapse, NCollapseItem, NA } from 'naive-ui'
@@ -421,6 +411,7 @@ const langselect = ref(null);
 
 const pushedZipList = ref<{ name: string, url: string, size: number, clicked?: boolean }[]>([]);
 
+
 //const Directory_Available = ref(false);
 //const Labels = ref(LabelsEnUS);
 const lang = ref('en');
@@ -440,6 +431,8 @@ watch(locale, (newValue, oldValue) => {
   }
   */
   document.title = t('title');
+  showBeforeMounted.value = true;
+  switchToolTipVisibility();
 });
 
 // initialize language
@@ -489,15 +482,6 @@ useHead({
   ],
 });
 
-onMounted(() => {
-  // remove style for svg size fix
-  document.querySelector('head').removeChild(document.getElementById('svgfix'));
-  
-  fileinput.value.oninput = folderinput.value.oninput = onInputFile;
-  checkLandScape();
-  window.addEventListener('resize', checkLandScape);
-  //Directory_Available.value = ['webkitdirectory', 'directory'].some(attr => typeof folderinput.value[attr] !== 'undefined');
-  
   // load UserSettings
   const storeName = 'avif2jpeg';
   const dat = JSON.parse(localStorage.getItem(storeName) || '{}');
@@ -508,6 +492,17 @@ onMounted(() => {
   }
   onInputTypes(UserSettings.editedAcceptTypes || '');
 
+onMounted(() => {
+  // remove style for svg size fix
+  document.querySelector('head').removeChild(document.getElementById('svgfix'));
+  
+  fileinput.value.oninput = folderinput.value.oninput = onInputFile;
+  checkLandScape();
+  window.addEventListener('resize', checkLandScape);
+  //Directory_Available.value = ['webkitdirectory', 'directory'].some(attr => typeof folderinput.value[attr] !== 'undefined');
+  
+
+
   window.addEventListener('unload', () => {
     const dat = {};
     for( const p in UserSettings ) {
@@ -515,7 +510,15 @@ onMounted(() => {
     }
     localStorage.setItem(storeName, JSON.stringify(dat));
   });
+
+  switchToolTipVisibility();
 });
+
+let showBeforeMounted = ref<true | undefined>(true);
+async function switchToolTipVisibility() {
+  //await new Promise(res => setTimeout(res, 100));
+  setTimeout(() => showBeforeMounted.value = undefined, 3000);
+}
 
 
 function changeRoute(val) {
