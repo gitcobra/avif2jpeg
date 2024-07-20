@@ -244,6 +244,7 @@
     <template #default>
     <n-space vertical align="center">
 
+      <!-- progress circle -->
       <n-progress type="circle" :percentage="percentage" :color="progressColor" indicator-text-color="black" rail-color="silver">
         <n-space vertical align="center" justify="center">
           <n-space style="font-size:x-large; white-space: nowrap;">{{percentage}}%</n-space>
@@ -253,12 +254,13 @@
 
       <!-- filename -->
       <n-space vertical align="center" item-style="overflow:hidden; text-overflow: ellipsis; white-space:nowrap;">
-        <!-- <n-spin v-if="processing" size="small" /> -->
         <n-space style="font-size:x-small;">
           <span>{{processingFileName}}</span>
         </n-space>
-        <n-space vertical style="height:90px;" align="center" justify="center">
-          <div ref="thumbnail"></div>
+        <n-space vertical style="position:relative; height:90px;" align="center" justify="center">
+          <n-spin :show="processing" size="small">
+            <div ref="thumbnail" style="width:100%; height:100%;"></div>
+          </n-spin>
         </n-space>
         <n-space>
           <!-- blob image -->
@@ -326,7 +328,7 @@ import { useRouter } from 'vue-router'
 import { ref, reactive, watch, computed, onMounted, getCurrentScope, h, nextTick } from 'vue'
 import { useHead } from "@vueuse/head"
 
-import { NButton, NButtonGroup, NInput, NSelect, NSpace, NSlider, NInputNumber, NSwitch, NIcon, NProgress, NModal, NTooltip, NCheckbox, NRadio, NRadioGroup, NCollapse, NCollapseItem, NA } from 'naive-ui'
+import { NButton, NButtonGroup, NInput, NSelect, NSpace, NSlider, NInputNumber, NSwitch, NIcon, NProgress, NModal, NTooltip, NCheckbox, NRadio, NRadioGroup, NCollapse, NCollapseItem, NA, NSpin } from 'naive-ui'
 import { NScrollbar, NMessageProvider, NNotificationProvider, NDivider } from 'naive-ui'
 import 'vfonts/RobotoSlab.css'
 import { LogInOutline as LogInIcon, LogoGithub as Github, ImageOutline as FileImageRegular, ImageSharp as MdImage, FolderOpenOutline, ArrowRedoSharp, Archive, GlobeOutline, SearchCircle } from '@vicons/ionicons5'
@@ -420,7 +422,10 @@ const processingType = computed(() => {
       return 'info';
   }
 });
-const progressColor = ref('lime');
+const PROG_COL_FINE = 'lime';
+const PROG_COL_WAR = 'orange';
+const PROG_COL_ERR = 'red';
+const progressColor = ref(PROG_COL_FINE);
 const inputFileCount = ref(0);
 let elapsedTime = 0;
 
@@ -597,7 +602,7 @@ function onStart({length}) {
   zipArchived.value = false;
   processingMessage.value = t('processing');
   prevLoadedImg = null;
-  progressColor.value = 'lime';
+  progressColor.value = PROG_COL_FINE;
   inputFileCount.value = 0;
   elapsedTime = 0;
   
@@ -646,7 +651,7 @@ function onSuccess({name, index, success, inputSize, outputSize}) {
 }
 function onFailure({name}) {
   sendMessage.value = [{description:`${name}`, duration:0}, 'warning'];
-  progressColor.value = 'orange';
+  progressColor.value = PROG_COL_WAR;
 }
 
 function onComplete({index, zip, aborted, success, length, lastImage, lastImageDataURL, name, inputFileCount:fcount, elapsedTime:etime, size}) {
@@ -690,7 +695,7 @@ function onComplete({index, zip, aborted, success, length, lastImage, lastImageD
     percentage.value = 100;
   }
   else
-    progressColor.value = 'red';
+    progressColor.value = PROG_COL_ERR;
   
   currentIndex.value = index;
   if( success === length ) {
