@@ -7,7 +7,12 @@
 
         <n-space align="start">
           <!-- github -->
-          <n-a href="https://github.com/gitcobra/avif2jpeg" style="color:black; font-size:small; font-weight: bolder;"><n-icon><Github /></n-icon>GitHub</n-a>
+          <n-tooltip :to="false" display-directive="show" :show="showBeforeMounted" trigger="hover" :duration="0" :delay="50">
+            <template #trigger>
+              <n-a href="https://github.com/gitcobra/avif2jpeg" style="color:black; font-size:small; font-weight: bolder;"><n-icon><Github /></n-icon>GitHub</n-a>
+            </template>
+            {{ t('githubOpenSource') }}
+          </n-tooltip>
 
           <span style="font-size:x-small;"><version/></span>
           
@@ -60,7 +65,7 @@
         </n-tooltip>
 
         <!-- folder select -->
-        <n-tooltip :to="false" display-directive="show" :show="showBeforeMounted" v-if="!IS_SP" trigger="hover" placement="bottom" :keep-alive-on-hover="false" style="max-width:90vw;" :delay="0" :z-index="10">
+        <n-tooltip :to="false" display-directive="show" :show="showBeforeMounted" v-if="!IS_SP" trigger="hover" placement="bottom" :keep-alive-on-hover="false" style="max-width:90vw;" :delay="0" :z-index="10" :on-clickoutside="onClickOutsideTooltip">
           <template #trigger>
             <n-button round @click="folderinput.click()" style="width:100%;">
               <template #icon>
@@ -214,10 +219,12 @@
   <n-modal v-model:show="noimage" preset="dialog" type="error" title="Images Not Found" positive-text="OK">
     {{t('noimage')}}<br>{{AcceptFileTypes[UserSettings.acceptTypeValue] || '.*'}}
   </n-modal>
+
   <!-- AVIF unsupported dialog -->
   <n-modal v-model:show="avifUnsupported" preset="dialog" type="warning" title="Unsupported" positive-text="OK">
     {{t('avifUnsupported')}}
   </n-modal>
+  
   <!-- unsaved image dialog -->
   <n-modal v-model:show="showUnsavedDialog" preset="dialog" type="warning" :title="t('confirmCloseDialogTitle')"
     :positive-text="t('save')" :negative-text="t('close')" :maskClosable="false"
@@ -225,6 +232,12 @@
     >
     {{t('confirmCloseDialog')}}
   </n-modal>
+  
+  <!-- copied DataURL Dialog -->
+  <n-modal v-model:show="showCopiedDataURLDialog" preset="dialog" type="info" :title="t('copiedDataURLDialogTitle')" positive-text="OK">
+    {{t('copiedDataURLMessage')}}
+  </n-modal>
+
 
   <!-- processing modal dialog -->
   <n-modal v-model:show="showProcess" :closable="!processing && processCompleted" :close-on-esc="!processing && processCompleted" @mask-click="sendMessage='destroy'" preset="dialog" :title="processingMessage" :type="processingType" :mask-closable="false" :on-after-leave="onBeforeProcessingDialogClose">
@@ -248,8 +261,21 @@
           <div ref="thumbnail"></div>
         </n-space>
         <n-space>
-          <a :href="convertedImageUrl" v-if="!!convertedImageUrl" target="_blank"><n-button round size="tiny">{{t('open')}}</n-button></a>
-          <n-button round size="tiny" v-if="!!convertedImageDataUrl" @click="copyDataURL(convertedImageDataUrl)">DataURI</n-button>
+          <!-- blob image -->
+          <n-tooltip v-if="!!convertedImageUrl" display-directive="show" trigger="hover" :duration="0" :delay="50">
+            <template #trigger>
+            <a :href="convertedImageUrl" target="_blank"><n-button round size="tiny">{{t('open')}}</n-button></a>
+            </template>
+            {{t('convertedImageUrlTooltip')}}
+          </n-tooltip>
+          
+          <!-- data url -->
+          <n-tooltip v-if="!!convertedImageDataUrl" display-directive="show" trigger="hover" :duration="0" :delay="50">
+            <template #trigger>
+            <a :href="convertedImageDataUrl" v-if="!!convertedImageDataUrl" target="_self" @click.left.prevent="copyDataURL"><n-button round size="tiny">DataURI</n-button></a>
+            </template>
+            {{t('convertedImageDataUrlTooltip')}}
+          </n-tooltip>
         </n-space>
       </n-space>
 
@@ -482,15 +508,17 @@ useHead({
   ],
 });
 
-  // load UserSettings
-  const storeName = 'avif2jpeg';
-  const dat = JSON.parse(localStorage.getItem(storeName) || '{}');
-  for( const p in UserSettings ) {
-    if( dat.hasOwnProperty(p) ) {
-      UserSettings[p] = dat[p];
-    }
+
+// load UserSettings
+const storeName = 'avif2jpeg';
+const dat = JSON.parse(localStorage.getItem(storeName) || '{}');
+for( const p in UserSettings ) {
+  if( dat.hasOwnProperty(p) ) {
+    UserSettings[p] = dat[p];
   }
-  onInputTypes(UserSettings.editedAcceptTypes || '');
+}
+onInputTypes(UserSettings.editedAcceptTypes || '');
+
 
 onMounted(() => {
   // remove style for svg size fix
@@ -517,7 +545,7 @@ onMounted(() => {
 let showBeforeMounted = ref<true | undefined>(true);
 async function switchToolTipVisibility() {
   //await new Promise(res => setTimeout(res, 100));
-  setTimeout(() => showBeforeMounted.value = undefined, 3000);
+  setTimeout(() => showBeforeMounted.value = undefined, 1200);
 }
 
 
@@ -702,6 +730,9 @@ function downloadUrl(url: string, fileName: string) {
   a.click();
 }
 
+function onClickOutsideTooltip(this:any) {
+  this.show = false;
+}
 
 
 function checkLandScape() {
@@ -709,9 +740,7 @@ function checkLandScape() {
   const h = document.body.clientHeight;
   LANDSCAPE.value = w * 0.75 > h || w > 900;
 }
-function close() {
 
-}
 function onBeforeProcessingDialogClose() {
   sendMessage.value = 'destroy';
   // show a prompt to save the converted file if more than 10 seconds have elapsed for the conversion
@@ -757,9 +786,11 @@ function openImage(url) {
   window.open(url, '_blank').document.write(`<img src="${url}">`);
 }
 
-function copyDataURL(url) {
+const showCopiedDataURLDialog = ref(false);
+function copyDataURL() {
   try {
-    navigator.clipboard.writeText(url);
+    navigator.clipboard.writeText(convertedImageDataUrl.value);
+    showCopiedDataURLDialog.value = true;
   } catch(e) {}
 }
 

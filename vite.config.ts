@@ -3,9 +3,13 @@ import { defineConfig } from 'vite'
 import { splitVendorChunkPlugin } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import generateSitemap from 'vite-ssg-sitemap'
+import {replaceInFile} from 'replace-in-file'
+
+
+const basePath = '/avif2jpeg/dist';
 
 export default defineConfig({
-  base: '/avif2jpeg/dist/',
+  base: basePath,
   plugins: [
     vue(),
     splitVendorChunkPlugin(),
@@ -18,10 +22,18 @@ export default defineConfig({
   ssgOptions: {
     dirStyle: 'nested',
     onFinished() {
+      
+      // create sitemap.xml
       generateSitemap({
         hostname: 'https://gitcobra.github.io',
-        basePath: '/avif2jpeg/dist',
+        basePath: basePath,
         readable: true,
+      });
+      // append a slash each url in sitemap.xml
+      replaceInFile({
+        files: './dist/sitemap.xml',
+        from: /(<loc>\s+http[^\s]+)(?=\s)(?<!\/)/g,
+        to: '$1/',
       });
     },
     

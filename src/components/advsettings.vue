@@ -1,7 +1,7 @@
 <template>
   <n-collapse display-directive="show" :expanded-names="props.expanded ? ['collapitem'] : ''" :on-update:expanded-names="names => expanded = !!String(names)">
     <template #arrow><n-icon><SettingsOutline /></n-icon></template>
-    <n-collapse-item :title="'Advanced Settings'" name="collapitem">
+    <n-collapse-item :title="$t('advancedSettings')" name="collapitem">
       
       <n-space vertical item-style="padding-left: 10%">
         <n-tooltip trigger="hover" :placement="true ? 'left' : 'bottom-start'" :keep-alive-on-hover="false" :duration="0" :delay="50">
@@ -15,12 +15,12 @@
         <n-tooltip trigger="hover" :placement="true ? 'left' : 'bottom-start'" :keep-alive-on-hover="false" :duration="0" :delay="50">
           <template #trigger>
           <n-space :wrap="false" align="center">
-            <span style="white-space: nowrap; font-size:smaller; margin-left:8px;">Max zip file size:</span>
+            <span style="white-space: nowrap; font-size:smaller; margin-left:8px;">{{$t('maxZipFileSize')}}:</span>
             <n-slider :tooltip="false" v-model:value="maxZipSizeMB" :step="1" :min="100" :max="1000" style="width:90px;"/>
             <n-input-number size="tiny" v-model:value="maxZipSizeMB" step="1" min="100" max="1000" style="width:120px"><template #suffix>(MB)</template></n-input-number>
           </n-space>
           </template>
-          Set smaller value if memory problems occur.
+          {{$t('maxZipFileSizeTooltip')}}
         </n-tooltip>
       </n-space>
     </n-collapse-item>

@@ -50,5 +50,15 @@
     "files": "ファイル",
   
     "confirmCloseDialog": "まだ変換したファイルを保存していません。",
-    "confirmCloseDialogTitle": "変換ファイルが未保存"
+    "confirmCloseDialogTitle": "変換ファイルが未保存",
+
+    "githubOpenSource": "オープンソース",
+    "convertedImageUrlTooltip": "出力したファイルを開く",
+    "copiedDataURLDialogTitle": "クリップボードにコピー",
+    "copiedDataURLMessage": "変換した画像を Data URL としてクリップボードにコピーしました。",
+    "convertedImageDataUrlTooltip": "変換した画像をDataURLとしてコピー",
+
+    "advancedSettings": "詳細設定",
+    "maxZipFileSize": "最大ZIPファイルサイズ",
+    "maxZipFileSizeTooltip": "メモリの問題が発生する場合はより小さい値をセットして下さい"
 }

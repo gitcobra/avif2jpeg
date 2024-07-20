@@ -50,5 +50,16 @@
     "files": "File | Files",
   
     "confirmCloseDialog": "You have not saved the converted images yet.",
-    "confirmCloseDialogTitle": "Data have not been saved"
+    "confirmCloseDialogTitle": "Data have not been saved",
+
+    "githubOpenSource": "Open Source",
+    "convertedImageUrlTooltip": "Open the converted image",
+    "copiedDataURLDialogTitle": "Copied to clipboard",
+    "copiedDataURLMessage": "The converted image was copied to your clipboard as DataURL.",
+    "convertedImageDataUrlTooltip": "Copy the converted image as DataURL",
+
+    "advancedSettings": "Advanced Settings",
+    "maxZipFileSize": "Max zip file size",
+    "maxZipFileSizeTooltip": "Set smaller value if memory problems occur."
+
   }
