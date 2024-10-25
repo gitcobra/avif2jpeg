@@ -1,5 +1,5 @@
 <template>
-<a href="#" @click="visible=true" style="color:black; font-size:small">Licenses</a>
+<n-button text @click="visible=true" style="color:black; font-size:small">Licenses</n-button>
 <n-modal preset="dialog" ref="dialog" v-model:show="visible" positive-text="OK" title="Licenses">
   <h3>Used Framework and Libraries</h3>
   <ul>
@@ -20,7 +20,6 @@ const Licenses = {
   'Vite': 'https://github.com/vitejs/vite/blob/main/LICENSE',
   'Vite SSG': 'https://github.com/antfu/vite-ssg/blob/main/LICENSE',
   'Naive UI': 'https://github.com/TuSimple/naive-ui/blob/main/LICENSE',
-  //'tabler': 'https://github.com/tabler/tabler-icons/blob/master/LICENSE',
   'Ionicons': 'https://github.com/ionic-team/ionicons/blob/main/LICENSE',
 };
 

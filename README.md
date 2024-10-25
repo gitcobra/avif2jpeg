@@ -4,3 +4,5 @@ No data is sent to any server.
 
 <a href="https://gitcobra.github.io/avif2jpeg/dist/">DEMO</a>
 
+### Please click the browser's back button if you are searching code to parse AVIF images
+It depends on `HTMLCanvasElement` for the conversion processes. There is no code to parse AVIF structure in this repository.

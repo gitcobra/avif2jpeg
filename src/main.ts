@@ -2,7 +2,8 @@
 import { RouterOptions, ViteSSG } from 'vite-ssg'
 import { RouteRecordRaw } from 'vue-router'
 import App from "./App.vue";
-import { createI18n, LANG_ID_LIST } from './i18n'
+//import naive from "naive-ui";
+import { I18n, LANG_ID_LIST } from './i18n';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -24,6 +25,7 @@ for(const lang of LANG_ID_LIST) {
 
 
 
+
 //createApp(App).use(router).mount("#app");
 export const createApp = ViteSSG(
   App,
@@ -35,7 +37,7 @@ export const createApp = ViteSSG(
   // function to have custom setups
   ({ app, router, routes, isClient, initialState }) => {
     // install plugins etc.
-    const i18n = createI18n();
-    app.use(i18n);
+    app.use(I18n);
+    //app.use(naive);
   }
 );

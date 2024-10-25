@@ -11,16 +11,29 @@
     "isolatedModules": true,
     "esModuleInterop": true,
     "lib": [
-      "ESNext", "DOM","ScriptHost",
-      "DOM.Iterable"
+      "ESNext", "DOM",
+      "DOM.Iterable","WebWorker"
     ],
     "skipLibCheck": true,
     
     "noImplicitAny": false,
-    "strictNullChecks":false,
+    "strictNullChecks": false,
 
+    "paths": {
+      "@/*": ["./src/*"],
+      "@assets/*": ["./src/shared/assets/*"],
+      "@cmp/*": ["./src/shared/cmp/*"],
+      "@stores/*": ["./src/shared/stores/*"],
+      "@use/*": ["./src/shared/use/*"],
+    },
     "types": ["vite-ssg", "vite/client", "vite"]
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "./**.d.ts"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
