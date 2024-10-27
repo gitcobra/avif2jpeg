@@ -65,10 +65,9 @@ provide(GlobalValsKey, {
 });
 
 
-// insert meta tags
 
+// insert header
 useHead({
-  // Can be static or computed
   //title: t('title'),
   meta: [
     {

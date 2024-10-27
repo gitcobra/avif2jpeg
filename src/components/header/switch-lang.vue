@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import { useHead } from '@vueuse/head';
 import { GlobeOutline } from '@vicons/ionicons5';
 import { useI18n } from "vue-i18n";
-import { GlobalValsKey } from "../../Avif2Jpeg.vue";
 import { LANG_ID_LIST, LANG_NAMES } from '../../i18n';
+import { GlobalValsKey } from "../../Avif2Jpeg.vue";
+
 
 
 
@@ -61,6 +63,10 @@ onMounted(() => {
 
 setLocaleByCurrentPath();
 
+// insert appropriate language title tag (for SSG)
+useHead({
+  title: t('title'),
+});
 
 
 
