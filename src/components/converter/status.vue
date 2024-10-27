@@ -1077,6 +1077,7 @@ function getThumbnailedSize(image: {width:number, height:number}, maxSize: numbe
           :show-arrow="true"
           trigger="click"
           size="small"
+          placement="bottom-start"
         >
           <n-popover :show="autoPopoverErrorButtonFlag" :duration="0" :delay="0" placement="right" :style="{color:'white', backgroundColor:c.errorColor}" :arrow-style="{backgroundColor:c.errorColor}">
             <template #trigger>

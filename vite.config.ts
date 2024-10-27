@@ -12,23 +12,6 @@ import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 
 
 
-/*
-// move the app script tag to the end of the body tag to make unsupported.js work
-const appScriptToEndOfBody = () => {
-  return {
-    name: 'no-attribute',
-    transformIndexHtml(html) {
-      const scriptTag = (/<script [^>]*type="module" crossorigin[^>]*src="[^>]*assets\/app.+?<\/script>/.exec(html) || [''])[0];
-      html = html.replace(scriptTag, '');
-      html = html.replace(/(?=<\/body>)/, scriptTag);
-      
-      //console.log(`\nappScriptToEndOfBody: ${scriptTag}`)
-      return html;
-    }
-  };
-};
-*/
-
 
 const basePath = '/avif2jpeg/dist/';
 export default defineConfig({
@@ -93,10 +76,6 @@ export default defineConfig({
   resolve: {
     alias: [
       { find: '@', replacement: fileURLToPath(new URL('./src', import.meta.url)) },
-      { find: '@assets', replacement: fileURLToPath(new URL('./src/shared/assets', import.meta.url)) },
-      { find: '@cmp', replacement: fileURLToPath(new URL('./src/shared/cmp', import.meta.url)) },
-      { find: '@stores', replacement: fileURLToPath(new URL('./src/shared/stores', import.meta.url)) },
-      { find: '@use', replacement: fileURLToPath(new URL('./src/shared/use', import.meta.url)) },
     ]
   },
 
@@ -128,26 +107,6 @@ export default defineConfig({
       },
     },
   },
-
-  /*
-  // build error issue
-  // TypeError: createApp is not a function · Issue #112 · antfu/vite-ssg · GitHub
-  // https://github.com/antfu/vite-ssg/issues/112
-  build: {
-    //minify: false,
-    rollupOptions: {
-      //...(process.env.VITE_SSG ? { treeshake: false } : {}),
-      output: {
-        ...(process.env.VITE_SSG
-          ? {
-              footer:
-                "if (typeof createApp !== 'undefined') module.exports = { createApp }",
-            }
-          : {}),
-      },
-    },
-  },
-  */
 
   // remove console.log
   esbuild: process.env.NODE_ENV !== 'development' ? {
