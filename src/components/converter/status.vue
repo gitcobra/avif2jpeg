@@ -31,7 +31,7 @@ const props = defineProps<{
     success: number
     failure: number
     done: number
-    zipped: number
+    zippedTotalCount: number
     zippedTotalSize: number
     zippingErrorCount: number
 
@@ -104,6 +104,7 @@ type ZipList = {
   size: number
   sizeByUnit: string
   name: string
+  number: number
   count: number
   clicked: boolean
 }[];
@@ -287,40 +288,50 @@ onMounted(() => {
 
 watch([() => props.status.zips.length, () => props.status.failedZips.length], () => {
   const stat = props.status;
-  // update zip list
-  if( zipList.value.length > stat.zips.length )
-    zipList.value.length = 0;//s.zips.length;
   
-  let size = 0;
-  for( let i = zipList.value.length; i < stat.zips.length; i++ ) {
-    const item = stat.zips[i];
-    const name = stat.baseZipName + '-' + String(i + 1).padStart(2, '0') + '.zip';
-    size += item.size;
-    zipList.value[i] = {
-      url: item.url,
-      size: item.size,
-      sizeByUnit: getUnitSize(item.size),
-      name,
-      count: item.count,
-      clicked: false,
-    };
+  // update zip list
+  {
+    if( zipList.value.length > stat.zips.length )
+      zipList.value.length = 0;//s.zips.length;
+    
+    let size = 0;
+    const singlar = stat.zips.length === 1 && stat.zippedTotalCount === stat.length;
+    for( let i = zipList.value.length; i < stat.zips.length; i++ ) {
+      const item = stat.zips[i];
+      const name = stat.baseZipName + ( singlar ? '' : '-' + String(i + 1).padStart(2, '0') ) + '.zip';
+      size += item.size;
+      zipList.value[i] = {
+        url: item.url,
+        size: item.size,
+        number: singlar ? 0 : i + 1,
+        sizeByUnit: getUnitSize(item.size),
+        name,
+        count: item.count,
+        clicked: false,
+      };
+    }
   }
 
-  if( failedZipList.value.length > stat.failedZips.length )
-    failedZipList.value.length = 0;
-  size = 0;
-  for( let i = failedZipList.value.length; i < stat.failedZips.length; i++ ) {
-    const item = stat.failedZips[i];
-    const name = stat.baseZipName + '-error-' + String(i + 1).padStart(2, '0') + '.zip';
-    size += item.size;
-    failedZipList.value[i] = {
-      url: item.url,
-      size: item.size,
-      sizeByUnit: getUnitSize(item.size),
-      name,
-      count: item.count,
-      clicked: false,
-    };
+  // failed zip list
+  {
+    if( failedZipList.value.length > stat.failedZips.length )
+      failedZipList.value.length = 0;
+    let size = 0;
+    const singlar = stat.failedZipDone && stat.failedZips.length === 1;
+    for( let i = failedZipList.value.length; i < stat.failedZips.length; i++ ) {
+      const item = stat.failedZips[i];
+      const name = stat.baseZipName + '-error' + ( singlar ? '' : '-' + String(i + 1).padStart(2, '0') ) + '.zip';
+      size += item.size;
+      failedZipList.value[i] = {
+        url: item.url,
+        size: item.size,
+        number: singlar ? 0 : i + 1,
+        sizeByUnit: getUnitSize(item.size),
+        name,
+        count: item.count,
+        clicked: false,
+      };
+    }
   }
 });
 
@@ -366,7 +377,7 @@ function update() {
   converted.value[0] = stat.converted;
   length.value = stat.length;
   zipped.value[1] = zipped.value[0];
-  zipped.value[0] = stat.zipped;
+  zipped.value[0] = stat.zippedTotalCount;
   inputTotalSize.value = stat.inputTotalSize;
   outputTotalSize.value = stat.outputTotalSize;
   
@@ -943,14 +954,14 @@ function getThumbnailedSize(image: {width:number, height:number}, maxSize: numbe
                       @click.stop="download(item)"
                       round
                     >
-                      <n-icon size="tiny"><Archive /></n-icon>ZIP{{ index + 1 }}
+                      <n-icon size="tiny"><Archive /></n-icon>ZIP{{ item.number || '' }}
                     </n-button>
                     </a>
 
                   </template>
 
                   <div :style="{color:c.successColor}">
-                  <div>ZIP {{index + 1}} ({{ $t('success') }})</div>
+                  <div>ZIP {{ item.number || '' }} ({{ $t('success') }})</div>
                   <div>{{item.name}}</div>
                   <div>{{ item.sizeByUnit }}</div>
                   <div>{{ $rt(`{n} @:files`, item.count) }}</div>
@@ -1124,14 +1135,14 @@ function getThumbnailedSize(image: {width:number, height:number}, maxSize: numbe
                   @click.stop="download(item)"
                   round
                 >
-                  <n-icon size="tiny"><Warning /></n-icon>ZIP{{index + 1}}
+                  <n-icon size="tiny"><Warning /></n-icon>ZIP{{item.number || ''}}
                 </n-button>
                 </a>
 
               </template>
 
               <div :style="{color:c.errorColor}">
-              <div>ZIP {{index + 1}} ({{ $t('failed') }})</div>
+              <div>ZIP {{ item.number || '' }} ({{ $t('failed') }})</div>
               <div>{{ item.name }}</div>
               <div>{{ item.sizeByUnit }}</div>
               <div>{{ $rt(`{n} @:files`, item.count) }}</div>

@@ -250,7 +250,7 @@ export async function convertTargetFilesInMultithread(ConvStats: Stat, canceled,
 
 
 // 
-async function pushErrorZipsInMultithread(list: FileWithId[], zipWorker: Worker, Terminated, ConvStats) {
+async function pushErrorZipsInMultithread(list: FileWithId[], zipWorker: Worker, Terminated, ConvStats: Stat) {
   for( const file of list ) {
     const path = (file.webkitRelativePath || file.name).replace(/^\//, '');
     let buffer: ArrayBuffer;
@@ -312,14 +312,14 @@ function createZipWorkerListenerAndPromise(zipWorker: Worker, ConvStats: Stat, c
       switch(action) {
         case 'push-zip':
           ConvStats.zips.push({url, size, count});
-          ConvStats.zipped += count;
+          ConvStats.zippedTotalCount += count;
           ConvStats.zippedTotalSize += size;
           break;
 
         case 'squeeze-zip':
           if( count > 0 ) {
             ConvStats.zips.push({url, size, count});
-            ConvStats.zipped += count;
+            ConvStats.zippedTotalCount += count;
             ConvStats.zippedTotalSize += size;
           }
           resolve(void 0);

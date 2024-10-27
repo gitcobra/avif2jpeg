@@ -195,7 +195,7 @@ function initConvStatPropObj(obj?: ConversionStatusType): ConversionStatusType {
     failure: 0,
     done: 0,
     length: 0,
-    zipped: 0,
+    zippedTotalCount: 0,
     zippingErrorCount: 0,
     zippedTotalSize: 0,
     

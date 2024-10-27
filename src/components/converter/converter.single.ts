@@ -127,7 +127,7 @@ export async function convertImagesInSingleThread(list: FileWithId[], completedF
         break;
       }
       ConvStats.zips.push({url: zipUrl, size:currentOutputSizeSum, count:zippedCount});
-      ConvStats.zipped += zippedCount;
+      ConvStats.zippedTotalCount += zippedCount;
       ConvStats.zippedTotalSize += currentOutputSizeSum;
       
       currentOutputSizeSum = 0;
@@ -189,7 +189,7 @@ export async function convertImagesInSingleThread(list: FileWithId[], completedF
           throw new Error(`terminated zipping process for memory problems`);
         const zipUrl = azip.url();
         ConvStats.zips.push({url: zipUrl, count: zippedCount, size:currentOutputSizeSum});
-        ConvStats.zipped += zippedCount;
+        ConvStats.zippedTotalCount += zippedCount;
         ConvStats.zippedTotalSize += currentOutputSizeSum;
       } catch(e: any) {
         console.error(e.message);
@@ -215,7 +215,7 @@ export async function convertImagesInSingleThread(list: FileWithId[], completedF
   };
 }
 
-async function pushErrorZips(list: File[], maxZipSizeMB: number, ConvStats, Terminated) {
+async function pushErrorZips(list: File[], maxZipSizeMB: number, ConvStats: Stat, Terminated) {
   let count = 0;
   let size = 0;
   let azip = new AnZip;
