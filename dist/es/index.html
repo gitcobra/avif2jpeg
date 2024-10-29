@@ -3,15 +3,14 @@
 
 <head>
     <meta charset="UTF-8">
+    <title>Conversor por lotes "Sin conexión" de AVIF a JPEG</title>
     <link rel="icon" type="image/png" href="/avif2jpeg/dist/avif.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AVIF to JPEG "Offline" Batch Converter</title>
-
     <meta name="twitter:card" content="summary">
     <meta property="og:url" content="https://gitcobra.github.io/avif2jpeg/dist/">
     <meta property="og:image" content="/avif2jpeg/dist/card.jpg">
-    <script type="module" crossorigin="" src="/avif2jpeg/dist/assets/app-Dlo8OyFx.js"></script>
-    <link rel="modulepreload" crossorigin="" href="/avif2jpeg/dist/assets/vendor-np_TPv7z.js">
+    <script type="module" crossorigin="" src="/avif2jpeg/dist/assets/app-CJ7pH-kp.js"></script>
+    <link rel="modulepreload" crossorigin="" href="/avif2jpeg/dist/assets/vendor-Cr-L01rW.js">
     <link rel="stylesheet" crossorigin="" href="/avif2jpeg/dist/assets/app-0Dfpho_D.css">
 
     <!-- Google tag (gtag.js) -->
@@ -46,7 +45,7 @@
                                     <div role="none" class="" style="max-width:100%;margin-right:12px;margin-left:;padding-top:4px;padding-bottom:4px;"><!--[--><!----><a class="n-a" style="--n-text-color:#18a058;--n-bezier:cubic-bezier(.4, 0, .2, 1);color:black;font-size:small;font-weight:bolder;" href="https://github.com/gitcobra/avif2jpeg"><i role="img" class="n-icon" style="--n-bezier:cubic-bezier(.4, 0, .2, 1);--n-color:;--n-opacity:;"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512">
                                                     <path d="M256 32C132.3 32 32 134.9 32 261.7c0 101.5 64.2 187.5 153.2 217.9a17.56 17.56 0 0 0 3.8.4c8.3 0 11.5-6.1 11.5-11.4c0-5.5-.2-19.9-.3-39.1a102.4 102.4 0 0 1-22.6 2.7c-43.1 0-52.9-33.5-52.9-33.5c-10.2-26.5-24.9-33.6-24.9-33.6c-19.5-13.7-.1-14.1 1.4-14.1h.1c22.5 2 34.3 23.8 34.3 23.8c11.2 19.6 26.2 25.1 39.6 25.1a63 63 0 0 0 25.6-6c2-14.8 7.8-24.9 14.2-30.7c-49.7-5.8-102-25.5-102-113.5c0-25.1 8.7-45.6 23-61.6c-2.3-5.8-10-29.2 2.2-60.8a18.64 18.64 0 0 1 5-.5c8.1 0 26.4 3.1 56.6 24.1a208.21 208.21 0 0 1 112.2 0c30.2-21 48.5-24.1 56.6-24.1a18.64 18.64 0 0 1 5 .5c12.2 31.6 4.5 55 2.2 60.8c14.3 16.1 23 36.6 23 61.6c0 88.2-52.4 107.6-102.3 113.3c8 7.1 15.2 21.1 15.2 42.5c0 30.7-.3 55.5-.3 63c0 5.4 3.1 11.5 11.4 11.5a19.35 19.35 0 0 0 4-.4C415.9 449.2 480 363.1 480 261.7C480 134.9 379.7 32 256 32z" fill="currentColor"></path>
                                                 </svg></i>GitHub</a><!----><!--]--></div>
-                                    <div role="none" class="" style="max-width:100%;margin-right:12px;margin-left:;padding-top:4px;padding-bottom:4px;"><!--[--><!----><span style="cursor:pointer;">v1.1.1</span><!----><!--]--></div>
+                                    <div role="none" class="" style="max-width:100%;margin-right:12px;margin-left:;padding-top:4px;padding-bottom:4px;"><!--[--><!----><span style="cursor:pointer;">v1.1.39</span><!----><!--]--></div>
                                     <div role="none" class="" style="max-width:100%;margin-right:;margin-left:;padding-top:4px;padding-bottom:4px;">
                                         <div role="none" class="n-space" style="display:flex;flex-direction:row;justify-content:flex-start;flex-wrap:wrap;margin-top:-4px;margin-bottom:-4px;align-items:center;gap:;">
                                             <div role="none" class="" style="max-width:100%;margin-right:;margin-left:;padding-top:4px;padding-bottom:4px;"><!--[--><button class="n-button n-button--default-type n-button--medium-type" tabindex="0" type="button" style="--n-bezier:cubic-bezier(.4, 0, .2, 1);--n-bezier-ease-out:cubic-bezier(0, 0, .2, 1);--n-ripple-duration:.6s;--n-opacity-disabled:0.5;--n-wave-opacity:0.6;--n-font-weight:400;--n-color:#0000;--n-color-hover:#0000;--n-color-pressed:#0000;--n-color-focus:#0000;--n-color-disabled:#0000;--n-ripple-color:#0000;--n-text-color:rgb(51, 54, 57);--n-text-color-hover:#36ad6a;--n-text-color-pressed:#0c7a43;--n-text-color-focus:#36ad6a;--n-text-color-disabled:rgb(51, 54, 57);--n-border:none;--n-border-hover:none;--n-border-pressed:none;--n-border-focus:none;--n-border-disabled:none;--n-width:initial;--n-height:initial;--n-font-size:14px;--n-padding:initial;--n-icon-size:18px;--n-icon-margin:6px;--n-border-radius:initial;color:black;font-size:small;"><!----><!----><span class="n-button__content">Licenses</span><!----><!----><!----></button><!----><!--]--></div>
@@ -60,8 +59,8 @@
                                         <div class="n-select" style="width:100%;"><!--[-->
                                             <div class="n-base-selection n-base-selection--selected" style="--n-bezier:cubic-bezier(.4, 0, .2, 1);--n-border:1px solid rgb(224, 224, 230);--n-border-active:1px solid #18a058;--n-border-focus:1px solid #36ad6a;--n-border-hover:1px solid #36ad6a;--n-border-radius:3px;--n-box-shadow-active:0 0 0 2px rgba(24, 160, 88, 0.2);--n-box-shadow-focus:0 0 0 2px rgba(24, 160, 88, 0.2);--n-box-shadow-hover:none;--n-caret-color:#18a058;--n-color:rgba(255, 255, 255, 1);--n-color-active:rgba(255, 255, 255, 1);--n-color-disabled:rgb(250, 250, 252);--n-font-size:12px;--n-height:22px;--n-padding-single-top:0;--n-padding-multiple-top:3px;--n-padding-single-right:26px;--n-padding-multiple-right:26px;--n-padding-single-left:12px;--n-padding-multiple-left:12px;--n-padding-single-bottom:0;--n-padding-multiple-bottom:0;--n-placeholder-color:rgba(194, 194, 194, 1);--n-placeholder-color-disabled:rgba(209, 209, 209, 1);--n-text-color:rgb(51, 54, 57);--n-text-color-disabled:rgba(194, 194, 194, 1);--n-arrow-color:rgba(194, 194, 194, 1);--n-arrow-color-disabled:rgba(209, 209, 209, 1);--n-loading-color:#18a058;--n-color-active-warning:rgba(255, 255, 255, 1);--n-box-shadow-focus-warning:0 0 0 2px rgba(240, 160, 32, 0.2);--n-box-shadow-active-warning:0 0 0 2px rgba(240, 160, 32, 0.2);--n-box-shadow-hover-warning:none;--n-border-warning:1px solid #f0a020;--n-border-focus-warning:1px solid #fcb040;--n-border-hover-warning:1px solid #fcb040;--n-border-active-warning:1px solid #f0a020;--n-color-active-error:rgba(255, 255, 255, 1);--n-box-shadow-focus-error:0 0 0 2px rgba(208, 48, 80, 0.2);--n-box-shadow-active-error:0 0 0 2px rgba(208, 48, 80, 0.2);--n-box-shadow-hover-error:none;--n-border-error:1px solid #d03050;--n-border-focus-error:1px solid #de576d;--n-border-hover-error:1px solid #de576d;--n-border-active-error:1px solid #d03050;--n-clear-size:16px;--n-clear-color:rgba(194, 194, 194, 1);--n-clear-color-hover:rgba(146, 146, 146, 1);--n-clear-color-pressed:rgba(175, 175, 175, 1);--n-arrow-size:16px;">
                                                 <div class="n-base-selection-label" tabindex="0">
-                                                    <div class="n-base-selection-input" title="English">
-                                                        <div class="n-base-selection-input__content">English</div>
+                                                    <div class="n-base-selection-input" title="Spanish">
+                                                        <div class="n-base-selection-input__content">Spanish</div>
                                                     </div><!--[-->
                                                     <div class="n-base-loading n-base-suffix" role="img" aria-label="loading">
                                                         <div class="n-base-loading__placeholder">
