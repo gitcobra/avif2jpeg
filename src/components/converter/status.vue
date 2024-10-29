@@ -872,12 +872,12 @@ function getThumbnailedSize(image: {width:number, height:number}, maxSize: numbe
       <n-flex :wrap="false" :class="{'log-container':1, 'expand-log': expandLog}" align="stretch" :style="expandLog ? {height: logMaxHeight, maxHeight: logMaxHeight} : {}">
         <!-- filename table -->
         <n-scrollbar ref="scrollref" :x-scrollable="true" @mouseup="autoScrollLog=false" @wheel="autoScrollLog=false" trigger="none" style="z-index:2; padding-right:10px; min-height:7em;" :size="50" :style="{maxHeight: logMaxHeight}">
-          <table style="z-index:1;">
-          <tr>
-            <th>{{$t('status.table.core')}}</th><th> {{$t('status.table.index')}} </th><th style="min-width:7em;">{{$t('status.table.status')}}</th><th style="padding-left:2em;">{{$t('status.table.details')}}</th>
+          <table class="log-table">
+          <tr class="log-tr">
+            <th class="log-th">{{$t('status.table.core')}}</th><th class="log-th"> {{$t('status.table.index')}} </th><th style="min-width:7em;" class="log-th">{{$t('status.table.status')}}</th><th style="padding-left:2em;" class="log-th">{{$t('status.table.details')}}</th>
           </tr>
-          <tr v-for="{index, key, command, path, core} in (hideSuccess ? workingLogs.filter(item => !item.completed) : workingLogs).slice(-logViewSize)" :key="key">
-            <td>{{ (core >= 0 ? core+1 : '-') }}</td><td>{{ index+1 }}</td><td>{{ command }}</td><td>{{path}}</td>
+          <tr v-for="{index, key, command, path, core} in (hideSuccess ? workingLogs.filter(item => !item.completed) : workingLogs).slice(-logViewSize)" :key="key" class="log-tr">
+            <td class="log-td">{{ (core >= 0 ? core+1 : '-') }}</td><td class="log-td">{{ index+1 }}</td><td class="log-td">{{ command }}</td><td class="log-td">{{path}}</td>
           </tr>
           </table>
         </n-scrollbar>
@@ -1192,7 +1192,8 @@ function getThumbnailedSize(image: {width:number, height:number}, maxSize: numbe
   height: 7em;
 
   /* log table */
-  table {
+  .log-table {
+    z-index: 1;
     position:relative;
     font-size:0.9em;
     line-height:1em;
@@ -1200,19 +1201,19 @@ function getThumbnailedSize(image: {width:number, height:number}, maxSize: numbe
     border-collapse: collapse;
     
 
-    tr:first-child {
+    .log-tr:first-child {
       position:sticky;
       top:0px;
       
-      th {
+      .log-th {
         color: #666;
         padding: 0px 3px 3px;
       }
-      th:nth-of-type(4) {
+      .log-th:nth-of-type(4) {
         text-align: left;
       }
     }
-    td {
+    .log-td {
       border-left: 1px dotted #CCC;
       &:first-child, &:nth-of-type(2) {
         text-align: right;

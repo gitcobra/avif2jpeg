@@ -98,5 +98,6 @@
   "selectLanguage": "Wybierz swój język",
   "back": "Z powrotem",
   "failed": "Przegrany",
-  "success": "Sukces"
+  "success": "Sukces",
+  "previousVersion": "Poprzednia wersja"
 }

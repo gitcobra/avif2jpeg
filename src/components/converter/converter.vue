@@ -545,9 +545,10 @@ function checkAvailableFeatures() {
         <!-- control buttons -->
         <n-flex justify="end">
           <!-- cancel button -->
-          <n-button v-if="processing && !canceled" ref="cancelbutton" round size="large" @click="canceled = true">{{t('cancel')}}</n-button>
-          <!-- spinner waiting for complete -->
-          <n-spin v-else-if="canceled && !processCompleted" size="small"></n-spin>
+          <n-button v-if="processing" :disabled="canceled" ref="cancelbutton" round size="large" @click="canceled = true">
+            <!-- spinner waiting for complete -->
+            <n-spin :show="canceled && !processCompleted" size="small">{{t('cancel')}}</n-spin>
+          </n-button>
           <!-- close button -->
           <n-button v-else-if="processCompleted" @click="onBeforeProcessingDialogClose" round size="large" style="font-size: small; margin-top:1em;">{{t('close')}}</n-button>
         </n-flex>

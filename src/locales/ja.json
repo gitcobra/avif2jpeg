@@ -103,5 +103,6 @@
   "reset": "リセット",
   "back": "戻る",
   "failed": "失敗",
-  "success": "成功"
+  "success": "成功",
+  "previousVersion": "過去のバージョン"
 }

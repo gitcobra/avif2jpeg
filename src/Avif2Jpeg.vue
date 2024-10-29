@@ -15,7 +15,7 @@ import { UserSettings } from './user-settings';
 import { useI18n } from 'vue-i18n'
 import { useHead } from "@vueuse/head";
 
-import 'vfonts/RobotoSlab.css';
+//import 'vfonts/RobotoSlab.css';
 import { ArrowDown } from '@vicons/ionicons5';
 
 
@@ -204,6 +204,8 @@ function onInputFile(list: File[]) {
 
 
 <style lang="scss">
+@import '/node_modules/modern-normalize/modern-normalize.css';
+
 html, body {
   box-sizing: border-box;
   height: 100%;

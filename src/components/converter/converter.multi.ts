@@ -171,13 +171,6 @@ export async function convertTargetFilesInMultithread(ConvStats: Stat, canceled,
     //setTimeout(()=>worker.postMessage(messages), 0);
     worker.postMessage( messages );
     
-    /*
-    DEV: {
-      if( ConvStats.outputTotalSize >= props.maxZipSizeMB * 1024 * 1024 ) {
-        canceled.value = true;
-      }
-    }
-    */
     
     // when it is a last file, wait until all workers are done because the list could expand when retrying.
     if( isLastItem ) {
@@ -213,7 +206,7 @@ export async function convertTargetFilesInMultithread(ConvStats: Stat, canceled,
   }
 
   // squeeze remaining zip
-  if( !isSingleImageFile && ConvStats.success > 0 ) {
+  if( !isSingleImageFile ) {
     zipWorker.postMessage({action: 'squeeze'});
     await promiseToWaitSqueezingZip;
   }
@@ -249,35 +242,6 @@ export async function convertTargetFilesInMultithread(ConvStats: Stat, canceled,
 }
 
 
-// 
-async function pushErrorZipsInMultithread(list: FileWithId[], zipWorker: Worker, Terminated, ConvStats: Stat) {
-  for( const file of list ) {
-    const path = (file.webkitRelativePath || file.name).replace(/^\//, '');
-    let buffer: ArrayBuffer;
-    try {
-      buffer = await file.arrayBuffer();
-    } catch(e:any) {
-      console.warn(`failed to load `, path);
-      //throw e;
-      ConvStats.failedToCreateFailedZip = true;
-      return;
-    }
-    
-    if( Terminated.value )
-      return;
-    
-    zipWorker.postMessage({
-      action: 'add-filelist',
-      buffer,
-      path,
-    });
-    ConvStats.failedFileZippedCount++;
-  }
-  
-  zipWorker.postMessage({
-    action: 'squeeze-filelist',
-  });
-}
 
 
 
@@ -292,10 +256,12 @@ function createZipWorkerListenerAndPromise(zipWorker: Worker, ConvStats: Stat, c
       //console.log(`recieved a message from zipWorker: ${action}`);
       
       
+      /*
       if( canceled.value ) {
-        //resolve(void 0);
-        //return;
+        resolve(void 0);
+        return;
       }
+      */
 
       // completion
       if( action === 'add-zip-completed' ) {
@@ -373,10 +339,14 @@ function createCanvasWorkerListener(ConvStats: Stat, canceled, SingleImageData: 
     const { action } = data;
 
     if( canceled.value ) {
+      console.log(`canceling action from canvas "${action}"`);
+      /*
       if( !processingCoreLogItems.value.has(worker.id) )
         return;
+      */
       
       switch( action ) {
+        /*
         case 'list-start':
         case 'file-start':
           return;
@@ -384,8 +354,10 @@ function createCanvasWorkerListener(ConvStats: Stat, canceled, SingleImageData: 
         case 'file-load':
         case 'file-converted':
           return;
+        */
         
         case 'file-canceled':
+          console.log('file-canceled');
           ConvStats.done++;
           //ConvStats.failure++;
           /*
@@ -407,6 +379,8 @@ function createCanvasWorkerListener(ConvStats: Stat, canceled, SingleImageData: 
         break;
       case 'file-start': {
         const { index, path, fileId } = data;
+        //console.log(`file-start ${index}`);
+
         const item = {
           key:_keyCounter++,
           core:worker.id,
@@ -533,4 +507,38 @@ function createCanvasWorkerListener(ConvStats: Stat, canceled, SingleImageData: 
   };
 
   return cworkerlistener;
+}
+
+
+
+
+
+// create zips for failed files
+async function pushErrorZipsInMultithread(list: FileWithId[], zipWorker: Worker, Terminated, ConvStats: Stat) {
+  for( const file of list ) {
+    const path = (file.webkitRelativePath || file.name).replace(/^\//, '');
+    let buffer: ArrayBuffer;
+    try {
+      buffer = await file.arrayBuffer();
+    } catch(e:any) {
+      console.warn(`failed to load `, path);
+      //throw e;
+      ConvStats.failedToCreateFailedZip = true;
+      return;
+    }
+    
+    if( Terminated.value )
+      return;
+    
+    zipWorker.postMessage({
+      action: 'add-filelist',
+      buffer,
+      path,
+    });
+    ConvStats.failedFileZippedCount++;
+  }
+  
+  zipWorker.postMessage({
+    action: 'squeeze-filelist',
+  });
 }

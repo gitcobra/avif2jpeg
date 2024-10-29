@@ -103,5 +103,6 @@
   "reset": "Reset",
   "back": "Back",
   "failed": "Failed",
-  "success": "Success"
+  "success": "Success",
+  "previousVersion": "Previous version"
 }

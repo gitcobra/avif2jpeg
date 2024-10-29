@@ -98,5 +98,6 @@
   "selectLanguage": "اختر لغتك",
   "back": "خلف",
   "failed": "فشل",
-  "success": "نجاح"
+  "success": "نجاح",
+  "previousVersion": "الإصدار السابق"
 }

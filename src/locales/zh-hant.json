@@ -98,5 +98,6 @@
   "reset": "重置",
   "back": "後退",
   "failed": "失敗的",
-  "success": "成功"
+  "success": "成功",
+  "previousVersion": "以前的版本"
 }

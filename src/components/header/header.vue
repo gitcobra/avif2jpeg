@@ -5,9 +5,7 @@
       <n-space align="start">
         <Github/>
 
-        <span style="font-size:x-small;">
-          <Version/>
-        </span>
+        <Version/>
         
         <n-space align="center">
           <Licenses/>
@@ -17,9 +15,11 @@
       
       <!-- language switches -->
       <n-space align="end" style="font-size: x-small;">          
+        <Suspense>
         <router-view>
         <SwitchLanguages />
         </router-view>
+        </Suspense>
       </n-space>
     </n-space>
 

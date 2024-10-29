@@ -98,5 +98,6 @@
   "selectLanguage": "Wählen Sie Ihre Sprache aus",
   "back": "Zurück",
   "failed": "Fehlgeschlagen",
-  "success": "Erfolg"
+  "success": "Erfolg",
+  "previousVersion": "Vorherige Version"
 }

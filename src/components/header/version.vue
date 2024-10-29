@@ -10,9 +10,9 @@
     @update:value="onSelect"
   >
     <template #header>
-      <span style="font-size:xx-small; user-select: none;">Previous version</span>
+      <span style="font-size:x-small; user-select: none;">{{ $t('previousVersion') }}</span>
     </template>
-    <span style="cursor: pointer">v{{CurVer}}</span>
+    <span style="cursor: pointer;">v{{CurVer}}</span>
   </n-popselect>
 
 </template>

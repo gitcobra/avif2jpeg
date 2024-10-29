@@ -1,29 +1,35 @@
+import { nextTick } from 'vue';
+import { createI18n, type DefaultLocaleMessageSchema } from 'vue-i18n';
+import en from './locales/en.json';
 
-import { createI18n } from 'vue-i18n';
+// language name list
+export { default as LANG_NAMES } from './locales/langlist.json';
 
 // language id list
 export const LANG_ID_LIST: string[] = [] as const;
 // language name list
-export const LANG_NAMES: {[K: string]: string} = {} as const;
-// language json list
-export const LANG_JSONS: {[K: string]: object} = {} as const;
+//export const LANG_NAMES: {[K: string]: string} = {} as const;
 
-// load language files
-const messages: {[K: string]: any} = {};
-const messageImports = import.meta.glob<any>('./locales/*.json', { eager: true });
+
+
+// prepare language files in locale directory
+const localeImports: Record<string, () => Promise<DefaultLocaleMessageSchema>> = {};
+const messageImports = import.meta.glob('./locales/*.json');
 for(const path in messageImports) {
-  const raw = messageImports[path];
-  const lang = (path.match(/([^/]+)\.json$/) || [])[1];
-  if( typeof lang !== 'string' )
-    throw new Error();
-
-  const json = raw; //JSON.parse(raw);
+  const lang = ( path.match(/\/([a-z]{2}(?:-[a-z]+)?)\.json$/i) )?.[1];
+  if( !lang )
+    continue;
   
-  messages[lang] = json;
   LANG_ID_LIST.push(lang);
-  LANG_NAMES[lang] = json['lang'];
-  LANG_JSONS[lang] = json;
+  localeImports[lang] = messageImports[path] as any;
 }
+
+
+
+const messages: Record<string, DefaultLocaleMessageSchema> = {
+  //en: await localeImports.en(), // ERROR: Top-level await is not available in the configured target environment
+  en,
+};
 
 export const I18n = createI18n({
   legacy: false,
@@ -32,12 +38,22 @@ export const I18n = createI18n({
   locale: 'en',
   fallbackLocale: 'en',
   
-  
   messages,
 
   // suppress the warning "XSS: [intlify] Detected HTML in '...' message. Recommend not using HTML messages to avoid XSS."
   warnHtmlMessage: false,
   missingWarn: false,
   fallbackWarn: false,
-
 });
+
+
+export async function loadLocaleMessages(locale) {
+  
+  // load locale messages with dynamic import
+  const message = await localeImports[locale]();
+
+  // set locale and locale message
+  I18n.global.setLocaleMessage(locale, message);
+
+  return nextTick();
+}

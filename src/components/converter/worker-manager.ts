@@ -94,6 +94,7 @@ export async function waitAllWorkers() {
 }
 
 export function init() {
+  releaseAllWorkers();
   for( const worker of workers ) {
     worker.terminate();
   }

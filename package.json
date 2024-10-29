@@ -1,7 +1,7 @@
 {
   "name": "avif2jpeg",
   "private": true,
-  "version": "1.0.13",
+  "version": "1.1.38",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -13,10 +13,10 @@
     "@gitcobra/anzip": "^1.0.8",
     "@types/node": "^22.7.4",
     "@vicons/ionicons5": "^0.12.0",
-    "@vicons/tabler": "^0.12.0",
     "@vitejs/plugin-vue": "^5.1.4",
     "@vueuse/head": "^2.0.0",
     "js-beautify": "^1.15.1",
+    "modern-normalize": "^3.0.1",
     "naive-ui": "^2.40.1",
     "replace-in-file": "^8.2.0",
     "sass": "^1.79.4",

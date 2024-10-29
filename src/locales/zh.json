@@ -98,5 +98,6 @@
   "selectLanguage": "选择您的语言",
   "back": "后退",
   "failed": "失败的",
-  "success": "成功"
+  "success": "成功",
+  "previousVersion": "以前的版本"
 }

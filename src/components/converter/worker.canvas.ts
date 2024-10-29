@@ -90,6 +90,7 @@ self.onmessage = async (params: MessageEvent<MessageToCanvasWorker | null>) => {
   } as MessageFromCanvasWorker);
 };
 
+
 async function convertRecievedData(data) {
   const { index, file, fileId, type, quality, demandThumbnail, demandImage, webkitRelativePath } = data;
 

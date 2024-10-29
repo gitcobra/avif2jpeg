@@ -52,7 +52,6 @@ export default defineConfig({
     }),
 
     splitVendorChunkPlugin(),
-    //appScriptToEndOfBody(),
     
     htmlInjectionPlugin({
       injections: [
@@ -82,14 +81,17 @@ export default defineConfig({
   ssgOptions: {
     dirStyle: 'nested',
     onFinished() {
-      
       // create sitemap.xml
       generateSitemap({
         hostname: 'https://gitcobra.github.io',
-        basePath: basePath,
+        basePath: '/avif2jpeg/dist',
         readable: true,
       });
     },
+
+    // without this, each static language htmls would be applied the same language,
+    // because of asynchronous import of lang files probably.
+    concurrency: 1,
     
     // build error issue
     // The requested module 'naive-ui' is a CommonJS module, which may not support all module.exports as named exports.
@@ -109,7 +111,5 @@ export default defineConfig({
   },
 
   // remove console.log
-  esbuild: process.env.NODE_ENV !== 'development' ? {
-    drop: ['console', 'debugger'],
-  } : {},
+  //esbuild: process.env.NODE_ENV !== 'development' ? { drop: ['console', 'debugger'] } : {},
 });
