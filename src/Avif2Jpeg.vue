@@ -15,7 +15,7 @@ import { UserSettings } from './user-settings';
 import { useI18n } from 'vue-i18n'
 import { useHead } from "@vueuse/head";
 
-//import 'vfonts/RobotoSlab.css';
+import 'vfonts/RobotoSlab.css';
 import { ArrowDown } from '@vicons/ionicons5';
 
 

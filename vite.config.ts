@@ -111,5 +111,5 @@ export default defineConfig({
   },
 
   // remove console.log
-  //esbuild: process.env.NODE_ENV !== 'development' ? { drop: ['console', 'debugger'] } : {},
+  esbuild: process.env.NODE_ENV !== 'development' ? { drop: ['console', 'debugger'] } : {},
 });
