@@ -39,5 +39,7 @@ export const createApp = ViteSSG(
     // install plugins etc.
     app.use(I18n);
     //app.use(naive);
-  }
+
+
+  },
 );

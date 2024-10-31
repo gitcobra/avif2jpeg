@@ -15,11 +15,11 @@
       
       <!-- language switches -->
       <n-space align="end" style="font-size: x-small;">          
-        <Suspense>
         <router-view>
-        <SwitchLanguages />
+          <Suspense>
+          <SwitchLanguages @lang-ready="emit('ready')"/>
+          </Suspense>
         </router-view>
-        </Suspense>
       </n-space>
     </n-space>
 
@@ -36,6 +36,11 @@ import SwitchLanguages from './switch-lang.vue';
 import Github from './github.vue';
 import Licenses from './licenses.vue'
 import Version from './version.vue';
+
+
+const emit = defineEmits<{
+  'ready': []
+}>();
 
 // injections
 const INJ = inject(GlobalValsKey);

@@ -18,6 +18,12 @@ const router = useRouter();
 const { locale, t } = useI18n();
 
 
+// emits
+const emit = defineEmits<{
+  'lang-ready': []
+}>();
+
+
 // constants
 
 // create language list
@@ -31,6 +37,7 @@ langOptions.sort((a, b) => {
 
 
 // initialize on mounted 
+
 onMounted(() => {
  
   // router settings
@@ -41,15 +48,30 @@ onMounted(() => {
     // show tooltips
     INJ.switchToolTipVisibility();
   });
-  
 });
 
+
+onBeforeMount(async () => {
+
+});
+
+
+// set language for SSG
 await setLocaleByCurrentPath();
 
 // insert appropriate language title (for SSG)
 useHead({
   title: t('title'),
 });
+
+await nextTick();
+emit('lang-ready');
+
+
+
+
+
+
 
 
 
@@ -59,11 +81,10 @@ async function setLocaleMessages(lang: string) {
   if( !lang )
     return;
   
-  if( !I18n.global.availableLocales[lang] ) {
-    await loadLocaleMessages(lang);
-  }
-  locale.value = lang; 
   
+  await loadLocaleMessages(lang);
+  locale.value = lang;
+
   // change page title
   document.title = t('title');
 }
@@ -72,9 +93,9 @@ async function setLocaleByCurrentPath() {
   const currentPath = router.currentRoute.value.path || '';
   const langPath = String(currentPath.match(/(?<=^\/)[^/]+/) || '');
 
-
   // change locale by the page path
   if( langPath && LANG_ID_LIST.includes(langPath) ) {
+    locale.value = langPath;
     await setLocaleMessages(langPath);
   }
   else {
@@ -111,7 +132,7 @@ function getBrowserLanguage(): string {
 }
 
 function changeRoute(val: string) {
-  //console.log(`changeRoute: ${router.currentRoute.value.fullPath} => ${val}`);
+  console.log(`changeRoute: ${router.currentRoute.value.fullPath} => ${val}`);
   router.push('/' + val + '/');
 }
 

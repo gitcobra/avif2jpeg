@@ -33,6 +33,11 @@ import LangFlag from './components/lang-flag.vue';
 
 const { t, locale } = useI18n();
 
+const emit = defineEmits<{
+  'ready': []
+}>();
+
+
 // constants
 
 // detect smartphone
@@ -84,7 +89,6 @@ useHead({
 
 
 // on mounted
-
 onMounted(() => {
   // remove style for svg size fix
   //document.querySelector('head').removeChild(document.getElementById('svgfix'));
@@ -94,10 +98,8 @@ onMounted(() => {
   window.addEventListener('resize', checkLandScape);
 
   switchToolTipVisibility();
-  setTimeout(() => mounted.value = true, 1000);
+  setTimeout(() => mounted.value = true, 3000);
 });
-
-
 
 
 
@@ -119,6 +121,10 @@ function onInputFile(list: File[]) {
   inputConversionFiles.value = list;
 }
 
+function test() {
+  alert('headermounted')
+}
+
 </script>
 
 
@@ -131,9 +137,9 @@ function onInputFile(list: File[]) {
 <template>
 
   <n-flex vertical align="stretch" justify="start" style="height:100%; position: relative;">
-    <Header/>
+    <Header @ready="emit('ready')"/>
     
-    <transition :name="mounted ? 'fade' : ''" mode="out-in">
+    <transition name="fade" mode="out-in">
     <n-flex :key="locale" vertical align="stretch" justify="space-between" style="height:100%;">    
       <Title/>
 
