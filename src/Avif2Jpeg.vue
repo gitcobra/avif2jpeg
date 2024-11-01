@@ -1,4 +1,6 @@
 <script lang="ts">
+import SwitchLanguages from './components/header/switch-lang.vue';
+
 // for provide
 import { type InjectionKey, type Ref } from 'vue';
 
@@ -55,7 +57,12 @@ const LANDSCAPE = ref(true);
 const processing = ref(false);
 const mounted = ref(false);
 
+const contentVisible = ref(false);
 
+// for SSG
+if( import.meta.env.SSR ) {
+  contentVisible.value = true;
+}
 
 
 
@@ -89,6 +96,7 @@ useHead({
 
 
 // on mounted
+
 onMounted(() => {
   // remove style for svg size fix
   //document.querySelector('head').removeChild(document.getElementById('svgfix'));
@@ -103,8 +111,27 @@ onMounted(() => {
 
 
 
-// functions
+const TRANSTIME = 200;
+let transStartTime = 0;
+let firstTime = true;
+function onLangChange() {
+  if( import.meta.env.SSR )
+    return;
+  
+  contentVisible.value = false;
+  transStartTime = Date.now();
+}
+function onLangReady() {
+  const dif = firstTime ? 0 : Math.max(0, TRANSTIME - (Date.now() - transStartTime));
+  firstTime = false;
+  setTimeout(() => contentVisible.value = true, dif);
+  emit('ready');
+}
 
+
+
+
+// functions
 
 async function switchToolTipVisibility() {
   setTimeout(() => showBeforeMounted.value = true, 200);
@@ -121,9 +148,7 @@ function onInputFile(list: File[]) {
   inputConversionFiles.value = list;
 }
 
-function test() {
-  alert('headermounted')
-}
+
 
 </script>
 
@@ -137,10 +162,20 @@ function test() {
 <template>
 
   <n-flex vertical align="stretch" justify="start" style="height:100%; position: relative;">
-    <Header @ready="emit('ready')"/>
+    <Header>
+      <template #lang-switch>
+        <Suspense>
+          <SwitchLanguages
+            @lang-change="onLangChange"
+            @lang-ready="onLangReady"
+          />
+        </Suspense>
+      </template>
+    </Header>
+
     
-    <transition name="fade" mode="out-in">
-    <n-flex :key="locale" vertical align="stretch" justify="space-between" style="height:100%;">    
+    <transition name="fade">
+    <n-flex v-if="contentVisible" vertical align="stretch" justify="space-between" style="height:100%;">    
       <Title/>
 
       <n-space justify="center">
@@ -237,10 +272,10 @@ a {
 }
 
 .fade-enter-active {
-  transition: all .4s ease;
+  transition: all .3s ease;
 }
 .fade-leave-active {
-  transition: all .1s ease;
+  transition: all .2s ease; /* TRANSTIME */
 }
 .fade-leave-to, .fade-enter-from {
   opacity: 0;

@@ -20,7 +20,8 @@ const { locale, t } = useI18n();
 
 // emits
 const emit = defineEmits<{
-  'lang-ready': []
+  'lang-ready': [string]
+  'lang-change': [string]
 }>();
 
 
@@ -59,13 +60,13 @@ onBeforeMount(async () => {
 // set language for SSG
 await setLocaleByCurrentPath();
 
-// insert appropriate language title (for SSG)
-useHead({
-  title: t('title'),
-});
+if( import.meta.env.SSR ) {
+  // insert appropriate language title (for SSG)
+  useHead({
+    title: t('title'),
+  });
+}
 
-await nextTick();
-emit('lang-ready');
 
 
 
@@ -78,25 +79,32 @@ emit('lang-ready');
 // general functions
 
 async function setLocaleMessages(lang: string) {
-  if( !lang )
-    return;
-  
-  
-  await loadLocaleMessages(lang);
-  locale.value = lang;
+  if( lang !== locale.value || I18n.global.availableLocales.indexOf(lang as any) === -1 ) {
+    emit('lang-change', lang);
 
-  // change page title
-  document.title = t('title');
+    await loadLocaleMessages(lang);
+    locale.value = lang;
+
+    // change page title
+    document.title = t('title');
+
+    await nextTick();
+  }
+
+  emit('lang-ready', lang);
 }
 
 async function setLocaleByCurrentPath() {
   const currentPath = router.currentRoute.value.path || '';
-  const langPath = String(currentPath.match(/(?<=^\/)[^/]+/) || '');
+  const lang = String(currentPath.match(/(?<=^\/)[^/]+/) || '');
+
+  if( import.meta.env.SSR )
+    locale.value = lang;
 
   // change locale by the page path
-  if( langPath && LANG_ID_LIST.includes(langPath) ) {
-    locale.value = langPath;
-    await setLocaleMessages(langPath);
+  if( lang && LANG_ID_LIST.includes(lang) ) {
+    await setLocaleMessages(lang);
+    locale.value = lang;
   }
   else {
     await setLocaleByBrowserLanguage();
@@ -151,7 +159,8 @@ function changeRoute(val: string) {
         :consistent-menu-width="false"
         
         :options="langOptions"
-        v-model:value="locale"
+        _v-model:value="locale"
+        :value="locale"
         @update:value="changeRoute"
       >
         <template #arrow>

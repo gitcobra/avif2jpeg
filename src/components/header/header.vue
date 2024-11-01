@@ -15,11 +15,7 @@
       
       <!-- language switches -->
       <n-space align="end" style="font-size: x-small;">          
-        <router-view>
-          <Suspense>
-          <SwitchLanguages @lang-ready="emit('ready')"/>
-          </Suspense>
-        </router-view>
+        <slot name="lang-switch"></slot>
       </n-space>
     </n-space>
 
@@ -28,22 +24,8 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed, ref, inject } from "vue";
-import { ImageOutline, FolderOpenOutline, SearchCircle } from '@vicons/ionicons5';
 import { useI18n } from "vue-i18n";
-import { GlobalValsKey } from "../../Avif2Jpeg.vue";
-import SwitchLanguages from './switch-lang.vue';
 import Github from './github.vue';
 import Licenses from './licenses.vue'
 import Version from './version.vue';
-
-
-const emit = defineEmits<{
-  'ready': []
-}>();
-
-// injections
-const INJ = inject(GlobalValsKey);
-
-useI18n();
 </script>
