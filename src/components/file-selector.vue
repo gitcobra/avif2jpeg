@@ -11,7 +11,7 @@
       <n-space vertical align="stretch" justify="center">
         <!-- file select -->
         <n-tooltip :to="false" display-directive="show"
-          :show="INJ.showBeforeMounted.value" trigger="hover" :keep-alive-on-hover="false"
+          :show="INJ.showTooltipsBeforeMounted.value" trigger="hover" :keep-alive-on-hover="false"
           :placement="INJ.LANDSCAPE.value ? 'right' : 'top'"
           :duration="0" :delay="0" :z-index="10"
         >
@@ -34,8 +34,8 @@
         <n-tooltip :to="false" display-directive="show" trigger="hover"
           placement="left" :keep-alive-on-hover="false" style="max-width: 40vw;"
           :duration="0" :delay="0" :z-index="10"
-          v-if="!INJ.IS_SP && folderInputSupport"
-          :show="INJ.showBeforeMounted.value"
+          v-if="!INJ.IS_SP && folderInputSupport || INJ.SSR"
+          :show="INJ.showTooltipsBeforeMounted.value"
         >
           <template #trigger>
             <n-button

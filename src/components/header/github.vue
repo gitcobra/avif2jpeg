@@ -1,6 +1,6 @@
 
 <template>
-  <n-tooltip :to="false" display-directive="show" :show="INJ.showBeforeMounted.value" trigger="hover" :duration="0" :delay="50">
+  <n-tooltip :to="false" display-directive="show" :show="INJ.showTooltipsBeforeMounted.value" trigger="hover" :duration="0" :delay="0">
     <template #trigger>
       <n-a href="https://github.com/gitcobra/avif2jpeg" style="color:black; font-size:small; font-weight: bolder;"><n-icon><LogoGithub /></n-icon>GitHub</n-a>
     </template>

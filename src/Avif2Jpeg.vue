@@ -6,9 +6,10 @@ import { type InjectionKey, type Ref } from 'vue';
 
 export const GlobalValsKey: InjectionKey<{
   LANDSCAPE: Ref<boolean>
-  showBeforeMounted: Ref<boolean>
+  showTooltipsBeforeMounted: Ref<boolean>
   IS_SP: boolean
   switchToolTipVisibility: Function
+  SSR: boolean
 }> = Symbol('global variables');
 </script>
 
@@ -52,7 +53,7 @@ const IS_SP = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mob
 const inputConversionFiles = ref(null);
 const availableThreadCount = ref(2);
 
-let showBeforeMounted = ref<boolean | undefined>(false);
+let showTooltipsBeforeMounted = ref<boolean | undefined>(undefined);
 const LANDSCAPE = ref(true);
 const processing = ref(false);
 const mounted = ref(false);
@@ -62,6 +63,7 @@ const contentVisible = ref(false);
 // for SSG
 if( import.meta.env.SSR ) {
   contentVisible.value = true;
+  showTooltipsBeforeMounted.value = true;
 }
 
 
@@ -70,28 +72,15 @@ if( import.meta.env.SSR ) {
 
 
 provide(GlobalValsKey, {
-  showBeforeMounted,
+  showTooltipsBeforeMounted,
   LANDSCAPE,
   IS_SP,
   switchToolTipVisibility,
+  SSR: import.meta.env.SSR,
 });
 
 
 
-// insert header
-useHead({
-  //title: t('title'),
-  meta: [
-    {
-      property: "og:title",
-      content: t('title'),
-    },
-    {
-      property: `og:description`,
-      content: t('metaDescription'),
-    }
-  ],
-});
 
 
 
@@ -134,8 +123,11 @@ function onLangReady() {
 // functions
 
 async function switchToolTipVisibility() {
-  setTimeout(() => showBeforeMounted.value = true, 200);
-  setTimeout(() => showBeforeMounted.value = undefined, 300);
+  if( !import.meta.env.SSR )
+    return;
+  
+  showTooltipsBeforeMounted.value = true;
+  setTimeout(() => showTooltipsBeforeMounted.value = undefined, 1000);
 }
 
 function checkLandScape() {
@@ -272,10 +264,10 @@ a {
 }
 
 .fade-enter-active {
-  transition: all .3s ease;
+  transition: all .4s ease;
 }
 .fade-leave-active {
-  transition: all .2s ease; /* TRANSTIME */
+  transition: all .1s ease;
 }
 .fade-leave-to, .fade-enter-from {
   opacity: 0;

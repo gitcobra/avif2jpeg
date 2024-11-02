@@ -31,6 +31,10 @@ const themeOverrides: GlobalThemeOverrides = {
     //color: '#777777',
     boxShadow: '2px 2px 5px 0px #555555',
   },
+  Tooltip: {
+    // transparency
+    color: '#000000AA', 
+  }
 };
 
 // hide SSGed html until mounted

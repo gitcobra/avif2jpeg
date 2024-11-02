@@ -16,6 +16,7 @@ import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 const basePath = '/avif2jpeg/dist/';
 export default defineConfig({
   base: basePath,
+
   plugins: [
     vue(),
     AutoImport({
@@ -80,6 +81,7 @@ export default defineConfig({
 
   ssgOptions: {
     dirStyle: 'nested',
+    
     onFinished() {
       // create sitemap.xml
       generateSitemap({
@@ -87,7 +89,16 @@ export default defineConfig({
         basePath: '/avif2jpeg/dist',
         readable: true,
       });
+
+      // sweep away unneeded tags and attributes from base html
+      replaceInFile({
+        files: './dist/**/index.html',
+        from: /<!--.*?-->|\s(style|data-v-[^=]+|role)="[^"]*?"|<svg\s[\s\S]+?<\/svg>/g,
+        to: '',
+      });
     },
+    
+    formatting: 'minify',
 
     // without this, each static language htmls would be applied the same language,
     // because of asynchronous import of lang files probably.
@@ -99,7 +110,7 @@ export default defineConfig({
     mock: true,
     format: 'cjs',
   },
-
+  
   //Deprecation Warning: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
   //More info: https://sass-lang.com/d/legacy-js-api
   css: {

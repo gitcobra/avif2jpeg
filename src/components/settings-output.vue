@@ -85,7 +85,7 @@ function checkSupportedImageFormats() {
   <n-space justify="center">
     
     <n-space vertical>
-      <n-tooltip :to="false" display-directive="show" :show="INJ.showBeforeMounted.value" trigger="hover" :placement="INJ.LANDSCAPE.value ? 'left' : 'top-start'" :keep-alive-on-hover="false" :duration="0" :delay="0">
+      <n-tooltip :to="false" display-directive="show" :show="INJ.showTooltipsBeforeMounted.value" trigger="hover" :placement="INJ.LANDSCAPE.value ? 'left' : 'top-start'" :keep-alive-on-hover="false" :duration="0" :delay="0">
         <template #trigger>
           <n-space align="center">
             <n-icon><ImageOutline /></n-icon>{{t('settings.imageType')}}:
@@ -95,7 +95,7 @@ function checkSupportedImageFormats() {
         {{t('settings.imageTypeTooltip')}}
       </n-tooltip>
 
-      <n-tooltip :to="false" display-directive="show" :show="INJ.showBeforeMounted.value" trigger="hover" :placement="INJ.LANDSCAPE.value ? 'left' : 'top-start'" :keep-alive-on-hover="false" :duration="0" :delay="0">
+      <n-tooltip :to="false" display-directive="show" :show="INJ.showTooltipsBeforeMounted.value" trigger="hover" :placement="INJ.LANDSCAPE.value ? 'left' : 'top-start'" :keep-alive-on-hover="false" :duration="0" :delay="0">
         <template #trigger>
           <n-space align="center">
             <n-space align="start" :wrap="false">

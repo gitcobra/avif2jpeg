@@ -64,6 +64,17 @@ if( import.meta.env.SSR ) {
   // insert appropriate language title (for SSG)
   useHead({
     title: t('title'),
+
+    meta: [
+      {
+        property: "og:title",
+        content: t('title'),
+      },
+      {
+        property: `og:description`,
+        content: t('metaDescription'),
+      }
+    ],
   });
 }
 
@@ -150,7 +161,7 @@ function changeRoute(val: string) {
 
 
 <template>
-  <n-tooltip :to="false" display-directive="show" :show="INJ.showBeforeMounted.value" trigger="hover" :keep-alive-on-hover="false" :placement="INJ.LANDSCAPE.value ? 'left' : 'bottom'" :duration="0" :delay="50">
+  <n-tooltip :to="false" display-directive="show" :show="INJ.showTooltipsBeforeMounted.value" trigger="hover" :keep-alive-on-hover="false" :placement="INJ.LANDSCAPE.value ? 'left' : 'bottom'" :duration="0" :delay="50">
     <template #trigger>
       <n-select
         ref="langselect"
