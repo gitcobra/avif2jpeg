@@ -679,10 +679,10 @@ function getThumbnailedSize(image: {width:number, height:number}, maxSize: numbe
 
 <template>
   <n-flex vertical justify="center">
-    <n-space justify="center" :wrap="false" style="white-space: nowrap;">
+    <n-space justify="center" align="center" :wrap="false" style="white-space: nowrap;">
 
       <!-- left column -->
-      <n-space vertical justify="center" style="height:100%;">
+      <n-space vertical justify="center" class="left-column">
    
         <n-statistic tabular-nums :label="$t('status.elapsedTime')">
           <n-space>
@@ -691,7 +691,7 @@ function getThumbnailedSize(image: {width:number, height:number}, maxSize: numbe
         </n-statistic>
 
         <n-statistic tabular-nums :label="$t('status.multiThreading')">
-          <n-space>
+          <n-space :style="{color: !props.status.threads ? 'red' : ''}">
             {{ props.status.threads ? $rt('{n} @:threads', props.status.threads) : $t('disabled') }}
           </n-space>
         </n-statistic>
@@ -725,6 +725,7 @@ function getThumbnailedSize(image: {width:number, height:number}, maxSize: numbe
           {stroke: processing ? c.successColor : statusColor, opacity:0.3},
           {stroke: statusColor, opacity:0.3},
         ]"
+        class="center-column"
       >
         <!-- content in the center circle -->
         <n-space vertical align="center" style="font-family:v-mono; font-size:xx-large; white-space: nowrap;" :wrap="false" :wrap-item="false">
@@ -850,7 +851,7 @@ function getThumbnailedSize(image: {width:number, height:number}, maxSize: numbe
         <n-flex align="center" :wrap="false">
           <transition-group>
           <!-- filter completed item -->
-          <n-checkbox key="a" v-model:checked="hideSuccess" size="small" style="font-size: smaller">{{$t('status.filterSuccess')}}</n-checkbox>
+          <n-checkbox key="a" v-model:checked="hideSuccess" size="small" style="font-size: smaller" class="hide-mobile">{{$t('status.filterSuccess')}}</n-checkbox>
           
           <!-- auto scroll -->
           <n-checkbox key="b" v-if="expandLog" v-model:checked="autoScrollLog" @update:checked="flag => flag && scrollLogViewToBottom(true)" size="small" style="font-size: smaller">{{$t('status.autoScroll')}}</n-checkbox>
@@ -1239,12 +1240,33 @@ function getThumbnailedSize(image: {width:number, height:number}, maxSize: numbe
 
 
 
-
-
 .in-button-anchor {
   color: white;
   display: flex;
 }
+
+
+
+.left-column {
+  height:100%;
+}
+@media screen and (max-width: 512px) {
+	.left-column {
+    > * {
+      display: none;
+    }
+  }
+  .center-column {
+    width: 45vw;
+  }
+  .hide-mobile {
+    display: none;
+  }
+}
+
+
+
+
 
 
 /* transitions */

@@ -12345,6 +12345,10 @@
     "/avif2jpeg/dist/assets/RobotoSlab-Regular-C-OtUSR_.ttf",
     "/avif2jpeg/dist/assets/RobotoSlab-Medium-ClaBQ_fg.ttf"
   ],
+  "src/components/converter/converter.vue?vue&type=style&index=0&lang.scss": [
+    "/avif2jpeg/dist/assets/RobotoSlab-Regular-C-OtUSR_.ttf",
+    "/avif2jpeg/dist/assets/RobotoSlab-Medium-ClaBQ_fg.ttf"
+  ],
   "src/components/converter/status.vue": [
     "/avif2jpeg/dist/assets/RobotoSlab-Regular-C-OtUSR_.ttf",
     "/avif2jpeg/dist/assets/RobotoSlab-Medium-ClaBQ_fg.ttf"
@@ -12353,7 +12357,7 @@
     "/avif2jpeg/dist/assets/RobotoSlab-Regular-C-OtUSR_.ttf",
     "/avif2jpeg/dist/assets/RobotoSlab-Medium-ClaBQ_fg.ttf"
   ],
-  "src/components/converter/status.vue?vue&type=style&index=0&scoped=9a90c771&lang.scss": [
+  "src/components/converter/status.vue?vue&type=style&index=0&scoped=4cf6933b&lang.scss": [
     "/avif2jpeg/dist/assets/RobotoSlab-Regular-C-OtUSR_.ttf",
     "/avif2jpeg/dist/assets/RobotoSlab-Medium-ClaBQ_fg.ttf"
   ],
@@ -12389,7 +12393,7 @@
     "/avif2jpeg/dist/assets/RobotoSlab-Regular-C-OtUSR_.ttf",
     "/avif2jpeg/dist/assets/RobotoSlab-Medium-ClaBQ_fg.ttf"
   ],
-  "src/components/droptarget.vue?vue&type=style&index=0&scoped=eb06bc91&lang.scss": [
+  "src/components/droptarget.vue?vue&type=style&index=0&scoped=61ec1790&lang.scss": [
     "/avif2jpeg/dist/assets/RobotoSlab-Regular-C-OtUSR_.ttf",
     "/avif2jpeg/dist/assets/RobotoSlab-Medium-ClaBQ_fg.ttf"
   ],
@@ -12401,7 +12405,7 @@
     "/avif2jpeg/dist/assets/RobotoSlab-Regular-C-OtUSR_.ttf",
     "/avif2jpeg/dist/assets/RobotoSlab-Medium-ClaBQ_fg.ttf"
   ],
-  "src/components/file-selector.vue?vue&type=style&index=0&scoped=b84c1c15&lang.scss": [
+  "src/components/file-selector.vue?vue&type=style&index=0&scoped=977d699f&lang.scss": [
     "/avif2jpeg/dist/assets/RobotoSlab-Regular-C-OtUSR_.ttf",
     "/avif2jpeg/dist/assets/RobotoSlab-Medium-ClaBQ_fg.ttf"
   ],

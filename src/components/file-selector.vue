@@ -108,6 +108,7 @@
 
     <!-- drop target -->
     <DropTarget
+      v-if="!INJ.IS_SP"
       @drop="emitInputs"
       :forbidden="!isAllowedInputs"
     />

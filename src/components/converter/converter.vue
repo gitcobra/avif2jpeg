@@ -22,11 +22,12 @@ import { convertImagesInSingleThread, getAsPromise } from './converter.single';
 
 // sub components
 import ConversionStatus from './status.vue';
+import { GlobalValsKey } from '@/Avif2Jpeg.vue';
 export type ConversionStatusType = InstanceType<typeof ConversionStatus>['$props']['status'];
 
 
 // common
-
+const INJ = inject(GlobalValsKey);
 const { t } = useI18n();
 const dialog = useDialog();
 const message = useMessage();
@@ -524,7 +525,8 @@ function checkAvailableFeatures() {
     :type="processingType"
     :mask-closable="false"
     :on-after-leave="cleanUpProcessedData"
-    style="min-width: 640px;"
+
+    class="processing-dialog"
   >
     <template #default>
       <n-flex vertical  style="flex-grow: 1;">
@@ -558,3 +560,15 @@ function checkAvailableFeatures() {
   </n-modal>
 
 </template>
+
+<style lang="scss">
+.processing-dialog {
+  min-width: 640px;
+}
+
+@media screen and (max-width: 500px) {
+  .processing-dialog {
+    min-width: 320px;
+  }	
+}
+</style>

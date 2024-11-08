@@ -180,7 +180,7 @@ async function digOutFileSystemEntries(entries: FileSystemEntry[], list?: File[]
   cursor: crosshair;
 }
 .avif {
+  max-width: 10vw;
   width: 64px;
-  height: 48px;
 }
 </style>

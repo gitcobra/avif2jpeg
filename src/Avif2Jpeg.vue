@@ -47,7 +47,6 @@ const emit = defineEmits<{
 const IS_SP = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile Safari/.test(navigator.userAgent);
 
 
-
 // reactive values
 
 const inputConversionFiles = ref(null);
