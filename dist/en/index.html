@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>AVIF to JPEG "Offline" Batch Converter</title>
+    <link rel="icon" type="image/png" href="/avif2jpeg/dist/avif.png">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="twitter:card" content="summary">
+    <meta property="og:url" content="https://gitcobra.github.io/avif2jpeg/dist/">
+    <meta property="og:image" content="/avif2jpeg/dist/card.jpg">
+    <script type="module" crossorigin="" src="/avif2jpeg/dist/assets/app-C5CiZxGJ.js"></script>
+    <link rel="modulepreload" crossorigin="" href="/avif2jpeg/dist/assets/vendor-muAr_BNG.js">
+    <link rel="stylesheet" crossorigin="" href="/avif2jpeg/dist/assets/app-IWY5oJpy.css">
+    <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-FK7FWT5MS4"></script>
+    <script>
+        function gtag() {
+            dataLayer.push(arguments)
+        }
+        window.dataLayer = window.dataLayer || [], gtag("js", new Date), gtag("config", "G-FK7FWT5MS4")
+    </script>
+    <meta property="og:title" content="AVIF to JPEG &quot;Offline&quot; Batch Converter">
+    <meta property="og:description" content="It is a free web application to convert AVIF or WebP images to other common image formats such as JPEG or PNG without server communication.">
+</head>
+
+<body><noscript><strong>We're sorry but AVIF to JPEG "Offline" Batch Converter doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript>
+    <div id="app" data-server-rendered="true">
+        <div class="n-config-provider">
+            <div class="n-flex hide">
+                <div class="n-space">
+                    <div class="">
+                        <div class="n-space">
+                            <div class="">
+                                <div class="n-space">
+                                    <div class=""><a class="n-a" href="https://github.com/gitcobra/avif2jpeg"><i class="n-icon"></i>GitHub</a>
+                                        <div class="v-binder-follower-container">
+                                            <div class="v-binder-follower-content">
+                                                <div class="n-popover n-popover-shared n-tooltip n-popover-shared--show-arrow">
+                                                    <div class="n-popover__content">Open Source</div>
+                                                    <div class="n-popover-arrow-wrapper">
+                                                        <div class="n-popover-arrow"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class=""><span>v1.4.2</span></div>
+                                    <div class="">
+                                        <div class="n-space">
+                                            <div class=""><button class="n-button n-button--default-type n-button--medium-type" tabindex="0" type="button"><span class="n-button__content">Licenses</span></button></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="">
+                                <div class="n-space">
+                                    <div class="">
+                                        <div class="n-select" _v-model:value="locale">
+                                            <div class="n-base-selection n-base-selection--selected">
+                                                <div class="n-base-selection-label" tabindex="0">
+                                                    <div class="n-base-selection-input" title="English">
+                                                        <div class="n-base-selection-input__content">English</div>
+                                                    </div>
+                                                    <div class="n-base-loading n-base-suffix" aria-label="loading">
+                                                        <div class="n-base-loading__placeholder">
+                                                            <div class="n-base-clear">
+                                                                <div class="n-base-clear__placeholder"><i class="n-base-icon n-base-suffix__arrow"><i class="n-icon"></i></i></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="n-base-selection__border"></div>
+                                                <div class="n-base-selection__state-border"></div>
+                                            </div>
+                                        </div>
+                                        <div class="v-binder-follower-container">
+                                            <div class="v-binder-follower-content">
+                                                <div class="n-popover n-popover-shared n-tooltip n-popover-shared--show-arrow">
+                                                    <div class="n-popover__content">
+                                                        <div>Select your language</div>
+                                                    </div>
+                                                    <div class="n-popover-arrow-wrapper">
+                                                        <div class="n-popover-arrow"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="">
+                        <div class="n-divider n-divider--no-title">
+                            <div class="n-divider__line n-divider__line--left"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="n-flex">
+                    <div class="n-space">
+                        <div class="">
+                            <h1><a class="n-a" href="/avif2jpeg/dist/">AVIF to JPEG "Offline" Batch Converter</a></h1>
+                        </div>
+                    </div>
+                    <div class="n-space">
+                        <div class="">
+                            <div class="container-1">
+                                <div class="container-2">
+                                    <div class="n-space">
+                                        <div class="">
+                                            <div class="n-space">
+                                                <div class="">
+                                                    <div class="n-badge"><i class="n-icon"></i></div>
+                                                </div>
+                                                <div class="">
+                                                    <div class="n-space">
+                                                        <div class=""><button class="n-button n-button--default-type n-button--medium-type n-button--color" tabindex="0" type="button"><span class="n-button__icon">
+                                                                    <div class="n-icon-slot"><i class="n-icon"></i></div>
+                                                                </span><span class="n-button__content">Load Images</span>
+                                                                <div aria-hidden="true" class="n-base-wave"></div>
+                                                            </button>
+                                                            <div class="v-binder-follower-container">
+                                                                <div class="v-binder-follower-content">
+                                                                    <div class="n-popover n-popover-shared n-tooltip n-popover-shared--show-arrow">
+                                                                        <div class="n-popover__content">
+                                                                            <div>Select your images from a dialog window.<br>*Multiple selection allowed.</div>
+                                                                        </div>
+                                                                        <div class="n-popover-arrow-wrapper">
+                                                                            <div class="n-popover-arrow"></div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class=""><button class="n-button n-button--default-type n-button--medium-type n-button--color" tabindex="0" type="button"><span class="n-button__icon">
+                                                                    <div class="n-icon-slot"><i class="n-icon"></i></div>
+                                                                </span><span class="n-button__content">Load a Whole Folder</span>
+                                                                <div aria-hidden="true" class="n-base-wave"></div>
+                                                            </button>
+                                                            <div class="v-binder-follower-container">
+                                                                <div class="v-binder-follower-content">
+                                                                    <div class="n-popover n-popover-shared n-tooltip n-popover-shared--show-arrow">
+                                                                        <div class="n-popover__content">
+                                                                            <div>Convert all images in the selected folder and its subfolders, and add the converted images to a ZIP archive with relative path.<br>*It will show "Upload" button, but it actually doesn't upload anything to any server.</div>
+                                                                        </div>
+                                                                        <div class="n-popover-arrow-wrapper">
+                                                                            <div class="n-popover-arrow"></div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="">
+                                            <div class="">
+                                                <div class="n-collapse">
+                                                    <div class="n-collapse-item n-collapse-item--left-arrow-placement n-collapse-item--trigger-area-main n-collapse-item--trigger-area-extra n-collapse-item--trigger-area-arrow">
+                                                        <div class="n-collapse-item__header">
+                                                            <div class="n-collapse-item__header-main">
+                                                                <div class="n-collapse-item-arrow" data-arrow="true"><i class="n-base-icon"></i></div>Choose Target File Extentions
+                                                            </div>
+                                                            <div class="n-collapse-item__header-extra" data-extra="true"><i class="n-icon"></i></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="">
+                                            <div class="container-1">
+                                                <div class="n-space container-2">
+                                                    <div class="">
+                                                        <div class="n-space container-3">
+                                                            <div class="">
+                                                                <div class="n-space">
+                                                                    <div class=""><i class="n-icon"></i></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="">
+                                                                <div class="n-space">
+                                                                    <div class=""><span>Drag &amp; Drop</span></div>
+                                                                    <div class=""><span>AVIF Images <span>or <span><i class="n-icon"></i>Folders </span></span></span></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="">
+                                                                <div class="n-space">
+                                                                    <div class=""><img src="/avif2jpeg/dist/avif.png" class="avif"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><input type="file" multiple="" accept=".avif, .webp"><input webkitdirectory="" directory="" type="file">
+                        </div>
+                    </div>
+                    <div class="n-space"></div>
+                    <div class="n-space">
+                        <div class=""><i class="n-icon"></i></div>
+                    </div>
+                    <div class="n-space">
+                        <div class="">
+                            <div class="n-space">
+                                <div class="">
+                                    <div class="n-space">
+                                        <div class="">
+                                            <div class="n-space">
+                                                <div class=""><i class="n-icon"></i></div>
+                                                <div class="">Image Type:</div>
+                                                <div class="">
+                                                    <div class="n-select">
+                                                        <div class="n-base-selection n-base-selection--selected">
+                                                            <div class="n-base-selection-label" tabindex="0">
+                                                                <div class="n-base-selection-input" title="image/jpeg">
+                                                                    <div class="n-base-selection-input__content">image/jpeg</div>
+                                                                </div>
+                                                                <div class="n-base-loading n-base-suffix" aria-label="loading">
+                                                                    <div class="n-base-loading__placeholder">
+                                                                        <div class="n-base-clear">
+                                                                            <div class="n-base-clear__placeholder"><i class="n-base-icon n-base-suffix__arrow"></i></div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="n-base-selection__border"></div>
+                                                            <div class="n-base-selection__state-border"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="v-binder-follower-container">
+                                                <div class="v-binder-follower-content">
+                                                    <div class="n-popover n-popover-shared n-tooltip n-popover-shared--show-arrow">
+                                                        <div class="n-popover__content">Choose image format for output</div>
+                                                        <div class="n-popover-arrow-wrapper">
+                                                            <div class="n-popover-arrow"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="">
+                                            <div class="n-space">
+                                                <div class="">
+                                                    <div class="n-space">
+                                                        <div class=""><i class="n-icon"></i></div>
+                                                        <div class=""><span>Image Quality:</span></div>
+                                                        <div class="">
+                                                            <div class="n-space">
+                                                                <div class="">
+                                                                    <div class="n-slider">
+                                                                        <div class="n-slider-rail">
+                                                                            <div class="n-slider-rail__fill"></div>
+                                                                            <div class="n-slider-handles">
+                                                                                <div class="n-slider-handle-wrapper" tabindex="0" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" aria-orientation="horizontal" aria-disabled="false">
+                                                                                    <div class="n-slider-handle"></div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="">
+                                                                    <div class="n-input-number">
+                                                                        <div class="n-input n-input--resizable n-input--stateful">
+                                                                            <div class="n-input-wrapper">
+                                                                                <div class="n-input__input"><input type="text" class="n-input__input-el" placeholder="Please Input" value="90" size="20"></div>
+                                                                                <div class="n-input__suffix"><button class="n-button n-button--default-type n-button--medium-type" tabindex="-1" type="button"><span class="n-button__icon">
+                                                                                            <div class="n-icon-slot"><i class="n-base-icon"></i></div>
+                                                                                        </span></button><button class="n-button n-button--default-type n-button--medium-type" tabindex="-1" type="button"><span class="n-button__icon">
+                                                                                            <div class="n-icon-slot"><i class="n-base-icon"></i></div>
+                                                                                        </span></button></div>
+                                                                            </div>
+                                                                            <div class="n-input__border"></div>
+                                                                            <div class="n-input__state-border"></div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="v-binder-follower-container">
+                                                <div class="v-binder-follower-content">
+                                                    <div class="n-popover n-popover-shared n-tooltip n-popover-shared--show-arrow">
+                                                        <div class="n-popover__content">Set image quality for output</div>
+                                                        <div class="n-popover-arrow-wrapper">
+                                                            <div class="n-popover-arrow"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><canvas width="1" height="1"></canvas>
+                        </div>
+                        <div class="">
+                            <div class="n-flex">
+                                <div class="n-collapse settings-body">
+                                    <div class="n-collapse-item n-collapse-item--left-arrow-placement n-collapse-item--trigger-area-arrow n-collapse-item--trigger-area-main">
+                                        <div class="n-collapse-item__header">
+                                            <div class="n-collapse-item__header-main">
+                                                <div class="n-collapse-item-arrow" data-arrow="true"><i class="n-icon"></i><i class="n-icon"></i></div>Advanced Settings
+                                            </div>
+                                            <div class="n-collapse-item__header-extra" data-extra="true"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="n-space">
+                        <div class="">
+                            <div class="n-divider n-divider--no-title">
+                                <div class="n-divider__line n-divider__line--left"></div>
+                            </div>
+                        </div>
+                        <div class="">
+                            <div class="n-space">
+                                <div class="">
+                                    <ul>
+                                        <li>This is a free web application to batch convert AVIF(or WebP, etc) images to common image formats such as JPEG, PNG.</li>
+                                        <li>It uses a browser's built-in function for the conversions, so <strong>no data is sent to any server</strong>.</li>
+                                        <li>The converted images will be output as <strong>a zip file</strong> when multiple images are loaded.</li>
+                                        <li>Requires <a href="https://caniuse.com/avif" target="_self">latest</a> version of Firefox or Chrome to load AVIF images.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/avif2jpeg/dist/unsupported.js"></script>
+    <script>
+        /\/avif2jpeg\/?$/.test(location.pathname) && location.assign("/avif2jpeg/dist/")
+    </script>
+</body>
+
+</html>
