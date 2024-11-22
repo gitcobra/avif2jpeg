@@ -24,3 +24,5 @@ dist-ssr
 *.sw?
 .vscode/extensions.json
 .vite-ssg-temp/*
+dist/*
+old/*
