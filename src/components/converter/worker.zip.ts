@@ -1,9 +1,13 @@
-import AnZip from "@gitcobra/anzip";
+import AnZip from "@gitcobra/anzip-es6";
 
 
 console.log('converter.worker.zip started');
 
+const zipList: AnZip[] = [];
+const zipListLengthStack = [];
+const errorZipList: AnZip[] = [];
 let azip = new AnZip();
+zipList.push(azip);
 let bytesSum = 0;
 let count = 0;
 let terminated = false;
@@ -11,7 +15,7 @@ let terminated = false;
 let MaxZipSize = 1024 * 1024 * 1024;
 let keepPrevExtension = false;
 let outputExtension = '';
-
+let outputImageType = '';
 
 
 
@@ -24,13 +28,25 @@ type ZipMessageType = MessageEvent<{
   zipSize?: number
   keepExt?: boolean
   outputExt?: string
+  imageType?: string
 
   // for failed file
-  buffer?: ArrayBuffer
+  //buffer?: ArrayBuffer
+  file?: Blob
   path?: string
+
+  // request-image
+  index?: number
 }>;
-self.onmessage = (params: ZipMessageType) => {
-  const { data: { action, zipSize, keepExt, outputExt, buffer, path }, ports } = params;
+type ImageMessageToMain = {
+  action: 'respond-image'
+  url: string
+  path: string
+  index: number
+  size: number
+};
+self.onmessage = async (params: ZipMessageType) => {
+  const { data: { action, zipSize, keepExt, outputExt, file, index, /*buffer,*/ path, imageType }, ports } = params;
   console.log('zipworker: ' + action);
 
   switch( action ) {
@@ -43,6 +59,7 @@ self.onmessage = (params: ZipMessageType) => {
       MaxZipSize = zipSize;
       keepPrevExtension = !!keepExt;
       outputExtension = outputExt || '';
+      outputImageType = imageType || '';
       break;
     case 'squeeze':
       //self.close();
@@ -63,22 +80,66 @@ self.onmessage = (params: ZipMessageType) => {
       bytesSum = 0;
       break;
     
-    case 'add-filelist':
+    case 'add-filelist': {
       if( bytesSum >= MaxZipSize ) {
         outputZipUrl('push-filelist-zip');
       }
-      
       //const path = (webkitRelativePath || file.webkitRelativePath || file.name).replace(/^\//, '');
       //const buf = await file.arrayBuffer();
-      azip.add(path, buffer);
-      bytesSum += buffer.byteLength;
-      count++;
+      //azip.add(path, buffer);
+      //bytesSum += buffer.byteLength;      
+
+      const success = await azip.add(path, file);
+      if( success ) {
+        
+        bytesSum += file.size;
+        count++;
+      }
+      let message: ZippingMessageToMain = {
+        action: 'push-filelist',
+        size: bytesSum,
+        count,
+      };
+      self.postMessage( message );
       break;
-    
+    }
     case 'squeeze-filelist':
+      await new Promise(r => setTimeout(r, 10));
       outputZipUrl('squeeze-filelist-zip');
       break;
+    
+    case 'request-image': {
+      let targetazip: AnZip = azip;
+      let targetidx = index;
+      for( let i = 0; i < zipListLengthStack.length; i++ ) {
+        if( index <= zipListLengthStack[i] - 1 ) {
+          targetidx = i > 0 ? index - zipListLengthStack[i - 1] : index;
+          targetazip = zipList[i];
+          break;
+        }
+        if( i === zipListLengthStack.length - 1 ) {
+          targetidx = index - zipListLengthStack[i];
+          break;
+        }
+      }
 
+      const blob = targetazip.get(targetidx, outputImageType);
+      if( !blob ) {
+        console.warn(index, targetidx, blob);
+        console.warn(zipListLengthStack);
+      }
+      const path = targetazip.getPathByIndex(targetidx);
+      const url = URL.createObjectURL(blob);
+      let message: ImageMessageToMain = {
+        action: 'respond-image',
+        url,
+        index,
+        path,
+        size: blob.size,
+      };
+      self.postMessage( message );
+      break;
+    }
     default:
       console.error(`zip.worker got an unknown action. "${action}"`);
       break;
@@ -91,7 +152,8 @@ self.onmessage = (params: ZipMessageType) => {
 // message from canvas worker
 type ZipMessageFromCanvasType = MessageEvent<{
   //action: string
-  data?: ArrayBuffer | Uint8Array
+  //data?: ArrayBuffer | Uint8Array
+  blob: Blob
   //zipSize?: number
   path?: string
   outputPath?: string
@@ -102,11 +164,10 @@ type AddingZipMessageToMain = {
   fileId: number
 };
 // listener for canvasWorker
-const onmessageFromCanvasWorkers = (params: ZipMessageFromCanvasType, port: MessagePort) => {
-  let { data: { data, path, fileId } } = params;
+const onmessageFromCanvasWorkers = async (params: ZipMessageFromCanvasType, port: MessagePort) => {
+  let { data: { /*data,*/ blob, path, fileId } } = params;
   
   if( terminated ) {
-    //console.log('terminated flag is true for zip worker');
     port.postMessage({fileId, canceled: true});
     return;
   }
@@ -134,16 +195,17 @@ const onmessageFromCanvasWorkers = (params: ZipMessageFromCanvasType, port: Mess
   
   // add an image to the zip
   //const abuffer: ArrayBuffer = await data?.arrayBuffer();
-  const abuffer = data;
-  const bufferSize = abuffer.byteLength ?? 0;
+  //const abuffer = data;
+  const bufferSize = blob.size;// abuffer.byteLength ?? 0;
   if( bytesSum + bufferSize > MaxZipSize ) {
+    //await azip.wait(true);
     outputZipUrl('push-zip');
   }
 
-  azip.add(outputPath, abuffer);
+  //azip.add(outputPath, abuffer);
   bytesSum += bufferSize;
   count++;
-
+  await azip.add(outputPath, blob);
   
   // inform main thread that adding the file to the zip is completed
   let message: AddingZipMessageToMain = {
@@ -151,8 +213,15 @@ const onmessageFromCanvasWorkers = (params: ZipMessageFromCanvasType, port: Mess
     fileId, 
   };
   self.postMessage( message );
+  
   // inform canvas.worker that adding the file to the zip is completed
-  port.postMessage({fileId, renamed: dupCounter >= 2, outputPath});
+  /*
+  if( terminated ) {
+    port.postMessage({fileId, canceled: true});
+    return;
+  }
+  */
+  port.postMessage({fileId, /*canceled: terminated,*/ renamed: dupCounter >= 2, outputPath});
   
 };
 
@@ -169,7 +238,7 @@ type ZippingMessageToMain = FileInfo & (
     action: 'push-zip' | 'squeeze-zip' | 'push-filelist-zip' | 'squeeze-filelist-zip'
     url: string
   } | {
-    action: 'zip-squeeze-error' | 'zip-error'
+    action: 'zip-squeeze-error' | 'zip-error' | 'push-filelist'
   }
 );
 function outputZipUrl(action: ZippingMessageToMain['action']) {
@@ -177,20 +246,44 @@ function outputZipUrl(action: ZippingMessageToMain['action']) {
   
   let message: ZippingMessageToMain;
   try {
-    const url = azip.url();
-    message = {url, action, size:bytesSum, count};
+    const azip2 = azip;
+    const count2 = count;
+    const size2 = bytesSum;
+    azip2.wait().then(() => azip2.zip()).then(() => {
+      const url = azip2.url();
+      message = {url, action, size: size2, count: count2};
+      if( action === 'push-zip' || action === 'squeeze-zip') {
+        //zipList.push(azip2);
+      }
+      else {
+        //errorZipList.push(azip2);
+      }
+
+      // NOTE:
+      // it needs to inform 'add-zip-completed' action to main in advance of 'squeeze-zip', so insert a sleep.
+      return new Promise(r => setTimeout(r, 0));
+    }).then(() => {
+      self.postMessage( message );
+    }).catch((e) => {
+      console.log(e);
+    });
   } catch(e: any) {
     console.warn(e.message, action);
-    message = {action: action === 'squeeze-zip' ? 'zip-squeeze-error' : 'zip-error', size:bytesSum, count};
+    message = {
+      action: action === 'squeeze-zip' ? 'zip-squeeze-error' : 'zip-error',
+      size:bytesSum, count
+    };
+    self.postMessage( message );
   }
-  self.postMessage( message );
-
   
-  azip.clear();
+  //azip.clear();
+  const prevLength = zipListLengthStack.length ? zipListLengthStack[zipListLengthStack.length - 1] : 0;
+  zipListLengthStack.push(azip.count() + prevLength);
   azip = new AnZip();
+  zipList.push(azip);
   count = 0;
   bytesSum = 0;
 }
 
 
-export type MessageToMainFromZipWorker = ZippingMessageToMain | AddingZipMessageToMain;
+export type MessageToMainFromZipWorker = ZippingMessageToMain | AddingZipMessageToMain | ImageMessageToMain;

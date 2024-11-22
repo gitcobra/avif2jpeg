@@ -3,8 +3,8 @@ import { Directive, VNode } from 'vue';
 import { type DropdownOption, NIcon, NScrollbar, NSpin, useThemeVars } from 'naive-ui';
 import { ImageSharp, Archive, Warning, WarningOutline, DocumentTextOutline, DownloadOutline, Resize, UnlinkOutline } from '@vicons/ionicons5';
 import { useI18n } from 'vue-i18n';
-
-
+import ImageViewer from './image-viewer.vue';
+import { getThumbnailedSize, getUnitSize } from './util';
 
 // common components
 const dialog = useDialog();
@@ -67,10 +67,14 @@ const props = defineProps<{
     convertedImageDataUrl?: string
     convertedImageWidth?: number
     convertedImageHeight?: number
+    convertedImageSize?: number
+    convertedImageIndex?: number
 
     type: string
     threads?: number
     zipSize: number
+
+    demandImage: (index: number) => void
   }
   interval?: number
 }>();
@@ -81,6 +85,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   'all-zips-clicked': []
   'demand-zip-errors': []
+  'demand-image': [index: number]
 }>();
 
 
@@ -141,26 +146,26 @@ const minLogSize = ref(5);
 const maxLogSize = ref(1000);
 const logOpened = ref(true);
 
+const imageViewerStarted = ref(false);
+
 const outputImg = reactive({
   name: '',
   width: 0,
   height: 0,
-  twidth: 0,
-  theight: 0,
   size: 0,
   url: '',
   dataUrl: '',
+  index: -1,
 });
 
 
 
 
 // element references
-const outputImageLink = ref<HTMLAnchorElement>();
 const thumbcanvas = ref<HTMLCanvasElement>(null);
 const processingBitmap = ref<ImageBitmap | HTMLImageElement | null>(null);
 const scrollref = ref<InstanceType<typeof NScrollbar>>();
-
+const imageViewer = ref<typeof ImageViewer>();
 
 
 // common variables
@@ -236,6 +241,7 @@ onMounted(() => {
     }
 
     // close log view when there is only one item in the list
+    /*
     if( newv ) {
       if( props.status.length > 1 )
         logOpened.value = true;
@@ -244,6 +250,9 @@ onMounted(() => {
       if( props.status.length < 2 )
         logOpened.value = false;
     }
+    */
+    logOpened.value = false;
+    imageViewerStarted.value = true;
 
     // on finished
     if( !props.processing ) {
@@ -430,6 +439,20 @@ function update() {
   if( props.processing ) {
     statusColor.value = failure.value[0] ? c.value.warningColor : c.value.infoColor;
   }
+
+  // update output image
+  if( stat.convertedImageUrl !== outputImg.url ) {
+    outputImg.url = stat.convertedImageUrl;
+    outputImg.name = stat.convertedImageName;
+    outputImg.dataUrl = stat.convertedImageDataUrl;
+    outputImg.size = stat.convertedImageSize || stat.outputTotalSize;
+    outputImg.width = stat.convertedImageWidth;
+    outputImg.height = stat.convertedImageHeight;
+    outputImg.index = stat.convertedImageIndex;
+    //const {width ,height} = getThumbnailedSize(outputImg, {width:320, height:100});
+    //outputImg.twidth = width;
+    //outputImg.theight = height;
+  }
 }
 
 function onFinished() {
@@ -438,6 +461,7 @@ function onFinished() {
   statusColor.value = props.status.success === props.status.length ? c.value.successColor : c.value.errorColor;
   
   // update output image
+  /*
   if( stat.convertedImageUrl !== outputImg.url ) {
     outputImg.url = stat.convertedImageUrl;
     outputImg.name = stat.convertedImageName;
@@ -445,10 +469,11 @@ function onFinished() {
     outputImg.size = stat.outputTotalSize;
     outputImg.width = stat.convertedImageWidth;
     outputImg.height = stat.convertedImageHeight;
-    const {width ,height} = getThumbnailedSize(outputImg, {width:320, height:100});
-    outputImg.twidth = width;
-    outputImg.theight = height;
+    //const {width ,height} = getThumbnailedSize(outputImg, {width:320, height:100});
+    //outputImg.twidth = width;
+    //outputImg.theight = height;
   }
+  */
   
 
   // set tooltip for save button 
@@ -571,23 +596,11 @@ async function onSaveButtonClick() {
     }
   }
   else {
-    outputImageLink.value.click();
+    imageViewer.value.download();
   }
 }
 
-function copyDataURL(str: string) {
-  try {
-    navigator.clipboard.writeText(str);
-  } catch(e) {}
-  dialog.info({
-    title: t('copiedDataURLDialogTitle'),
-    content: t('copiedDataURLMessage'),
-    positiveText: 'OK',
-  });
-}
-function openImage(url: string) {
-  window.open(url, '_blank').document.write(`<img src="${url}">`);
-}
+
 
 function createFailedFileLink(download = false) {
   const blob = new Blob([props.status.unconvertedListText], {type: 'text/plain;charset=utf8'});
@@ -631,45 +644,6 @@ function scrollLogViewToBottom(instant = false) {
 
 
 
-
-
-
-// general functions
-
-function getUnitSize(bytes: number, precise=2) {
-  const sign = Math.sign(bytes);
-  bytes = Math.abs(bytes);
-
-  const units = [
-    'Bytes',
-    'KB',
-    'MB',
-    'GB',
-  ];
-  const index = bytes ? Math.floor(Math.log(bytes) / Math.log( 1024 )) : 0;
-  const val = (bytes / Math.pow(1024, index) * sign).toFixed(precise);
-  
-  return `${val}${units[index]}`;
-}
-
-function getThumbnailedSize(image: {width:number, height:number}, maxSize: number | {width:number, height:number} =100, disallowExpanding=false) {
-  maxSize = typeof maxSize === 'number' ? ({width:maxSize, height:maxSize}) : maxSize;
-  const {width: mwidth, height: mheight} = maxSize;
-
-  let { width, height } = image;
-  const ratio = width / height;
-  const mratio = mwidth / mheight;
-
-  if( ratio >= mratio ) {
-    width = disallowExpanding ? Math.min(mwidth, width) : mwidth;
-    height = width / ratio |0;
-  }
-  else {
-    height = disallowExpanding ? Math.min(mheight, height) : mheight;
-    width = height * ratio |0;
-  }
-  return {width, height};
-}
 
 
 </script>
@@ -914,6 +888,30 @@ function getThumbnailedSize(image: {width:number, height:number}, maxSize: numbe
 
     <!-- output files -->
     <n-flex :wrap="false" vertical>  
+ 
+      <!-- single converted image -->
+      <transition name="singleimage">
+      <n-flex justify="center" align="center" vertical>
+        <n-button tertiary type="success" size="small" :disabled="!(status.success > 0)" v-if="!imageViewerStarted && zippingFlag && props.status.threads" @click="imageViewerStarted=true">
+          {{$t('status.browseConvertedImages')}}
+        </n-button>
+        <ImageViewer
+          v-else-if="status.success > 0 && (props.status.threads || !zippingFlag)"
+          ref="imageViewer"
+          :size="outputImg.size"
+          :url="outputImg.url"
+          :data-url="outputImg.dataUrl"
+          :width="outputImg.width"
+          :height="outputImg.height"
+          :name="outputImg.name"
+          :length="props.status.success"
+          :index="outputImg.index"
+          :is-single="!zippingFlag"
+          @demand-image="index => emit('demand-image', index)"
+        />
+      </n-flex>
+      </transition>
+      
       <n-flex justify="center">
         
         <!-- zip list -->
@@ -976,58 +974,7 @@ function getThumbnailedSize(image: {width:number, height:number}, maxSize: numbe
 
         </n-flex>
 
-        <!-- single converted image -->
-        <transition name="singleimage">
-        <n-flex v-if="!zippingFlag && !processing && status.success === 1" justify="center" align="center" vertical>
 
-          <n-flex align="center">
-            <!-- output image -->
-            <n-flex style="position:relative;" align="center" justify="center" vertical>
-              <a ref="outputImageLink" :href="outputImg.url" target="_blank" :download="outputImg.name" :title="outputImg.name" style="line-height:0px;">
-                <img ref="convertedImage" :src="outputImg.url" :style="`border:1px solid ${c.successColor}; width:${outputImg.twidth}px; height:${outputImg.theight}px;`">
-              </a>
-            </n-flex>
-            
-            <n-flex vertical>
-              <n-flex justify="center">
-                <!-- blobURL, DataURL image -->
-                <n-popover v-if="outputImg.url" display-directive="show" trigger="hover" :duration="0" :delay="0">
-                  <template #trigger>
-                  <a :href="outputImg.url" target="_blank"><n-button round size="tiny">{{$t('open')}}</n-button></a>
-                  </template>
-                  {{t('convertedImageUrlTooltip')}}
-                </n-popover>
-                
-                <!-- data url -->
-                <n-popover v-if="outputImg.dataUrl" display-directive="show" trigger="hover" :duration="0" :delay="0">
-                  <template #trigger>
-                  <a :href="outputImg.dataUrl" target="_self">
-                    <n-button @click.left.prevent.stop="copyDataURL(outputImg.dataUrl)" round size="tiny">DataURL</n-button>
-                  </a>
-                  </template>
-                  {{t('convertedImageDataUrlTooltip')}}
-                </n-popover>
-              </n-flex>
-              
-              <!-- image size -->
-              <n-flex justify="center">
-                {{ outputImg.width }} × {{ outputImg.height }}
-              </n-flex>
-
-              <!-- image size -->
-              <n-flex justify="center">
-                {{ getUnitSize(outputImg.size, 0) }}
-              </n-flex>
-            </n-flex>
-          </n-flex>
-
-          <!-- file name -->
-          <n-flex ref="fileNameContainer" justify="center" style="font-size:smaller; overflow:hidden; white-space:nowrap; text-overflow: ellipsis; max-width:400px;">
-            {{outputImg.name}}
-          </n-flex>
-
-        </n-flex>
-        </transition>
       </n-flex>
 
       <!-- result -->
@@ -1039,7 +986,7 @@ function getThumbnailedSize(image: {width:number, height:number}, maxSize: numbe
           <template #trigger>
             <Transition name="save">
             <span v-if="success[0] > 0" style="position:relative;">
-              <n-badge :value="zippingFlag ? success[0].toLocaleString('en-us') : props.status.type.replace(/\(.+\)/, '')" :color="c.successColorHover" :offset="[-20,0]">
+              <n-badge :value="zippingFlag ? zipped[0].toLocaleString('en-us') : props.status.type.replace(/\(.+\)/, '')" :color="c.successColorHover" :offset="[-20,-3]">
               <n-button size="medium" @click="onSaveButtonClick" :color="c.successColor" round>
                 <template v-if="zippingFlag">
                   <a v-if="zipList.length" :href="zipList[0].url" :download="zipList[0].name" class="in-button-anchor" @click.prevent>
@@ -1082,7 +1029,7 @@ function getThumbnailedSize(image: {width:number, height:number}, maxSize: numbe
         >
           <n-popover :show="autoPopoverErrorButtonFlag" :duration="0" :delay="0" placement="right" :style="{color:'white', backgroundColor:c.errorColor}" :arrow-style="{backgroundColor:c.errorColor}">
             <template #trigger>
-              <n-badge :value="status.unconvertedFileCount.toLocaleString()" :color="c.errorColorHover">
+              <n-badge :value="status.unconvertedFileCount.toLocaleString()" :color="c.errorColorHover" :offset="[-0,-3]">
               <n-button size="small" :color="c.errorColor">
                 <n-icon size="medium" style="vertical-align: middle;"><WarningOutline/></n-icon>
               </n-button>

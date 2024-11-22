@@ -71,7 +71,8 @@
     "done": "Fatto",
     "progressSuccess": "File completati",
     "downloadConvertedImage": "Scarica l'immagine convertita",
-    "failureZippingFailedFiles": "Errore durante la compressione dei file non riusciti."
+    "failureZippingFailedFiles": "Errore durante la compressione dei file non riusciti.",
+    "browseConvertedImages": "Sfoglia le immagini convertite"
   },
   "disabled": "Disabilitato",
   "threads": "discussione | discussioni",

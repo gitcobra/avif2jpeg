@@ -1,7 +1,7 @@
 // legacy converter that runs in single thread
 
 import type { FileWithId, SingleImageDataType } from './converter.vue';
-import AnZip from '@gitcobra/anzip';
+import AnZip from '@gitcobra/anzip-es6';
 
 import type Converter from './converter.vue';
 import type ConversionStatus from './status.vue';

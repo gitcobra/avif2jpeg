@@ -108,7 +108,7 @@ export default defineConfig({
     // The requested module 'naive-ui' is a CommonJS module, which may not support all module.exports as named exports.
     // https://github.com/antfu/vite-ssg/issues/150#issuecomment-1114006208
     mock: true,
-    format: 'cjs',
+    //format: 'cjs',
   },
   
   //Deprecation Warning: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
@@ -123,4 +123,12 @@ export default defineConfig({
 
   // remove console.log
   esbuild: process.env.NODE_ENV !== 'development' ? { drop: ['console', 'debugger'] } : {},
+
+
+  // Build error when using vite-ssg/使用vite-ssg进行构建时出错 #4225 
+  // https://github.com/tusen-ai/naive-ui/issues/4225#issuecomment-2072791151
+  ssr: {
+    // Add these three values ​​to the original configuration.
+    noExternal: ['naive-ui', 'date-fns', 'vueuc'],
+  }
 });

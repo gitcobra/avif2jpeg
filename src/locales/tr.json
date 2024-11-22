@@ -70,7 +70,8 @@
     "done": "Tamamlandı",
     "progressSuccess": "Tamamlanan Dosyalar",
     "downloadConvertedImage": "Dönüştürülen Resmi İndir",
-    "failureZippingFailedFiles": "Başarısız olan dosyalar sıkıştırılırken hata oluştu."
+    "failureZippingFailedFiles": "Başarısız olan dosyalar sıkıştırılırken hata oluştu.",
+    "browseConvertedImages": "Dönüştürülen görsellere göz atın"
   },
   "disabled": "Engelli",
   "threads": "konu | \nKonular",

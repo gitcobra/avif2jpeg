@@ -79,7 +79,8 @@
     "convertedZips": "変換に成功したZIP",
     "progressSuccess": "完了済ファイル",
     "downloadConvertedImage": "変換した画像をダウンロード",
-    "failureZippingFailedFiles": "失敗したファイルのZIP作成中にエラーが発生しました"
+    "failureZippingFailedFiles": "失敗したファイルのZIP作成中にエラーが発生しました",
+    "browseConvertedImages": "変換した画像を閲覧"
   },
   "disabled": "無効",
   "threads": "スレッド | スレッド",

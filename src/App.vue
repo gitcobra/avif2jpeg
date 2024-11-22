@@ -34,6 +34,9 @@ const themeOverrides: GlobalThemeOverrides = {
   Tooltip: {
     // transparency
     color: '#000000AA', 
+  },
+  Image: {
+    toolbarColor: '#00000099',
   }
 };
 

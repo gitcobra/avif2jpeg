@@ -157,12 +157,13 @@ async function convertRecievedData(data) {
   }
   else {
     // output to worker.zip  
-    const abuffer: ArrayBuffer | null = await blob?.arrayBuffer() || null;
+    //const abuffer: ArrayBuffer | null = await blob?.arrayBuffer() || null;
     dataOutputPort.postMessage({
-      data: abuffer, 
+      //data: abuffer, 
+      blob,
       path, 
       fileId
-    }, [abuffer]);
+    }/*, [blob]*/);
     
     //dataOutputPort.postMessage({data: blob, path, fileId});
   }

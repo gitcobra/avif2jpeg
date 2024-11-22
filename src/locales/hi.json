@@ -70,7 +70,8 @@
     "done": "हो गया",
     "progressSuccess": "पूर्ण फ़ाइलें",
     "downloadConvertedImage": "परिवर्तित छवि डाउनलोड करें",
-    "failureZippingFailedFiles": "विफल फ़ाइलों को ज़िप करते समय विफलता."
+    "failureZippingFailedFiles": "विफल फ़ाइलों को ज़िप करते समय विफलता.",
+    "browseConvertedImages": "परिवर्तित छवियाँ ब्राउज़ करें"
   },
   "disabled": "अक्षम",
   "threads": "धागा | \nधागे",

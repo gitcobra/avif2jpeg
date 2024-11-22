@@ -70,7 +70,8 @@
     "done": "hecho",
     "progressSuccess": "Archivos completados",
     "downloadConvertedImage": "Descargar imagen convertida",
-    "failureZippingFailedFiles": "Error al comprimir los archivos fallidos."
+    "failureZippingFailedFiles": "Error al comprimir los archivos fallidos.",
+    "browseConvertedImages": "Explorar imágenes convertidas"
   },
   "disabled": "Desactivado",
   "threads": "hilo | \ntrapos",

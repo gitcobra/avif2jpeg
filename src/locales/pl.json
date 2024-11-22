@@ -70,7 +70,8 @@
     "done": "zrobione",
     "progressSuccess": "Gotowe pliki",
     "downloadConvertedImage": "Pobierz przekonwertowany obraz",
-    "failureZippingFailedFiles": "Błąd podczas kompresowania nieudanych plików."
+    "failureZippingFailedFiles": "Błąd podczas kompresowania nieudanych plików.",
+    "browseConvertedImages": "Przeglądaj przekonwertowane obrazy"
   },
   "disabled": "Wyłączony",
   "threads": "wątek | \nwątki",

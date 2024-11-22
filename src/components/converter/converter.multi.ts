@@ -33,7 +33,7 @@ const THUMB_DEMAND_INTERVAL = 100; // (msec)
 
 
 // main routine
-export async function convertTargetFilesInMultithread(ConvStats: Stat, canceled, props: Props, SingleImageData: SingleImageDataType, message, notification, files: FileWithId[], completedFileIdSet: Set<number>, format: string, quality: number, outputExt: string) {
+export async function convertTargetFilesInMultithread(ConvStats: Stat, canceled, props: Props, SingleImageData: SingleImageDataType, message, notification, files: FileWithId[], completedFileIdSet: Set<number>, format: string, quality: number, outputExt: string, imageType: string) {
   const progressingFileIdSet = new Set<number>;
   const targetFileMapById = new Map<number, FileWithId>();
   const failedFileCountMap = new Map<File, number>();
@@ -54,6 +54,7 @@ export async function convertTargetFilesInMultithread(ConvStats: Stat, canceled,
     zipSize: props.maxZipSizeMB * 1024 * 1024,
     keepExt: props.retainExtension,
     outputExt,
+    imageType,
   });
 
   // create a listener for canvas Workers
@@ -83,6 +84,10 @@ export async function convertTargetFilesInMultithread(ConvStats: Stat, canceled,
     unwatch();
     WorkerManager.releaseAllWorkers();
   });
+
+  ConvStats.demandImage = (index: number) => {
+    zipWorker.postMessage({action: 'request-image', index});
+  };
 
 
   // post all image files to workers
@@ -272,6 +277,15 @@ function createZipWorkerListenerAndPromise(zipWorker: Worker, ConvStats: Stat, c
         return;
       }
 
+      if( action === 'respond-image' ) {
+        const {url, index, path, size} = data;
+        ConvStats.convertedImageUrl = url;
+        ConvStats.convertedImageSize = size;
+        ConvStats.convertedImageIndex = index;
+        ConvStats.convertedImageName = path;
+        return;
+      }
+
       const { size, count } = data;
       const url = ('url' in params.data) ? params.data.url : '';
       
@@ -292,9 +306,13 @@ function createZipWorkerListenerAndPromise(zipWorker: Worker, ConvStats: Stat, c
           break;
         
         // zip failed files
+        case 'push-filelist':
+          ConvStats.failedFileZippedCount++;
+          break;
         case 'squeeze-filelist-zip':
           ConvStats.failedZipDone = true;
         case 'push-filelist-zip':
+          console.log('push-filelist-zip', count)
           ConvStats.failedZips.push({url, size, count});
           //ConvStats.failedFileZippedCount += count;
           break;
@@ -339,7 +357,7 @@ function createCanvasWorkerListener(ConvStats: Stat, canceled, SingleImageData: 
     const { action } = data;
 
     if( canceled.value ) {
-      console.log(`canceling action from canvas "${action}"`);
+      //console.log(`canceling action from canvas "${action}"`);
       /*
       if( !processingCoreLogItems.value.has(worker.id) )
         return;
@@ -515,8 +533,11 @@ function createCanvasWorkerListener(ConvStats: Stat, canceled, SingleImageData: 
 
 // create zips for failed files
 async function pushErrorZipsInMultithread(list: FileWithId[], zipWorker: Worker, Terminated, ConvStats: Stat) {
+  let count = 0;
   for( const file of list ) {
     const path = (file.webkitRelativePath || file.name).replace(/^\//, '');
+    
+    /*
     let buffer: ArrayBuffer;
     try {
       buffer = await file.arrayBuffer();
@@ -526,16 +547,23 @@ async function pushErrorZipsInMultithread(list: FileWithId[], zipWorker: Worker,
       ConvStats.failedToCreateFailedZip = true;
       return;
     }
+    */
     
     if( Terminated.value )
       return;
+
+    // prevent too much call stacks
+    if( count - ConvStats.failedFileZippedCount > 20 )
+      await new Promise(r => setTimeout(r, 10));
     
     zipWorker.postMessage({
       action: 'add-filelist',
-      buffer,
+      //buffer,
+      file,
       path,
     });
-    ConvStats.failedFileZippedCount++;
+
+    count++;
   }
   
   zipWorker.postMessage({

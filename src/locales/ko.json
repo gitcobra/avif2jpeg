@@ -70,7 +70,8 @@
     "done": "완료",
     "progressSuccess": "완성된 파일",
     "downloadConvertedImage": "변환된 이미지 다운로드",
-    "failureZippingFailedFiles": "실패한 파일을 압축하는 중 오류가 발생했습니다."
+    "failureZippingFailedFiles": "실패한 파일을 압축하는 중 오류가 발생했습니다.",
+    "browseConvertedImages": "변환된 이미지 찾아보기"
   },
   "disabled": "장애가 있는",
   "threads": "스레드 | \n스레드",

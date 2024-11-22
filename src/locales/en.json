@@ -80,7 +80,8 @@
     "convertedZips": "successfully completed ZIP",
     "progressSuccess": "Completed Files",
     "downloadConvertedImage": "Download Converted Image",
-    "failureZippingFailedFiles": "Failure while zipping the failed files."
+    "failureZippingFailedFiles": "Failure while zipping the failed files.",
+    "browseConvertedImages": "Browse converted images"
   },
   "settings": {
     "maxZipFileSize": "Max zip file size",

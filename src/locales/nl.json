@@ -70,7 +70,8 @@
     "done": "klaar",
     "progressSuccess": "Voltooide bestanden",
     "downloadConvertedImage": "Geconverteerde afbeelding downloaden",
-    "failureZippingFailedFiles": "Fout bij het zippen van de mislukte bestanden."
+    "failureZippingFailedFiles": "Fout bij het zippen van de mislukte bestanden.",
+    "browseConvertedImages": "Blader door geconverteerde afbeeldingen"
   },
   "disabled": "Gehandicapt",
   "threads": "draad | \ndraden",

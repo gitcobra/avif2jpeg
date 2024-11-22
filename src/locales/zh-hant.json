@@ -71,7 +71,8 @@
     "done": "完畢",
     "progressSuccess": "已完成的文件",
     "downloadConvertedImage": "下載轉換後的圖片",
-    "failureZippingFailedFiles": "壓縮失敗的檔案時失敗。"
+    "failureZippingFailedFiles": "壓縮失敗的檔案時失敗。",
+    "browseConvertedImages": "瀏覽轉換後的圖像"
   },
   "disabled": "殘障人士",
   "threads": "thread | threads",

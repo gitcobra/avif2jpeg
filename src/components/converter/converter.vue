@@ -163,6 +163,10 @@ function onBeforeProcessingDialogClose() {
   conversionModalActive.value = false;
 }
 
+function onDemandImage(index: number) {
+  ConvStats.demandImage(index);
+}
+
 function onESCPress() {
   if( !canceled.value && processing.value ) {
     canceled.value = true;
@@ -224,6 +228,8 @@ function initConvStatPropObj(obj?: ConversionStatusType): ConversionStatusType {
     unconvertedTotalSize: 0,
     failedFileZippedCount: 0,
     failedToCreateFailedZip: false,
+
+    demandImage: () => {}
   };
   return Object.assign(obj || {}, initBaseObj);
 }
@@ -320,7 +326,7 @@ async function startConvert(input: File[]) {
   ({ callbackToGenerateFailedZips, callbackToClearConverter } =
     ( !disableMultiThreading && props.threads >= 2 ) ?
       // multi-threading
-      await convertTargetFilesInMultithread(ConvStats, canceled, props, SingleImageData, message, notification, list, completedFileIdSet, format, quality, outputExt)
+      await convertTargetFilesInMultithread(ConvStats, canceled, props, SingleImageData, message, notification, list, completedFileIdSet, format, quality, outputExt, format)
       :
       // single-threading
       await convertImagesInSingleThread(list, completedFileIdSet, SingleImageData, props, canceled, ConvStats)
@@ -541,6 +547,7 @@ function checkAvailableFeatures() {
           :interval="STATUS_UPDATE_INTERVAL"
           @all-zips-clicked="allZipsClicked = true"
           @demand-zip-errors="onDemandZipErrorsFromStatus"
+          @demand-image="onDemandImage"
         />
         </div>
 

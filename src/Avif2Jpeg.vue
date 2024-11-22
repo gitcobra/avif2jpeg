@@ -99,6 +99,11 @@ onMounted(() => {
 
 
 
+
+
+
+// functions
+
 const TRANSTIME = 200;
 let transStartTime = 0;
 let firstTime = true;
@@ -115,11 +120,6 @@ function onLangReady() {
   setTimeout(() => contentVisible.value = true, dif);
   emit('ready');
 }
-
-
-
-
-// functions
 
 async function switchToolTipVisibility() {
   if( !import.meta.env.SSR )
@@ -262,6 +262,7 @@ a {
   margin: 0px;
 }
 
+/* transitions */
 .fade-enter-active {
   transition: all .4s ease;
 }

@@ -70,7 +70,8 @@
     "done": "منتهي",
     "progressSuccess": "الملفات المكتملة",
     "downloadConvertedImage": "تحميل الصورة المحولة",
-    "failureZippingFailedFiles": "فشل أثناء ضغط الملفات الفاشلة."
+    "failureZippingFailedFiles": "فشل أثناء ضغط الملفات الفاشلة.",
+    "browseConvertedImages": "تصفح الصور المحولة"
   },
   "disabled": "عاجز",
   "threads": "خيط | \nالمواضيع",

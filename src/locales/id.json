@@ -70,7 +70,8 @@
     "done": "Selesai",
     "progressSuccess": "File Selesai",
     "downloadConvertedImage": "Unduh Gambar yang Dikonversi",
-    "failureZippingFailedFiles": "Kegagalan saat membuat zip file yang gagal."
+    "failureZippingFailedFiles": "Kegagalan saat membuat zip file yang gagal.",
+    "browseConvertedImages": "Jelajahi gambar yang dikonversi"
   },
   "disabled": "Dengan disabilitas",
   "threads": "benang | \nbenang",
