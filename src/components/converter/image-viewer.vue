@@ -15,7 +15,7 @@ const props = defineProps<{
   name: string
   size: number
   length: number
-  index: number
+  index?: number
   isSingle: boolean
 }>();
 
@@ -164,8 +164,11 @@ function openImage(url: string) {
             :max-height="100"
             :loading="demandingImage"
             :file-name="props.name"
+            :allow-next="index < props.length"
+            :allow-prev="index > 1"
             @load="onThumbnailLoad"
-            @next="index++"
+            @next="if( index < props.length ) index++;"
+            @prev="if( index > 1 ) index--;"
           />
         <!-- </a> -->
         </n-spin>
@@ -176,7 +179,9 @@ function openImage(url: string) {
           <!-- open blobURL -->
           <n-popover v-if="props.url" display-directive="show" trigger="hover" :duration="0" :delay="0">
             <template #trigger>
-            <a :href="props.url" target="_blank"><n-button round size="tiny">{{$t('open')}}</n-button></a>
+            <a :href="props.url" target="_blank" @click.prevent="thumbref.openPreview();">
+              <n-button round size="tiny">{{$t('open')}}</n-button>
+            </a>
             </template>
             {{$t('convertedImageUrlTooltip')}}
           </n-popover>

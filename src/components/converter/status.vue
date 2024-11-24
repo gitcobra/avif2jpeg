@@ -890,8 +890,8 @@ function scrollLogViewToBottom(instant = false) {
     <n-flex :wrap="false" vertical>  
  
       <!-- single converted image -->
-      <transition name="singleimage">
       <n-flex justify="center" align="center" vertical>
+        <div class="singleimage" :style="{maxHeight: imageViewerStarted ? '2000px' : '100px'}">
         <n-button tertiary type="success" size="small" :disabled="!(status.success > 0)" v-if="!imageViewerStarted && zippingFlag && props.status.threads" @click="imageViewerStarted=true">
           {{$t('status.browseConvertedImages')}}
         </n-button>
@@ -909,8 +909,8 @@ function scrollLogViewToBottom(instant = false) {
           :is-single="!zippingFlag"
           @demand-image="index => emit('demand-image', index)"
         />
+        </div>
       </n-flex>
-      </transition>
       
       <n-flex justify="center">
         
@@ -1270,12 +1270,8 @@ function scrollLogViewToBottom(instant = false) {
   transition: all .5s ease;
 }
 
-.singleimage-enter-from {
-  opacity: 0;
-  transform: scaleY(0%);
-}
-.singleimage-enter-active {
-  transition: all .5s ease .1s;
+.singleimage {
+  transition: all .5s ease;
 }
 
 </style>

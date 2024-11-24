@@ -2,7 +2,7 @@
 import { NButton, type ImageRenderToolbarProps } from 'naive-ui';
 import { getThumbnailedSize } from './util';
 import { RefSymbol } from '@vue/reactivity';
-
+import { ArrowBack, ArrowForward } from '@vicons/ionicons5';
 
 const { t } = useI18n();
 
@@ -16,6 +16,8 @@ const props = withDefaults(defineProps<{
   expand?: boolean
   loading?: boolean
   fileName?: string
+  allowNext: boolean
+  allowPrev: boolean
 }>(), {
   maxWidth: 100,
   maxHeight: 100,
@@ -27,14 +29,17 @@ const emit = defineEmits<{
   'load': [{src: string, width:number, height: number}];
   'error': [src: string];
   'next': []
+  'prev': []
 }>();
 
 // methods
-defineExpose({download});
-
+defineExpose({
+  download,
+  openPreview,
+});
 
 // refs
-
+const nImageRef = ref();
 
 // reactives
 const imgloading = ref(true);
@@ -67,6 +72,10 @@ watch(() => props.src, () => {
 
 // mounted
 onMounted(() => {
+  document.body.addEventListener('keydown', onEscKeyDown);
+});
+onUnmounted(() => {
+  document.body.removeEventListener('keydown', onEscKeyDown);
 });
 
 
@@ -98,21 +107,54 @@ async function changeSrc(src: string) {
   disp.value = false;
   await new Promise(r => setTimeout(r, 150));
   imgsrc.value = src;
+  
+  // change previewed image
+  // HACK: these properties are not documented in naive-ui manual
+  try {
+    if( nImageRef.value?.previewInstRef?.displayed ) {
+      nImageRef.value.previewInstRef.setPreviewSrc(src);
+    }
+  } catch(e) {
+  }
 }
 
 function renderToolbar({ nodes }: ImageRenderToolbarProps) {
-  delete nodes.next;
-  delete nodes.prev;
-  nodes.download = h(NButton, {onClick: download, round:true, textColor:'white', size:'small', style: { marginLeft: '12px' }}, [t('Download')])
+  //delete nodes.next;
+  //delete nodes.prev;
+  nodes.next = h(NButton, {onClick(){emit('next'); }, disabled:!props.allowNext, circle:true, textColor:'white', size:'small', style: { marginLeft: '12px' }}, {icon: () => h(ArrowForward)});
+  nodes.prev = h(NButton, {onClick(){emit('prev'); }, disabled:!props.allowPrev, circle:true, textColor:'white', size:'small', style: { marginLeft: '12px' }}, {icon: () => h(ArrowBack)});
+  nodes.download = h(NButton, {onClick(){download()}, round:true, textColor:'white', size:'small', style: { marginLeft: '12px' }}, {default: () => t('Download')});
   return Object.values(nodes);
 }
 
-const outputImageLink = ref<HTMLAnchorElement>();
 function download() {
   const a = document.createElement('a');
   a.href = imgsrc.value;
   a.download = props.fileName;
   a.click();
+}
+
+function onEscKeyDown(ev: KeyboardEvent) {
+  if( ev.code !== 'Escape' )
+    return;
+  
+  // HACK: prevent the modal from being closed along with the previewed image when the ESC key is pressed
+  try {
+    if( nImageRef.value?.previewInstRef?.displayed ) {
+      ev.stopPropagation();
+      // manually close the preview
+      nImageRef.value?.previewInstRef?.toggleShow(false);
+    }
+  } catch(e) {
+  }
+}
+
+function openPreview() {
+  try {
+    nImageRef.value?.previewInstRef?.setPreviewSrc(props.src);
+    nImageRef.value?.previewInstRef?.toggleShow(true);
+  } catch(e) {
+  }
 }
 
 
@@ -121,9 +163,10 @@ function download() {
 <template>
 <n-spin :show="imgloading || props.loading">
   <n-flex justify="center" align="center" :style="spincss">
-    <a ref="outputImageLink" :href="imgsrc" @click.left.prevent="" target="_blank" :download="props.fileName" :title="props.fileName" style="line-height:0px;">
+    <a :href="imgsrc" @click.left.prevent="" target="_blank" :download="props.fileName" :title="props.fileName" style="line-height:0px;">
       <Transition mode="in-out">
       <n-image
+        ref="nImageRef"
         show-toolbar-tooltip
         :render-toolbar="renderToolbar"
         @load="imgload"
