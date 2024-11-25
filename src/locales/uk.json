@@ -71,7 +71,8 @@
     "progressSuccess": "Завершені файли",
     "downloadConvertedImage": "Завантажте перетворене зображення",
     "failureZippingFailedFiles": "Помилка під час архівування невдалих файлів.",
-    "browseConvertedImages": "Перегляньте перетворені зображення"
+    "browseConvertedImages": "Перегляньте перетворені зображення",
+    "index": "Індекс"
   },
   "disabled": "Вимкнено",
   "threads": "нитка | \nнитки",

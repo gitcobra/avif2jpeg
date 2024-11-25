@@ -18,6 +18,7 @@
   "de": "German",
   "ar": "Arabic",
   "status": {
-    "browseConvertedImages": "Browse converted images"
+    "browseConvertedImages": "Browse converted images",
+    "index": "Index"
   }
 }

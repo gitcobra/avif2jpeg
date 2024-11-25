@@ -71,7 +71,8 @@
     "progressSuccess": "Abgeschlossene Dateien",
     "downloadConvertedImage": "Konvertiertes Bild herunterladen",
     "failureZippingFailedFiles": "Fehler beim Komprimieren der fehlgeschlagenen Dateien.",
-    "browseConvertedImages": "Durchsuchen Sie konvertierte Bilder"
+    "browseConvertedImages": "Durchsuchen Sie konvertierte Bilder",
+    "index": "Index"
   },
   "disabled": "Deaktiviert",
   "threads": "Thread | \nThreads",

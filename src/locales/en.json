@@ -81,7 +81,8 @@
     "progressSuccess": "Completed Files",
     "downloadConvertedImage": "Download Converted Image",
     "failureZippingFailedFiles": "Failure while zipping the failed files.",
-    "browseConvertedImages": "Browse converted images"
+    "browseConvertedImages": "Browse converted images",
+    "index": "Index"
   },
   "settings": {
     "maxZipFileSize": "Max zip file size",

@@ -4,6 +4,7 @@ import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { getThumbnailedSize, getUnitSize } from './util';
 import Thumbnail from './thumbnail.vue';
+import { ArrowForward, ArrowBack } from '@vicons/ionicons5';
 
 
 
@@ -143,6 +144,11 @@ async function copyDataURL(url: string) {
   }
 }
 
+function moveIndex(val: number) {
+  if( val > 0 && index.value < props.length ) index.value++;
+  if( val < 0 && index.value > 1 ) index.value--;
+}
+
 function openImage(url: string) {
   window.open(url, '_blank').document.write(`<img src="${url}">`);
 }
@@ -167,15 +173,23 @@ function openImage(url: string) {
             :allow-next="index < props.length"
             :allow-prev="index > 1"
             @load="onThumbnailLoad"
-            @next="if( index < props.length ) index++;"
-            @prev="if( index > 1 ) index--;"
+            @next="moveIndex(1)"
+            @prev="moveIndex(-1)"
           />
         <!-- </a> -->
         </n-spin>
       </n-flex>
       
       <n-flex vertical>
-        <n-flex justify="center" :wrap="false">
+        <n-flex justify="center" :wrap="true">
+          <!-- save blobURL -->
+          <n-popover v-if="props.url && !isSingle" display-directive="show" trigger="hover" :duration="0" :delay="0">
+            <template #trigger>
+            <a :href="props.url" ref="saveImg" target="_blank" :download="props.name"><n-button round size="tiny">{{$t('save')}}</n-button></a>
+            </template>
+            {{$t('save')}}
+          </n-popover>
+          
           <!-- open blobURL -->
           <n-popover v-if="props.url" display-directive="show" trigger="hover" :duration="0" :delay="0">
             <template #trigger>
@@ -184,14 +198,6 @@ function openImage(url: string) {
             </a>
             </template>
             {{$t('convertedImageUrlTooltip')}}
-          </n-popover>
-
-          <!-- save blobURL -->
-          <n-popover v-if="props.url && !isSingle" display-directive="show" trigger="hover" :duration="0" :delay="0">
-            <template #trigger>
-            <a :href="props.url" ref="saveImg" target="_blank" :download="props.name"><n-button round size="tiny">{{$t('save')}}</n-button></a>
-            </template>
-            {{$t('save')}}
           </n-popover>
           
           <!-- copy data url -->
@@ -219,19 +225,22 @@ function openImage(url: string) {
 
     </n-flex>
 
-    <!-- slider for index -->
-    <n-flex v-if="!isSingle" align="center" justify="center">
-      <n-slider v-model:value="index" :tooltip="false" :step="1" :min="1" :max="props.length" style="width:180px;" />
-
-      <!-- index -->
-      <n-flex style="font-family: v-mono;" align="center">
-        <n-input-number v-model:value="index" :autofocus="false" step="1" min="1" :max="props.length" button-placement="both" size="small" style="width:8em;" /> / {{ props.length }}
-      </n-flex>
-    </n-flex>
-
     <!-- file name -->
     <n-flex ref="fileNameContainer" justify="center" style="max-width:320px;" :title="props.name">
       <n-scrollbar :x-scrollable="true" trigger="hover" style="font-size:smaller; overflow:hidden; white-space:nowrap; text-overflow: ellipsis;">{{props.name}}</n-scrollbar>
+    </n-flex>
+
+    <!-- index -->
+    <n-flex v-if="!isSingle" style="font-family: v-mono;" align="center">
+      <!-- <n-input-number v-model:value="index" :autofocus="false" step="1" min="1" :max="props.length" button-placement="both" size="small" style="width:8em;" /> / {{ props.length }} -->
+      <span style="font-size:xx-small">{{t('status.index')}}:</span> {{ index }} / {{ props.length }}
+    </n-flex>
+
+    <!-- slider for index -->
+    <n-flex v-if="!isSingle" align="center" justify="center">
+      <n-button @click="moveIndex(-1)" :disabled="index <= 1" :circle="true" size="small"><template #icon><n-icon><ArrowBack/></n-icon></template></n-button>
+      <n-slider v-model:value="index" :tooltip="false" :step="1" :min="1" :max="props.length" style="width:180px;" />
+      <n-button @click="moveIndex(1)" :disabled="index >= length" :circle="true" size="small"><template #icon><n-icon><ArrowForward/></n-icon></template></n-button>
     </n-flex>
 
   </n-flex>

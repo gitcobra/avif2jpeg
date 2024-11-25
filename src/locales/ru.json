@@ -71,7 +71,8 @@
     "progressSuccess": "Завершенные файлы",
     "downloadConvertedImage": "Загрузить конвертированное изображение",
     "failureZippingFailedFiles": "Сбой при архивировании неудавшихся файлов.",
-    "browseConvertedImages": "Просмотр конвертированных изображений"
+    "browseConvertedImages": "Просмотр конвертированных изображений",
+    "index": "Индекс"
   },
   "disabled": "Неполноценный",
   "threads": "нить | \nнити",

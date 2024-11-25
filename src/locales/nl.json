@@ -71,7 +71,8 @@
     "progressSuccess": "Voltooide bestanden",
     "downloadConvertedImage": "Geconverteerde afbeelding downloaden",
     "failureZippingFailedFiles": "Fout bij het zippen van de mislukte bestanden.",
-    "browseConvertedImages": "Blader door geconverteerde afbeeldingen"
+    "browseConvertedImages": "Blader door geconverteerde afbeeldingen",
+    "index": "Index"
   },
   "disabled": "Gehandicapt",
   "threads": "draad | \ndraden",

@@ -71,7 +71,8 @@
     "progressSuccess": "الملفات المكتملة",
     "downloadConvertedImage": "تحميل الصورة المحولة",
     "failureZippingFailedFiles": "فشل أثناء ضغط الملفات الفاشلة.",
-    "browseConvertedImages": "تصفح الصور المحولة"
+    "browseConvertedImages": "تصفح الصور المحولة",
+    "index": "فِهرِس"
   },
   "disabled": "عاجز",
   "threads": "خيط | \nالمواضيع",

@@ -71,7 +71,8 @@
     "progressSuccess": "Archivos completados",
     "downloadConvertedImage": "Descargar imagen convertida",
     "failureZippingFailedFiles": "Error al comprimir los archivos fallidos.",
-    "browseConvertedImages": "Explorar imágenes convertidas"
+    "browseConvertedImages": "Explorar imágenes convertidas",
+    "index": "Índice"
   },
   "disabled": "Desactivado",
   "threads": "hilo | \ntrapos",

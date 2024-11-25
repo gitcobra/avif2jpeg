@@ -71,7 +71,8 @@
     "progressSuccess": "Tamamlanan Dosyalar",
     "downloadConvertedImage": "Dönüştürülen Resmi İndir",
     "failureZippingFailedFiles": "Başarısız olan dosyalar sıkıştırılırken hata oluştu.",
-    "browseConvertedImages": "Dönüştürülen görsellere göz atın"
+    "browseConvertedImages": "Dönüştürülen görsellere göz atın",
+    "index": "Dizin"
   },
   "disabled": "Engelli",
   "threads": "konu | \nKonular",
