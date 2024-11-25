@@ -225,7 +225,7 @@ function openImage(url: string) {
 
       <!-- index -->
       <n-flex style="font-family: v-mono;" align="center">
-        <n-input-number v-model:value="index" step="1" min="1" :max="props.length" button-placement="both" size="small" style="width:8em;" /> / {{ props.length }}
+        <n-input-number v-model:value="index" :autofocus="false" step="1" min="1" :max="props.length" button-placement="both" size="small" style="width:8em;" /> / {{ props.length }}
       </n-flex>
     </n-flex>
 

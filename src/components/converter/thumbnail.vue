@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { NButton, type ImageRenderToolbarProps } from 'naive-ui';
+import { NButton, NIcon, NTooltip, type ImageRenderToolbarProps } from 'naive-ui';
 import { getThumbnailedSize } from './util';
 import { RefSymbol } from '@vue/reactivity';
-import { ArrowBack, ArrowForward } from '@vicons/ionicons5';
+import { ArrowBack, ArrowForward, DownloadOutline } from '@vicons/ionicons5';
 
 const { t } = useI18n();
 
@@ -119,11 +119,21 @@ async function changeSrc(src: string) {
 }
 
 function renderToolbar({ nodes }: ImageRenderToolbarProps) {
-  //delete nodes.next;
-  //delete nodes.prev;
-  nodes.next = h(NButton, {onClick(){emit('next'); }, disabled:!props.allowNext, circle:true, textColor:'white', size:'small', style: { marginLeft: '12px' }}, {icon: () => h(ArrowForward)});
-  nodes.prev = h(NButton, {onClick(){emit('prev'); }, disabled:!props.allowPrev, circle:true, textColor:'white', size:'small', style: { marginLeft: '12px' }}, {icon: () => h(ArrowBack)});
-  nodes.download = h(NButton, {onClick(){download()}, round:true, textColor:'white', size:'small', style: { marginLeft: '12px' }}, {default: () => t('Download')});
+  // add next and prev buttons manually
+  nodes.next = h(NButton, {onClick(){emit('next'); }, disabled:!props.allowNext, circle:true, textColor:'white', size:'tiny', style: { marginLeft: '4px' }}, {icon: () => h(ArrowForward)});
+  nodes.prev = h(NButton, {onClick(){emit('prev'); }, disabled:!props.allowPrev, circle:true, textColor:'white', size:'tiny', style: { marginLeft: '4px' }}, {icon: () => h(ArrowBack)});
+  
+  // NOTE: need to edit download button because the default download button opens the blob url in a new tab instead of downloading.
+  // HACK: could not find a proper way to edit the download button (NTooltip didn't work)
+  //nodes.download = h(NTooltip, {onClick(){download()}, round:true, textColor:'white', size:'small', style: { marginLeft: '12px' }}, {default: () => t('Download'), trigger: () => h(NButton, {onClick(){download()}, circle:true, textColor:'white', size:'small'}, {icon: () => h(DownloadOutline)})});
+  try {
+  const dlchilds = (nodes.download.children as any);
+  dlchilds.default = () => t('Download');
+  const icon = dlchilds.trigger();
+  icon.props.onClick = download;
+  dlchilds.trigger = () => icon;//() => h(NIcon, {component:DownloadOutline, onClick(){download()}, circle:true, textColor:'white', size:'small', style: { marginLeft: '12px' }});
+  } catch(e) {}
+
   return Object.values(nodes);
 }
 
@@ -150,6 +160,7 @@ function onEscKeyDown(ev: KeyboardEvent) {
 }
 
 function openPreview() {
+  // HACK
   try {
     nImageRef.value?.previewInstRef?.setPreviewSrc(props.src);
     nImageRef.value?.previewInstRef?.toggleShow(true);
