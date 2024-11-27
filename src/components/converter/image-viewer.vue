@@ -233,7 +233,7 @@ function openImage(url: string) {
     <!-- index -->
     <n-flex v-if="!isSingle" style="font-family: v-mono;" align="center">
       <!-- <n-input-number v-model:value="index" :autofocus="false" step="1" min="1" :max="props.length" button-placement="both" size="small" style="width:8em;" /> / {{ props.length }} -->
-      <span style="font-size:xx-small">{{t('status.index')}}:</span> {{ index }} / {{ props.length }}
+      <span style="font-size:0.8em;">{{t('status.index')}}:</span> {{ index }} / {{ props.length }}
     </n-flex>
 
     <!-- slider for index -->

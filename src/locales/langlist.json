@@ -16,9 +16,5 @@
   "es": "Spanish",
   "en": "English",
   "de": "German",
-  "ar": "Arabic",
-  "status": {
-    "browseConvertedImages": "Browse converted images",
-    "index": "Index"
-  }
+  "ar": "Arabic"
 }
