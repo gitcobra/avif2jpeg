@@ -262,7 +262,7 @@ onMounted(() => {
 
   
 
-  // change max-height of the log-container when the window is resized
+  // FIXME: change max-height of the log-container when the window is resized
   const inst = getCurrentInstance();
   let _tid;
   
@@ -272,9 +272,11 @@ onMounted(() => {
       if( !logOpened.value || _unmounted )
         return;
       const logHeight = scrollref.value.$parent.$el.offsetHeight;
-      const margin = window.innerHeight - inst.parent.parent.vnode.el.offsetHeight - 8;
+      const modalMargin = window.innerHeight - inst.parent.parent.vnode.el.offsetHeight - 8;
       
-      logMaxHeight.value = logHeight + margin + 'px';
+      logMaxHeight.value = Math.max(logHeight + modalMargin, 50) + 'px';
+
+      console.log(logHeight, modalMargin, logMaxHeight.value)
     }, 100);
   };
   
@@ -292,8 +294,10 @@ onMounted(() => {
     clearTimeout(_tid);
     clearTimeout(hookedUpdateTimeoutId);
     clearTimeout(scrollTimeoutId);
+    window.removeEventListener('resize', changeLogMaxHeight);
   });
 });
+
 
 watch([() => props.status.zips.length, () => props.status.failedZips.length], () => {
   const stat = props.status;

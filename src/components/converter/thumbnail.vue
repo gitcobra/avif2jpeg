@@ -109,7 +109,8 @@ async function changeSrc(src: string) {
   imgsrc.value = src;
   
   // change previewed image
-  // HACK: these properties are not documented in naive-ui manual
+  // HACK: *these properties are not documented in naive-ui manual.
+  // manually set preview src because preview-src attribute doesn't seem to work.
   try {
     if( nImageRef.value?.previewInstRef?.displayed ) {
       nImageRef.value.previewInstRef.setPreviewSrc(src);
@@ -128,7 +129,7 @@ function renderToolbar({ nodes }: ImageRenderToolbarProps) {
   //nodes.download = h(NTooltip, {onClick(){download()}, round:true, textColor:'white', size:'small', style: { marginLeft: '12px' }}, {default: () => t('Download'), trigger: () => h(NButton, {onClick(){download()}, circle:true, textColor:'white', size:'small'}, {icon: () => h(DownloadOutline)})});
   try {
   const dlchilds = (nodes.download.children as any);
-  dlchilds.default = () => t('Download');
+  dlchilds.default = () => t('save');
   const icon = dlchilds.trigger();
   icon.props.onClick = download;
   dlchilds.trigger = () => icon;//() => h(NIcon, {component:DownloadOutline, onClick(){download()}, circle:true, textColor:'white', size:'small', style: { marginLeft: '12px' }});

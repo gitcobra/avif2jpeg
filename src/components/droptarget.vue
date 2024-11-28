@@ -9,15 +9,15 @@
             <n-space align="center">
               <n-icon size="64" color="white"><ArrowRedoSharp /></n-icon>
             </n-space>
-            <n-space vertical align="center" :wrap="false" style="font-weight:bold; font-size:x-large; line-height: 90%; white-space: nowrap;">
+            <n-space vertical align="center" :wrap="false" style="font-weight:bold; font-size:1em; line-height: 90%; white-space: nowrap;">
               <span>Drag & Drop</span>
               <span style="position:relative">
                 AVIF Images
-                <span style="position:absolute; font-size:small; right:-3.5em; bottom:-1.1em; white-space: nowrap;">
+                <span style="position:absolute; font-size:0.5em; right:-3.5em; bottom:-1.5em; white-space: nowrap;">
                    or 
                   <n-popover placement="bottom-end">
                     <template #trigger>
-                    <span style="color:#666666; font-size:smaller;">
+                    <span style="color:#666666;">
                       <n-icon style="vertical-align: middle;"><FolderOpenOutline /></n-icon>
                       Folders
                     </span>
