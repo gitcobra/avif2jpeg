@@ -98,7 +98,11 @@
     "advancedSettings": "Advanced Settings",
     "enableMultiThreads": "Enable multi-threading",
     "resetButtonTooltip": "Restore all settings to default.",
-    "multiThreadsTooltip": "Convert images in multi-threaded"
+    "multiThreadsTooltip": "Convert images in multi-threaded",
+    "shrinkImageTooltip": "If the image dimensions are larger than the specified value, shrink the image to that value",
+    "shrinkImage": "Shrink images that exceed the following dimensions",
+    "useFolderNameForZip": "Use dropped folder name for the zip file",
+    "useFolderNameForZipTooltip": "If a folder is dropped or selected, its name is used as the name of the output ZIP file"
   },
   "disabled": "Disabled",
   "Download": "Download",
@@ -106,5 +110,7 @@
   "back": "Back",
   "failed": "Failed",
   "success": "Success",
-  "previousVersion": "Previous version"
+  "previousVersion": "Previous version",
+  "height": "\nHeight",
+  "width": "Width"
 }

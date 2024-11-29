@@ -89,7 +89,11 @@
     "enableMultiThreads": "Habilitar multithreading",
     "resetButtonTooltip": "Restaure todas as configurações para o padrão.",
     "multiThreadsTooltip": "Converta imagens em multithread",
-    "advancedSettings": "Configurações avançadas"
+    "advancedSettings": "Configurações avançadas",
+    "shrinkImageTooltip": "Se as dimensões da imagem forem maiores que o valor especificado, reduza a imagem para esse valor",
+    "shrinkImage": "Reduzir imagens que excedam as seguintes dimensões",
+    "useFolderNameForZip": "Use o nome da pasta descartada para o arquivo zip",
+    "useFolderNameForZipTooltip": "Se uma pasta for descartada ou selecionada, seu nome será usado como o nome do arquivo ZIP de saída"
   },
   "githubOpenSource": "Código aberto",
   "copiedDataURLDialogTitle": "Copiado para a área de transferência",
@@ -101,5 +105,7 @@
   "back": "Voltar",
   "failed": "Fracassado",
   "success": "Sucesso",
-  "previousVersion": "Versão anterior"
+  "previousVersion": "Versão anterior",
+  "height": "Altura",
+  "width": "Largura"
 }

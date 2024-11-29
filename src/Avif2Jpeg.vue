@@ -139,8 +139,6 @@ function onInputFile(list: File[]) {
   inputConversionFiles.value = list;
 }
 
-
-
 </script>
 
 
@@ -210,12 +208,16 @@ function onInputFile(list: File[]) {
 
         <AdvancedSettings
           v-model:retain-ext="UserSettings.retainExtension"
+          v-model:use-folder-name-for-zip="UserSettings.useFolderNameForZip"
           v-model:max-zip-size="UserSettings.maxZipSizeMB"
           v-model:expanded="UserSettings.expandAdvSettings"
           v-model:multithread="UserSettings.multithread"
           v-model:thread-count="UserSettings.threadCount"
-          
           :thread-max="availableThreadCount || 0"
+          
+          v-model:shrink-image="UserSettings.shrinkImage"
+          v-model:max-width="UserSettings.maxWidth"
+          v-model:max-height="UserSettings.maxHeight"
         />
         
       </n-space>

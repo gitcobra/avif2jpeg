@@ -89,7 +89,11 @@
     "enableMultiThreads": "Çoklu iş parçacığını etkinleştir",
     "resetButtonTooltip": "Tüm ayarları varsayılana geri yükleyin.",
     "multiThreadsTooltip": "Görüntüleri çok iş parçacıklı olarak dönüştürün",
-    "advancedSettings": "Gelişmiş Ayarlar"
+    "advancedSettings": "Gelişmiş Ayarlar",
+    "shrinkImageTooltip": "Görüntü boyutları belirtilen değerden büyükse görüntüyü bu değere küçültün",
+    "shrinkImage": "Aşağıdaki boyutları aşan görselleri küçültün",
+    "useFolderNameForZip": "Zip dosyası için bırakılan klasör adını kullan",
+    "useFolderNameForZipTooltip": "Bir klasör bırakılırsa veya seçilirse adı, çıktı ZIP dosyasının adı olarak kullanılır"
   },
   "githubOpenSource": "Açık Kaynak",
   "copiedDataURLDialogTitle": "Panoya kopyalandı",
@@ -101,5 +105,7 @@
   "back": "Geri",
   "failed": "Arızalı",
   "success": "Başarı",
-  "previousVersion": "Önceki sürüm"
+  "previousVersion": "Önceki sürüm",
+  "height": "Yükseklik",
+  "width": "Genişlik"
 }

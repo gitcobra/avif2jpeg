@@ -89,7 +89,11 @@
     "enableMultiThreads": "Habilitar subprocesos múltiples",
     "resetButtonTooltip": "Restaura todas las configuraciones a los valores predeterminados.",
     "multiThreadsTooltip": "Convertir imágenes en multiproceso",
-    "advancedSettings": "Configuración avanzada"
+    "advancedSettings": "Configuración avanzada",
+    "shrinkImageTooltip": "Si las dimensiones de la imagen son mayores que el valor especificado, reduzca la imagen a ese valor",
+    "shrinkImage": "Reducir imágenes que excedan las siguientes dimensiones",
+    "useFolderNameForZip": "Utilice el nombre de la carpeta eliminada para el archivo zip",
+    "useFolderNameForZipTooltip": "Si se suelta o selecciona una carpeta, su nombre se utiliza como nombre del archivo ZIP de salida."
   },
   "githubOpenSource": "Código abierto",
   "copiedDataURLDialogTitle": "Copiado al portapapeles",
@@ -101,5 +105,7 @@
   "back": "Atrás",
   "failed": "Fallido",
   "success": "Éxito",
-  "previousVersion": "Versión anterior"
+  "previousVersion": "Versión anterior",
+  "height": "Altura",
+  "width": "Ancho"
 }

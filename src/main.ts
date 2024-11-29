@@ -23,23 +23,20 @@ for(const lang of LANG_ID_LIST) {
   });
 }
 
+//console.log(import.meta.env)
 
-
-
-//createApp(App).use(router).mount("#app");
 export const createApp = ViteSSG(
   App,
   // vue-router options
   {
     routes,
-    base: '/avif2jpeg/dist/',
+    base: import.meta.env.BASE_URL,
   },
   // function to have custom setups
   ({ app, router, routes, isClient, initialState }) => {
     // install plugins etc.
     app.use(I18n);
     //app.use(naive);
-
 
   },
 );

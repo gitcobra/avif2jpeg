@@ -56,6 +56,7 @@ export type MessageToCanvasWorker = {
   type: string
   demandThumbnail: boolean
   demandImage: boolean
+  maxSize: { width:number, height:number } | null
 }[];
 // message from main thread
 self.onmessage = async (params: MessageEvent<MessageToCanvasWorker | null>) => {
@@ -91,8 +92,8 @@ self.onmessage = async (params: MessageEvent<MessageToCanvasWorker | null>) => {
 };
 
 
-async function convertRecievedData(data) {
-  const { index, file, fileId, type, quality, demandThumbnail, demandImage, webkitRelativePath } = data;
+async function convertRecievedData(data: MessageToCanvasWorker[number]) {
+  const { index, file, fileId, type, quality, demandThumbnail, demandImage, webkitRelativePath, maxSize } = data;
 
   const path = webkitRelativePath || file.webkitRelativePath || file.name;
   const inputsize = file.size;
@@ -109,8 +110,30 @@ async function convertRecievedData(data) {
   self.postMessage( messageToMain );
 
   let sourceBitmap: ImageBitmap;
+  let width: number, height: number;
   try {
-    sourceBitmap = await createImageBitmap(file);  
+    sourceBitmap = await createImageBitmap(file);
+    ({width, height} = sourceBitmap);
+
+    // resize the source bitmap
+    if( maxSize ) {
+      const whrate = width / height;
+      let {width: mw, height: mh} = maxSize;
+      
+      let resize = {};
+      if( width > mw ) {
+        width = mw;
+        height = width / whrate;
+        resize = {resizeWidth: width};
+      }
+      if( height > mh ) {
+        height = mh;
+        width = height * whrate;
+        resize = {resizeHeight: height};
+      }
+      
+      sourceBitmap = await createImageBitmap(sourceBitmap, {resizeQuality:'high', ...resize});
+    }
   } catch(e) {
     console.error('error occurred on canvas worker', fileId, path);
     messageToMain = {
@@ -122,7 +145,6 @@ async function convertRecievedData(data) {
     self.postMessage( messageToMain );
     return;
   }
-  const {width, height} = sourceBitmap;
 
   // create a thumbnail image before transferring
   let dbitmap: ImageBitmap | null = null;

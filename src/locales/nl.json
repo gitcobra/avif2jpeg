@@ -89,7 +89,11 @@
     "enableMultiThreads": "Schakel multithreading in",
     "resetButtonTooltip": "Herstel alle instellingen naar de standaardinstellingen.",
     "multiThreadsTooltip": "Converteer afbeeldingen in multi-threaded",
-    "advancedSettings": "Geavanceerde instellingen"
+    "advancedSettings": "Geavanceerde instellingen",
+    "shrinkImageTooltip": "Als de afmetingen van de afbeelding groter zijn dan de opgegeven waarde, verkleint u de afbeelding tot die waarde",
+    "shrinkImage": "Verklein afbeeldingen die de volgende afmetingen overschrijden",
+    "useFolderNameForZip": "Gebruik de verwijderde mapnaam voor het zipbestand",
+    "useFolderNameForZipTooltip": "Als een map wordt verwijderd of geselecteerd, wordt de naam ervan gebruikt als de naam van het uitvoer-ZIP-bestand"
   },
   "githubOpenSource": "Open bron",
   "copiedDataURLDialogTitle": "Gekopieerd naar klembord",
@@ -101,5 +105,7 @@
   "back": "Rug",
   "failed": "Mislukt",
   "success": "Succes",
-  "previousVersion": "Vorige versie"
+  "previousVersion": "Vorige versie",
+  "height": "Hoogte",
+  "width": "Breedte"
 }

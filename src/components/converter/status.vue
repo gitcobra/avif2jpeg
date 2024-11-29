@@ -893,10 +893,10 @@ function scrollLogViewToBottom(instant = false) {
     <!-- output files -->
     <n-flex :wrap="false" vertical>  
  
-      <!-- single converted image -->
+      <!-- image browser -->
       <n-flex justify="center" align="center" vertical>
         <div class="singleimage" :style="{maxHeight: imageViewerStarted ? '2000px' : '100px'}">
-        <n-button tertiary type="success" size="small" :disabled="!(status.success > 0)" v-if="!imageViewerStarted && zippingFlag && props.status.threads" @click="imageViewerStarted=true">
+        <n-button v-if="!imageViewerStarted && zippingFlag && props.status.threads" tertiary type="success" size="small" :disabled="!(status.success > 0)" @click="imageViewerStarted=true">
           {{$t('status.browseConvertedImages')}}
         </n-button>
         <ImageViewer

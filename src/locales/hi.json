@@ -89,7 +89,11 @@
     "enableMultiThreads": "मल्टी-थ्रेडिंग सक्षम करें",
     "resetButtonTooltip": "सभी सेटिंग्स को डिफ़ॉल्ट पर पुनर्स्थापित करें।",
     "multiThreadsTooltip": "छवियों को मल्टी-थ्रेडेड में कनवर्ट करें",
-    "advancedSettings": "एडवांस सेटिंग"
+    "advancedSettings": "एडवांस सेटिंग",
+    "shrinkImageTooltip": "यदि छवि आयाम निर्दिष्ट मान से बड़े हैं, तो छवि को उस मान तक छोटा करें",
+    "shrinkImage": "उन छवियों को सिकोड़ें जो निम्नलिखित आयामों से अधिक हैं",
+    "useFolderNameForZip": "ज़िप फ़ाइल के लिए ड्रॉप्ड फ़ोल्डर नाम का उपयोग करें",
+    "useFolderNameForZipTooltip": "यदि कोई फ़ोल्डर हटा दिया जाता है या चुना जाता है, तो उसका नाम आउटपुट ज़िप फ़ाइल के नाम के रूप में उपयोग किया जाता है"
   },
   "githubOpenSource": "खुला स्त्रोत",
   "copiedDataURLDialogTitle": "क्लिपबोर्ड पर कॉपी किया गया",
@@ -101,5 +105,7 @@
   "back": "पीछे",
   "failed": "असफल",
   "success": "सफलता",
-  "previousVersion": "पिछला संस्करण"
+  "previousVersion": "पिछला संस्करण",
+  "height": "ऊंचाई",
+  "width": "चौड़ाई"
 }

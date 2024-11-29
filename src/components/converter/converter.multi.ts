@@ -6,6 +6,7 @@ import type { FileWithId, SingleImageDataType } from './converter.vue';
 import type Converter from './converter.vue';
 import type ConversionStatus from './status.vue';
 import { MessageToMainFromZipWorker } from './worker.zip';
+import { UserSettings } from '@/user-settings';
 
 type ConverterType = InstanceType<typeof Converter>;
 type Props = ConverterType['$props'];
@@ -152,6 +153,7 @@ export async function convertTargetFilesInMultithread(ConvStats: Stat, canceled,
         quality: quality / 100,
         demandThumbnail: demandThumbnail || isLastItem,
         demandImage: isSingleImageFile,
+        maxSize: UserSettings.shrinkImage ? {width: UserSettings.maxWidth, height: UserSettings.maxHeight} : null,
         
         // chrome (currently v126.0.6478.127) cannot seem to read a property of a File that defined by Object.defineProperty from a Worker,
         // (Firefox can) so send the property directly.

@@ -89,7 +89,11 @@
     "enableMultiThreads": "멀티스레딩 활성화",
     "resetButtonTooltip": "모든 설정을 기본값으로 복원합니다.",
     "multiThreadsTooltip": "멀티스레드에서 이미지 변환",
-    "advancedSettings": "고급 설정"
+    "advancedSettings": "고급 설정",
+    "shrinkImageTooltip": "이미지 크기가 지정된 값보다 크면 이미지를 해당 값으로 축소합니다.",
+    "shrinkImage": "다음 치수를 초과하는 이미지 축소",
+    "useFolderNameForZip": "zip 파일에 삭제된 폴더 이름 사용",
+    "useFolderNameForZipTooltip": "폴더를 삭제하거나 선택하면 해당 이름이 출력 ZIP 파일의 이름으로 사용됩니다."
   },
   "githubOpenSource": "오픈 소스",
   "copiedDataURLDialogTitle": "클립보드에 복사됨",
@@ -101,5 +105,7 @@
   "back": "뒤쪽에",
   "failed": "실패한",
   "success": "성공",
-  "previousVersion": "이전 버전"
+  "previousVersion": "이전 버전",
+  "height": "키",
+  "width": "너비"
 }

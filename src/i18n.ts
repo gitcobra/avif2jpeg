@@ -3,7 +3,7 @@ import { createI18n, type DefaultLocaleMessageSchema } from 'vue-i18n';
 import en from './locales/en.json';
 
 // language name list
-export { default as LANG_NAMES } from './locales/langlist.json';
+export { default as LANG_NAMES } from './langlist.json';
 
 // language id list
 export const LANG_ID_LIST: string[] = [] as const;

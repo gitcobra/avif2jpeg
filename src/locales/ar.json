@@ -89,7 +89,11 @@
     "enableMultiThreads": "تمكين تعدد الخيوط",
     "resetButtonTooltip": "استعادة جميع الإعدادات إلى الوضع الافتراضي.",
     "multiThreadsTooltip": "تحويل الصور في متعددة الخيوط",
-    "advancedSettings": "الإعدادات المتقدمة"
+    "advancedSettings": "الإعدادات المتقدمة",
+    "shrinkImageTooltip": "إذا كانت أبعاد الصورة أكبر من القيمة المحددة، فقم بتقليص الصورة إلى تلك القيمة",
+    "shrinkImage": "تقليص الصور التي تتجاوز الأبعاد التالية",
+    "useFolderNameForZip": "استخدم اسم المجلد المسقط للملف المضغوط",
+    "useFolderNameForZipTooltip": "إذا تم إسقاط مجلد أو تحديده، فسيتم استخدام اسمه كاسم لملف ZIP الناتج"
   },
   "githubOpenSource": "مفتوح المصدر",
   "copiedDataURLDialogTitle": "تم النسخ إلى الحافظة",
@@ -101,5 +105,7 @@
   "back": "خلف",
   "failed": "فشل",
   "success": "نجاح",
-  "previousVersion": "الإصدار السابق"
+  "previousVersion": "الإصدار السابق",
+  "height": "ارتفاع",
+  "width": "عرض"
 }

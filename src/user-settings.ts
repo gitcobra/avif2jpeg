@@ -11,9 +11,14 @@ const DefaultSettings = {
   expandAdvSettings: false,
   retainExtension: false,
   maxZipSizeMB: 1000,
+  useFolderNameForZip: false,
 
   multithread: true,
   threadCount: undefined,
+
+  shrinkImage: false,
+  maxWidth: 4096,
+  maxHeight: 4096,
 } as const;
 
 export type UserSettingsType = Omit<typeof DefaultSettings, "threadCount"> & {

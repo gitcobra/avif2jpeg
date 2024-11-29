@@ -89,7 +89,11 @@
     "enableMultiThreads": "Aktifkan multi-threading",
     "resetButtonTooltip": "Kembalikan semua pengaturan ke default.",
     "multiThreadsTooltip": "Konversi gambar dalam multi-utas",
-    "advancedSettings": "Pengaturan Lanjutan"
+    "advancedSettings": "Pengaturan Lanjutan",
+    "shrinkImageTooltip": "Jika dimensi gambar lebih besar dari nilai yang ditentukan, kecilkan gambar ke nilai tersebut",
+    "shrinkImage": "Kecilkan gambar yang melebihi dimensi berikut",
+    "useFolderNameForZip": "Gunakan nama folder yang hilang untuk file zip",
+    "useFolderNameForZipTooltip": "Jika folder dijatuhkan atau dipilih, namanya digunakan sebagai nama file ZIP keluaran"
   },
   "githubOpenSource": "Sumber Terbuka",
   "copiedDataURLDialogTitle": "Disalin ke papan klip",
@@ -101,5 +105,7 @@
   "back": "Kembali",
   "failed": "Gagal",
   "success": "Kesuksesan",
-  "previousVersion": "Versi sebelumnya"
+  "previousVersion": "Versi sebelumnya",
+  "height": "Tinggi",
+  "width": "Lebar"
 }

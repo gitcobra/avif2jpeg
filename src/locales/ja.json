@@ -100,11 +100,17 @@
     "advancedSettings": "詳細設定",
     "enableMultiThreads": "マルチスレッドを有効にする",
     "resetButtonTooltip": "全ての設定を初期状態に戻します",
-    "multiThreadsTooltip": "画像の変換をマルチスレッドで実行します"
+    "multiThreadsTooltip": "画像の変換をマルチスレッドで実行します",
+    "shrinkImageTooltip": "画像寸法が指定した値よりも大きい場合、その値まで縮小します",
+    "shrinkImage": "以下の寸法を超える画像を縮小する",
+    "useFolderNameForZip": "ドロップされたフォルダ名をZIP名に使用する",
+    "useFolderNameForZipTooltip": "フォルダがドロップまたは選択された場合、その名前を出力ZIPファイルの名前として使用します"
   },
   "reset": "リセット",
   "back": "戻る",
   "failed": "失敗",
   "success": "成功",
-  "previousVersion": "過去のバージョン"
+  "previousVersion": "過去のバージョン",
+  "height": "縦幅",
+  "width": "横幅"
 }

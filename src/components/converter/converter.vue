@@ -15,6 +15,9 @@ export type SingleImageDataType = {
 };
 </script>
 
+
+
+
 <script setup lang="ts">
 import { type NotificationType } from 'naive-ui';
 import { convertTargetFilesInMultithread } from './converter.multi';
@@ -23,6 +26,7 @@ import { convertImagesInSingleThread, getAsPromise } from './converter.single';
 // sub components
 import ConversionStatus from './status.vue';
 import { GlobalValsKey } from '@/Avif2Jpeg.vue';
+import { UserSettings } from '@/user-settings';
 export type ConversionStatusType = InstanceType<typeof ConversionStatus>['$props']['status'];
 
 
@@ -305,7 +309,7 @@ async function startConvert(input: File[]) {
   const format = props.format;
   const quality = props.quality;
   const outputExt = [...format.matchAll(/.+\/(.+)/g)][0][1].replace(/jpeg/, 'jpg');
-  const baseZipName = makeCurrentOutputName(format, quality);
+  const baseZipName = makeCurrentOutputName(format, quality, fileList[0].webkitRelativePath);
 
   // set initial Status properties
   ConvStats.length = fileList.length;
@@ -429,12 +433,14 @@ function assignIdToFiles(list: File[]): FileWithId[] {
   return output as FileWithId[];
 }
 
-function makeCurrentOutputName(format: string, quality: number) {
+function makeCurrentOutputName(format: string, quality: number, firstFilePath?: string) {
   const d = new Date();
   
   format = format.replace(/^image\//, '').toLowerCase();
 
-  const currentOutputFileName = `avif2jpg-
+  const baseName = UserSettings.useFolderNameForZip && String(firstFilePath).match(/^\/?([^/]+)\//)?.[1] || 'avif2jpg';
+  
+  const currentOutputFileName = `${baseName}-
     ${ d.getFullYear().toString().substring(2) }
     ${ String((d.getMonth()+1) * 100 + d.getDate()).padStart(4, '0') }
     ${ String(d.getHours()*10000 + d.getMinutes()*100 + d.getSeconds()).padStart(6, '0') }

@@ -89,7 +89,11 @@
     "enableMultiThreads": "启用多线程",
     "resetButtonTooltip": "将所有设置恢复为默认值。",
     "multiThreadsTooltip": "在多线程中转换图像",
-    "advancedSettings": "高级设置"
+    "advancedSettings": "高级设置",
+    "shrinkImageTooltip": "如果图像尺寸大于指定值，则将图像缩小到该值",
+    "shrinkImage": "缩小超过以下尺寸的图像",
+    "useFolderNameForZip": "使用 zip 文件的删除文件夹名称",
+    "useFolderNameForZipTooltip": "如果删除或选择文件夹，则其名称将用作输出 ZIP 文件的名称"
   },
   "githubOpenSource": "开源",
   "copiedDataURLDialogTitle": "已复制到剪贴板",
@@ -101,5 +105,7 @@
   "back": "后退",
   "failed": "失败的",
   "success": "成功",
-  "previousVersion": "以前的版本"
+  "previousVersion": "以前的版本",
+  "height": "高度",
+  "width": "宽度"
 }
