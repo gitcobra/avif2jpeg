@@ -3,3 +3,4 @@ node_modules
 .vite-ssg-temp/*
 dist/*
 old/*
+test/
