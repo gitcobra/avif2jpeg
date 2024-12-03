@@ -72,7 +72,9 @@
     "downloadConvertedImage": "Pobierz przekonwertowany obraz",
     "failureZippingFailedFiles": "Błąd podczas kompresowania nieudanych plików.",
     "browseConvertedImages": "Przeglądaj przekonwertowane obrazy",
-    "index": "Indeks"
+    "index": "Indeks",
+    "Original": "Zanim",
+    "Converted": "Po"
   },
   "disabled": "Wyłączony",
   "threads": "wątek | \nwątki",

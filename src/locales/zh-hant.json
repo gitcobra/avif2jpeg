@@ -73,7 +73,9 @@
     "downloadConvertedImage": "下載轉換後的圖片",
     "failureZippingFailedFiles": "壓縮失敗的檔案時失敗。",
     "browseConvertedImages": "瀏覽轉換後的圖像",
-    "index": "指數"
+    "index": "指數",
+    "Original": "前",
+    "Converted": "後"
   },
   "disabled": "殘障人士",
   "threads": "thread | threads",

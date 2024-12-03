@@ -8,8 +8,8 @@ import { NTooltip } from "naive-ui";
 // constants
 const ZIP_MIN_SIZE_MB = 100;
 const ZIP_MAX_SIZE_MB = 2000;
-const MAX_WIDTH = 8192;
-const MAX_HEIGHT = 8192;
+const MAX_WIDTH = 4096;
+const MAX_HEIGHT = 4096;
 const MIN_WIDTH = 100;
 const MIN_HEIGHT = 100;
 const TooltipDefAttr: InstanceType<typeof NTooltip>['$props'] = {
@@ -18,6 +18,7 @@ const TooltipDefAttr: InstanceType<typeof NTooltip>['$props'] = {
   keepAliveOnHover: false,
   duration: 0,
   delay: 0,
+  style: 'max-width: 20vw;',
 };
 
 
@@ -59,74 +60,6 @@ watch(() => props.threadMax, () => {
 }, {immediate:true});
 
 const enableNewFeatures = computed(() => multithread.value && props.threadMax > 1);
-
-
-/*
-const props = defineProps<{
-  expanded: boolean
-  retainExt: boolean
-  maxZipSize: number
-  multithread: boolean
-  threadCount: number | undefined
-  threadMax: number
-  shrinkImage: boolean
-  maxWidth: number
-  maxHeight: number
-}>();
-const emit = defineEmits<{
-  (e: 'update:expanded', flag: boolean): void
-  (e: 'update:retainExt', flag: boolean): void
-  (e: 'update:maxZipSize', val: number): void
-  (e: 'update:multithread', val: boolean): void
-  (e: 'update:threadCount', val: number): void
-  (e: 'update:shrinkImage', val: boolean): void
-  (e: 'update:maxWidth', val: number): void
-  (e: 'update:maxHeight', val: number): void
-}>();
-
-const expanded = computed({
-  get: () => props.expanded,
-  set: (flag: boolean) => {
-    emit('update:expanded', flag);
-  },
-});
-const retainExtension = computed({
-  get: () => props.retainExt,
-  set: (flag: boolean) => {
-    emit('update:retainExt', flag);
-  },
-});
-const maxZipSizeMB = computed({
-  get: () => props.maxZipSize,
-  set: (val: number) => {
-    emit('update:maxZipSize', val);
-  },
-});
-const multithread = computed({
-  get: () => props.multithread,
-  set: (flag: boolean) => {
-    emit('update:multithread', flag);
-  },
-});
-const threadCount = computed({
-  get: () => typeof props.threadCount === 'undefined' ? props.threadMax : props.threadCount,
-  set: (val: number) => {
-    emit('update:threadCount', val);
-  },
-});
-const = computed({
-  get: () => props.retainExt,
-  set: (flag: boolean) => {
-    emit('update:retainExt', flag);
-  },
-});
-
-// watcher
-watch(() => [props.threadMax, props.threadCount], ([avail]) => {
-  if( avail > 1 && typeof props.threadCount === 'undefined' )
-    threadCount.value = avail;
-});
-*/
 
 
 </script>

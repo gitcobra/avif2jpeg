@@ -72,7 +72,9 @@
     "downloadConvertedImage": "Unduh Gambar yang Dikonversi",
     "failureZippingFailedFiles": "Kegagalan saat membuat zip file yang gagal.",
     "browseConvertedImages": "Jelajahi gambar yang dikonversi",
-    "index": "Indeks"
+    "index": "Indeks",
+    "Original": "Sebelum",
+    "Converted": "Setelah"
   },
   "disabled": "Dengan disabilitas",
   "threads": "benang | \nbenang",

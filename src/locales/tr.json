@@ -72,7 +72,9 @@
     "downloadConvertedImage": "Dönüştürülen Resmi İndir",
     "failureZippingFailedFiles": "Başarısız olan dosyalar sıkıştırılırken hata oluştu.",
     "browseConvertedImages": "Dönüştürülen görsellere göz atın",
-    "index": "Dizin"
+    "index": "Dizin",
+    "Original": "Önce",
+    "Converted": "Sonrasında"
   },
   "disabled": "Engelli",
   "threads": "konu | \nKonular",

@@ -72,7 +72,9 @@
     "downloadConvertedImage": "Geconverteerde afbeelding downloaden",
     "failureZippingFailedFiles": "Fout bij het zippen van de mislukte bestanden.",
     "browseConvertedImages": "Blader door geconverteerde afbeeldingen",
-    "index": "Index"
+    "index": "Index",
+    "Original": "Voor",
+    "Converted": "Na"
   },
   "disabled": "Gehandicapt",
   "threads": "draad | \ndraden",

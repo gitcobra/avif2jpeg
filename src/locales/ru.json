@@ -72,7 +72,9 @@
     "downloadConvertedImage": "Загрузить конвертированное изображение",
     "failureZippingFailedFiles": "Сбой при архивировании неудавшихся файлов.",
     "browseConvertedImages": "Просмотр конвертированных изображений",
-    "index": "Индекс"
+    "index": "Индекс",
+    "Original": "До",
+    "Converted": "После"
   },
   "disabled": "Неполноценный",
   "threads": "нить | \nнити",

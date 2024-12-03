@@ -72,7 +72,9 @@
     "downloadConvertedImage": "परिवर्तित छवि डाउनलोड करें",
     "failureZippingFailedFiles": "विफल फ़ाइलों को ज़िप करते समय विफलता.",
     "browseConvertedImages": "परिवर्तित छवियाँ ब्राउज़ करें",
-    "index": "अनुक्रमणिका"
+    "index": "अनुक्रमणिका",
+    "Original": "पहले",
+    "Converted": "बाद"
   },
   "disabled": "अक्षम",
   "threads": "धागा | \nधागे",

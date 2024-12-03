@@ -73,7 +73,9 @@
     "downloadConvertedImage": "Scarica l'immagine convertita",
     "failureZippingFailedFiles": "Errore durante la compressione dei file non riusciti.",
     "browseConvertedImages": "Sfoglia le immagini convertite",
-    "index": "Indice"
+    "index": "Indice",
+    "Original": "Prima",
+    "Converted": "Dopo"
   },
   "disabled": "Disabilitato",
   "threads": "discussione | discussioni",

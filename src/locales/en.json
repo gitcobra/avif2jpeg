@@ -82,7 +82,9 @@
     "downloadConvertedImage": "Download Converted Image",
     "failureZippingFailedFiles": "Failure while zipping the failed files.",
     "browseConvertedImages": "Browse converted images",
-    "index": "Index"
+    "index": "Index",
+    "Original": "Original",
+    "Converted": "Converted"
   },
   "settings": {
     "maxZipFileSize": "Max zip file size",

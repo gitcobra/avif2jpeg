@@ -8,6 +8,7 @@ import type ConversionStatus from './status.vue';
 import { MessageToMainFromZipWorker } from './worker.zip';
 import { UserSettings } from '@/user-settings';
 
+
 type ConverterType = InstanceType<typeof Converter>;
 type Props = ConverterType['$props'];
 type ConversionStatusType = InstanceType<typeof ConversionStatus>;
@@ -45,9 +46,9 @@ export async function convertTargetFilesInMultithread(ConvStats: Stat, canceled,
   const canvasWorkerCount = Math.min(props.threads - 1, files.length); // preserve +1 for worker.zip
   WorkerManager.init();
   
-  // create a Worker for zip archives
+  // create a Worker for zip archives (zip worker is always only one instance)
   const zipWorker = new ZipWorker();
-  const promiseToWaitSqueezingZip = createZipWorkerListenerAndPromise(zipWorker, ConvStats, canceled, completedFileIdSet);
+  const promiseToWaitSqueezingZip = createZipWorkerListenerAndPromise(zipWorker, ConvStats, canceled, completedFileIdSet, targetFileMapById);
 
   // set zip.worker configurations
   zipWorker.postMessage({
@@ -59,7 +60,7 @@ export async function convertTargetFilesInMultithread(ConvStats: Stat, canceled,
   });
 
   // create a listener for canvas Workers
-  const canvasListener = createCanvasWorkerListener(ConvStats, canceled, SingleImageData, message, notification, files, completedFileIdSet, failedFileCountMap, targetFileMapById, progressingFileIdSet);
+  const canvasListener = createCanvasWorkerListener(ConvStats, canceled, SingleImageData, message, notification, files, completedFileIdSet, failedFileCountMap, targetFileMapById, progressingFileIdSet, props, outputExt);
 
   // create canvas Workers to convert each image
   for( let i = 0; i < canvasWorkerCount; i++ ) {
@@ -152,7 +153,7 @@ export async function convertTargetFilesInMultithread(ConvStats: Stat, canceled,
         type: format,
         quality: quality / 100,
         demandThumbnail: demandThumbnail || isLastItem,
-        demandImage: isSingleImageFile,
+        isSingleImage: isSingleImageFile,
         maxSize: UserSettings.shrinkImage ? {width: UserSettings.maxWidth, height: UserSettings.maxHeight} : null,
         
         // chrome (currently v126.0.6478.127) cannot seem to read a property of a File that defined by Object.defineProperty from a Worker,
@@ -213,10 +214,10 @@ export async function convertTargetFilesInMultithread(ConvStats: Stat, canceled,
   }
 
   // squeeze remaining zip
-  if( !isSingleImageFile ) {
+  //if( !isSingleImageFile ) {
     zipWorker.postMessage({action: 'squeeze'});
     await promiseToWaitSqueezingZip;
-  }
+  //}
   
   // it will lose all blob urls created by zipWorker if terminate it here
   //zipWorker.terminate();
@@ -253,7 +254,7 @@ export async function convertTargetFilesInMultithread(ConvStats: Stat, canceled,
 
 
 // create a listener for zip.worker
-function createZipWorkerListenerAndPromise(zipWorker: Worker, ConvStats: Stat, canceled, completedFileIdSet) {
+function createZipWorkerListenerAndPromise(zipWorker: Worker, ConvStats: Stat, canceled, completedFileIdSet, targetFileMapById) {
   
   const promise = new Promise(resolve => {
     
@@ -280,11 +281,27 @@ function createZipWorkerListenerAndPromise(zipWorker: Worker, ConvStats: Stat, c
       }
 
       if( action === 'respond-image' ) {
-        const {url, index, path, size} = data;
-        ConvStats.convertedImageUrl = url;
-        ConvStats.convertedImageSize = size;
-        ConvStats.convertedImageIndex = index;
-        ConvStats.convertedImageName = path;
+        const {url, index, path, size, fileId} = data;
+
+        
+          ConvStats.convertedImageUrl = url;
+          ConvStats.convertedImageSize = size;
+          ConvStats.convertedImageIndex = index;
+          ConvStats.convertedImageName = path;
+          ConvStats.convertedImageFileId = fileId;
+          
+          // create an object url of the original image
+          let orgUrl = '', orgSize = 0, orgName = '';
+          if( fileId >= 0 ) {
+            const file = targetFileMapById.get(fileId);
+            orgUrl = URL.createObjectURL(file);
+            orgSize = file.size;
+            orgName = file.name;
+          }
+          ConvStats.convertedImageOrgUrl = orgUrl;
+          ConvStats.convertedImageOrgSize = orgSize;
+          ConvStats.convertedImageOrgName = orgName;
+        
         return;
       }
 
@@ -337,9 +354,9 @@ function createZipWorkerListenerAndPromise(zipWorker: Worker, ConvStats: Stat, c
 
 // create a listener for canvas worker
 // all canvas workers share the single listener
-function createCanvasWorkerListener(ConvStats: Stat, canceled, SingleImageData: SingleImageDataType, message, notification, fileList: File[], completedFileIdSet: Set<number>, failedFileCountMap: Map<File, number>, targetFileMapById: Map<number, FileWithId>, progressingFileMapById) {
+function createCanvasWorkerListener(ConvStats: Stat, canceled, SingleImageData: SingleImageDataType, message, notification, fileList: File[], completedFileIdSet: Set<number>, failedFileCountMap: Map<File, number>, targetFileMapById: Map<number, FileWithId>, progressingFileMapById, props: Props, outputExt:string) {
   type LogType = Stat['logs'][number];
-
+  
   
   let _keyCounter = 0;
   // Map<worker.id, logitem>
@@ -421,13 +438,18 @@ function createCanvasWorkerListener(ConvStats: Stat, canceled, SingleImageData: 
         break;
       }
       case 'file-converted': {
-        const { index, path, fileId, image } = data;
+        const { index, path, fileId/*, image, blobUrl*/ } = data;
 
         const item = processingCoreLogItems.value.get(worker.id);
         item.command = `🔃converted`;
         //processingCoreLogItems.delete(worker.id);
         completedItemsLog.value.set(fileId, item);
         ConvStats.converted++;
+
+        /*
+        if( !blobUrl )
+          break;
+        
         
         if( !image )
           break;
@@ -441,6 +463,12 @@ function createCanvasWorkerListener(ConvStats: Stat, canceled, SingleImageData: 
         // and directly go down "file-completed" block↓
         ConvStats.done++;
         ConvStats.success++;
+        
+        ConvStats.convertedImageName = path.replace(/^.*\/(?=[^/]+$)/, '').replace(props.retainExtension ? '' : /\.(jpe?g|gif|png|avif|webp|bmp)$/i, '') + '.' + outputExt;
+        ConvStats.convertedImageUrl = blobUrl;
+        */
+
+        break;
       }
 
       // otherwese 'file-completed' action is caused by worker.zip

@@ -72,7 +72,9 @@
     "downloadConvertedImage": "Baixar imagem convertida",
     "failureZippingFailedFiles": "Falha ao compactar os arquivos com falha.",
     "browseConvertedImages": "Procure imagens convertidas",
-    "index": "Índice"
+    "index": "Índice",
+    "Original": "Antes",
+    "Converted": "Depois"
   },
   "disabled": "Desabilitado",
   "threads": "fio | \ntópicos",

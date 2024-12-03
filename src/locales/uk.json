@@ -72,7 +72,9 @@
     "downloadConvertedImage": "Завантажте перетворене зображення",
     "failureZippingFailedFiles": "Помилка під час архівування невдалих файлів.",
     "browseConvertedImages": "Перегляньте перетворені зображення",
-    "index": "Індекс"
+    "index": "Індекс",
+    "Original": "Раніше",
+    "Converted": "після"
   },
   "disabled": "Вимкнено",
   "threads": "нитка | \nнитки",

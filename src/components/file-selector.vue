@@ -19,7 +19,7 @@
             <n-button
               :disabled="!isAllowedInputs"
               @click="onInputButtonClick(fileinput)"
-              round style="width:100%;" color="white" text-color="black"
+              round style="width:100%; background-color:white"
             >
               <template #icon>
                 <n-icon size="large" color="gray"><ImageOutline /></n-icon>
@@ -41,7 +41,7 @@
             <n-button
               :disabled="!isAllowedInputs"
               @click="onInputButtonClick(folderinput)"
-              round style="width:100%;" color="white" text-color="black"
+              round style="width:100%; background-color:white"
             >
               <template #icon>
                 <n-icon size="large" color="gray"><FolderOpenOutline /></n-icon>

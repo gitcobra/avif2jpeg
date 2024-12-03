@@ -30,6 +30,9 @@ export async function convertImagesInSingleThread(list: FileWithId[], completedF
   let lastImageName = '';
   let lastImageWidth = 0;
   let lastImageHeight = 0;
+  
+  let lastImageOrgUrl = '';
+  let lastImageOrgSize = 0;
 
   let outputSize = 0;
   let _keyCounter = 0;
@@ -67,6 +70,8 @@ export async function convertImagesInSingleThread(list: FileWithId[], completedF
     
     // convert to Object URL
     currentImgBlobUrl = URL.createObjectURL(file);
+    lastImageOrgUrl = currentImgBlobUrl;
+    lastImageOrgSize = file.size;
 
     // load img element
     img.src = currentImgBlobUrl;
@@ -176,10 +181,18 @@ export async function convertImagesInSingleThread(list: FileWithId[], completedF
   if( ConvStats.success > 0 ) {
     if( fileCount === 1 ) {
       if( lastImageBlob ) {
+        /*
         SingleImageData.convertedImageBlob = lastImageBlob;
         SingleImageData.convertedImageName = lastImageName;
         SingleImageData.convertedImageWidth = lastImageWidth;
         SingleImageData.convertedImageHeight = lastImageHeight;
+        */
+        ConvStats.convertedImageIndex = 0;
+        ConvStats.convertedImageName = lastImageName.replace(/^.*\/(?=[^/]+$)/, '').replace(props.retainExtension ? '' : /\.(jpe?g|gif|png|avif|webp|bmp)$/i, '') + '.' + ext;
+        ConvStats.convertedImageUrl = URL.createObjectURL(lastImageBlob);
+        
+        ConvStats.convertedImageOrgUrl = lastImageOrgUrl;
+        ConvStats.convertedImageOrgSize = lastImageOrgSize;
       }
     }
     else {

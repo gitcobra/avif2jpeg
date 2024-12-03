@@ -64,11 +64,16 @@ const props = defineProps<{
 
     convertedImageName?: string
     convertedImageUrl?: string
+    convertedImageOrgUrl?: string
     convertedImageDataUrl?: string
     convertedImageWidth?: number
     convertedImageHeight?: number
     convertedImageSize?: number
+    convertedImageOrgSize?: number
+    convertedImageOrgName?: string
     convertedImageIndex?: number
+    convertedImageFileId?: number
+    
 
     type: string
     threads?: number
@@ -150,10 +155,11 @@ const imageViewerStarted = ref(false);
 
 const outputImg = reactive({
   name: '',
-  width: 0,
-  height: 0,
+  originalName: '',
   size: 0,
   url: '',
+  originalUrl: '',
+  originalSize: 0,
   dataUrl: '',
   index: -1,
 });
@@ -377,7 +383,7 @@ function update() {
   }, UPDATE_INTERVAL_MSEC);
 
   const stat = props.status;
-  zippingFlag.value = stat.length >= 2;
+  zippingFlag.value = stat.length >= 2 /*|| props.status.threads >= 2*/;
   index.value[1] = index.value[0];
   index.value[0] = stat.index;
   success.value[1] = success.value[0];
@@ -450,9 +456,12 @@ function update() {
     outputImg.name = stat.convertedImageName;
     outputImg.dataUrl = stat.convertedImageDataUrl;
     outputImg.size = stat.convertedImageSize || stat.outputTotalSize;
-    outputImg.width = stat.convertedImageWidth;
-    outputImg.height = stat.convertedImageHeight;
+    outputImg.originalSize = stat.convertedImageOrgSize;
+    outputImg.originalName = stat.convertedImageOrgName;
+    //outputImg.width = stat.convertedImageWidth;
+    //outputImg.height = stat.convertedImageHeight;
     outputImg.index = stat.convertedImageIndex;
+    outputImg.originalUrl = stat.convertedImageOrgUrl;
     //const {width ,height} = getThumbnailedSize(outputImg, {width:320, height:100});
     //outputImg.twidth = width;
     //outputImg.theight = height;
@@ -902,14 +911,15 @@ function scrollLogViewToBottom(instant = false) {
         <ImageViewer
           v-else-if="status.success > 0 && (props.status.threads || !zippingFlag)"
           ref="imageViewer"
-          :size="outputImg.size"
           :url="outputImg.url"
-          :data-url="outputImg.dataUrl"
-          :width="outputImg.width"
-          :height="outputImg.height"
+          :size="outputImg.size"
+          :original-url="outputImg.originalUrl"
+          :original-size="outputImg.originalSize"   
           :name="outputImg.name"
+          :originalName="outputImg.originalName"
           :length="props.status.success"
           :index="outputImg.index"
+          
           :is-single="!zippingFlag"
           @demand-image="index => emit('demand-image', index)"
         />

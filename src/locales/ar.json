@@ -72,7 +72,9 @@
     "downloadConvertedImage": "تحميل الصورة المحولة",
     "failureZippingFailedFiles": "فشل أثناء ضغط الملفات الفاشلة.",
     "browseConvertedImages": "تصفح الصور المحولة",
-    "index": "فِهرِس"
+    "index": "فِهرِس",
+    "Original": "قبل",
+    "Converted": "بعد"
   },
   "disabled": "عاجز",
   "threads": "خيط | \nالمواضيع",

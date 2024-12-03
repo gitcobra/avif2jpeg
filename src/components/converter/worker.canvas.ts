@@ -33,6 +33,7 @@ FileInfo & (
   } | {
     action: 'file-converted'
     image?: Blob
+    //blobUrl?: string
     width: number
     height: number
     inputsize: number
@@ -55,7 +56,7 @@ export type MessageToCanvasWorker = {
   quality: number
   type: string
   demandThumbnail: boolean
-  demandImage: boolean
+  isSingleImage: boolean
   maxSize: { width:number, height:number } | null
 }[];
 // message from main thread
@@ -93,7 +94,7 @@ self.onmessage = async (params: MessageEvent<MessageToCanvasWorker | null>) => {
 
 
 async function convertRecievedData(data: MessageToCanvasWorker[number]) {
-  const { index, file, fileId, type, quality, demandThumbnail, demandImage, webkitRelativePath, maxSize } = data;
+  const { index, file, fileId, type, quality, demandThumbnail, isSingleImage, webkitRelativePath, maxSize } = data;
 
   const path = webkitRelativePath || file.webkitRelativePath || file.name;
   const inputsize = file.size;
@@ -172,14 +173,15 @@ async function convertRecievedData(data: MessageToCanvasWorker[number]) {
   const blob = await canvas.convertToBlob({type, quality});
   const outputsize = blob.size;
   
+  // NOTE: changed to always add to zip, no longer use SingleImageData
+  /*
   let imageBlob: Blob;
-  if( demandImage ) {
+  if( isSingleImage ) {
     // output the converted image to the main thread 
     imageBlob = blob;
   }
-  else {
+  else*/ {
     // output to worker.zip  
-    //const abuffer: ArrayBuffer | null = await blob?.arrayBuffer() || null;
     dataOutputPort.postMessage({
       //data: abuffer, 
       blob,
@@ -190,6 +192,13 @@ async function convertRecievedData(data: MessageToCanvasWorker[number]) {
     //dataOutputPort.postMessage({data: blob, path, fileId});
   }
 
+  /*
+  let blobUrl = '';
+  if( isSingleImage ) {
+     blobUrl = URL.createObjectURL(blob);
+  }
+  */
+
   // send "file-end" message to the main thread
   messageToMain = {
     action: 'file-converted',
@@ -198,7 +207,8 @@ async function convertRecievedData(data: MessageToCanvasWorker[number]) {
     index,
     outputsize,
     inputsize,
-    image: imageBlob,
+    //image: imageBlob,
+    //blobUrl,
     width,
     height
   };

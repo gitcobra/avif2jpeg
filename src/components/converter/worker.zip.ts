@@ -5,6 +5,8 @@ console.log('converter.worker.zip started');
 
 const zipList: AnZip[] = [];
 const zipListLengthStack = [];
+let entireIndex = 0;
+const fileIdByIndex = new Map<number, number>();
 const errorZipList: AnZip[] = [];
 let azip = new AnZip();
 zipList.push(azip);
@@ -44,6 +46,7 @@ type ImageMessageToMain = {
   path: string
   index: number
   size: number
+  fileId: number
 };
 self.onmessage = async (params: ZipMessageType) => {
   const { data: { action, zipSize, keepExt, outputExt, file, index, /*buffer,*/ path, imageType }, ports } = params;
@@ -127,6 +130,7 @@ self.onmessage = async (params: ZipMessageType) => {
       if( !blob ) {
         console.warn(index, targetidx, blob);
         console.warn(zipListLengthStack);
+        break;
       }
       const path = targetazip.getPathByIndex(targetidx);
       const url = URL.createObjectURL(blob);
@@ -135,6 +139,7 @@ self.onmessage = async (params: ZipMessageType) => {
         url,
         index,
         path,
+        fileId: fileIdByIndex.get(index),
         size: blob.size,
       };
       self.postMessage( message );
@@ -206,6 +211,8 @@ const onmessageFromCanvasWorkers = async (params: ZipMessageFromCanvasType, port
   bytesSum += bufferSize;
   count++;
   await azip.add(outputPath, blob);
+
+  fileIdByIndex.set(entireIndex++, fileId);
   
   // inform main thread that adding the file to the zip is completed
   let message: AddingZipMessageToMain = {

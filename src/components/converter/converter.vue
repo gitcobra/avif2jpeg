@@ -9,9 +9,17 @@ export type FileWithId = File & {
 };
 export type SingleImageDataType = {
   convertedImageBlob: Blob
-  convertedImageWidth: number
-  convertedImageHeight: number
+  //convertedImageWidth?: number
+  //convertedImageHeight?: number
   convertedImageName: string
+
+  convertedImageUrl?: string
+  convertedImageOrgUrl?: string
+  convertedImageDataUrl?: string
+  convertedImageSize?: number
+  convertedImageOrgSize?: number
+  convertedImageIndex?: number
+  convertedImageFileId?: number
 };
 </script>
 
@@ -242,6 +250,7 @@ function cleanUpProcessedData() {
   dispConvStatusComponent.value = false;
 
   URL.revokeObjectURL(ConvStats.convertedImageUrl);
+  URL.revokeObjectURL(ConvStats.convertedImageOrgUrl);
   
   for( const item of ConvStats.zips ) {
     URL.revokeObjectURL(item.url);
@@ -342,7 +351,7 @@ async function startConvert(input: File[]) {
   
   // output single image 
   if( ConvStats.length === 1 ) {
-    await outputSingleImageData(outputExt, SingleImageData);
+    //await outputSingleImageData(outputExt, SingleImageData);
   }
   
   // update condition by the result
@@ -389,8 +398,8 @@ async function outputSingleImageData(ext, SingleImageData: SingleImageDataType) 
     ConvStats.convertedImageName = SingleImageData.convertedImageName.replace(/^.*\/(?=[^/]+$)/, '').replace(props.retainExtension ? '' : /\.(jpe?g|gif|png|avif|webp|bmp)$/i, '') + '.' + ext;
     ConvStats.convertedImageUrl = URL.createObjectURL(SingleImageData.convertedImageBlob);
     ConvStats.convertedImageDataUrl = dataUrl;
-    ConvStats.convertedImageWidth = SingleImageData.convertedImageWidth;
-    ConvStats.convertedImageHeight = SingleImageData.convertedImageHeight;
+    //ConvStats.convertedImageWidth = SingleImageData.convertedImageWidth;
+    //ConvStats.convertedImageHeight = SingleImageData.convertedImageHeight;
   }
 }
 

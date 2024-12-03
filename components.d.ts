@@ -31,6 +31,7 @@ declare module 'vue' {
     NFlex: typeof import('naive-ui')['NFlex']
     NIcon: typeof import('naive-ui')['NIcon']
     NImage: typeof import('naive-ui')['NImage']
+    NImageGroup: typeof import('naive-ui')['NImageGroup']
     NInput: typeof import('naive-ui')['NInput']
     NInputNumber: typeof import('naive-ui')['NInputNumber']
     NLoadingBarProvider: typeof import('naive-ui')['NLoadingBarProvider']

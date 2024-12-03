@@ -12,8 +12,7 @@ import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 import beautify from 'js-beautify';
 
 
-//let basePath = '/avif2jpeg/dist/';
-//let outDir = './dist';
+
 export default defineConfig(({mode}) => {
   // load environment variables
   const env = loadEnv(mode, process.cwd() + '/env');

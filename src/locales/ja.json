@@ -81,7 +81,9 @@
     "downloadConvertedImage": "変換した画像をダウンロード",
     "failureZippingFailedFiles": "失敗したファイルのZIP作成中にエラーが発生しました",
     "browseConvertedImages": "変換した画像を閲覧",
-    "index": "索引"
+    "index": "索引",
+    "Original": "変換前",
+    "Converted": "変換後"
   },
   "disabled": "無効",
   "threads": "スレッド | スレッド",

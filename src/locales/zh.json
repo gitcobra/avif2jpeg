@@ -72,7 +72,9 @@
     "downloadConvertedImage": "下载转换后的图像",
     "failureZippingFailedFiles": "压缩失败的文件时失败。",
     "browseConvertedImages": "浏览转换后的图像",
-    "index": "指数"
+    "index": "指数",
+    "Original": "前",
+    "Converted": "后"
   },
   "disabled": "残疾人",
   "threads": "thread | threads",
