@@ -111,5 +111,12 @@
   "success": "Successo",
   "previousVersion": "Versione precedente",
   "height": "Altezza",
-  "width": "Larghezza"
+  "width": "Larghezza",
+  "checkboxTextDontShowThis": "Non mostrare più questo messaggio",
+  "loadfolderNotifyingTitle": "Informazioni sull'avviso quando viene selezionata una cartella",
+  "OK": "OK",
+  "Continue": "Continuare",
+  "Cancel": "Cancellare",
+  "loadfolderNotifyingMessageTerm1": "La maggior parte dei browser Web visualizzerà un avviso come l'immagine seguente quando si seleziona una cartella.",
+  "loadfolderNotifyingMessageTerm2": "È necessario premere il pulsante \"carica\" ​​qui per caricare tutte le immagini nella cartella, ma i dati caricati da questa applicazione non vengono mai effettivamente \"caricati\" sul server."
 }

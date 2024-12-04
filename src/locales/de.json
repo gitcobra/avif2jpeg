@@ -110,5 +110,12 @@
   "success": "Erfolg",
   "previousVersion": "Vorherige Version",
   "height": "Höhe",
-  "width": "Breite"
+  "width": "Breite",
+  "checkboxTextDontShowThis": "Diese Nachricht nicht mehr anzeigen",
+  "loadfolderNotifyingTitle": "Über die Warnung, wenn ein Ordner ausgewählt wird",
+  "OK": "OK",
+  "Continue": "Weitermachen",
+  "Cancel": "Stornieren",
+  "loadfolderNotifyingMessageTerm1": "Die meisten Webbrowser zeigen eine Warnung wie das Bild unten an, wenn Sie einen Ordner auswählen.",
+  "loadfolderNotifyingMessageTerm2": "Sie müssen hier auf die Schaltfläche „Hochladen“ klicken, um alle Bilder im Ordner zu laden, aber die von dieser Anwendung geladenen Daten werden nie wirklich auf den Server „hochgeladen“."
 }

@@ -110,5 +110,12 @@
   "success": "성공",
   "previousVersion": "이전 버전",
   "height": "키",
-  "width": "너비"
+  "width": "너비",
+  "checkboxTextDontShowThis": "이 메시지를 다시 표시하지 않음",
+  "loadfolderNotifyingTitle": "폴더 선택 시 경고에 대하여",
+  "OK": "좋아요",
+  "Continue": "계속하다",
+  "Cancel": "취소",
+  "loadfolderNotifyingMessageTerm1": "대부분의 웹 브라우저는 폴더를 선택할 때 아래 이미지와 같은 경고를 표시합니다.",
+  "loadfolderNotifyingMessageTerm2": "폴더에 있는 모든 이미지를 로드하려면 여기에서 \"업로드\" 버튼을 눌러야 하지만, 이 애플리케이션에 의해 로드된 데이터는 실제로 서버에 \"업로드\"되지 않습니다."
 }

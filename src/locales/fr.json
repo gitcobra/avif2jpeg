@@ -110,5 +110,12 @@
   "success": "Succès",
   "previousVersion": "Version précédente",
   "height": "Hauteur",
-  "width": "Largeur"
+  "width": "Largeur",
+  "checkboxTextDontShowThis": "Ne plus afficher ce message",
+  "loadfolderNotifyingTitle": "À propos de l'avertissement lors de la sélection d'un dossier",
+  "OK": "D'ACCORD",
+  "Continue": "Continuer",
+  "Cancel": "Annuler",
+  "loadfolderNotifyingMessageTerm1": "La plupart des navigateurs Web afficheront un avertissement comme l'image ci-dessous lorsque vous sélectionnez un dossier.",
+  "loadfolderNotifyingMessageTerm2": "Vous devez appuyer ici sur le bouton « télécharger » pour charger toutes les images du dossier, mais les données chargées par cette application ne sont jamais réellement « téléchargées » sur le serveur."
 }

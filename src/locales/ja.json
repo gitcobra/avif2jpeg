@@ -115,5 +115,13 @@
   "success": "成功",
   "previousVersion": "過去のバージョン",
   "height": "縦幅",
-  "width": "横幅"
+  "width": "横幅",
+  "checkboxTextDontShowThis": "このメッセージを次回から表示しない",
+  "loadfolderNotifyingTitle": "フォルダ選択時の警告について",
+  "OK": "了解",
+  "loadfolderNotifyingMessage": {},
+  "loadfolderNotifyingMessageTerm1": "殆どのウェブブラウザでは、フォルダを選択すると以下の画像のような警告が表示されます。",
+  "loadfolderNotifyingMessageTerm2": "フォルダ内の全ての画像を読み込むにはここで「アップロード」ボタンを押す必要がありますが、このアプリで読み込まれたデータが実際にサーバーへ「アップロード」される事はありません。",
+  "Continue": "続行する",
+  "Cancel": "キャンセル"
 }

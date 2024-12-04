@@ -123,7 +123,7 @@
 
 <script setup lang="ts">
 import { ImageOutline, FolderOpenOutline, SearchCircle, DocumentOutline } from '@vicons/ionicons5';
-import { NEmpty } from "naive-ui";
+import { NCheckbox, NEmpty, NImage } from "naive-ui";
 import { GlobalValsKey } from "../Avif2Jpeg.vue";
 import { useI18n } from 'vue-i18n';
 import DropTarget from "./droptarget.vue";
@@ -202,6 +202,7 @@ const customExtensions = computed({
     emit('update:userExtensions', val);
   },
 });
+const disableNotifyingFolderSelect = defineModel<boolean>('disableNotifyingFolderSelect');
 
 
 // DOM elements
@@ -229,7 +230,33 @@ onMounted(() => {
 
 // event handlers
 
-function onInputButtonClick(elm: HTMLInputElement) {
+async function onInputButtonClick(elm: HTMLInputElement) {
+  
+  // notify about the dialog box that the browser pops up when selected a folder
+  if( elm === folderinput.value && !disableNotifyingFolderSelect.value ) {
+    let ok = false;
+    await new Promise<boolean>(resolve => {
+      dialog.info({
+        title: t('loadfolderNotifyingTitle'),
+        positiveText: t('Continue'),
+        negativeText: t('Cancel'),
+        onAfterLeave: () => resolve(ok),
+        onPositiveClick: () => ok = true,
+        content: () => h('div', [
+          h('p', {}, t(`loadfolderNotifyingMessageTerm1`)),
+          h('div', [h(NImage, {width:250, style:{border:'3px solid gray'}, src: import.meta.env.BASE_URL +'/notification-folder.png'})]),
+          h('p', {}, t(`loadfolderNotifyingMessageTerm2`)),
+          h('p', [h(NCheckbox, { onUpdateChecked: val => disableNotifyingFolderSelect.value = val, checked: disableNotifyingFolderSelect.value }, () => t('checkboxTextDontShowThis'))]),
+        ]),
+      });
+    });
+
+    if( !ok ) {
+      disableNotifyingFolderSelect.value = false;
+      return;
+    }
+  }
+  
   //disableInputButtons.value = true;
   elm.click();
 }

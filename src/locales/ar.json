@@ -110,5 +110,12 @@
   "success": "نجاح",
   "previousVersion": "الإصدار السابق",
   "height": "ارتفاع",
-  "width": "عرض"
+  "width": "عرض",
+  "checkboxTextDontShowThis": "لا تظهر هذه الرسالة مرة أخرى",
+  "loadfolderNotifyingTitle": "حول التحذير عند تحديد مجلد",
+  "OK": "نعم",
+  "Continue": "يكمل",
+  "Cancel": "يلغي",
+  "loadfolderNotifyingMessageTerm1": "ستعرض معظم متصفحات الويب تحذيرًا مثل الصورة أدناه عند تحديد مجلد.",
+  "loadfolderNotifyingMessageTerm2": "يجب عليك الضغط على زر \"تحميل\" هنا لتحميل جميع الصور الموجودة في المجلد، ولكن البيانات التي تم تحميلها بواسطة هذا التطبيق لا يتم \"تحميلها\" فعليًا إلى الخادم."
 }

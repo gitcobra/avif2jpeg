@@ -110,5 +110,12 @@
   "success": "Sucesso",
   "previousVersion": "Versão anterior",
   "height": "Altura",
-  "width": "Largura"
+  "width": "Largura",
+  "checkboxTextDontShowThis": "Não mostrar esta mensagem novamente",
+  "loadfolderNotifyingTitle": "Sobre o aviso ao selecionar uma pasta",
+  "OK": "OK",
+  "Continue": "Continuar",
+  "Cancel": "Cancelar",
+  "loadfolderNotifyingMessageTerm1": "A maioria dos navegadores da web exibirá um aviso como a imagem abaixo quando você selecionar uma pasta.",
+  "loadfolderNotifyingMessageTerm2": "Você deve pressionar o botão “upload” aqui para carregar todas as imagens da pasta, mas os dados carregados por este aplicativo nunca são realmente “carregados” para o servidor."
 }

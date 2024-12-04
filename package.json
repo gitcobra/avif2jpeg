@@ -1,7 +1,7 @@
 {
   "name": "avif2jpeg",
   "private": true,
-  "version": "1.7.2",
+  "version": "1.7.7",
   "type": "module",
   "scripts": {
     "dev": "vite",

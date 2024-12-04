@@ -172,6 +172,7 @@ function onInputFile(list: File[]) {
           v-model:expanded="UserSettings.expandExtButtons"
           v-model:target="UserSettings.acceptTypeValue"
           v-model:userExtensions="UserSettings.editedAcceptTypes"
+          v-model:disable-notifying-folder-select="UserSettings.disableNotifyingFolderSelect"
           :forbidden="processing"
           @input="onInputFile"
         />

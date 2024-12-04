@@ -110,5 +110,12 @@
   "success": "Sukces",
   "previousVersion": "Poprzednia wersja",
   "height": "Wysokość",
-  "width": "Szerokość"
+  "width": "Szerokość",
+  "checkboxTextDontShowThis": "Nie pokazuj więcej tego komunikatu",
+  "loadfolderNotifyingTitle": "O ostrzeżeniu po wybraniu folderu",
+  "OK": "OK",
+  "Continue": "Kontynuować",
+  "Cancel": "Anulować",
+  "loadfolderNotifyingMessageTerm1": "Większość przeglądarek internetowych wyświetli ostrzeżenie jak na obrazku poniżej, gdy wybierzesz folder.",
+  "loadfolderNotifyingMessageTerm2": "Aby załadować wszystkie obrazy z folderu, należy nacisnąć przycisk „prześlij”, ale dane ładowane przez tę aplikację nigdy nie są tak naprawdę „przesyłane” na serwer."
 }

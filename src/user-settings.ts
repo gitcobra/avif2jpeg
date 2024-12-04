@@ -19,6 +19,8 @@ const DefaultSettings = {
   shrinkImage: false,
   maxWidth: 4096,
   maxHeight: 4096,
+
+  disableNotifyingFolderSelect: false,
 } as const;
 
 export type UserSettingsType = Omit<typeof DefaultSettings, "threadCount"> & {

@@ -110,5 +110,12 @@
   "success": "Kesuksesan",
   "previousVersion": "Versi sebelumnya",
   "height": "Tinggi",
-  "width": "Lebar"
+  "width": "Lebar",
+  "checkboxTextDontShowThis": "Jangan tampilkan pesan ini lagi",
+  "loadfolderNotifyingTitle": "Tentang peringatan ketika memilih folder",
+  "OK": "OKE",
+  "Continue": "Melanjutkan",
+  "Cancel": "Membatalkan",
+  "loadfolderNotifyingMessageTerm1": "Kebanyakan web browser akan menampilkan peringatan seperti gambar di bawah ini ketika Anda memilih folder.",
+  "loadfolderNotifyingMessageTerm2": "Anda harus menekan tombol “unggah” di sini untuk memuat semua gambar ke dalam folder, tetapi data yang dimuat oleh aplikasi ini tidak pernah benar-benar “diunggah” ke server."
 }

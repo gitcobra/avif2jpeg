@@ -115,5 +115,13 @@
   "success": "Success",
   "previousVersion": "Previous version",
   "height": "\nHeight",
-  "width": "Width"
+  "width": "Width",
+  "checkboxTextDontShowThis": "Don't show this message again",
+  "loadfolderNotifyingTitle": "About the warning when selecting a folder",
+  "OK": "OK",
+  "loadfolderNotifyingMessage": {},
+  "loadfolderNotifyingMessageTerm1": "Most web browsers will display a warning like the image below when you select a folder.",
+  "loadfolderNotifyingMessageTerm2": "You must press the “Upload” button here to load all the images in the folder, but the data loaded by this application is never actually uploaded to the server.",
+  "Continue": "Continue",
+  "Cancel": "Cancel"
 }

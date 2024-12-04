@@ -110,5 +110,12 @@
   "success": "成功",
   "previousVersion": "以前的版本",
   "height": "高度",
-  "width": "寬度"
+  "width": "寬度",
+  "checkboxTextDontShowThis": "不再顯示此訊息",
+  "loadfolderNotifyingTitle": "關於選擇資料夾時的警告",
+  "OK": "好的",
+  "Continue": "繼續",
+  "Cancel": "取消",
+  "loadfolderNotifyingMessageTerm1": "當您選擇資料夾時，大多數網頁瀏覽器都會顯示如下圖所示的警告。",
+  "loadfolderNotifyingMessageTerm2": "您必須按此處的「上傳」按鈕才能載入資料夾中的所有圖像，但此應用程式載入的資料實際上從未「上傳」到伺服器。"
 }

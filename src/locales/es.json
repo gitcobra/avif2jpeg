@@ -110,5 +110,12 @@
   "success": "Éxito",
   "previousVersion": "Versión anterior",
   "height": "Altura",
-  "width": "Ancho"
+  "width": "Ancho",
+  "checkboxTextDontShowThis": "No mostrar este mensaje nuevamente",
+  "loadfolderNotifyingTitle": "Acerca de la advertencia al seleccionar una carpeta",
+  "OK": "DE ACUERDO",
+  "Continue": "Continuar",
+  "Cancel": "Cancelar",
+  "loadfolderNotifyingMessageTerm1": "La mayoría de los navegadores web mostrarán una advertencia como la imagen a continuación cuando seleccione una carpeta.",
+  "loadfolderNotifyingMessageTerm2": "Debe presionar el botón \"cargar\" aquí para cargar todas las imágenes en la carpeta, pero los datos cargados por esta aplicación nunca se \"cargan\" realmente al servidor."
 }
