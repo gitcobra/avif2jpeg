@@ -187,7 +187,7 @@ function bindKeys(ev: KeyboardEvent) {
     case 'End':
       index.value = props.length;
       break;
-    case 'Space':
+    case ' ':
     case 'Enter':
       switchImage();
       break;
