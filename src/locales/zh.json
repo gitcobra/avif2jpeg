@@ -74,7 +74,8 @@
     "browseConvertedImages": "浏览转换后的图像",
     "index": "指数",
     "Original": "前",
-    "Converted": "后"
+    "Converted": "后",
+    "saveAllZipsTooltip": "保存所有 ZIP 文件"
   },
   "disabled": "残疾人",
   "threads": "thread | threads",

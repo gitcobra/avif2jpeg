@@ -74,7 +74,8 @@
     "browseConvertedImages": "Jelajahi gambar yang dikonversi",
     "index": "Indeks",
     "Original": "Sebelum",
-    "Converted": "Setelah"
+    "Converted": "Setelah",
+    "saveAllZipsTooltip": "Simpan semua file ZIP"
   },
   "disabled": "Dengan disabilitas",
   "threads": "benang | \nbenang",

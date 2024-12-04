@@ -74,7 +74,8 @@
     "browseConvertedImages": "Blader door geconverteerde afbeeldingen",
     "index": "Index",
     "Original": "Voor",
-    "Converted": "Na"
+    "Converted": "Na",
+    "saveAllZipsTooltip": "Bewaar alle ZIP-bestanden"
   },
   "disabled": "Gehandicapt",
   "threads": "draad | \ndraden",

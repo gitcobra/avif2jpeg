@@ -84,7 +84,8 @@
     "browseConvertedImages": "Browse converted images",
     "index": "Index",
     "Original": "Original",
-    "Converted": "Converted"
+    "Converted": "Converted",
+    "saveAllZipsTooltip": "Save all ZIP files"
   },
   "settings": {
     "maxZipFileSize": "Max zip file size",

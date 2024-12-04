@@ -74,7 +74,8 @@
     "browseConvertedImages": "Dönüştürülen görsellere göz atın",
     "index": "Dizin",
     "Original": "Önce",
-    "Converted": "Sonrasında"
+    "Converted": "Sonrasında",
+    "saveAllZipsTooltip": "Tüm ZIP dosyalarını kaydet"
   },
   "disabled": "Engelli",
   "threads": "konu | \nKonular",

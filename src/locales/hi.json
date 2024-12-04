@@ -74,7 +74,8 @@
     "browseConvertedImages": "परिवर्तित छवियाँ ब्राउज़ करें",
     "index": "अनुक्रमणिका",
     "Original": "पहले",
-    "Converted": "बाद"
+    "Converted": "बाद",
+    "saveAllZipsTooltip": "सभी ज़िप फ़ाइलें सहेजें"
   },
   "disabled": "अक्षम",
   "threads": "धागा | \nधागे",

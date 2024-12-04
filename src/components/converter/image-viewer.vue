@@ -155,7 +155,7 @@ onBeforeMount(() => {
 
 // general functions
 function onEscKeyDown(ev: KeyboardEvent) {
-  if( ev.code !== 'Escape' )
+  if( ev.key !== 'Escape' )
     return;
   
   // HACK: prevent the modal from being closed along with the previewed image when the ESC key is pressed
@@ -170,7 +170,7 @@ function onEscKeyDown(ev: KeyboardEvent) {
 }
 
 function bindKeys(ev: KeyboardEvent) {
-  switch( ev.code ) {
+  switch( ev.key ) {
     case 'ArrowRight':
     case 'PageDown':
       moveIndex(1);
@@ -260,34 +260,42 @@ function openImage(url: string) {
 
 
 /*
-for preview image
+HACK: switch between Original image and Converted image for preview
 */
-let originalToolbarNextButton = () => {};
-const switchImage = (flag?: boolean) => {
+let reservedTransform = '';
+const switchImage = () => {
+  // preserve transform
+  reservedTransform = window.getComputedStyle(nImageGroupRef?.value?.previewInstRef?.previewRef)?.transform;
+  
   const prev = isPreviewingConvertedImg.value;
-  originalToolbarNextButton();
+  nImageGroupRef?.value?.previewInstRef?.handleSwitchNext?.();
   nextTick(() => {
     if( isPreviewingConvertedImg.value === prev )
-      originalToolbarNextButton();
+      nImageGroupRef?.value?.previewInstRef?.handleSwitchNext?.();
   });
 };
+// HACK: Image Preview resets its own CSS transform each time it loads an image, so restore them manually
+function restoreTransform() {
+  try {
+    nextTick(() => nImageGroupRef.value.previewInstRef.previewRef.style.transform = reservedTransform);
+  } catch(e) {}
+}
 
 function renderToolbar({ nodes }: ImageRenderToolbarProps) {
-  // HACK: switch Original image and Converted image
-  originalToolbarNextButton = (nodes.next.children as any)?.trigger?.()?.props?.onClick || (() => {});
-  //switchToOriginalImage = (nodes.prev.children as any)?.trigger?.()?.props?.onClick || (() => {});
+  
+  // add button to switch between original and converted
   const switchOrgConv = h(NBadge, {
     color:isPreviewingConvertedImg.value ? 'green' : 'gray',
     offset:[-20, -12],
     value: (isPreviewingConvertedImg.value ? t('status.Converted') : t('status.Original')) + ' ' + index.value,
-  }, h(NButton, {
+  }, () => h(NButton, {
     round:true, onClick(){ switchImage() },
     textColor:'white',
     size:'small',
     style: { marginLeft: '4px' },
   }, {icon: () => h(isPreviewingConvertedImg.value ? ArrowRedoOutline : ArrowUndoOutline)}));
   
-  // add next and prev buttons manually
+  // add increasing and decreasing index buttons
   nodes.next = h(NButton, {onClick(){moveIndex(1); }, disabled:!allowNext.value, circle:true, textColor:'white', size:'tiny', style: { marginLeft: '4px' }}, {icon: () => h(ArrowForward)});
   nodes.prev = h(NButton, {onClick(){moveIndex(-1); }, disabled:!allowPrev.value, circle:true, textColor:'white', size:'tiny', style: { marginLeft: '4px' }}, {icon: () => h(ArrowBack)});
   
@@ -319,6 +327,7 @@ function renderToolbar({ nodes }: ImageRenderToolbarProps) {
         ref="nImageGroupRef"
         show-toolbar-tooltip
         :render-toolbar="renderToolbar"
+        @preview-next="restoreTransform"
       >
       <n-flex align="center" justify="center" :wrap="false">
         

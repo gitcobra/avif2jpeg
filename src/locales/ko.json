@@ -74,7 +74,8 @@
     "browseConvertedImages": "변환된 이미지 찾아보기",
     "index": "색인",
     "Original": "전에",
-    "Converted": "후에"
+    "Converted": "후에",
+    "saveAllZipsTooltip": "모든 ZIP 파일 저장"
   },
   "disabled": "장애가 있는",
   "threads": "스레드 | \n스레드",

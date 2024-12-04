@@ -74,7 +74,8 @@
     "browseConvertedImages": "Перегляньте перетворені зображення",
     "index": "Індекс",
     "Original": "Раніше",
-    "Converted": "після"
+    "Converted": "після",
+    "saveAllZipsTooltip": "Збережіть усі ZIP-файли"
   },
   "disabled": "Вимкнено",
   "threads": "нитка | \nнитки",

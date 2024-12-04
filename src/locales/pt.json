@@ -74,7 +74,8 @@
     "browseConvertedImages": "Procure imagens convertidas",
     "index": "Índice",
     "Original": "Antes",
-    "Converted": "Depois"
+    "Converted": "Depois",
+    "saveAllZipsTooltip": "Salve todos os arquivos ZIP"
   },
   "disabled": "Desabilitado",
   "threads": "fio | \ntópicos",

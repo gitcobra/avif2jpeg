@@ -178,25 +178,31 @@ function openPreview() {
 </script>
 
 <template>
-<n-spin :show="imgloading || props.loading">
-  <n-flex justify="center" align="center" :style="spincss">
-    <a :href="imgsrc" @click.left.prevent="" target="_blank" :download="props.fileName" :title="props.fileName" style="line-height:0px;">
-      <Transition mode="in-out">
-      <n-image
-        ref="nImageRef"
-        show-toolbar-tooltip
-        _:render-toolbar="renderToolbar"
-        @load="imgload"
-        @error="imgerror"
-        :src="imgsrc"
-        v-show="disp"
-        :width="twidth" :height="theight"
-        style="border:1px solid silver"
-      />
-      </Transition>
-    </a>
-  </n-flex>
-</n-spin>
+  <n-tooltip>
+    <template #trigger>
+    <n-spin :show="imgloading || props.loading">
+      <n-flex justify="center" align="center" :style="spincss">
+      <a :href="imgsrc" @click.left.prevent="" target="_blank" :download="props.fileName" :title="props.fileName" style="line-height:0px;">
+        <Transition mode="in-out">
+        <n-image
+          ref="nImageRef"
+          show-toolbar-tooltip
+          _:render-toolbar="renderToolbar"
+          @load="imgload"
+          @error="imgerror"
+          :src="imgsrc"
+          v-show="disp"
+          :width="twidth" :height="theight"
+          style="border:1px solid silver"
+        />
+        </Transition>
+      </a>
+      </n-flex>
+    </n-spin>
+    </template>
+    {{ props.fileName }}
+  </n-tooltip>
+
 </template>
 
 

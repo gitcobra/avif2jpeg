@@ -74,7 +74,8 @@
     "browseConvertedImages": "تصفح الصور المحولة",
     "index": "فِهرِس",
     "Original": "قبل",
-    "Converted": "بعد"
+    "Converted": "بعد",
+    "saveAllZipsTooltip": "احفظ جميع ملفات ZIP"
   },
   "disabled": "عاجز",
   "threads": "خيط | \nالمواضيع",

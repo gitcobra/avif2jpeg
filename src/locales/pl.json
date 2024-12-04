@@ -74,7 +74,8 @@
     "browseConvertedImages": "Przeglądaj przekonwertowane obrazy",
     "index": "Indeks",
     "Original": "Zanim",
-    "Converted": "Po"
+    "Converted": "Po",
+    "saveAllZipsTooltip": "Zapisz wszystkie pliki ZIP"
   },
   "disabled": "Wyłączony",
   "threads": "wątek | \nwątki",

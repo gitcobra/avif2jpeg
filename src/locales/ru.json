@@ -74,7 +74,8 @@
     "browseConvertedImages": "Просмотр конвертированных изображений",
     "index": "Индекс",
     "Original": "До",
-    "Converted": "После"
+    "Converted": "После",
+    "saveAllZipsTooltip": "Сохраните все ZIP-файлы"
   },
   "disabled": "Неполноценный",
   "threads": "нить | \nнити",

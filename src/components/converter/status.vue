@@ -1024,9 +1024,10 @@ function scrollLogViewToBottom(instant = false) {
               <div>{{t('success')}}: {{zipped[0].toLocaleString()}}</div>
               <div>{{t('status.totalSize')}}: {{getUnitSize(status.zippedTotalSize)}}</div>
               <div>ZIP × {{zipList.length}}</div>
+              <div>{{t('status.saveAllZipsTooltip')}}</div>
             </template>
             <template v-else>
-              {{ $t(`status.downloadConvertedImage`) }}
+              {{ $t(`status.downloadConvertedImage`, zipList.length) }}
             </template>
           </template>
         </n-popover>

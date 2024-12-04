@@ -83,7 +83,8 @@
     "browseConvertedImages": "変換した画像を閲覧",
     "index": "索引",
     "Original": "変換前",
-    "Converted": "変換後"
+    "Converted": "変換後",
+    "saveAllZipsTooltip": "すべての ZIP ファイルを保存する"
   },
   "disabled": "無効",
   "threads": "スレッド | スレッド",
