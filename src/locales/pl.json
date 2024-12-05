@@ -116,6 +116,6 @@
   "OK": "OK",
   "Continue": "Kontynuować",
   "Cancel": "Anulować",
-  "loadfolderNotifyingMessageTerm1": "Większość przeglądarek internetowych wyświetli ostrzeżenie jak na obrazku poniżej, gdy wybierzesz folder.",
-  "loadfolderNotifyingMessageTerm2": "Aby załadować wszystkie obrazy z folderu, należy nacisnąć przycisk „prześlij”, ale dane ładowane przez tę aplikację nigdy nie są tak naprawdę „przesyłane” na serwer."
+  "loadfolderNotifyingMessageTerm2": "Aby załadować wszystkie obrazy z folderu, należy nacisnąć przycisk „prześlij”, ale dane ładowane przez tę aplikację nigdy nie są tak naprawdę „przesyłane” na serwer.",
+  "loadfolderNotifyingMessageTerm1": "Gdy jako dane wejściowe na stronie internetowej wybierzesz folder zamiast pliku, w głównych przeglądarkach internetowych wyświetli się ostrzeżenie, jak na obrazku poniżej."
 }

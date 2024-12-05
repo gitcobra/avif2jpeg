@@ -116,6 +116,6 @@
   "OK": "OK",
   "Continue": "Weitermachen",
   "Cancel": "Stornieren",
-  "loadfolderNotifyingMessageTerm1": "Die meisten Webbrowser zeigen eine Warnung wie das Bild unten an, wenn Sie einen Ordner auswählen.",
-  "loadfolderNotifyingMessageTerm2": "Sie müssen hier auf die Schaltfläche „Hochladen“ klicken, um alle Bilder im Ordner zu laden, aber die von dieser Anwendung geladenen Daten werden nie wirklich auf den Server „hochgeladen“."
+  "loadfolderNotifyingMessageTerm2": "Sie müssen hier auf die Schaltfläche „Hochladen“ klicken, um alle Bilder im Ordner zu laden, aber die von dieser Anwendung geladenen Daten werden nie wirklich auf den Server „hochgeladen“.",
+  "loadfolderNotifyingMessageTerm1": "Wenn Sie als Eingabe auf einer Website einen Ordner anstelle einer Datei auswählen, zeigen die gängigen Webbrowser eine Warnung wie im Bild unten an."
 }

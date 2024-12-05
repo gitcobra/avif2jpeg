@@ -169,7 +169,7 @@ type AddingZipMessageToMain = {
   fileId: number
 };
 // listener for canvasWorker
-const onmessageFromCanvasWorkers = async (params: ZipMessageFromCanvasType, port: MessagePort) => {
+const onmessageFromCanvasWorkers = (params: ZipMessageFromCanvasType, port: MessagePort) => {
   let { data: { /*data,*/ blob, path, fileId } } = params;
   
   if( terminated ) {
@@ -210,9 +210,9 @@ const onmessageFromCanvasWorkers = async (params: ZipMessageFromCanvasType, port
   //azip.add(outputPath, abuffer);
   bytesSum += bufferSize;
   count++;
-  await azip.add(outputPath, blob);
-
   fileIdByIndex.set(entireIndex++, fileId);
+  //await azip.add(outputPath, blob);
+  azip.add(outputPath, blob);
   
   // inform main thread that adding the file to the zip is completed
   let message: AddingZipMessageToMain = {
@@ -278,7 +278,8 @@ function outputZipUrl(action: ZippingMessageToMain['action']) {
     console.warn(e.message, action);
     message = {
       action: action === 'squeeze-zip' ? 'zip-squeeze-error' : 'zip-error',
-      size:bytesSum, count
+      size:bytesSum,
+      count,
     };
     self.postMessage( message );
   }
@@ -290,6 +291,8 @@ function outputZipUrl(action: ZippingMessageToMain['action']) {
   zipList.push(azip);
   count = 0;
   bytesSum = 0;
+
+  console.log(zipListLengthStack)
 }
 
 

@@ -116,6 +116,6 @@
   "OK": "OK",
   "Continue": "Continuar",
   "Cancel": "Cancelar",
-  "loadfolderNotifyingMessageTerm1": "A maioria dos navegadores da web exibirá um aviso como a imagem abaixo quando você selecionar uma pasta.",
-  "loadfolderNotifyingMessageTerm2": "Você deve pressionar o botão “upload” aqui para carregar todas as imagens da pasta, mas os dados carregados por este aplicativo nunca são realmente “carregados” para o servidor."
+  "loadfolderNotifyingMessageTerm2": "Você deve pressionar o botão “upload” aqui para carregar todas as imagens da pasta, mas os dados carregados por este aplicativo nunca são realmente “carregados” para o servidor.",
+  "loadfolderNotifyingMessageTerm1": "Quando você seleciona uma pasta em vez de um arquivo como entrada em um site, os principais navegadores da web exibirão um aviso como na imagem abaixo."
 }

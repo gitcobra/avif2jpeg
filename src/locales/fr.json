@@ -116,6 +116,6 @@
   "OK": "D'ACCORD",
   "Continue": "Continuer",
   "Cancel": "Annuler",
-  "loadfolderNotifyingMessageTerm1": "La plupart des navigateurs Web afficheront un avertissement comme l'image ci-dessous lorsque vous sélectionnez un dossier.",
-  "loadfolderNotifyingMessageTerm2": "Vous devez appuyer ici sur le bouton « télécharger » pour charger toutes les images du dossier, mais les données chargées par cette application ne sont jamais réellement « téléchargées » sur le serveur."
+  "loadfolderNotifyingMessageTerm2": "Vous devez appuyer ici sur le bouton « télécharger » pour charger toutes les images du dossier, mais les données chargées par cette application ne sont jamais réellement « téléchargées » sur le serveur.",
+  "loadfolderNotifyingMessageTerm1": "Lorsque vous sélectionnez un dossier au lieu d'un fichier comme entrée sur un site Web, les principaux navigateurs Web affichent un avertissement comme l'image ci-dessous."
 }

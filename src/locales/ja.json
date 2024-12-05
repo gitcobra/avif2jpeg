@@ -120,8 +120,8 @@
   "loadfolderNotifyingTitle": "フォルダ選択時の警告について",
   "OK": "了解",
   "loadfolderNotifyingMessage": {},
-  "loadfolderNotifyingMessageTerm1": "殆どのウェブブラウザでは、フォルダを選択すると以下の画像のような警告が表示されます。",
   "loadfolderNotifyingMessageTerm2": "フォルダ内の全ての画像を読み込むにはここで「アップロード」ボタンを押す必要がありますが、このアプリで読み込まれたデータが実際にサーバーへ「アップロード」される事はありません。",
   "Continue": "続行する",
-  "Cancel": "キャンセル"
+  "Cancel": "キャンセル",
+  "loadfolderNotifyingMessageTerm1": "ウェブサイト上でファイルではなくフォルダを入力として選択すると、主要なウェブブラウザは以下の画像のような警告を表示します。"
 }

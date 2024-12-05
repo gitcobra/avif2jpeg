@@ -116,6 +116,6 @@
   "OK": "OK",
   "Continue": "Doorgaan",
   "Cancel": "Annuleren",
-  "loadfolderNotifyingMessageTerm1": "De meeste webbrowsers geven een waarschuwing weer zoals in de onderstaande afbeelding wanneer u een map selecteert.",
-  "loadfolderNotifyingMessageTerm2": "U moet hier op de knop “uploaden” drukken om alle afbeeldingen in de map te laden, maar de gegevens die door deze applicatie worden geladen, worden nooit daadwerkelijk naar de server “geüpload”."
+  "loadfolderNotifyingMessageTerm2": "U moet hier op de knop “uploaden” drukken om alle afbeeldingen in de map te laden, maar de gegevens die door deze applicatie worden geladen, worden nooit daadwerkelijk naar de server “geüpload”.",
+  "loadfolderNotifyingMessageTerm1": "Wanneer u een map in plaats van een bestand selecteert als invoer op een website, geven de belangrijkste webbrowsers een waarschuwing weer zoals in de onderstaande afbeelding."
 }

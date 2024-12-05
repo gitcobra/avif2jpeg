@@ -116,6 +116,6 @@
   "OK": "TAMAM",
   "Continue": "Devam etmek",
   "Cancel": "İptal etmek",
-  "loadfolderNotifyingMessageTerm1": "Çoğu web tarayıcısı, bir klasörü seçtiğinizde aşağıdaki resimdekine benzer bir uyarı görüntüler.",
-  "loadfolderNotifyingMessageTerm2": "Klasördeki tüm görselleri yüklemek için burada “yükle” butonuna basmalısınız ancak bu uygulama tarafından yüklenen veriler aslında hiçbir zaman sunucuya “yüklenmez”."
+  "loadfolderNotifyingMessageTerm2": "Klasördeki tüm görselleri yüklemek için burada “yükle” butonuna basmalısınız ancak bu uygulama tarafından yüklenen veriler aslında hiçbir zaman sunucuya “yüklenmez”.",
+  "loadfolderNotifyingMessageTerm1": "Bir web sitesinde girdi olarak dosya yerine bir klasörü seçtiğinizde, büyük web tarayıcıları aşağıdaki görüntüye benzer bir uyarı görüntüleyecektir."
 }

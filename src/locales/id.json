@@ -116,6 +116,6 @@
   "OK": "OKE",
   "Continue": "Melanjutkan",
   "Cancel": "Membatalkan",
-  "loadfolderNotifyingMessageTerm1": "Kebanyakan web browser akan menampilkan peringatan seperti gambar di bawah ini ketika Anda memilih folder.",
-  "loadfolderNotifyingMessageTerm2": "Anda harus menekan tombol “unggah” di sini untuk memuat semua gambar ke dalam folder, tetapi data yang dimuat oleh aplikasi ini tidak pernah benar-benar “diunggah” ke server."
+  "loadfolderNotifyingMessageTerm2": "Anda harus menekan tombol “unggah” di sini untuk memuat semua gambar ke dalam folder, tetapi data yang dimuat oleh aplikasi ini tidak pernah benar-benar “diunggah” ke server.",
+  "loadfolderNotifyingMessageTerm1": "Saat Anda memilih folder dan bukan file sebagai input di situs web, browser web utama akan menampilkan peringatan seperti gambar di bawah."
 }
