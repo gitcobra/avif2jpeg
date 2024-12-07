@@ -65,6 +65,7 @@ if( import.meta.env.SSR ) {
   showTooltipsBeforeMounted.value = true;
 }
 
+const showNote = ref(false);
 
 
 
@@ -139,6 +140,11 @@ function onInputFile(list: File[]) {
   inputConversionFiles.value = list;
 }
 
+let tidShowNote = 0;
+function onInputClick(flag: boolean) {
+  showNote.value = flag;
+}
+
 </script>
 
 
@@ -175,6 +181,8 @@ function onInputFile(list: File[]) {
           v-model:disable-notifying-folder-select="UserSettings.disableNotifyingFolderSelect"
           :forbidden="processing"
           @input="onInputFile"
+          @click="onInputClick(true)"
+          @cancel="onInputClick(false)"
         />
       </n-space>
       
@@ -186,6 +194,7 @@ function onInputFile(list: File[]) {
         :retain-extension="UserSettings.retainExtension"
         :maxZipSizeMB="UserSettings.maxZipSizeMB"
         :threads="UserSettings.multithread ? UserSettings.threadCount : 0"
+        v-model:show-note="showNote"
         
         @start="processing=true"
         @end="processing=false"

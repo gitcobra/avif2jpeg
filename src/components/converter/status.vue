@@ -282,7 +282,6 @@ onMounted(() => {
       
       logMaxHeight.value = Math.max(logHeight + modalMargin, 50) + 'px';
 
-      console.log(logHeight, modalMargin, logMaxHeight.value)
     }, 100);
   };
   

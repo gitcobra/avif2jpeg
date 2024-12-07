@@ -117,5 +117,6 @@
   "Continue": "繼續",
   "Cancel": "取消",
   "loadfolderNotifyingMessageTerm2": "您必須按此處的「上傳」按鈕才能載入資料夾中的所有圖像，但此應用程式載入的資料實際上從未「上傳」到伺服器。",
-  "loadfolderNotifyingMessageTerm1": "當您在網站上選擇資料夾而不是檔案作為輸入時，主要網頁瀏覽器將顯示如下圖所示的警告。"
+  "loadfolderNotifyingMessageTerm1": "當您在網站上選擇資料夾而不是檔案作為輸入時，主要網頁瀏覽器將顯示如下圖所示的警告。",
+  "annotationOutOfMemory": "如果轉換過程中顯示「Out of Memory」且過程中斷，請在「進階設定」中減少或停用多執行緒數量。"
 }

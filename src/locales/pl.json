@@ -117,5 +117,6 @@
   "Continue": "Kontynuować",
   "Cancel": "Anulować",
   "loadfolderNotifyingMessageTerm2": "Aby załadować wszystkie obrazy z folderu, należy nacisnąć przycisk „prześlij”, ale dane ładowane przez tę aplikację nigdy nie są tak naprawdę „przesyłane” na serwer.",
-  "loadfolderNotifyingMessageTerm1": "Gdy jako dane wejściowe na stronie internetowej wybierzesz folder zamiast pliku, w głównych przeglądarkach internetowych wyświetli się ostrzeżenie, jak na obrazku poniżej."
+  "loadfolderNotifyingMessageTerm1": "Gdy jako dane wejściowe na stronie internetowej wybierzesz folder zamiast pliku, w głównych przeglądarkach internetowych wyświetli się ostrzeżenie, jak na obrazku poniżej.",
+  "annotationOutOfMemory": "Jeśli podczas konwersji wyświetli się komunikat „Brak pamięci” i proces zostanie przerwany, zmniejsz lub wyłącz liczbę wielowątkowości w „Ustawieniach zaawansowanych”."
 }

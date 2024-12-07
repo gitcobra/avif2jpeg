@@ -117,5 +117,6 @@
   "Continue": "Continuar",
   "Cancel": "Cancelar",
   "loadfolderNotifyingMessageTerm2": "Debe presionar el botón \"cargar\" aquí para cargar todas las imágenes en la carpeta, pero los datos cargados por esta aplicación nunca se \"cargan\" realmente al servidor.",
-  "loadfolderNotifyingMessageTerm1": "Cuando selecciona una carpeta en lugar de un archivo como entrada en un sitio web, los principales navegadores web mostrarán una advertencia como la imagen a continuación."
+  "loadfolderNotifyingMessageTerm1": "Cuando selecciona una carpeta en lugar de un archivo como entrada en un sitio web, los principales navegadores web mostrarán una advertencia como la imagen a continuación.",
+  "annotationOutOfMemory": "Si se muestra \"Sin memoria\" durante la conversión y el proceso se interrumpe, reduzca o desactive la cantidad de subprocesos múltiples en la \"Configuración avanzada\"."
 }

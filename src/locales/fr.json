@@ -117,5 +117,6 @@
   "Continue": "Continuer",
   "Cancel": "Annuler",
   "loadfolderNotifyingMessageTerm2": "Vous devez appuyer ici sur le bouton « télécharger » pour charger toutes les images du dossier, mais les données chargées par cette application ne sont jamais réellement « téléchargées » sur le serveur.",
-  "loadfolderNotifyingMessageTerm1": "Lorsque vous sélectionnez un dossier au lieu d'un fichier comme entrée sur un site Web, les principaux navigateurs Web affichent un avertissement comme l'image ci-dessous."
+  "loadfolderNotifyingMessageTerm1": "Lorsque vous sélectionnez un dossier au lieu d'un fichier comme entrée sur un site Web, les principaux navigateurs Web affichent un avertissement comme l'image ci-dessous.",
+  "annotationOutOfMemory": "Si « Mémoire insuffisante » s'affiche pendant la conversion et que le processus est interrompu, réduisez ou désactivez le nombre de multithreads dans les « Paramètres avancés »."
 }

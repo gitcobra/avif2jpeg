@@ -136,7 +136,7 @@ async function convertRecievedData(data: MessageToCanvasWorker[number]) {
       sourceBitmap = await createImageBitmap(sourceBitmap, {resizeQuality:'high', ...resize});
     }
   } catch(e) {
-    console.error('error occurred on canvas worker', fileId, path);
+    console.error('error occurred on canvas worker', fileId, path, e);
     messageToMain = {
       action: 'file-error', 
       path, 
@@ -170,7 +170,20 @@ async function convertRecievedData(data: MessageToCanvasWorker[number]) {
   };
   self.postMessage( messageToMain );
   
-  const blob = await canvas.convertToBlob({type, quality});
+  let blob: Blob;
+  try {
+    blob = await canvas.convertToBlob({type, quality});
+  } catch(e) {
+    console.error('error occurred while converting', fileId, path, e);
+    messageToMain = {
+      action: 'file-error', 
+      path, 
+      fileId, 
+      index,
+    };
+    self.postMessage( messageToMain );
+    return;
+  }
   const outputsize = blob.size;
   
   // NOTE: changed to always add to zip, no longer use SingleImageData

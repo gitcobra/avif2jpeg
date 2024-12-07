@@ -69,6 +69,7 @@ const props = defineProps<{
   threads?: number
 }>();
 
+const showNote = defineModel<boolean>('showNote');
 
 
 // emits
@@ -147,32 +148,35 @@ onMounted(async () => {
 
 // NOTE:
 // n-modal's "on-close" event fires only when pushing the close-buttons provided by the component
-function onBeforeProcessingDialogClose() {
+async function onBeforeProcessingDialogClose() {
+  let close = true;
   if( elapsedTimeForConversion > ELAPSED_SECONDS_TO_CONFIRM_BEFORE_CLOSING * 1000 ) {
     if( !allZipsClicked && ConvStats.success > 0 ) {
       // open up confirmation dialog when unsaved data exist
-      dialog.warning({
-        title: t('confirmCloseDialogTitle'),
-        autoFocus: true,
-        maskClosable: false,
-        positiveText: t('close'),
-        negativeText: t('back'),
-        onPositiveClick() {
-          conversionModalActive.value = false;
-          notification.destroyAll();
-          message.destroyAll();
-        },
-        onNegativeClick() {},
-        content: t('confirmCloseDialog'),
-      });
+      close = false;
+      await new Promise<void>(resolve => {
+        dialog.warning({
+          title: t('confirmCloseDialogTitle'),
+          autoFocus: true,
+          maskClosable: false,
+          positiveText: t('close'),
+          negativeText: t('back'),
+          onPositiveClick: () => close = true,
+          onAfterLeave: resolve,
 
-      return false;
+          content: t('confirmCloseDialog'),
+        });
+      });
     }   
   }
+
+  if( !close )
+    return;
 
   notification.destroyAll();
   message.destroyAll();
   conversionModalActive.value = false;
+  showNote.value = false;
 }
 
 function onDemandImage(index: number) {
@@ -529,6 +533,18 @@ function checkAvailableFeatures() {
     </n-tooltip>
   </n-space>
 
+  <!-- message -->
+  <n-drawer :show="conversionModalActive || showNote" placement="right" :z-index="0" mask-closable :on-mask-click="e => showNote=false">
+    <n-drawer-content title="Note">
+      <p>
+        {{ $t('annotationOutOfMemory') }}
+      </p>
+      <p>
+      <img width="200" src="/outofmemory.png">
+      </p>
+    </n-drawer-content>
+  </n-drawer>
+
   <!-- open the modal dialog during the conversion -->
   <n-modal
     ref="processingModal"   
@@ -551,7 +567,6 @@ function checkAvailableFeatures() {
   >
     <template #default>
       <n-flex vertical  style="flex-grow: 1;">
-        
         <!-- conversion status -->
         <div style="flex-grow: 1;">
         <ConversionStatus
@@ -580,6 +595,8 @@ function checkAvailableFeatures() {
       </n-flex>
     </template>
   </n-modal>
+
+
 
 </template>
 

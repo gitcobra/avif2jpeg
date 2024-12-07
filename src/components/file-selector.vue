@@ -156,6 +156,8 @@ const props = defineProps<{
 // emits
 const emit = defineEmits<{
   input: [val: File[]]
+  click: []
+  cancel: []
   
   'on-change-accept': [val: string]
   
@@ -231,7 +233,8 @@ onMounted(() => {
 // event handlers
 
 async function onInputButtonClick(elm: HTMLInputElement) {
-  
+  emit('click');
+
   // notify about the dialog box that the browser pops up when selected a folder
   if( elm === folderinput.value && !disableNotifyingFolderSelect.value ) {
     let ok = false;
@@ -253,6 +256,7 @@ async function onInputButtonClick(elm: HTMLInputElement) {
 
     if( !ok ) {
       disableNotifyingFolderSelect.value = false;
+      emit('cancel');
       return;
     }
   }
@@ -262,6 +266,7 @@ async function onInputButtonClick(elm: HTMLInputElement) {
 }
 function onInputButtonCancel() {
   //disableInputButtons.value = false;
+  emit('cancel');
 }
 
 function onInputFile(ev: Event) {

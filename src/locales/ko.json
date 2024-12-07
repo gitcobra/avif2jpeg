@@ -117,5 +117,6 @@
   "Continue": "계속하다",
   "Cancel": "취소",
   "loadfolderNotifyingMessageTerm2": "폴더에 있는 모든 이미지를 로드하려면 여기에서 \"업로드\" 버튼을 눌러야 하지만, 이 애플리케이션에 의해 로드된 데이터는 실제로 서버에 \"업로드\"되지 않습니다.",
-  "loadfolderNotifyingMessageTerm1": "웹 사이트에서 파일 대신 폴더를 입력으로 선택하면 주요 웹 브라우저에서는 아래 이미지와 같은 경고가 표시됩니다."
+  "loadfolderNotifyingMessageTerm1": "웹 사이트에서 파일 대신 폴더를 입력으로 선택하면 주요 웹 브라우저에서는 아래 이미지와 같은 경고가 표시됩니다.",
+  "annotationOutOfMemory": "변환 중에 \"메모리 부족\"이 표시되고 프로세스가 중단되면 \"고급 설정\"에서 멀티 스레드 수를 줄이거나 비활성화하십시오."
 }

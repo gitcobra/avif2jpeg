@@ -123,5 +123,6 @@
   "loadfolderNotifyingMessageTerm2": "You must press the “Upload” button here to load all the images in the folder, but the data loaded by this application is never actually uploaded to the server.",
   "Continue": "Continue",
   "Cancel": "Cancel",
-  "loadfolderNotifyingMessageTerm1": "When you select a folder instead of a file as input on a website, major web browsers will display a warning like the image below."
+  "loadfolderNotifyingMessageTerm1": "When you select a folder instead of a file as input on a website, major web browsers will display a warning like the image below.",
+  "annotationOutOfMemory": "If “Out of Memory” is displayed during conversion and the process is interrupted, reduce or disable the number of multi-threads in the “Advanced Settings”."
 }

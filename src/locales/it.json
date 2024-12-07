@@ -118,5 +118,6 @@
   "Continue": "Continuare",
   "Cancel": "Cancellare",
   "loadfolderNotifyingMessageTerm2": "È necessario premere il pulsante \"carica\" ​​qui per caricare tutte le immagini nella cartella, ma i dati caricati da questa applicazione non vengono mai effettivamente \"caricati\" sul server.",
-  "loadfolderNotifyingMessageTerm1": "Quando selezioni una cartella anziché un file come input su un sito Web, i principali browser Web visualizzeranno un avviso come l'immagine seguente."
+  "loadfolderNotifyingMessageTerm1": "Quando selezioni una cartella anziché un file come input su un sito Web, i principali browser Web visualizzeranno un avviso come l'immagine seguente.",
+  "annotationOutOfMemory": "Se durante la conversione viene visualizzato \"Memoria esaurita\" e il processo viene interrotto, ridurre o disabilitare il numero di multi-thread nelle \"Impostazioni avanzate\"."
 }
