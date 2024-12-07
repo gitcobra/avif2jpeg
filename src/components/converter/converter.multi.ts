@@ -1,6 +1,7 @@
 import { ref, watch, WatchStopHandle } from 'vue';
 import * as WorkerManager from './worker-manager';
 import ZipWorker from './worker.zip.ts?worker';
+import ZipWorkerURL from './worker.zip.ts?worker&url';
 import type { MessageToCanvasWorker, MessageFromCanvasWorker } from './worker.canvas';
 import type { FileWithId, SingleImageDataType } from './converter.vue';
 import type Converter from './converter.vue';
@@ -17,6 +18,8 @@ type Stat = ConversionStatusType['status'];
 
 
 // constants
+
+const TIMEOUT_WORKER_AVAILABILITY_MSEC = 1000 * 10;
 
 // retry this number of times to load an image if an error occurs
 const MAX_RETRY_COUNT = 1;
@@ -41,15 +44,18 @@ export async function convertTargetFilesInMultithread(ConvStats: Stat, canceled,
   const failedFileCountMap = new Map<File, number>();
 
 
-  
   // initialize workers
   const canvasWorkerCount = Math.min(props.threads - 1, files.length); // preserve +1 for worker.zip
   WorkerManager.init();
   
+  
   // create a Worker for zip archives (zip worker is always only one instance)
   const zipWorker = new ZipWorker();
+  // create a listener for the zip worker
   const promiseToWaitSqueezingZip = createZipWorkerListenerAndPromise(zipWorker, ConvStats, canceled, completedFileIdSet, targetFileMapById);
 
+  
+  
   // set zip.worker configurations
   zipWorker.postMessage({
     action: 'set-config',
@@ -58,6 +64,30 @@ export async function convertTargetFilesInMultithread(ConvStats: Stat, canceled,
     outputExt,
     imageType,
   });
+  // wait the first response and check if the worker is available
+  const workerIsAvailable = await new Promise(resolve => {
+    const determinator = (flag: boolean) => {
+      zipWorker.removeEventListener('message', resolve); 
+      clearTimeout(tid);
+      resolve(flag);
+    };
+    const listener = () => determinator(true);
+
+    let tid = 0;
+    zipWorker.addEventListener('message', listener);
+    tid = window.setTimeout(() => determinator(false), TIMEOUT_WORKER_AVAILABILITY_MSEC);
+  });
+
+  if( !workerIsAvailable ) {
+    // terminate the entire application here if failed to load the worker
+    return {
+      exception: new Error('worker-load-error'),
+      callbackToClearConverter: () => {},
+      callbackToGenerateFailedZips: () => {},
+    };
+  }
+
+
 
   // create a listener for canvas Workers
   const canvasListener = createCanvasWorkerListener(ConvStats, canceled, SingleImageData, message, notification, files, completedFileIdSet, failedFileCountMap, targetFileMapById, progressingFileIdSet, props, outputExt);
@@ -240,7 +270,6 @@ export async function convertTargetFilesInMultithread(ConvStats: Stat, canceled,
     doneCalled = true;
     await pushErrorZipsInMultithread(list, zipWorker, Terminated, ConvStats);
   };
-
 
   
   return {
@@ -599,4 +628,13 @@ async function pushErrorZipsInMultithread(list: FileWithId[], zipWorker: Worker,
   zipWorker.postMessage({
     action: 'squeeze-filelist',
   });
+}
+
+async function checkIsWorkerUrlAvailable(url: string) {
+  // check if the workers are exist on the server
+  const flag = await fetch( url ).then<boolean>(response => {
+    return response.statusText !== 'OK';
+  });
+
+  return flag;
 }

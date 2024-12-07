@@ -118,5 +118,7 @@
   "Cancel": "取消",
   "loadfolderNotifyingMessageTerm2": "您必须按此处的“上传”按钮才能加载文件夹中的所有图像，但此应用程序加载的数据实际上从未“上传”到服务器。",
   "loadfolderNotifyingMessageTerm1": "当您在网站上选择文件夹而不是文件作为输入时，主要网络浏览器将显示如下图所示的警告。",
-  "annotationOutOfMemory": "如果转换过程中显示“Out of Memory”并且过程中断，请在“高级设置”中减少或禁用多线程数量。"
+  "annotationOutOfMemory": "如果转换过程中显示“Out of Memory”并且过程中断，请在“高级设置”中减少或禁用多线程数量。",
+  "errMsgWorkerLoadError": "此页面可能是过时的版本。\n请重新加载页面。",
+  "Reload": "重新加载"
 }

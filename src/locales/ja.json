@@ -124,5 +124,7 @@
   "Continue": "続行する",
   "Cancel": "キャンセル",
   "loadfolderNotifyingMessageTerm1": "ウェブサイト上でファイルではなくフォルダを入力として選択すると、主要なウェブブラウザは以下の画像のような警告を表示します。",
-  "annotationOutOfMemory": "変換中に \"Out of Memory\" と表示され処理が中断されてしまう場合、「詳細設定」でマルチスレッドの数を減らすか、無効にして下さい。"
+  "annotationOutOfMemory": "変換中に \"Out of Memory\" と表示され処理が中断されてしまう場合、「詳細設定」でマルチスレッドの数を減らすか、無効にして下さい。",
+  "errMsgWorkerLoadError": "古いバージョンのページを表示している可能性があります。リロードして下さい。",
+  "Reload": "リロード"
 }

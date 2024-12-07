@@ -118,5 +118,7 @@
   "Cancel": "İptal etmek",
   "loadfolderNotifyingMessageTerm2": "Klasördeki tüm görselleri yüklemek için burada “yükle” butonuna basmalısınız ancak bu uygulama tarafından yüklenen veriler aslında hiçbir zaman sunucuya “yüklenmez”.",
   "loadfolderNotifyingMessageTerm1": "Bir web sitesinde girdi olarak dosya yerine bir klasörü seçtiğinizde, büyük web tarayıcıları aşağıdaki görüntüye benzer bir uyarı görüntüleyecektir.",
-  "annotationOutOfMemory": "Dönüştürme sırasında \"Bellek Yetersiz\" görüntülenirse ve işlem kesintiye uğrarsa, \"Gelişmiş Ayarlar\"da çoklu iş parçacığı sayısını azaltın veya devre dışı bırakın."
+  "annotationOutOfMemory": "Dönüştürme sırasında \"Bellek Yetersiz\" görüntülenirse ve işlem kesintiye uğrarsa, \"Gelişmiş Ayarlar\"da çoklu iş parçacığı sayısını azaltın veya devre dışı bırakın.",
+  "errMsgWorkerLoadError": "Bu sayfa eski bir sürüm olabilir. \nLütfen sayfayı yeniden yükleyin.",
+  "Reload": "Yeniden yükle"
 }

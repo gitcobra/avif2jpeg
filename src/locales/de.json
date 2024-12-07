@@ -118,5 +118,7 @@
   "Cancel": "Stornieren",
   "loadfolderNotifyingMessageTerm2": "Sie müssen hier auf die Schaltfläche „Hochladen“ klicken, um alle Bilder im Ordner zu laden, aber die von dieser Anwendung geladenen Daten werden nie wirklich auf den Server „hochgeladen“.",
   "loadfolderNotifyingMessageTerm1": "Wenn Sie als Eingabe auf einer Website einen Ordner anstelle einer Datei auswählen, zeigen die gängigen Webbrowser eine Warnung wie im Bild unten an.",
-  "annotationOutOfMemory": "Wenn während der Konvertierung „Out of Memory“ angezeigt wird und der Vorgang unterbrochen wird, reduzieren oder deaktivieren Sie die Anzahl der Multi-Threads in den „Erweiterten Einstellungen“."
+  "annotationOutOfMemory": "Wenn während der Konvertierung „Out of Memory“ angezeigt wird und der Vorgang unterbrochen wird, reduzieren oder deaktivieren Sie die Anzahl der Multi-Threads in den „Erweiterten Einstellungen“.",
+  "errMsgWorkerLoadError": "Bei dieser Seite handelt es sich möglicherweise um eine veraltete Version. \nBitte laden Sie die Seite neu.",
+  "Reload": "Neu laden"
 }

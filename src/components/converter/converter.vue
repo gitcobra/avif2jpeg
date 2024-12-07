@@ -27,7 +27,7 @@ export type SingleImageDataType = {
 
 
 <script setup lang="ts">
-import { type NotificationType } from 'naive-ui';
+import { NButton, type NotificationType } from 'naive-ui';
 import { convertTargetFilesInMultithread } from './converter.multi';
 import { convertImagesInSingleThread, getAsPromise } from './converter.single';
 
@@ -334,20 +334,51 @@ async function startConvert(input: File[]) {
   
   
   // start converting 
+  type ConverterResult = {
+     exception?: Error;
+     callbackToGenerateFailedZips: (any?) => any;
+     callbackToClearConverter: (any?) => any;
+  };
   
   const startedTime = Date.now();
   emit('start');
   
   const list = fileList.concat();
   let callbackToGenerateFailedZips;
-  ({ callbackToGenerateFailedZips, callbackToClearConverter } =
-    ( !disableMultiThreading && props.threads >= 2 ) ?
-      // multi-threading
-      await convertTargetFilesInMultithread(ConvStats, canceled, props, SingleImageData, message, notification, list, completedFileIdSet, format, quality, outputExt, format)
-      :
-      // single-threading
-      await convertImagesInSingleThread(list, completedFileIdSet, SingleImageData, props, canceled, ConvStats)
-  );
+  let exception: Error | undefined;
+  const result: ConverterResult = ( !disableMultiThreading && props.threads >= 2 ) ?
+    // multi-threading
+    await convertTargetFilesInMultithread(ConvStats, canceled, props, SingleImageData, message, notification, list, completedFileIdSet, format, quality, outputExt, format)
+    :
+    // single-threading
+    await convertImagesInSingleThread(list, completedFileIdSet, SingleImageData, props, canceled, ConvStats);
+  
+  ({exception, callbackToGenerateFailedZips, callbackToClearConverter} = result);
+  
+  // terminate the application when recieved an exception 
+  if( exception ) {
+    let message: string;
+    switch( exception.message ) {
+      case 'worker-load-error':
+        message = t('errMsgWorkerLoadError');
+        break;
+      default:
+        message = 'unexpected error';
+    }
+    
+    dialog.error({
+      title: 'Error',
+      
+      autoFocus: true,
+      maskClosable: false,
+      closable: false,
+
+      content: () => h('div', [
+        h('p', message),
+        h(NButton, {onClick() {location.reload()}}, t('Reload')),
+      ]),
+    });
+  }
   
 
   

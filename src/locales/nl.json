@@ -118,5 +118,7 @@
   "Cancel": "Annuleren",
   "loadfolderNotifyingMessageTerm2": "U moet hier op de knop “uploaden” drukken om alle afbeeldingen in de map te laden, maar de gegevens die door deze applicatie worden geladen, worden nooit daadwerkelijk naar de server “geüpload”.",
   "loadfolderNotifyingMessageTerm1": "Wanneer u een map in plaats van een bestand selecteert als invoer op een website, geven de belangrijkste webbrowsers een waarschuwing weer zoals in de onderstaande afbeelding.",
-  "annotationOutOfMemory": "Als tijdens de conversie “Onvoldoende geheugen” wordt weergegeven en het proces wordt onderbroken, verminder of schakel dan het aantal multi-threads uit in de “Geavanceerde instellingen”."
+  "annotationOutOfMemory": "Als tijdens de conversie “Onvoldoende geheugen” wordt weergegeven en het proces wordt onderbroken, verminder of schakel dan het aantal multi-threads uit in de “Geavanceerde instellingen”.",
+  "errMsgWorkerLoadError": "Deze pagina is mogelijk een verouderde versie. \nLaad de pagina opnieuw.",
+  "Reload": "Herladen"
 }

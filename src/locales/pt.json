@@ -118,5 +118,7 @@
   "Cancel": "Cancelar",
   "loadfolderNotifyingMessageTerm2": "Você deve pressionar o botão “upload” aqui para carregar todas as imagens da pasta, mas os dados carregados por este aplicativo nunca são realmente “carregados” para o servidor.",
   "loadfolderNotifyingMessageTerm1": "Quando você seleciona uma pasta em vez de um arquivo como entrada em um site, os principais navegadores da web exibirão um aviso como na imagem abaixo.",
-  "annotationOutOfMemory": "Se “Memória Cheia” for exibido durante a conversão e o processo for interrompido, reduza ou desative o número de multithreads em “Configurações Avançadas”."
+  "annotationOutOfMemory": "Se “Memória Cheia” for exibido durante a conversão e o processo for interrompido, reduza ou desative o número de multithreads em “Configurações Avançadas”.",
+  "errMsgWorkerLoadError": "Esta página pode ser uma versão desatualizada. \nPor favor, recarregue a página.",
+  "Reload": "Recarregar"
 }

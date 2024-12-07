@@ -327,6 +327,7 @@ async function filterByExtension(list: File[]) {
           content: () => h('div', [h(NEmpty, {description:"NO IMAGES"}), `${t('noimage')}`, h('br'), accept.value]),
         });
       });
+      onInputButtonCancel();
     }
   }
   return list;

@@ -53,17 +53,18 @@ self.onmessage = async (params: ZipMessageType) => {
   console.log('zipworker: ' + action);
 
   switch( action ) {
-    case 'set-port': {
-      const port = ports[0];
-      port.onmessage = (params) => onmessageFromCanvasWorkers(params, port);
-      return;
-    }
     case 'set-config':
       MaxZipSize = zipSize;
       keepPrevExtension = !!keepExt;
       outputExtension = outputExt || '';
       outputImageType = imageType || '';
+      self.postMessage({action: 'respond-set-config'});
       break;
+    case 'set-port': {
+      const port = ports[0];
+      port.onmessage = (params) => onmessageFromCanvasWorkers(params, port);
+      return;
+    }
     case 'squeeze':
       //self.close();
       // NOTE:
