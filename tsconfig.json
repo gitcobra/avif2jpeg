@@ -22,13 +22,14 @@
     "paths": {
       "@/*": ["./src/*"],
     },
-    "types": ["vite-ssg", "vite/client", "vite"]
+    "types": ["vite-ssg", "vite/client", "vite", "jest"]
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.d.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
+    "test/**/*.ts",
     "./**.d.ts"
   ],
   "references": [{ "path": "./tsconfig.node.json" }]

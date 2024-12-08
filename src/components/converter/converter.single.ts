@@ -2,9 +2,11 @@
 
 import type { FileWithId, SingleImageDataType } from './converter.vue';
 import AnZip from '@gitcobra/anzip-es6';
+import { SplitZipsIndexer } from './util';
 
 import type Converter from './converter.vue';
 import type ConversionStatus from './status.vue';
+
 
 type ConverterType = InstanceType<typeof Converter>;
 type Props = ConverterType['$props'];
@@ -18,6 +20,9 @@ export async function convertImagesInSingleThread(list: FileWithId[], completedF
   const ctx = canvas.getContext('2d');
 
   let azip = new AnZip;
+  const aziplist: AnZip[] = [azip];
+  const zipIndex = new SplitZipsIndexer;
+
   const type = props.format;
   const quality = props.quality / 100;
   const ext = [...type.matchAll(/.+\/(.+)/g)][0][1].replace(/jpeg/, 'jpg');
@@ -39,6 +44,30 @@ export async function convertImagesInSingleThread(list: FileWithId[], completedF
   let zippedCount = 0;
   let currentOutputSizeSum = 0;
   let memoryProblemOccurred = false;
+
+  const fileListByZippedIndex: FileWithId[] = [];
+  ConvStats.demandImage = (index: number) => {
+    const [zidx, fidx] = zipIndex.get(index);
+    console.log(zidx)
+    console.log(zipIndex)
+    const azip = aziplist[zidx];
+
+    
+    ConvStats.convertedImageIndex = index;
+    ConvStats.convertedImageName = azip.getPathByIndex(fidx);
+    ConvStats.convertedImageUrl = URL.createObjectURL( new Blob([azip.get(fidx)], {type}) );
+    
+    // create an object url of the original image
+    let orgUrl = '', orgSize = 0, orgName = '';
+    const file = fileListByZippedIndex[index];
+    orgUrl = URL.createObjectURL(file);
+    orgSize = file.size;
+    orgName = file.name;
+    ConvStats.convertedImageOrgUrl = orgUrl;
+    ConvStats.convertedImageOrgSize = orgSize;
+    ConvStats.convertedImageOrgName = orgName;
+  };
+
   for( const file of list ) {
     if( canceled.value )
       break;
@@ -137,7 +166,9 @@ export async function convertImagesInSingleThread(list: FileWithId[], completedF
       
       currentOutputSizeSum = 0;
       zippedCount = 0;
-      azip.clear();
+      zipIndex.split();
+      aziplist.push(azip);
+      //azip.clear();
       azip = new AnZip();
     }
 
@@ -158,6 +189,8 @@ export async function convertImagesInSingleThread(list: FileWithId[], completedF
     try {
       zippedCount++;
       azip.add(fname, abuffer);
+      zipIndex.increase();
+      fileListByZippedIndex.push(file);
       ConvStats.inputTotalSize += inputSize;
       ConvStats.outputTotalSize += outputSize;
     }
@@ -213,6 +246,9 @@ export async function convertImagesInSingleThread(list: FileWithId[], completedF
   const Terminated = {value:false};
   const callbackToClearConverter = () => {
     Terminated.value = true;
+    aziplist.forEach(azip => azip.clear());
+    aziplist.length = 0;
+    fileListByZippedIndex.length = 0;
   };
   let doneCalled = false;
   const callbackToGenerateFailedZips = async (list: FileWithId[]) => {
@@ -235,6 +271,7 @@ async function pushErrorZips(list: File[], maxZipSizeMB: number, ConvStats: Stat
   for( let i = 0; i < list.length; i++ ) {
     const file = list[i];
     const path = (file.webkitRelativePath || file.name).replace(/^\//, '');
+    /*
     let buffer: ArrayBuffer;
     try {
       buffer = await file.arrayBuffer();
@@ -244,15 +281,18 @@ async function pushErrorZips(list: File[], maxZipSizeMB: number, ConvStats: Stat
       ConvStats.failedToCreateFailedZip = true;
       return;
     }
+    */
 
     if( Terminated.value )
       return;
-    azip.add(path, buffer);
+    //azip.add(path, buffer);
+    await azip.add(path, file);
     size += file.size;
     count++;
     ConvStats.failedFileZippedCount++;
 
     if( size >= maxZipSizeMB || i === list.length - 1 ) {
+      await azip.zip();
       const url = azip.url();
       ConvStats.failedZips.push({url, size, count});    
       azip.clear();

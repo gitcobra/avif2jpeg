@@ -311,25 +311,24 @@ function createZipWorkerListenerAndPromise(zipWorker: Worker, ConvStats: Stat, c
 
       if( action === 'respond-image' ) {
         const {url, index, path, size, fileId} = data;
-
         
-          ConvStats.convertedImageUrl = url;
-          ConvStats.convertedImageSize = size;
-          ConvStats.convertedImageIndex = index;
-          ConvStats.convertedImageName = path;
-          ConvStats.convertedImageFileId = fileId;
-          
-          // create an object url of the original image
-          let orgUrl = '', orgSize = 0, orgName = '';
-          if( fileId >= 0 ) {
-            const file = targetFileMapById.get(fileId);
-            orgUrl = URL.createObjectURL(file);
-            orgSize = file.size;
-            orgName = file.name;
-          }
-          ConvStats.convertedImageOrgUrl = orgUrl;
-          ConvStats.convertedImageOrgSize = orgSize;
-          ConvStats.convertedImageOrgName = orgName;
+        ConvStats.convertedImageUrl = url;
+        ConvStats.convertedImageSize = size;
+        ConvStats.convertedImageIndex = index;
+        ConvStats.convertedImageName = path;
+        ConvStats.convertedImageFileId = fileId;
+        
+        // create an object url of the original image
+        let orgUrl = '', orgSize = 0, orgName = '';
+        if( fileId >= 0 ) {
+          const file = targetFileMapById.get(fileId);
+          orgUrl = URL.createObjectURL(file);
+          orgSize = file.size;
+          orgName = file.name;
+        }
+        ConvStats.convertedImageOrgUrl = orgUrl;
+        ConvStats.convertedImageOrgSize = orgSize;
+        ConvStats.convertedImageOrgName = orgName;
         
         return;
       }

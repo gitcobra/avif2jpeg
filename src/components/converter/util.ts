@@ -34,3 +34,44 @@ export function getThumbnailedSize(image: {width:number, height:number}, maxSize
   return {width, height};
 }
 
+// get file index by entire index for split zips
+export class SplitZipsIndexer {
+  private _currentFileCount = 0;
+  private _totalFileCount = 0;
+  private _zipLengthSumList: number[] = [];
+  private _pathBank: {
+    // path: [zip index, file index]
+    [path: string]: [number, number];
+  } = {};
+  constructor() {
+  }
+  increase(path?: string) {
+    if( path )
+      this._pathBank[path] = [this._zipLengthSumList.length, this._currentFileCount];
+    
+    this._currentFileCount++;
+    this._totalFileCount++;
+  }
+  split() {
+    this._zipLengthSumList.push(this._totalFileCount);
+    this._currentFileCount = 0;
+  }
+  get(index: number | string) {
+    if( typeof index === 'number' ) {
+      let zipIndex = this._zipLengthSumList.findIndex((val, i) => index < val);
+      if( zipIndex === -1 )
+        zipIndex = this._zipLengthSumList.length;
+      
+      const prevZipLengthSum = (this._zipLengthSumList[zipIndex - 1] || 0);
+      const fileIndex = index - prevZipLengthSum;
+      return [zipIndex, fileIndex];
+    }
+    else {
+      const dat = this._pathBank[String(index)];
+      if( dat )
+        return dat;
+    }
+    
+    return null;
+  }
+}
