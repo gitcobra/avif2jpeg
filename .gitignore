@@ -1,3 +1,4 @@
 node_modules
 .vscode/*
 .vite-ssg-temp/*
+test/test-util.ts
