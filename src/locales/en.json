@@ -124,7 +124,7 @@
   "Continue": "Continue",
   "Cancel": "Cancel",
   "loadfolderNotifyingMessageTerm1": "When you select a folder instead of a file as input on a website, major web browsers will display a warning like the image below.",
-  "annotationOutOfMemory": "If the conversion process is frequently interrupted and an “Out of Memory” message appears, try reducing or disabling the number of multi-threads in the advanced settings.\nIf this problem has occurred only recently, a newer version of the browser may solve the problem.",
+  "annotationOutOfMemory": "If the conversion process is frequently interrupted and an “Out of Memory” message appears, try reducing or disabling the number of multi-threads in the \"Advanced Settings\".\nIf this problem has occurred only recently, a newer version of the browser may solve the problem.",
   "errMsgWorkerLoadError": "This page may be an outdated version. Please reload the page.",
   "Reload": "Reload"
 }

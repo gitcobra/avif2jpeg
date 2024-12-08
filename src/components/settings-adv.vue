@@ -108,7 +108,7 @@ const enableNewFeatures = computed(() => multithread.value && props.threadMax > 
               </n-flex>
               <n-flex :wrap="false" align="center" style="padding-left: 2em;">
                 <n-slider v-model:value="threadCount" :disabled="!threadMax || !multithread" :step="1" :min="2" :max="threadMax" style="width:120px;"/>
-                <n-input-number size="tiny" v-model:value="threadCount" :disabled="!threadMax || !multithread" :step="1" :min="2" :max="threadMax" style="width:10em"><template #suffix>{{$t('threads', threadCount)}}</template></n-input-number>
+                <n-input-number @blur="threadCount??=2" size="tiny" v-model:value="threadCount" :disabled="!threadMax || !multithread" :step="1" :min="2" :max="threadMax" style="width:10em"><template #suffix>{{$t('threads', threadCount)}}</template></n-input-number>
               </n-flex>
             </n-flex>
             </template>
@@ -127,7 +127,7 @@ const enableNewFeatures = computed(() => multithread.value && props.threadMax > 
               </n-flex>
               <n-flex :wrap="false" align="center" style="padding-left: 2em;">
                 <n-slider :tooltip="false" v-model:value="maxZipSizeMB" :step="1" :min="ZIP_MIN_SIZE_MB" :max="ZIP_MAX_SIZE_MB" style="width:120px;"/>
-                <n-input-number size="tiny" v-model:value="maxZipSizeMB" step="1" :min="ZIP_MIN_SIZE_MB" :max="ZIP_MAX_SIZE_MB" style="width:10em"><template #suffix>(MB)</template></n-input-number>
+                <n-input-number @blur="maxZipSizeMB??=ZIP_MIN_SIZE_MB" size="tiny" v-model:value="maxZipSizeMB" step="1" :min="ZIP_MIN_SIZE_MB" :max="ZIP_MAX_SIZE_MB" style="width:10em"><template #suffix>(MB)</template></n-input-number>
               </n-flex>
             </n-flex>
             </template>
@@ -175,14 +175,14 @@ const enableNewFeatures = computed(() => multithread.value && props.threadMax > 
               </n-flex>
               <n-flex :wrap="false" align="center" style="padding-left: 2em;">
                 <n-slider v-model:value="maxWidth" :disabled="!shrinkImage || !enableNewFeatures" :step="1" :min="MIN_WIDTH" :max="MAX_WIDTH" style="width:120px;"/>
-                <n-input-number size="tiny" v-model:value="maxWidth" :disabled="!shrinkImage || !enableNewFeatures" :step="1" :min="8" :max="MAX_WIDTH*4" style="max-width:15em; text-align: right;">
+                <n-input-number size="tiny" @blur="maxWidth??=8" v-model:value="maxWidth" :disabled="!shrinkImage || !enableNewFeatures" :step="1" :min="8" :max="MAX_WIDTH*4" style="max-width:15em; text-align: right;">
                   <template #prefix><span style="width:4em; text-align: left;">{{$t('width')}}</span></template>
                   <template #suffix>px</template>
                 </n-input-number>
               </n-flex>
               <n-flex :wrap="false" align="center" style="padding-left: 2em;">
                 <n-slider v-model:value="maxHeight" :disabled="!shrinkImage || !enableNewFeatures" :step="1" :min="MIN_HEIGHT" :max="MAX_HEIGHT" style="width:120px;"/>
-                <n-input-number size="tiny" v-model:value="maxHeight" :disabled="!shrinkImage || !enableNewFeatures" :step="1" :min="8" :max="MAX_HEIGHT*4" style="max-width:15em; text-align: right;">
+                <n-input-number size="tiny" @blur="maxHeight??=8" v-model:value="maxHeight" :disabled="!shrinkImage || !enableNewFeatures" :step="1" :min="8" :max="MAX_HEIGHT*4" style="max-width:15em; text-align: right;">
                   <template #prefix><span style="width:4em; text-align: left;">{{$t('height')}}</span></template>
                   <template #suffix>px</template>
                 </n-input-number>

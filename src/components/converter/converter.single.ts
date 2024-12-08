@@ -48,8 +48,6 @@ export async function convertImagesInSingleThread(list: FileWithId[], completedF
   const fileListByZippedIndex: FileWithId[] = [];
   ConvStats.demandImage = (index: number) => {
     const [zidx, fidx] = zipIndex.get(index);
-    console.log(zidx)
-    console.log(zipIndex)
     const azip = aziplist[zidx];
 
     
@@ -167,9 +165,9 @@ export async function convertImagesInSingleThread(list: FileWithId[], completedF
       currentOutputSizeSum = 0;
       zippedCount = 0;
       zipIndex.split();
-      aziplist.push(azip);
       //azip.clear();
       azip = new AnZip();
+      aziplist.push(azip);
     }
 
     currentOutputSizeSum += outputSize;

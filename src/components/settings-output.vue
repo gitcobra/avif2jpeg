@@ -102,7 +102,7 @@ function checkSupportedImageFormats() {
               <n-icon><ImageSharp /></n-icon><span style="white-space: nowrap;">{{t('settings.quality')}}:</span>
               <n-space align="center" justify="space-between">
                 <n-slider :tooltip="false" v-model:value="quality" :step="1" style="width:120px;" :disabled="disableQuality" />
-                <n-input-number v-model:value="quality" step="1" min="0" max="100" :disabled="disableQuality" style="width:90px;" size="small" />
+                <n-input-number @blur="quality??=0" v-model:value="quality" step="1" min="0" max="100" :disabled="disableQuality" style="width:90px;" size="small" />
               </n-space>
             </n-space>
           </n-space>
