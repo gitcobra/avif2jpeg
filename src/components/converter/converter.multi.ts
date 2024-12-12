@@ -56,8 +56,6 @@ export async function convertTargetFilesInMultithread(ConvStats: Stat, canceled,
   // create a listener for the zip worker
   const promiseToWaitSqueezingZip = createZipWorkerListenerAndPromise(zipWorker, ConvStats, canceled, completedFileIdSet, targetFileMapById, variousFileInfo);
 
-  
-  
   // set zip.worker configurations
   zipWorker.postMessage({
     action: 'set-config',
@@ -66,37 +64,16 @@ export async function convertTargetFilesInMultithread(ConvStats: Stat, canceled,
     outputExt,
     imageType,
   });
-  // wait the first response and check if the worker is available
-  const workerIsAvailable = await new Promise(resolve => {
-    const determinator = (flag: boolean) => {
-      zipWorker.removeEventListener('message', resolve); 
-      clearTimeout(tid);
-      resolve(flag);
-    };
-    const listener = () => determinator(true);
-
-    let tid = 0;
-    zipWorker.addEventListener('message', listener);
-    tid = window.setTimeout(() => determinator(false), TIMEOUT_WORKER_AVAILABILITY_MSEC);
-  });
-
-  if( !workerIsAvailable ) {
-    // terminate the entire application here if failed to load the worker
-    return {
-      exception: new Error('worker-load-error'),
-      callbackToClearConverter: () => {},
-      callbackToGenerateFailedZips: () => {},
-    };
-  }
-
 
 
   // create a listener for canvas Workers
   const canvasListener = createCanvasWorkerListener(ConvStats, canceled, SingleImageData, message, notification, files, completedFileIdSet, failedFileCountMap, targetFileMapById, progressingFileIdSet, props, outputExt, variousFileInfo);
 
   // create canvas Workers to convert each image
+  let canvasSampleWorker: Worker;
   for( let i = 0; i < canvasWorkerCount; i++ ) {
     const worker = WorkerManager.createWorker('./worker.canvas.ts');
+    canvasSampleWorker ??= worker;
     
     // set the listener
     worker.onmessage = canvasListener;
@@ -108,6 +85,48 @@ export async function convertTargetFilesInMultithread(ConvStats: Stat, canceled,
     zipWorker.postMessage({action: 'set-port'}, [port1]);
     worker.postMessage({}, [port2]);
   }
+
+  // wait the first response and check if the workers are available
+  const promiseToWaitForResponseFromWorkers = new Promise<boolean>(resolve => {
+    const determinator = (flag: boolean) => {
+      zipWorker.removeEventListener('message', listener); 
+      canvasSampleWorker.removeEventListener('message', listener);
+      clearTimeout(tid);
+      resolve(flag);
+    };
+    
+    let recievedZipWorker = false;
+    let recievedCanvasWorker = false;
+    const listener = (ev: MessageEvent) => {
+      console.log(ev);
+      
+      if( ev.target === zipWorker )
+        recievedZipWorker = true;
+      if( ev.target === canvasSampleWorker )
+        recievedCanvasWorker = true;
+      
+      if( recievedZipWorker && recievedCanvasWorker )
+        determinator(true);
+    }
+
+    let tid = 0;
+    zipWorker.addEventListener('message', listener);
+    canvasSampleWorker.addEventListener('message', listener);
+    tid = window.setTimeout(() => determinator(false), TIMEOUT_WORKER_AVAILABILITY_MSEC);
+  });
+
+  console.log('wait for first worker\'s responses');
+  const workerIsAvailable = await promiseToWaitForResponseFromWorkers;
+  if( !workerIsAvailable ) {
+    // terminate the entire application here if failed to load the worker
+    return {
+      exception: new Error('worker-load-error'),
+      callbackToClearConverter: () => {},
+      callbackToGenerateFailedZips: () => {},
+    };
+  }
+
+
 
 
   // prepare watcher in case of the conversion process is canceled

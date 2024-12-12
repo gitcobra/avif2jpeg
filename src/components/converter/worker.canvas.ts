@@ -70,6 +70,9 @@ self.onmessage = async (params: MessageEvent<MessageToCanvasWorker | null>) => {
     
     // set a listener that get messages from zip.worker
     dataOutputPort.onmessage = listenerForZipWorker;
+
+    self.postMessage({action: 'respond-to-first-message'});
+
     return;
   }
 
