@@ -75,7 +75,12 @@
     "index": "Índice",
     "Original": "Antes",
     "Converted": "Depois",
-    "saveAllZipsTooltip": "Salve todos os arquivos ZIP"
+    "saveAllZipsTooltip": "Salve todos os arquivos ZIP",
+    "Shrinked": "Encolhida",
+    "Shrinking": "Encolhendo",
+    "convertedZips": "ZIP concluído com sucesso",
+    "outInRate": "Proporção de saída/entrada",
+    "zipped": "ZIPADO"
   },
   "disabled": "Desabilitado",
   "threads": "fio | \ntópicos",
@@ -96,7 +101,9 @@
     "shrinkImageTooltip": "Se as dimensões da imagem forem maiores que o valor especificado, reduza a imagem para esse valor",
     "shrinkImage": "Reduzir imagens que excedam as seguintes dimensões",
     "useFolderNameForZip": "Use o nome da pasta descartada para o arquivo zip",
-    "useFolderNameForZipTooltip": "Se uma pasta for descartada ou selecionada, seu nome será usado como o nome do arquivo ZIP de saída"
+    "useFolderNameForZipTooltip": "Se uma pasta for descartada ou selecionada, seu nome será usado como o nome do arquivo ZIP de saída",
+    "maxZipFileSize": "Tamanho máximo do arquivo zip",
+    "maxZipFileSizeTooltip": "Defina um valor menor se ocorrerem problemas de memória."
   },
   "githubOpenSource": "Código aberto",
   "copiedDataURLDialogTitle": "Copiado para a área de transferência",
@@ -118,7 +125,7 @@
   "Cancel": "Cancelar",
   "loadfolderNotifyingMessageTerm2": "Você deve pressionar o botão “upload” aqui para carregar todas as imagens da pasta, mas os dados carregados por este aplicativo nunca são realmente “carregados” para o servidor.",
   "loadfolderNotifyingMessageTerm1": "Quando você seleciona uma pasta em vez de um arquivo como entrada em um site, os principais navegadores da web exibirão um aviso como na imagem abaixo.",
-  "annotationOutOfMemory": "Se “Memória Cheia” for exibido durante a conversão e o processo for interrompido, reduza ou desative o número de multithreads em “Configurações Avançadas”.",
   "errMsgWorkerLoadError": "Esta página pode ser uma versão desatualizada. \nPor favor, recarregue a página.",
-  "Reload": "Recarregar"
+  "Reload": "Recarregar",
+  "annotationOutOfMemory": "Se o processo de conversão falhar frequentemente e aparecer uma mensagem “Memória insuficiente”, tente reduzir ou desabilitar o número de “multi-threads” nas “Configurações avançadas”.\n\nEste problema pode ser resolvido com uma versão mais recente do navegador."
 }

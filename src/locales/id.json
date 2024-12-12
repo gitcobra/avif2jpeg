@@ -75,7 +75,12 @@
     "index": "Indeks",
     "Original": "Sebelum",
     "Converted": "Setelah",
-    "saveAllZipsTooltip": "Simpan semua file ZIP"
+    "saveAllZipsTooltip": "Simpan semua file ZIP",
+    "Shrinked": "Menyusut",
+    "Shrinking": "Penyusutan",
+    "convertedZips": "berhasil menyelesaikan ZIP",
+    "outInRate": "Rasio Keluar / Masuk",
+    "zipped": "ZIP"
   },
   "disabled": "Dengan disabilitas",
   "threads": "benang | \nbenang",
@@ -96,7 +101,9 @@
     "shrinkImageTooltip": "Jika dimensi gambar lebih besar dari nilai yang ditentukan, kecilkan gambar ke nilai tersebut",
     "shrinkImage": "Kecilkan gambar yang melebihi dimensi berikut",
     "useFolderNameForZip": "Gunakan nama folder yang hilang untuk file zip",
-    "useFolderNameForZipTooltip": "Jika folder dijatuhkan atau dipilih, namanya digunakan sebagai nama file ZIP keluaran"
+    "useFolderNameForZipTooltip": "Jika folder dijatuhkan atau dipilih, namanya digunakan sebagai nama file ZIP keluaran",
+    "maxZipFileSize": "Ukuran file zip maksimal",
+    "maxZipFileSizeTooltip": "Tetapkan nilai yang lebih kecil jika terjadi masalah memori."
   },
   "githubOpenSource": "Sumber Terbuka",
   "copiedDataURLDialogTitle": "Disalin ke papan klip",
@@ -118,7 +125,7 @@
   "Cancel": "Membatalkan",
   "loadfolderNotifyingMessageTerm2": "Anda harus menekan tombol “unggah” di sini untuk memuat semua gambar ke dalam folder, tetapi data yang dimuat oleh aplikasi ini tidak pernah benar-benar “diunggah” ke server.",
   "loadfolderNotifyingMessageTerm1": "Saat Anda memilih folder dan bukan file sebagai input di situs web, browser web utama akan menampilkan peringatan seperti gambar di bawah.",
-  "annotationOutOfMemory": "Jika “Memori Kehabisan” ditampilkan selama konversi dan proses terhenti, kurangi atau nonaktifkan jumlah multi-utas di “Pengaturan Lanjutan”.",
   "errMsgWorkerLoadError": "Halaman ini mungkin merupakan versi lama. \nSilakan muat ulang halaman tersebut.",
-  "Reload": "Muat ulang"
+  "Reload": "Muat ulang",
+  "annotationOutOfMemory": "Jika proses konversi sering gagal dan muncul pesan “Out of Memory”, coba kurangi atau nonaktifkan jumlah \"multi-thread\" di \"Pengaturan Lanjut\".\n\nMasalah ini mungkin teratasi dengan versi browser yang lebih baru."
 }

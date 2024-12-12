@@ -34,7 +34,7 @@ export function getThumbnailedSize(image: {width:number, height:number}, maxSize
   return {width, height};
 }
 
-// get file index by entire index for split zips
+// get a split zips index and a file index from an entire index
 export class SplitZipsIndexer {
   private _currentFileCount = 0;
   private _totalFileCount = 0;

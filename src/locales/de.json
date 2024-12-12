@@ -75,7 +75,12 @@
     "index": "Index",
     "Original": "Vor",
     "Converted": "Nach",
-    "saveAllZipsTooltip": "Speichern Sie alle ZIP-Dateien"
+    "saveAllZipsTooltip": "Speichern Sie alle ZIP-Dateien",
+    "Shrinked": "Geschrumpft",
+    "Shrinking": "Schrumpfung",
+    "convertedZips": "ZIP erfolgreich abgeschlossen",
+    "outInRate": "Out/In-Verhältnis",
+    "zipped": "ZIPPED"
   },
   "disabled": "Deaktiviert",
   "threads": "Thread | \nThreads",
@@ -96,7 +101,9 @@
     "shrinkImageTooltip": "Wenn die Bildabmessungen größer als der angegebene Wert sind, verkleinern Sie das Bild auf diesen Wert",
     "shrinkImage": "Verkleinern Sie Bilder, die die folgenden Abmessungen überschreiten",
     "useFolderNameForZip": "Verwenden Sie den abgelegten Ordnernamen für die ZIP-Datei",
-    "useFolderNameForZipTooltip": "Wenn ein Ordner abgelegt oder ausgewählt wird, wird sein Name als Name der ZIP-Ausgabedatei verwendet"
+    "useFolderNameForZipTooltip": "Wenn ein Ordner abgelegt oder ausgewählt wird, wird sein Name als Name der ZIP-Ausgabedatei verwendet",
+    "maxZipFileSize": "Maximale Größe der ZIP-Datei",
+    "maxZipFileSizeTooltip": "Stellen Sie einen kleineren Wert ein, wenn Speicherprobleme auftreten."
   },
   "githubOpenSource": "Open Source",
   "copiedDataURLDialogTitle": "In die Zwischenablage kopiert",
@@ -118,7 +125,7 @@
   "Cancel": "Stornieren",
   "loadfolderNotifyingMessageTerm2": "Sie müssen hier auf die Schaltfläche „Hochladen“ klicken, um alle Bilder im Ordner zu laden, aber die von dieser Anwendung geladenen Daten werden nie wirklich auf den Server „hochgeladen“.",
   "loadfolderNotifyingMessageTerm1": "Wenn Sie als Eingabe auf einer Website einen Ordner anstelle einer Datei auswählen, zeigen die gängigen Webbrowser eine Warnung wie im Bild unten an.",
-  "annotationOutOfMemory": "Wenn während der Konvertierung „Out of Memory“ angezeigt wird und der Vorgang unterbrochen wird, reduzieren oder deaktivieren Sie die Anzahl der Multi-Threads in den „Erweiterten Einstellungen“.",
   "errMsgWorkerLoadError": "Bei dieser Seite handelt es sich möglicherweise um eine veraltete Version. \nBitte laden Sie die Seite neu.",
-  "Reload": "Neu laden"
+  "Reload": "Neu laden",
+  "annotationOutOfMemory": "Wenn der Konvertierungsvorgang häufig fehlschlägt und die Meldung „Nicht genügend Speicher“ angezeigt wird, versuchen Sie, die Anzahl der „Multi-Threads“ in den „Erweiterten Einstellungen“ zu reduzieren oder zu deaktivieren.\n\nDieses Problem kann möglicherweise mit einer neueren Browserversion behoben werden."
 }

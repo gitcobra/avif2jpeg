@@ -234,8 +234,13 @@ function initConvStatPropObj(obj?: ConversionStatusType): ConversionStatusType {
     convertedImageDataUrl: '',
     convertedImageName: '',
     convertedImageUrl: '',
+    convertedImageOrgUrl: '',
+    convertedImageIndex: -1,
+    convertedImageFileId: -1,
+    convertedImageShrinked: false,
     
     zipSize: props.maxZipSizeMB,
+    shrink: UserSettings.multithread && UserSettings.shrinkImage ? [UserSettings.maxWidth, UserSettings.maxHeight] : undefined,
     unconvertedListText: '',
 
     failedZipDone: false,

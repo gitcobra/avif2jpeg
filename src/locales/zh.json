@@ -75,7 +75,12 @@
     "index": "指数",
     "Original": "前",
     "Converted": "后",
-    "saveAllZipsTooltip": "保存所有 ZIP 文件"
+    "saveAllZipsTooltip": "保存所有 ZIP 文件",
+    "Shrinked": "缩小了",
+    "Shrinking": "收缩",
+    "convertedZips": "成功完成 ZIP",
+    "outInRate": "输出/输入比率",
+    "zipped": "压缩"
   },
   "disabled": "残疾人",
   "threads": "thread | threads",
@@ -96,7 +101,9 @@
     "shrinkImageTooltip": "如果图像尺寸大于指定值，则将图像缩小到该值",
     "shrinkImage": "缩小超过以下尺寸的图像",
     "useFolderNameForZip": "使用 zip 文件的删除文件夹名称",
-    "useFolderNameForZipTooltip": "如果删除或选择文件夹，则其名称将用作输出 ZIP 文件的名称"
+    "useFolderNameForZipTooltip": "如果删除或选择文件夹，则其名称将用作输出 ZIP 文件的名称",
+    "maxZipFileSize": "最大 zip 文件大小",
+    "maxZipFileSizeTooltip": "如果出现内存问题，请设置较小的值。"
   },
   "githubOpenSource": "开源",
   "copiedDataURLDialogTitle": "已复制到剪贴板",
@@ -118,7 +125,7 @@
   "Cancel": "取消",
   "loadfolderNotifyingMessageTerm2": "您必须按此处的“上传”按钮才能加载文件夹中的所有图像，但此应用程序加载的数据实际上从未“上传”到服务器。",
   "loadfolderNotifyingMessageTerm1": "当您在网站上选择文件夹而不是文件作为输入时，主要网络浏览器将显示如下图所示的警告。",
-  "annotationOutOfMemory": "如果转换过程中显示“Out of Memory”并且过程中断，请在“高级设置”中减少或禁用多线程数量。",
   "errMsgWorkerLoadError": "此页面可能是过时的版本。\n请重新加载页面。",
-  "Reload": "重新加载"
+  "Reload": "重新加载",
+  "annotationOutOfMemory": "如果转换过程频繁失败并出现“内存不足”消息，请尝试在“高级设置”中减少或禁用“多线程”数量。\n\n使用较新的浏览器版本可能会解决此问题。"
 }

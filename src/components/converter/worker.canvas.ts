@@ -30,6 +30,7 @@ FileInfo & (
     thumbnail?: ImageBitmap
     width: number
     height: number
+    shrinked: boolean
   } | {
     action: 'file-converted'
     image?: Blob
@@ -112,6 +113,7 @@ async function convertRecievedData(data: MessageToCanvasWorker[number]) {
 
   let sourceBitmap: ImageBitmap;
   let width: number, height: number;
+  let shrinked = false;
   try {
     sourceBitmap = await createImageBitmap(file);
     ({width, height} = sourceBitmap);
@@ -121,7 +123,7 @@ async function convertRecievedData(data: MessageToCanvasWorker[number]) {
       const whrate = width / height;
       let {width: mw, height: mh} = maxSize;
       
-      let resize = {};
+      let resize = null;
       if( width > mw ) {
         width = mw;
         height = width / whrate;
@@ -132,8 +134,9 @@ async function convertRecievedData(data: MessageToCanvasWorker[number]) {
         width = height * whrate;
         resize = {resizeHeight: height};
       }
+      shrinked = !!resize;
       
-      sourceBitmap = await createImageBitmap(sourceBitmap, {resizeQuality:'high', ...resize});
+      sourceBitmap = await createImageBitmap(sourceBitmap, {resizeQuality:'high', ...(resize||{})});
     }
   } catch(e) {
     console.error('error occurred on canvas worker', fileId, path, e);
@@ -166,7 +169,8 @@ async function convertRecievedData(data: MessageToCanvasWorker[number]) {
     index, 
     thumbnail:dbitmap, 
     width, 
-    height
+    height,
+    shrinked,
   };
   self.postMessage( messageToMain );
   

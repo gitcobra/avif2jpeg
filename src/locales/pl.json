@@ -75,7 +75,12 @@
     "index": "Indeks",
     "Original": "Zanim",
     "Converted": "Po",
-    "saveAllZipsTooltip": "Zapisz wszystkie pliki ZIP"
+    "saveAllZipsTooltip": "Zapisz wszystkie pliki ZIP",
+    "Shrinked": "Skurczony",
+    "Shrinking": "Kurczący się",
+    "convertedZips": "pomyślnie ukończono ZIP",
+    "outInRate": "Stosunek wyjścia/wejścia",
+    "zipped": "ZAPINANE"
   },
   "disabled": "Wyłączony",
   "threads": "wątek | \nwątki",
@@ -96,7 +101,9 @@
     "shrinkImageTooltip": "Jeśli wymiary obrazu są większe niż określona wartość, zmniejsz obraz do tej wartości",
     "shrinkImage": "Zmniejsz obrazy, które przekraczają następujące wymiary",
     "useFolderNameForZip": "Użyj usuniętej nazwy folderu dla pliku zip",
-    "useFolderNameForZipTooltip": "Jeśli folder zostanie upuszczony lub wybrany, jego nazwa zostanie użyta jako nazwa wyjściowego pliku ZIP"
+    "useFolderNameForZipTooltip": "Jeśli folder zostanie upuszczony lub wybrany, jego nazwa zostanie użyta jako nazwa wyjściowego pliku ZIP",
+    "maxZipFileSize": "Maksymalny rozmiar pliku zip",
+    "maxZipFileSizeTooltip": "Ustaw mniejszą wartość, jeśli wystąpią problemy z pamięcią."
   },
   "githubOpenSource": "Otwarte źródło",
   "copiedDataURLDialogTitle": "Skopiowano do schowka",
@@ -118,7 +125,7 @@
   "Cancel": "Anulować",
   "loadfolderNotifyingMessageTerm2": "Aby załadować wszystkie obrazy z folderu, należy nacisnąć przycisk „prześlij”, ale dane ładowane przez tę aplikację nigdy nie są tak naprawdę „przesyłane” na serwer.",
   "loadfolderNotifyingMessageTerm1": "Gdy jako dane wejściowe na stronie internetowej wybierzesz folder zamiast pliku, w głównych przeglądarkach internetowych wyświetli się ostrzeżenie, jak na obrazku poniżej.",
-  "annotationOutOfMemory": "Jeśli podczas konwersji wyświetli się komunikat „Brak pamięci” i proces zostanie przerwany, zmniejsz lub wyłącz liczbę wielowątkowości w „Ustawieniach zaawansowanych”.",
   "errMsgWorkerLoadError": "Ta strona może być nieaktualną wersją. \nZaładuj ponownie stronę.",
-  "Reload": "Przeładować"
+  "Reload": "Przeładować",
+  "annotationOutOfMemory": "Jeśli proces konwersji często kończy się niepowodzeniem i pojawia się komunikat „Brak pamięci”, spróbuj zmniejszyć lub wyłączyć liczbę „wielowątków” w „Ustawieniach zaawansowanych”.\n\nTen problem może zostać rozwiązany w nowszej wersji przeglądarki."
 }

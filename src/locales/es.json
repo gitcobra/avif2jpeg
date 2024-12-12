@@ -75,7 +75,12 @@
     "index": "Índice",
     "Original": "Antes",
     "Converted": "Después",
-    "saveAllZipsTooltip": "Guarde todos los archivos ZIP"
+    "saveAllZipsTooltip": "Guarde todos los archivos ZIP",
+    "Shrinked": "encogido",
+    "Shrinking": "Contracción",
+    "convertedZips": "ZIP completado exitosamente",
+    "outInRate": "Relación salida/entrada",
+    "zipped": "COMPRIMIDO"
   },
   "disabled": "Desactivado",
   "threads": "hilo | \ntrapos",
@@ -96,7 +101,9 @@
     "shrinkImageTooltip": "Si las dimensiones de la imagen son mayores que el valor especificado, reduzca la imagen a ese valor",
     "shrinkImage": "Reducir imágenes que excedan las siguientes dimensiones",
     "useFolderNameForZip": "Utilice el nombre de la carpeta eliminada para el archivo zip",
-    "useFolderNameForZipTooltip": "Si se suelta o selecciona una carpeta, su nombre se utiliza como nombre del archivo ZIP de salida."
+    "useFolderNameForZipTooltip": "Si se suelta o selecciona una carpeta, su nombre se utiliza como nombre del archivo ZIP de salida.",
+    "maxZipFileSize": "Tamaño máximo de archivo zip",
+    "maxZipFileSizeTooltip": "Establezca un valor menor si se producen problemas de memoria."
   },
   "githubOpenSource": "Código abierto",
   "copiedDataURLDialogTitle": "Copiado al portapapeles",
@@ -118,7 +125,7 @@
   "Cancel": "Cancelar",
   "loadfolderNotifyingMessageTerm2": "Debe presionar el botón \"cargar\" aquí para cargar todas las imágenes en la carpeta, pero los datos cargados por esta aplicación nunca se \"cargan\" realmente al servidor.",
   "loadfolderNotifyingMessageTerm1": "Cuando selecciona una carpeta en lugar de un archivo como entrada en un sitio web, los principales navegadores web mostrarán una advertencia como la imagen a continuación.",
-  "annotationOutOfMemory": "Si se muestra \"Sin memoria\" durante la conversión y el proceso se interrumpe, reduzca o desactive la cantidad de subprocesos múltiples en la \"Configuración avanzada\".",
   "errMsgWorkerLoadError": "Esta página puede ser una versión desactualizada. \nPor favor recarga la página.",
-  "Reload": "Recargar"
+  "Reload": "Recargar",
+  "annotationOutOfMemory": "Si el proceso de conversión falla con frecuencia y aparece el mensaje \"Sin memoria\", intente reducir o deshabilitar la cantidad de \"multiprocesos\" en la \"Configuración avanzada\".\n\nEste problema puede resolverse con una versión más reciente del navegador."
 }

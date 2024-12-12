@@ -20,6 +20,9 @@ const props = defineProps<{
   length: number
   index?: number
   isSingle: boolean
+  variousInfo?: {
+    shrinked?: boolean
+  }
 }>();
 
 
@@ -391,7 +394,9 @@ function renderToolbar({ nodes }: ImageRenderToolbarProps) {
             />
 
             <n-flex vertical align="center">
-              <span style="font-weight: bold; color:gray;">{{t('status.Converted')}}</span>
+              <n-flex justify="center" align="center" :size="0">
+                <span style="font-weight: bold; color:gray;">{{t('status.Converted')}}</span>
+              </n-flex>
               <n-flex justify="center" :wrap="true">
                 
                 <!-- save blobURL -->
@@ -425,10 +430,18 @@ function renderToolbar({ nodes }: ImageRenderToolbarProps) {
                 </n-popover>
               </n-flex>
               
-              <!-- image size -->
-              <n-flex justify="center" style="white-space:nowrap; font-family:v-mono;">
-                {{ String(width).padStart(4, ' ') }} × {{ String(height).padStart(4, ' ') }}
+              <!-- image dimension -->
+              <n-flex vertical align="center" justify="center" :size="0">
+                <n-flex justify="center" style="white-space:nowrap; font-family:v-mono;">
+                  <span :style="props.variousInfo?.shrinked ? {color:'blue'} : {}">
+                  {{ String(width).padStart(4, ' ') }} × {{ String(height).padStart(4, ' ') }}
+                  </span>
+                </n-flex>
+                <n-flex style="color:gray; font-size:xx-small;">
+                  {{ props.variousInfo?.shrinked ? '('+$t('status.Shrinked')+')' : '-'}}
+                </n-flex>
               </n-flex>
+              
 
               <!-- image size -->
               <n-flex justify="center">

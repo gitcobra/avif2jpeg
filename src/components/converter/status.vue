@@ -20,6 +20,7 @@ const LOG_SIZE_LIMIT = 99999;
 
 
 // props
+// FIXME: too messy
 const props = defineProps<{
   processing: boolean
   status: {
@@ -73,11 +74,13 @@ const props = defineProps<{
     convertedImageOrgName?: string
     convertedImageIndex?: number
     convertedImageFileId?: number
+    convertedImageShrinked?: boolean
     
 
     type: string
     threads?: number
     zipSize: number
+    shrink?: [number, number]
 
     demandImage: (index: number) => void
   }
@@ -162,6 +165,9 @@ const outputImg = reactive({
   originalSize: 0,
   dataUrl: '',
   index: -1,
+  various: {
+    shrinked: false,
+  }
 });
 
 
@@ -461,6 +467,9 @@ function update() {
     //outputImg.height = stat.convertedImageHeight;
     outputImg.index = stat.convertedImageIndex;
     outputImg.originalUrl = stat.convertedImageOrgUrl;
+    outputImg.various = {
+      shrinked: stat.convertedImageShrinked,
+    };
     //const {width ,height} = getThumbnailedSize(outputImg, {width:320, height:100});
     //outputImg.twidth = width;
     //outputImg.theight = height;
@@ -684,7 +693,8 @@ function scrollLogViewToBottom(instant = false) {
 
         <n-statistic tabular-nums :label="$t('status.outputSettings')">
           <n-space vertical justify="end" style="font-size: smaller; line-height:1em;">
-            <div>Type: {{ props.status.type }}</div>
+            <div>{{$t('settings.imageType')}}: {{ props.status.type }}</div>
+            <div v-if="status.shrink">{{$t('status.Shrinking')}}: <span style="font-size:smaller">{{status.shrink[0]}}×{{status.shrink[1]}}</span></div>
             <div>Zip: {{ props.status.zipSize }}MB</div>
           </n-space>
         </n-statistic>
@@ -918,6 +928,7 @@ function scrollLogViewToBottom(instant = false) {
           :originalName="outputImg.originalName"
           :length="props.status.success"
           :index="outputImg.index"
+          :various-info="outputImg.various"
           
           :is-single="!zippingFlag"
           @demand-image="index => emit('demand-image', index)"

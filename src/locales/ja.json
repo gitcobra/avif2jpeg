@@ -84,7 +84,9 @@
     "index": "索引",
     "Original": "変換前",
     "Converted": "変換後",
-    "saveAllZipsTooltip": "すべての ZIP ファイルを保存する"
+    "saveAllZipsTooltip": "すべての ZIP ファイルを保存する",
+    "Shrinked": "縮小済",
+    "Shrinking": "縮小"
   },
   "disabled": "無効",
   "threads": "スレッド | スレッド",
@@ -124,7 +126,7 @@
   "Continue": "続行する",
   "Cancel": "キャンセル",
   "loadfolderNotifyingMessageTerm1": "ウェブサイト上でファイルではなくフォルダを入力として選択すると、主要なウェブブラウザは以下の画像のような警告を表示します。",
-  "annotationOutOfMemory": "変換処理が中断され\"Out of Memory\"のメッセージが頻繁に表示される場合は、詳細設定でマルチスレッドの数を減らすか無効にしてみてください。\nこの問題が最近になってから発生している場合、ブラウザの新しいバージョンが出れば解決するかも知れません。",
   "errMsgWorkerLoadError": "古いバージョンのページを表示している可能性があります。リロードして下さい。",
-  "Reload": "リロード"
+  "Reload": "リロード",
+  "annotationOutOfMemory": "頻繁に変換処理が失敗し\"Out of Memory\"のメッセージが表示される場合、詳細設定で「マルチスレッド」の数を減らすか又は無効にしてください。\nこの問題はブラウザのバージョンが変われば解決するかも知れません。"
 }

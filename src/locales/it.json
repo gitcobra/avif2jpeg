@@ -76,7 +76,11 @@
     "index": "Indice",
     "Original": "Prima",
     "Converted": "Dopo",
-    "saveAllZipsTooltip": "Salva tutti i file ZIP"
+    "saveAllZipsTooltip": "Salva tutti i file ZIP",
+    "Shrinked": "Rimpicciolito",
+    "Shrinking": "Restringendosi",
+    "convertedZips": "ZIP completato con successo",
+    "zipped": "ZIP"
   },
   "disabled": "Disabilitato",
   "threads": "discussione | discussioni",
@@ -97,7 +101,9 @@
     "shrinkImageTooltip": "Se le dimensioni dell'immagine sono maggiori del valore specificato, riduci l'immagine a quel valore",
     "shrinkImage": "Riduci le immagini che superano le seguenti dimensioni",
     "useFolderNameForZip": "Utilizza il nome della cartella rilasciata per il file zip",
-    "useFolderNameForZipTooltip": "Se una cartella viene rilasciata o selezionata, il suo nome viene utilizzato come nome del file ZIP di output"
+    "useFolderNameForZipTooltip": "Se una cartella viene rilasciata o selezionata, il suo nome viene utilizzato come nome del file ZIP di output",
+    "maxZipFileSize": "Dimensione massima del file zip",
+    "maxZipFileSizeTooltip": "Impostare un valore più piccolo se si verificano problemi di memoria."
   },
   "githubOpenSource": "Open Source",
   "copiedDataURLDialogTitle": "Copiato negli appunti",
@@ -119,7 +125,7 @@
   "Cancel": "Cancellare",
   "loadfolderNotifyingMessageTerm2": "È necessario premere il pulsante \"carica\" ​​qui per caricare tutte le immagini nella cartella, ma i dati caricati da questa applicazione non vengono mai effettivamente \"caricati\" sul server.",
   "loadfolderNotifyingMessageTerm1": "Quando selezioni una cartella anziché un file come input su un sito Web, i principali browser Web visualizzeranno un avviso come l'immagine seguente.",
-  "annotationOutOfMemory": "Se durante la conversione viene visualizzato \"Memoria esaurita\" e il processo viene interrotto, ridurre o disabilitare il numero di multi-thread nelle \"Impostazioni avanzate\".",
   "errMsgWorkerLoadError": "Questa pagina potrebbe essere una versione obsoleta. \nPer favore ricarica la pagina.",
-  "Reload": "Ricaricare"
+  "Reload": "Ricaricare",
+  "annotationOutOfMemory": "Se il processo di conversione fallisce spesso e viene visualizzato il messaggio \"Memoria esaurita\", provare a ridurre o disabilitare il numero di \"multi-thread\" nelle \"Impostazioni avanzate\".\n\nQuesto problema potrebbe essere risolto con una versione più recente del browser."
 }

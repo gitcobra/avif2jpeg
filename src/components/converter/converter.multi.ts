@@ -42,7 +42,9 @@ export async function convertTargetFilesInMultithread(ConvStats: Stat, canceled,
   const progressingFileIdSet = new Set<number>;
   const targetFileMapById = new Map<number, FileWithId>();
   const failedFileCountMap = new Map<File, number>();
-
+  const variousFileInfo = new Map<number, {
+    shrinked: boolean;
+  }>();
 
   // initialize workers
   const canvasWorkerCount = Math.min(props.threads - 1, files.length); // preserve +1 for worker.zip
@@ -52,7 +54,7 @@ export async function convertTargetFilesInMultithread(ConvStats: Stat, canceled,
   // create a Worker for zip archives (zip worker is always only one instance)
   const zipWorker = new ZipWorker();
   // create a listener for the zip worker
-  const promiseToWaitSqueezingZip = createZipWorkerListenerAndPromise(zipWorker, ConvStats, canceled, completedFileIdSet, targetFileMapById);
+  const promiseToWaitSqueezingZip = createZipWorkerListenerAndPromise(zipWorker, ConvStats, canceled, completedFileIdSet, targetFileMapById, variousFileInfo);
 
   
   
@@ -90,7 +92,7 @@ export async function convertTargetFilesInMultithread(ConvStats: Stat, canceled,
 
 
   // create a listener for canvas Workers
-  const canvasListener = createCanvasWorkerListener(ConvStats, canceled, SingleImageData, message, notification, files, completedFileIdSet, failedFileCountMap, targetFileMapById, progressingFileIdSet, props, outputExt);
+  const canvasListener = createCanvasWorkerListener(ConvStats, canceled, SingleImageData, message, notification, files, completedFileIdSet, failedFileCountMap, targetFileMapById, progressingFileIdSet, props, outputExt, variousFileInfo);
 
   // create canvas Workers to convert each image
   for( let i = 0; i < canvasWorkerCount; i++ ) {
@@ -283,7 +285,7 @@ export async function convertTargetFilesInMultithread(ConvStats: Stat, canceled,
 
 
 // create a listener for zip.worker
-function createZipWorkerListenerAndPromise(zipWorker: Worker, ConvStats: Stat, canceled, completedFileIdSet, targetFileMapById) {
+function createZipWorkerListenerAndPromise(zipWorker: Worker, ConvStats: Stat, canceled, completedFileIdSet, targetFileMapById, variousFileInfo) {
   
   const promise = new Promise(resolve => {
     
@@ -329,6 +331,8 @@ function createZipWorkerListenerAndPromise(zipWorker: Worker, ConvStats: Stat, c
         ConvStats.convertedImageOrgUrl = orgUrl;
         ConvStats.convertedImageOrgSize = orgSize;
         ConvStats.convertedImageOrgName = orgName;
+        ConvStats.convertedImageShrinked = variousFileInfo.get(fileId)?.shrinked;
+        console.log(variousFileInfo.get(fileId))
         
         return;
       }
@@ -382,7 +386,7 @@ function createZipWorkerListenerAndPromise(zipWorker: Worker, ConvStats: Stat, c
 
 // create a listener for canvas worker
 // all canvas workers share the single listener
-function createCanvasWorkerListener(ConvStats: Stat, canceled, SingleImageData: SingleImageDataType, message, notification, fileList: File[], completedFileIdSet: Set<number>, failedFileCountMap: Map<File, number>, targetFileMapById: Map<number, FileWithId>, progressingFileMapById, props: Props, outputExt:string) {
+function createCanvasWorkerListener(ConvStats: Stat, canceled, SingleImageData: SingleImageDataType, message, notification, fileList: File[], completedFileIdSet: Set<number>, failedFileCountMap: Map<File, number>, targetFileMapById: Map<number, FileWithId>, progressingFileMapById, props: Props, outputExt:string, variousFileInfo) {
   type LogType = Stat['logs'][number];
   
   
@@ -458,11 +462,19 @@ function createCanvasWorkerListener(ConvStats: Stat, canceled, SingleImageData: 
         break;
       }
       case 'file-load': {
-        const { thumbnail, width, height } = data;
+        const { thumbnail, width, height, fileId, shrinked } = data;
         processingCoreLogItems.value.get(worker.id).command = `🖼️loaded`;
         if( thumbnail ) {
           ConvStats.thumbnail = thumbnail;
         }
+        
+        let dat = variousFileInfo.get(fileId);
+        if( !dat ) {
+          dat = {};
+          variousFileInfo.set(fileId, {});
+        }
+        dat.shrinked = shrinked;
+        variousFileInfo.set(fileId, dat);
         break;
       }
       case 'file-converted': {

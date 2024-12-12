@@ -49,7 +49,7 @@ const props = defineProps<{
 // set thread count to max if undefined
 watch([threadCount, () => props.threadMax], () => {
   if( props.threadMax > 1 && typeof threadCount.value === 'undefined' )
-    threadCount.value = props.threadMax;
+    threadCount.value = Math.max(props.threadMax / 2|0, 2);
 });
 
 // disable multi thread switch

@@ -75,7 +75,12 @@
     "index": "색인",
     "Original": "전에",
     "Converted": "후에",
-    "saveAllZipsTooltip": "모든 ZIP 파일 저장"
+    "saveAllZipsTooltip": "모든 ZIP 파일 저장",
+    "Shrinked": "축소됨",
+    "Shrinking": "축소",
+    "convertedZips": "ZIP을 성공적으로 완료했습니다",
+    "outInRate": "아웃/인 비율",
+    "zipped": "압축됨"
   },
   "disabled": "장애가 있는",
   "threads": "스레드 | \n스레드",
@@ -96,7 +101,9 @@
     "shrinkImageTooltip": "이미지 크기가 지정된 값보다 크면 이미지를 해당 값으로 축소합니다.",
     "shrinkImage": "다음 치수를 초과하는 이미지 축소",
     "useFolderNameForZip": "zip 파일에 삭제된 폴더 이름 사용",
-    "useFolderNameForZipTooltip": "폴더를 삭제하거나 선택하면 해당 이름이 출력 ZIP 파일의 이름으로 사용됩니다."
+    "useFolderNameForZipTooltip": "폴더를 삭제하거나 선택하면 해당 이름이 출력 ZIP 파일의 이름으로 사용됩니다.",
+    "maxZipFileSize": "최대 zip 파일 크기",
+    "maxZipFileSizeTooltip": "메모리 문제가 발생하면 더 작은 값을 설정하십시오."
   },
   "githubOpenSource": "오픈 소스",
   "copiedDataURLDialogTitle": "클립보드에 복사됨",
@@ -118,7 +125,7 @@
   "Cancel": "취소",
   "loadfolderNotifyingMessageTerm2": "폴더에 있는 모든 이미지를 로드하려면 여기에서 \"업로드\" 버튼을 눌러야 하지만, 이 애플리케이션에 의해 로드된 데이터는 실제로 서버에 \"업로드\"되지 않습니다.",
   "loadfolderNotifyingMessageTerm1": "웹 사이트에서 파일 대신 폴더를 입력으로 선택하면 주요 웹 브라우저에서는 아래 이미지와 같은 경고가 표시됩니다.",
-  "annotationOutOfMemory": "변환 중에 \"메모리 부족\"이 표시되고 프로세스가 중단되면 \"고급 설정\"에서 멀티 스레드 수를 줄이거나 비활성화하십시오.",
   "errMsgWorkerLoadError": "이 페이지는 오래된 버전일 수 있습니다. \n페이지를 새로고침하세요.",
-  "Reload": "새로고침"
+  "Reload": "새로고침",
+  "annotationOutOfMemory": "변환 프로세스가 자주 실패하고 \"메모리 부족\" 메시지가 나타나는 경우 \"고급 설정\"에서 \"멀티 스레드\" 수를 줄이거나 비활성화해 보십시오.\n\n이 문제는 최신 브라우저 버전으로 해결될 수 있습니다."
 }

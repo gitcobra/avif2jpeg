@@ -75,7 +75,12 @@
     "index": "Indice",
     "Original": "Avant",
     "Converted": "Après",
-    "saveAllZipsTooltip": "Enregistrez tous les fichiers ZIP"
+    "saveAllZipsTooltip": "Enregistrez tous les fichiers ZIP",
+    "Shrinked": "Rétréci",
+    "Shrinking": "Contraction",
+    "convertedZips": "ZIP terminé avec succès",
+    "outInRate": "Rapport sortie/entrée",
+    "zipped": "ZIPPÉ"
   },
   "disabled": "Désactivé",
   "threads": "fil | \nfils de discussion",
@@ -96,7 +101,9 @@
     "shrinkImageTooltip": "Si les dimensions de l'image sont plus grandes que la valeur spécifiée, réduisez l'image à cette valeur",
     "shrinkImage": "Réduire les images qui dépassent les dimensions suivantes",
     "useFolderNameForZip": "Utiliser le nom du dossier supprimé pour le fichier zip",
-    "useFolderNameForZipTooltip": "Si un dossier est supprimé ou sélectionné, son nom est utilisé comme nom du fichier ZIP de sortie"
+    "useFolderNameForZipTooltip": "Si un dossier est supprimé ou sélectionné, son nom est utilisé comme nom du fichier ZIP de sortie",
+    "maxZipFileSize": "Taille maximale du fichier zip",
+    "maxZipFileSizeTooltip": "Définissez une valeur plus petite si des problèmes de mémoire surviennent."
   },
   "githubOpenSource": "Source ouverte",
   "copiedDataURLDialogTitle": "Copié dans le presse-papiers",
@@ -118,7 +125,7 @@
   "Cancel": "Annuler",
   "loadfolderNotifyingMessageTerm2": "Vous devez appuyer ici sur le bouton « télécharger » pour charger toutes les images du dossier, mais les données chargées par cette application ne sont jamais réellement « téléchargées » sur le serveur.",
   "loadfolderNotifyingMessageTerm1": "Lorsque vous sélectionnez un dossier au lieu d'un fichier comme entrée sur un site Web, les principaux navigateurs Web affichent un avertissement comme l'image ci-dessous.",
-  "annotationOutOfMemory": "Si « Mémoire insuffisante » s'affiche pendant la conversion et que le processus est interrompu, réduisez ou désactivez le nombre de multithreads dans les « Paramètres avancés ».",
   "errMsgWorkerLoadError": "Cette page est peut-être une version obsolète. \nVeuillez recharger la page.",
-  "Reload": "Recharger"
+  "Reload": "Recharger",
+  "annotationOutOfMemory": "Si le processus de conversion échoue fréquemment et qu'un message « Mémoire insuffisante » apparaît, essayez de réduire ou de désactiver le nombre de « multi-threads » dans les « Paramètres avancés ».\n\nCe problème peut être résolu avec une version plus récente du navigateur."
 }

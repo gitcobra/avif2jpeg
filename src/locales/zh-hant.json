@@ -76,7 +76,12 @@
     "index": "指數",
     "Original": "前",
     "Converted": "後",
-    "saveAllZipsTooltip": "儲存所有 ZIP 文件"
+    "saveAllZipsTooltip": "儲存所有 ZIP 文件",
+    "Shrinked": "縮小了",
+    "Shrinking": "收縮",
+    "convertedZips": "成功完成 ZIP",
+    "outInRate": "輸出/輸入比率",
+    "zipped": "壓縮"
   },
   "disabled": "殘障人士",
   "threads": "thread | threads",
@@ -97,7 +102,9 @@
     "shrinkImageTooltip": "如果影像尺寸大於指定值，則將影像縮小到該值",
     "shrinkImage": "縮小超過以下尺寸的影像",
     "useFolderNameForZip": "使用 zip 檔案的刪除資料夾名稱",
-    "useFolderNameForZipTooltip": "如果刪除或選擇資料夾，則其名稱將用作輸出 ZIP 檔案的名稱"
+    "useFolderNameForZipTooltip": "如果刪除或選擇資料夾，則其名稱將用作輸出 ZIP 檔案的名稱",
+    "maxZipFileSize": "最大 zip 檔案大小",
+    "maxZipFileSizeTooltip": "如果出現記憶體問題，請設定較小的值。"
   },
   "githubOpenSource": "開源",
   "copiedDataURLDialogTitle": "已複製到剪貼簿",
@@ -118,7 +125,7 @@
   "Cancel": "取消",
   "loadfolderNotifyingMessageTerm2": "您必須按此處的「上傳」按鈕才能載入資料夾中的所有圖像，但此應用程式載入的資料實際上從未「上傳」到伺服器。",
   "loadfolderNotifyingMessageTerm1": "當您在網站上選擇資料夾而不是檔案作為輸入時，主要網頁瀏覽器將顯示如下圖所示的警告。",
-  "annotationOutOfMemory": "如果轉換過程中顯示「Out of Memory」且過程中斷，請在「進階設定」中減少或停用多執行緒數量。",
   "errMsgWorkerLoadError": "此頁面可能是過時的版本。\n請重新載入頁面。",
-  "Reload": "重新載入"
+  "Reload": "重新載入",
+  "annotationOutOfMemory": "如果轉換過程頻繁失敗並出現「記憶體不足」訊息，請嘗試在「進階設定」中減少或停用「多執行緒」數量。\n\n使用較新的瀏覽器版本可能會解決此問題。"
 }
