@@ -12361,7 +12361,7 @@
     "/avif2jpeg/dist/assets/RobotoSlab-Regular-C-OtUSR_.ttf",
     "/avif2jpeg/dist/assets/RobotoSlab-Medium-ClaBQ_fg.ttf"
   ],
-  "src/components/converter/image-viewer.vue?vue&type=style&index=0&scoped=d568baaa&lang.scss": [
+  "src/components/converter/image-viewer.vue?vue&type=style&index=0&scoped=12759e74&lang.scss": [
     "/avif2jpeg/dist/assets/RobotoSlab-Regular-C-OtUSR_.ttf",
     "/avif2jpeg/dist/assets/RobotoSlab-Medium-ClaBQ_fg.ttf"
   ],
@@ -12373,7 +12373,7 @@
     "/avif2jpeg/dist/assets/RobotoSlab-Regular-C-OtUSR_.ttf",
     "/avif2jpeg/dist/assets/RobotoSlab-Medium-ClaBQ_fg.ttf"
   ],
-  "src/components/converter/status.vue?vue&type=style&index=0&scoped=5231d4a8&lang.scss": [
+  "src/components/converter/status.vue?vue&type=style&index=0&scoped=e077b23b&lang.scss": [
     "/avif2jpeg/dist/assets/RobotoSlab-Regular-C-OtUSR_.ttf",
     "/avif2jpeg/dist/assets/RobotoSlab-Medium-ClaBQ_fg.ttf"
   ],
@@ -12469,7 +12469,7 @@
     "/avif2jpeg/dist/assets/RobotoSlab-Regular-C-OtUSR_.ttf",
     "/avif2jpeg/dist/assets/RobotoSlab-Medium-ClaBQ_fg.ttf"
   ],
-  "src/components/settings-adv.vue?vue&type=style&index=0&scoped=b94b2ea9&lang.scss": [
+  "src/components/settings-adv.vue?vue&type=style&index=0&scoped=961cce23&lang.scss": [
     "/avif2jpeg/dist/assets/RobotoSlab-Regular-C-OtUSR_.ttf",
     "/avif2jpeg/dist/assets/RobotoSlab-Medium-ClaBQ_fg.ttf"
   ],
@@ -12490,59 +12490,62 @@
     "/avif2jpeg/dist/assets/RobotoSlab-Medium-ClaBQ_fg.ttf"
   ],
   "src/locales/ar.json": [
-    "/avif2jpeg/dist/assets/ar-DLZu9ubl.js"
+    "/avif2jpeg/dist/assets/ar-DvX099_e.js"
   ],
   "src/locales/de.json": [
-    "/avif2jpeg/dist/assets/de-CNUg5Ibi.js"
+    "/avif2jpeg/dist/assets/de-BBORiRvk.js"
   ],
   "src/locales/en.json": [
     "/avif2jpeg/dist/assets/RobotoSlab-Regular-C-OtUSR_.ttf",
     "/avif2jpeg/dist/assets/RobotoSlab-Medium-ClaBQ_fg.ttf"
   ],
   "src/locales/es.json": [
-    "/avif2jpeg/dist/assets/es-CrsuhTtQ.js"
+    "/avif2jpeg/dist/assets/es-K5O-GtoK.js"
+  ],
+  "src/locales/fi.json": [
+    "/avif2jpeg/dist/assets/fi-biyqYVSJ.js"
   ],
   "src/locales/fr.json": [
-    "/avif2jpeg/dist/assets/fr-DeGnHJ5W.js"
+    "/avif2jpeg/dist/assets/fr-DRrgoeto.js"
   ],
   "src/locales/hi.json": [
-    "/avif2jpeg/dist/assets/hi-BA3LZ7gs.js"
+    "/avif2jpeg/dist/assets/hi-CVaCAzyu.js"
   ],
   "src/locales/id.json": [
-    "/avif2jpeg/dist/assets/id-fmBzUe6Z.js"
+    "/avif2jpeg/dist/assets/id-C_Z8re3f.js"
   ],
   "src/locales/it.json": [
-    "/avif2jpeg/dist/assets/it-BW3e4zoU.js"
+    "/avif2jpeg/dist/assets/it-VY2FUzV5.js"
   ],
   "src/locales/ja.json": [
-    "/avif2jpeg/dist/assets/ja-CRQJAPsf.js"
+    "/avif2jpeg/dist/assets/ja-BIGv4sEI.js"
   ],
   "src/locales/ko.json": [
-    "/avif2jpeg/dist/assets/ko-B8I5QOAs.js"
+    "/avif2jpeg/dist/assets/ko-nStKV_iG.js"
   ],
   "src/locales/nl.json": [
-    "/avif2jpeg/dist/assets/nl-58gtY7tV.js"
+    "/avif2jpeg/dist/assets/nl-DXwbjQmi.js"
   ],
   "src/locales/pl.json": [
-    "/avif2jpeg/dist/assets/pl-BawPLRR2.js"
+    "/avif2jpeg/dist/assets/pl-DiJp10Z0.js"
   ],
   "src/locales/pt.json": [
-    "/avif2jpeg/dist/assets/pt-DIvIz0A0.js"
+    "/avif2jpeg/dist/assets/pt-BaOc_cTp.js"
   ],
   "src/locales/ru.json": [
-    "/avif2jpeg/dist/assets/ru-CKWNK5Qt.js"
+    "/avif2jpeg/dist/assets/ru-DvSnO2Sh.js"
   ],
   "src/locales/tr.json": [
-    "/avif2jpeg/dist/assets/tr-BHClc7lz.js"
+    "/avif2jpeg/dist/assets/tr-OJP3tuEU.js"
   ],
   "src/locales/uk.json": [
-    "/avif2jpeg/dist/assets/uk-BGrZNfum.js"
+    "/avif2jpeg/dist/assets/uk-CvI1rzAD.js"
   ],
   "src/locales/zh-hant.json": [
-    "/avif2jpeg/dist/assets/zh-hant-CWa6mvOr.js"
+    "/avif2jpeg/dist/assets/zh-hant-oK2F8RsI.js"
   ],
   "src/locales/zh.json": [
-    "/avif2jpeg/dist/assets/zh-DqTTpF8f.js"
+    "/avif2jpeg/dist/assets/zh-B9t-FUxo.js"
   ],
   "src/main.ts": [
     "/avif2jpeg/dist/assets/RobotoSlab-Regular-C-OtUSR_.ttf",
