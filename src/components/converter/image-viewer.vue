@@ -471,9 +471,9 @@ function renderToolbar({ nodes }: ImageRenderToolbarProps) {
 
     <!-- slider for index -->
     <n-flex v-if="!isSingle" align="center" justify="center">
-      <n-button @click="moveIndex(-1)" :disabled="!allowPrev" :circle="true" size="small"><template #icon><n-icon><ArrowBack/></n-icon></template></n-button>
+      <n-button @click="moveIndex(-1)" :disabled="!allowPrev" :circle="true" size="large"><template #icon><n-icon><ArrowBack/></n-icon></template></n-button>
       <n-slider v-model:value="index" :tooltip="false" :step="1" :min="1" :max="props.length" style="width:180px;" />
-      <n-button @click="moveIndex(1)" :disabled="!allowNext" :circle="true" size="small"><template #icon><n-icon><ArrowForward/></n-icon></template></n-button>
+      <n-button @click="moveIndex(1)" :disabled="!allowNext" :circle="true" size="large"><template #icon><n-icon><ArrowForward/></n-icon></template></n-button>
     </n-flex>
 
   </n-flex>

@@ -127,5 +127,5 @@
   "loadfolderNotifyingMessageTerm1": "Quando você seleciona uma pasta em vez de um arquivo como entrada em um site, os principais navegadores da web exibirão um aviso como na imagem abaixo.",
   "errMsgWorkerLoadError": "Esta página pode ser uma versão desatualizada. \nPor favor, recarregue a página.",
   "Reload": "Recarregar",
-  "annotationOutOfMemory": "Se o processo de conversão falhar frequentemente e aparecer uma mensagem “Memória insuficiente”, tente reduzir ou desabilitar o número de “multi-threads” nas “Configurações avançadas”.\n\nEste problema pode ser resolvido com uma versão mais recente do navegador."
+  "annotationOutOfMemory": "Se o processo de conversão frequentemente falhar e uma mensagem \"fora da memória\" aparecer, tente reduzir ou desativar o número de \"multi-threads\" nas \"Configurações avançadas\"."
 }

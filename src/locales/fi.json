@@ -6,7 +6,6 @@
   "OK": "OK",
   "Reload": "Lataa uudelleen",
   "aborted": "Keskeytetty",
-  "annotationOutOfMemory": "Jos muunnos epäonnistuu usein ja näyttöön tulee Muisti täynnä -viesti, yritä vähentää \"monisäikeiden\" määrää tai poistaa se käytöstä \"Lisäasetuksissa\".\n\nTämä ongelma voidaan ratkaista uudemmalla selainversiolla.",
   "avifUnsupported": "Selaimesi ei tue AVIF-muotoa. \nKäytä Firefoxin tai Chromen uusinta versiota AVIF-kuvien muuntamiseen.",
   "back": "Takaisin",
   "cancel": "Peruuttaa",
@@ -124,5 +123,6 @@
   "success": "Menestys",
   "threads": "lanka | \nlangat",
   "title": "AVIF to JPEG \"Offline\" erämuunnin",
-  "width": "Leveys"
+  "width": "Leveys",
+  "annotationOutOfMemory": "Jos muuntamisprosessi epäonnistuu usein ja \"muistista\" -viesti tulee näkyviin, yritä vähentää tai poistaa käytöstä \"monivarjojen\" lukumäärää \"edistyneissä asetuksissa\"."
 }

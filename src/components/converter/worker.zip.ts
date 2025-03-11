@@ -54,7 +54,7 @@ self.onmessage = async (params: ZipMessageType) => {
 
   switch( action ) {
     case 'set-config':
-      MaxZipSize = zipSize;
+      MaxZipSize = zipSize!;
       keepPrevExtension = !!keepExt;
       outputExtension = outputExt || '';
       outputImageType = imageType || '';
@@ -93,10 +93,10 @@ self.onmessage = async (params: ZipMessageType) => {
       //azip.add(path, buffer);
       //bytesSum += buffer.byteLength;      
 
-      const success = await azip.add(path, file);
+      const success = await azip.add(path!, file!);
       if( success ) {
         
-        bytesSum += file.size;
+        bytesSum += file!.size;
         count++;
       }
       let message: ZippingMessageToMain = {
@@ -116,31 +116,31 @@ self.onmessage = async (params: ZipMessageType) => {
       let targetazip: AnZip = azip;
       let targetidx = index;
       for( let i = 0; i < zipListLengthStack.length; i++ ) {
-        if( index <= zipListLengthStack[i] - 1 ) {
-          targetidx = i > 0 ? index - zipListLengthStack[i - 1] : index;
+        if( index! <= zipListLengthStack[i] - 1 ) {
+          targetidx = i > 0 ? index! - zipListLengthStack[i - 1] : index;
           targetazip = zipList[i];
           break;
         }
         if( i === zipListLengthStack.length - 1 ) {
-          targetidx = index - zipListLengthStack[i];
+          targetidx = index! - zipListLengthStack[i];
           break;
         }
       }
 
-      const blob = targetazip.get(targetidx, outputImageType);
+      const blob = targetazip.get(targetidx!, outputImageType);
       if( !blob ) {
         console.warn(index, targetidx, blob);
         console.warn(zipListLengthStack);
         break;
       }
-      const path = targetazip.getPathByIndex(targetidx);
+      const path = targetazip.getPathByIndex(targetidx!);
       const url = URL.createObjectURL(blob);
       let message: ImageMessageToMain = {
         action: 'respond-image',
         url,
-        index,
+        index: index!,
         path,
-        fileId: fileIdByIndex.get(index),
+        fileId: fileIdByIndex.get(index!)!,
         size: blob.size,
       };
       self.postMessage( message );
@@ -178,7 +178,7 @@ const onmessageFromCanvasWorkers = (params: ZipMessageFromCanvasType, port: Mess
     return;
   }
   
-  path = path.replace(/^\//, '');
+  path = path!.replace(/^\//, '');
   
   // remove existing extension
   if( !keepPrevExtension )
@@ -257,7 +257,9 @@ function outputZipUrl(action: ZippingMessageToMain['action']) {
     const azip2 = azip;
     const count2 = count;
     const size2 = bytesSum;
-    azip2.wait().then(() => azip2.zip()).then(() => {
+    azip2.wait()
+    .then(() => azip2.zip())
+    .then(() => {
       const url = azip2.url();
       message = {url, action, size: size2, count: count2};
       if( action === 'push-zip' || action === 'squeeze-zip') {
@@ -292,8 +294,6 @@ function outputZipUrl(action: ZippingMessageToMain['action']) {
   zipList.push(azip);
   count = 0;
   bytesSum = 0;
-
-  console.log(zipListLengthStack)
 }
 
 

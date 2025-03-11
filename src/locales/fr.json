@@ -127,5 +127,5 @@
   "loadfolderNotifyingMessageTerm1": "Lorsque vous sélectionnez un dossier au lieu d'un fichier comme entrée sur un site Web, les principaux navigateurs Web affichent un avertissement comme l'image ci-dessous.",
   "errMsgWorkerLoadError": "Cette page est peut-être une version obsolète. \nVeuillez recharger la page.",
   "Reload": "Recharger",
-  "annotationOutOfMemory": "Si le processus de conversion échoue fréquemment et qu'un message « Mémoire insuffisante » apparaît, essayez de réduire ou de désactiver le nombre de « multi-threads » dans les « Paramètres avancés ».\n\nCe problème peut être résolu avec une version plus récente du navigateur."
+  "annotationOutOfMemory": "Si le processus de conversion échoue fréquemment et qu'un message «hors mémoire» apparaît, essayez de réduire ou de désactiver le nombre de «multi-threads» dans les «paramètres avancés»."
 }

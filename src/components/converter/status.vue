@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Directive, VNode } from 'vue';
-import { type DropdownOption, NIcon, NScrollbar, NSpin, useThemeVars } from 'naive-ui';
+import { dataTableDark, type DropdownOption, NIcon, NScrollbar, NSpin, useThemeVars } from 'naive-ui';
 import { ImageSharp, Archive, Warning, WarningOutline, DocumentTextOutline, DownloadOutline, Resize, UnlinkOutline } from '@vicons/ionicons5';
 import { useI18n } from 'vue-i18n';
 import ImageViewer from './image-viewer.vue';
@@ -530,6 +530,11 @@ function onFinished() {
   if( failure.value[0] > 0 || success.value[0] !== length.value ) {
 
   }
+
+  // check showEntireLog
+  if( !expandLog.value ) {
+    expandLog.value = true;
+  }
 }
 
 
@@ -620,6 +625,7 @@ async function onSaveButtonClick() {
     imageViewer.value.download();
   }
 }
+
 
 
 
@@ -838,7 +844,13 @@ function scrollLogViewToBottom(instant = false) {
 
 
     <!-- log view -->
-    <n-collapse display-directive="show" :trigger-areas="['arrow', 'main']" default-expanded-names="log-collapse" :expanded-names="logOpened ? ['log-collapse']:[]" :on-update:expanded-names="names => {logOpened = !!String(names)}">
+    <n-collapse
+      display-directive="show" 
+      :trigger-areas="['arrow', 'main']" 
+      default-expanded-names="log-collapse" 
+      :expanded-names="logOpened ? ['log-collapse']:[]" 
+      @update:expanded-names="names => {logOpened = !!String(names)}"
+    >
     <n-collapse-item title="Log" name="log-collapse" style="white-space:nowrap;">
       <template #header>
         <n-flex align="center" :wrap="false">{{$t('status.log')}}<n-spin :size="16" v-if="processing && !logOpened"> </n-spin></n-flex>

@@ -127,5 +127,5 @@
   "loadfolderNotifyingMessageTerm1": "Wenn Sie als Eingabe auf einer Website einen Ordner anstelle einer Datei auswählen, zeigen die gängigen Webbrowser eine Warnung wie im Bild unten an.",
   "errMsgWorkerLoadError": "Bei dieser Seite handelt es sich möglicherweise um eine veraltete Version. \nBitte laden Sie die Seite neu.",
   "Reload": "Neu laden",
-  "annotationOutOfMemory": "Wenn der Konvertierungsvorgang häufig fehlschlägt und die Meldung „Nicht genügend Speicher“ angezeigt wird, versuchen Sie, die Anzahl der „Multi-Threads“ in den „Erweiterten Einstellungen“ zu reduzieren oder zu deaktivieren.\n\nDieses Problem kann möglicherweise mit einer neueren Browserversion behoben werden."
+  "annotationOutOfMemory": "Wenn der Konvertierungsprozess häufig fehlschlägt und eine Meldung „Aus dem Speicher“ angezeigt wird, versuchen Sie, die Anzahl der \"Multi-Threads\" in den \"erweiterten Einstellungen\" zu reduzieren oder zu deaktivieren."
 }

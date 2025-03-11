@@ -46,21 +46,31 @@ const props = defineProps<{
   threadMax: number;
 }>();
 
-// set thread count to max if undefined
-watch([threadCount, () => props.threadMax], () => {
-  if( props.threadMax > 1 && typeof threadCount.value === 'undefined' )
-    threadCount.value = Math.max(props.threadMax / 2|0, 2);
-});
 
 // disable multi thread switch
 watch(() => props.threadMax, () => {
   if( !(props.threadMax > 1) ) {
     multithread.value = false;
   }
+
 }, {immediate:true});
+
+watch(threadCount, (val) => {
+  if( val === undefined ) {
+    threadCount.value = Math.max(2, Math.min(props.threadMax, 16));
+  }
+});
+
 
 const enableNewFeatures = computed(() => multithread.value && props.threadMax > 1);
 
+
+
+onMounted(() => {
+  // set thread count to max/2 if undefined
+  if( props.threadMax > 1 && typeof threadCount.value === 'undefined' )
+    threadCount.value = Math.max(props.threadMax / 2|0, 2);
+});
 
 </script>
 

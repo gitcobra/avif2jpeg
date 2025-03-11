@@ -51,6 +51,7 @@ FileInfo & (
 export type MessageToCanvasWorker = {
   index: number
   file: File
+  bitmap: ImageBitmap
   fileId: number
   outputPath: string
   webkitRelativePath: string,
@@ -59,6 +60,7 @@ export type MessageToCanvasWorker = {
   demandThumbnail: boolean
   isSingleImage: boolean
   maxSize: { width:number, height:number } | null
+  retriedTime: number
 }[];
 // message from main thread
 self.onmessage = async (params: MessageEvent<MessageToCanvasWorker | null>) => {
@@ -85,7 +87,7 @@ self.onmessage = async (params: MessageEvent<MessageToCanvasWorker | null>) => {
   */
 
   // process file list
-  const dataList = params.data;
+  const dataList = params.data!;
   for( const data of dataList ) {
     await convertRecievedData( data );
   }
@@ -94,11 +96,15 @@ self.onmessage = async (params: MessageEvent<MessageToCanvasWorker | null>) => {
   self.postMessage({
     action: 'list-end',
   } as MessageFromCanvasWorker);
+
+  canvas.width = 1;
+  canvas.height = 1;
 };
 
 
 async function convertRecievedData(data: MessageToCanvasWorker[number]) {
-  const { index, file, fileId, type, quality, demandThumbnail, isSingleImage, webkitRelativePath, maxSize } = data;
+  const { index, file, bitmap, fileId, type, quality, demandThumbnail, isSingleImage, webkitRelativePath, maxSize } = data;
+  const { retriedTime } = data;
 
   const path = webkitRelativePath || file.webkitRelativePath || file.name;
   const inputsize = file.size;
@@ -106,6 +112,7 @@ async function convertRecievedData(data: MessageToCanvasWorker[number]) {
   // start
   let messageToMain: MessageFromCanvasWorker;
 
+  /*
   messageToMain = {
     action: 'file-start', 
     path, 
@@ -113,20 +120,29 @@ async function convertRecievedData(data: MessageToCanvasWorker[number]) {
     index,
   };
   self.postMessage( messageToMain );
+  */
 
   let sourceBitmap: ImageBitmap;
   let width: number, height: number;
   let shrinked = false;
-  try {
-    sourceBitmap = await createImageBitmap(file);
-    ({width, height} = sourceBitmap);
 
+  /*  
+  // wait a second for retrying
+  const retryingDelay = retriedTime ? Math.max(0, 5000 - (Date.now() - retriedTime)) : 0;
+  if( retryingDelay )
+    await new Promise(r => setTimeout(r, retryingDelay));
+  */
+  
+  try {
+    sourceBitmap = bitmap; //await createImageBitmap(file);
+    /*
+    ({width, height} = sourceBitmap);
     // resize the source bitmap
     if( maxSize ) {
       const whrate = width / height;
       let {width: mw, height: mh} = maxSize;
       
-      let resize = null;
+      let resize: any = null;
       if( width > mw ) {
         width = mw;
         height = width / whrate;
@@ -141,6 +157,7 @@ async function convertRecievedData(data: MessageToCanvasWorker[number]) {
       
       sourceBitmap = await createImageBitmap(sourceBitmap, {resizeQuality:'high', ...(resize||{})});
     }
+    */
   } catch(e) {
     console.error('error occurred on canvas worker', fileId, path, e);
     messageToMain = {
@@ -152,17 +169,21 @@ async function convertRecievedData(data: MessageToCanvasWorker[number]) {
     self.postMessage( messageToMain );
     return;
   }
-
+  
   // create a thumbnail image before transferring
-  let dbitmap: ImageBitmap | null = null;
+  let dbitmap: ImageBitmap | undefined;
   if( demandThumbnail ) {
-    //dbitmap = await createImageBitmap(sourceBitmap, {resizeHeight:80, resizeQuality: 'low'/*'pixelated'*/});
+    //dbitmap = await createImageBitmap(sourceBitmap, {resizeHeight:80, resizeQuality: 'low'});
     const resize = width > height ? {resizeWidth: 110} : {resizeHeight:80};
-    dbitmap = await createImageBitmap(sourceBitmap, {...resize, resizeQuality: 'low'});
+    dbitmap = await createImageBitmap(sourceBitmap, {...resize, resizeQuality: 'pixelated'});
   }
 
+  //await new Promise(r => setTimeout(r, 3000));
+  //const canvas = new OffscreenCanvas(100, 100);
+  //const bmctx = canvas.getContext('bitmaprenderer');
+
   // transfer the bitmap to the canvas
-  bmctx.transferFromImageBitmap(sourceBitmap);
+  bmctx!.transferFromImageBitmap(sourceBitmap);
   
   // file loaded
   messageToMain = {
@@ -170,7 +191,7 @@ async function convertRecievedData(data: MessageToCanvasWorker[number]) {
     fileId, 
     path, 
     index, 
-    thumbnail:dbitmap, 
+    thumbnail: dbitmap, 
     width, 
     height,
     shrinked,
@@ -193,31 +214,13 @@ async function convertRecievedData(data: MessageToCanvasWorker[number]) {
   }
   const outputsize = blob.size;
   
-  // NOTE: changed to always add to zip, no longer use SingleImageData
-  /*
-  let imageBlob: Blob;
-  if( isSingleImage ) {
-    // output the converted image to the main thread 
-    imageBlob = blob;
-  }
-  else*/ {
-    // output to worker.zip  
-    dataOutputPort.postMessage({
-      //data: abuffer, 
-      blob,
-      path, 
-      fileId
-    }/*, [blob]*/);
-    
-    //dataOutputPort.postMessage({data: blob, path, fileId});
-  }
-
-  /*
-  let blobUrl = '';
-  if( isSingleImage ) {
-     blobUrl = URL.createObjectURL(blob);
-  }
-  */
+  // output to worker.zip  
+  dataOutputPort.postMessage({
+    //data: abuffer, 
+    blob,
+    path, 
+    fileId
+  }/*, [blob]*/);
 
   // send "file-end" message to the main thread
   messageToMain = {
@@ -242,7 +245,7 @@ const listenerForZipWorker = (params) => {
   const {fileId, renamed, outputPath, canceled} = params.data;
   
   // post to main thread
-  const {inputsize, outputsize, path, index} = fileStat.get(fileId);
+  const {inputsize, outputsize, path, index} = fileStat.get(fileId)!;
   const messageToMain: MessageFromCanvasWorker = {
     action: canceled ? 'file-canceled' : 'file-completed',
     /*path: response,*/ 

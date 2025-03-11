@@ -8,9 +8,9 @@ export type FileWithId = File & {
   readonly _id: number
 };
 export type SingleImageDataType = {
-  convertedImageBlob: Blob
-  //convertedImageWidth?: number
-  //convertedImageHeight?: number
+  convertedImageBlob: Blob | null
+  convertedImageWidth?: number
+  convertedImageHeight?: number
   convertedImageName: string
 
   convertedImageUrl?: string
@@ -54,7 +54,7 @@ const ELAPSED_SECONDS_TO_CONFIRM_BEFORE_CLOSING = 10;
 const CoreCount = navigator.hardwareConcurrency;
 const OffscreenCanvas_Available = typeof OffscreenCanvas === 'function';
 const STATUS_UPDATE_INTERVAL = 300;
-
+const THREADS_MAX_LIMIT = 16;
 
 
 // properties
@@ -122,7 +122,7 @@ let allZipsClicked = false;
 
 // watchers
 
-watch(() => props.input, (val: File[]) => {
+watch(() => props.input!, (val: File[]) => {
   if( val?.length ) {
     startConvert(val);
   }
@@ -193,7 +193,7 @@ function onESCPress() {
 }
 
 function convertAgain() {
-  startConvert(props.input);
+  startConvert(props.input!);
 }
 
 let onDemandZipErrorsFromStatus = ref(() => {});
@@ -258,8 +258,8 @@ function initConvStatPropObj(obj?: ConversionStatusType): ConversionStatusType {
 function cleanUpProcessedData() {
   dispConvStatusComponent.value = false;
 
-  URL.revokeObjectURL(ConvStats.convertedImageUrl);
-  URL.revokeObjectURL(ConvStats.convertedImageOrgUrl);
+  URL.revokeObjectURL(ConvStats.convertedImageUrl!);
+  URL.revokeObjectURL(ConvStats.convertedImageOrgUrl!);
   
   for( const item of ConvStats.zips ) {
     URL.revokeObjectURL(item.url);
@@ -299,8 +299,8 @@ async function startConvert(input: File[]) {
   initConvStatPropObj(ConvStats);
   cleanUpProcessedData();
   
-  const SingleImageData = {
-    convertedImageBlob: null as Blob,
+  const SingleImageData: SingleImageDataType = {
+    convertedImageBlob: null,
     convertedImageWidth: 0,
     convertedImageHeight: 0,
     convertedImageName: '',
@@ -351,7 +351,7 @@ async function startConvert(input: File[]) {
   const list = fileList.concat();
   let callbackToGenerateFailedZips;
   let exception: Error | undefined;
-  const result: ConverterResult = ( !disableMultiThreading && props.threads >= 2 ) ?
+  const result: ConverterResult = ( !disableMultiThreading && props.threads! >= 2 ) ?
     // multi-threading
     await convertTargetFilesInMultithread(ConvStats, canceled, props, SingleImageData, message, notification, list, completedFileIdSet, format, quality, outputExt, format)
     :
@@ -444,8 +444,8 @@ async function outputSingleImageData(ext, SingleImageData: SingleImageDataType) 
 }
 
 function processFailedFiles( list: FileWithId[], completedFileIdSet: Set<number> ) {
-  const errorList = [];
-  const errorText = [];
+  const errorList: FileWithId[] = [];
+  const errorText:string[] = [];
   let size = 0;
   for( const file of list ) {
     if( !completedFileIdSet.has(file._id) ) {
@@ -471,7 +471,7 @@ function processFailedFiles( list: FileWithId[], completedFileIdSet: Set<number>
 // add id to File[]
 let _fileIdCounter = 0;
 function assignIdToFiles(list: File[]): FileWithId[] {
-  const output = [];
+  const output: File[] = [];
   // add id to each file
   for( const file of list ) {
     if( !file.hasOwnProperty('_id') )
@@ -546,7 +546,7 @@ function checkAvailableFeatures() {
   if( !OffscreenCanvas_Available || CoreCount < 2 || !Promise.any ) {
     disableMultiThreading = true;
   }
-  emit('multi-thread-count', disableMultiThreading ? 0 : CoreCount);
+  emit('multi-thread-count', disableMultiThreading ? 0 : Math.min(CoreCount, THREADS_MAX_LIMIT));
 }
 
 
@@ -570,6 +570,7 @@ function checkAvailableFeatures() {
   </n-space>
 
   <!-- message -->
+  <!--
   <n-drawer :show="conversionModalActive || showNote" placement="right" :z-index="0" mask-closable :on-mask-click="e => showNote=false">
     <n-drawer-content title="Note">
       <p>
@@ -580,6 +581,7 @@ function checkAvailableFeatures() {
       </p>
     </n-drawer-content>
   </n-drawer>
+  -->
 
   <!-- open the modal dialog during the conversion -->
   <n-modal

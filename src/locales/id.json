@@ -127,5 +127,5 @@
   "loadfolderNotifyingMessageTerm1": "Saat Anda memilih folder dan bukan file sebagai input di situs web, browser web utama akan menampilkan peringatan seperti gambar di bawah.",
   "errMsgWorkerLoadError": "Halaman ini mungkin merupakan versi lama. \nSilakan muat ulang halaman tersebut.",
   "Reload": "Muat ulang",
-  "annotationOutOfMemory": "Jika proses konversi sering gagal dan muncul pesan “Out of Memory”, coba kurangi atau nonaktifkan jumlah \"multi-thread\" di \"Pengaturan Lanjut\".\n\nMasalah ini mungkin teratasi dengan versi browser yang lebih baru."
+  "annotationOutOfMemory": "Jika proses konversi sering gagal dan pesan \"di luar memori\" muncul, cobalah mengurangi atau menonaktifkan jumlah \"multi-thread\" dalam \"pengaturan lanjutan\"."
 }

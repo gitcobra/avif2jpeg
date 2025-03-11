@@ -6,7 +6,7 @@
   var disclaimer = document.createElement('div');
   var app = document.getElementById('app');
   app.appendChild(disclaimer);
-  addEventListener('load', function(){
+  addEventListener('load', function() {
     setTimeout(function() {
       if( app.contains(disclaimer) ) {
         app.innerHTML =
@@ -17,6 +17,6 @@
       }
       disclaimer = null;
       app = null;
-    }, 1000);
+    }, 3000);
   });
 })();

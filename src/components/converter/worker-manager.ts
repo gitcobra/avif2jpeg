@@ -1,65 +1,96 @@
 import CanvasWorker from './worker.canvas?worker';
 
 
+
 let WorkerId = 0;
 export class WorkerWithId extends CanvasWorker {
   readonly id: number = WorkerId++;
+  readonly priority: boolean;
+  constructor(priority?: boolean) {
+    super();
+    this.priority = priority || false;
+  }
   release() {
     releaseWorker(this);
   }
 }
-type WorkerResolver = (worker: WorkerWithId) => void;
 
-const workers: WorkerWithId[] = [];
-const workingWorkerPromises = new Set<Promise<WorkerWithId>>;
-const promiseFromWorker = new Map<WorkerWithId, Promise<WorkerWithId>>;
+class PromiseWithWorkerId extends Promise<[WorkerWithId, PromiseListItem, boolean/*priority*/]> {
+  wid: WorkerWithId['id'] = -1;
+}
+
+type WorkerResolver = () => void;
+type PromiseListItem = PromiseWithWorkerId;
+type PromiseList = Set<PromiseListItem>;
+
+const workers: Set<WorkerWithId> = new Set;
+const workerPromises: PromiseList = new Set;
+const priorWorkerPromises: PromiseList = new Set;
 const resolverFromWorker = new Map<WorkerWithId, WorkerResolver>;
-const busyWorkerList = new Set<WorkerWithId>;
+const priorWorkerIds: number[] = [];
 
-export function createWorker(url: string, hook?: boolean) {
+export function createWorker(priority?: boolean) {
   const worker = new WorkerWithId(); //new WorkerWithId(wurl, {type: 'module'});
-  workers.push(worker);
+  workers.add(worker);
   
-  if( hook ) {
-    hookWorker(worker);
-  }
-  else {
-    // create and add a resolved promise to WorkingWorkerPromises
-    const promise = Promise.resolve(worker);
-    workingWorkerPromises.add( promise );
-    promiseFromWorker.set(worker, promise);
-  }
-  
+  // create and add a resolved promise to WorkingWorkerPromises
+  addNewPromiseToList(worker, priority);
+  releaseWorker(worker);
+
+  if( priority )
+    priorWorkerIds.push(worker.id);
+
   return worker;
 }
 
-export function hookWorker(worker: WorkerWithId) {
-  /*
-    NOTE: [2024/9] Promise.withResolvers is too new to use
-  */
-  const promise = new Promise<WorkerWithId>(resolve => {
-    resolverFromWorker.set(worker, resolve);
+function addNewPromiseToList(worker: WorkerWithId, priority?: boolean) {
+  const promiseList = ( priority ? priorWorkerPromises : workerPromises );
+  
+  // create a new Promise
+  const promise = new PromiseWithWorkerId(resolve => {
+    resolverFromWorker.set(worker, () => resolve([worker, promise, !!priority]));
   });
+  promise.wid = worker.id;
 
-  workingWorkerPromises.add(promise);
-  promiseFromWorker.set(worker, promise);
-  busyWorkerList.add(worker);
+  // renew the worker promise
+  promiseList.add(promise);
 }
 
-export async function getWorker() {
-  let worker: WorkerWithId;
-  let promise: Promise<WorkerWithId>;
+
+export async function getWorker(priority?: boolean | number) {
+  let promises: PromiseList;
+  /*
   do {
-    worker = await Promise.any(workingWorkerPromises);
-  } while( busyWorkerList.has(worker) )
+    if( typeof priority !== 'undefined' ) {
+      promises = priority ? priorWorkerPromises : workerPromises;
+    }
+    else 
+      promises = new Set([...workerPromises, ...priorWorkerPromises]);
+
+    [worker, promise] = await Promise.any(promises);
+  } while( !promises.has(promise) ) // check if the promise was already picked out
+  */
+
+  if( !priority /*|| typeof priority === 'undefined'*/ ) {
+    //promises = new Set([...workerPromises, ...priorWorkerPromises]);
+    promises = new Set([...priorWorkerPromises, ...workerPromises]);
+  }
+  else if( typeof priority === 'number' ) {
+    const wids = priorWorkerIds.slice(0, priority);
+    promises = new Set( [...priorWorkerPromises].filter((p) => wids.includes(p.wid)) );
+  }
+  else {
+    promises = priority ? priorWorkerPromises : workerPromises;
+  }
+  
+  // pick one of fulfilled Promise
+  const [worker, promise, pickedWorkerPriority] = await Promise.any(promises);
   
   // remove the old promise
-  promise = promiseFromWorker.get(worker);
-  promiseFromWorker.delete(worker);
-  workingWorkerPromises.delete(promise);
+  ( pickedWorkerPriority ? priorWorkerPromises : workerPromises ).delete( promise );
 
   // set a new promise
-  hookWorker(worker);
+  addNewPromiseToList( worker, pickedWorkerPriority );
 
   return worker;
 }
@@ -73,24 +104,31 @@ export function releaseWorker(worker: WorkerWithId) {
 
   const resolve = resolverFromWorker.get(worker);
   if( !resolve ) {
-    // console.warn(`the worker was already released.`, worker.id);
+    console.warn(`the worker was already released.`, worker.id);
     return;
   }
 
   //console.log(resolverFromWorker.has(worker), busyWorkerList.has(worker));
   resolverFromWorker.delete(worker);
-  busyWorkerList.delete(worker);
+  //busyWorkerList.delete(worker);
   
-  resolve(worker);
+  resolve();
 }
 
 export function releaseAllWorkers() {
   for( const worker of resolverFromWorker.keys() )
     releaseWorker(worker);
+  
+  console.log(resolverFromWorker);
 }
 
+
 export async function waitAllWorkers() {
-  return await Promise.all(workingWorkerPromises);
+  return await Promise.all([...workerPromises, ...priorWorkerPromises]);
+}
+
+export function getBusyWorkers() {
+  return [];//[...busyWorkerList];
 }
 
 export function init() {
@@ -98,11 +136,12 @@ export function init() {
   for( const worker of workers ) {
     worker.terminate();
   }
-  workers.length = 0;
-  workingWorkerPromises.clear();
-  promiseFromWorker.clear();
+  workers.clear();
+  workerPromises.clear();
+  priorWorkerPromises.clear();
+  //promiseFromWorker.clear();
   resolverFromWorker.clear();
-  busyWorkerList.clear();
+  //busyWorkerList.clear();
 
   WorkerId = 0;
 }

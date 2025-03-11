@@ -127,5 +127,5 @@
   "loadfolderNotifyingMessageTerm1": "Wanneer u een map in plaats van een bestand selecteert als invoer op een website, geven de belangrijkste webbrowsers een waarschuwing weer zoals in de onderstaande afbeelding.",
   "errMsgWorkerLoadError": "Deze pagina is mogelijk een verouderde versie. \nLaad de pagina opnieuw.",
   "Reload": "Herladen",
-  "annotationOutOfMemory": "Als het conversieproces regelmatig mislukt en de melding “Onvoldoende geheugen” verschijnt, probeer dan het aantal \"multi-threads\" in de \"Geavanceerde instellingen\" te verminderen of uit te schakelen.\n\nDit probleem kan mogelijk worden opgelost met een nieuwere browserversie."
+  "annotationOutOfMemory": "Als het conversieproces vaak mislukt en een \"geheugen\" -bericht verschijnt, probeer dan het aantal \"multi-threads\" te verminderen of uit te schakelen in de \"geavanceerde instellingen\"."
 }

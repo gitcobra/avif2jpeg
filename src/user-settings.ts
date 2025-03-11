@@ -23,6 +23,18 @@ const DefaultSettings = {
   disableNotifyingFolderSelect: false,
 } as const;
 
+const Limits: {
+  [key: string]: {
+    min?: number
+    max?: number
+  }
+} = {
+  threadCount: {
+    min: 2,
+    max: 16,
+  },
+} as const;
+
 export type UserSettingsType = Omit<typeof DefaultSettings, "threadCount"> & {
   threadCount?: number
 };
@@ -45,7 +57,14 @@ const dat = JSON.parse(localStorage.getItem(storeName) || '{}');
 for( const p in UserSettings ) {
   if( dat.hasOwnProperty(p) ) {
     if( dat[p] !== undefined ) {
-      (UserSettings as any)[p] = dat[p];
+      let value = dat[p];
+      if( Limits.hasOwnProperty(p) ) {
+        if( Limits[p].min! > value )
+          value = Limits[p].min;
+        if( Limits[p].max! < value )
+          value = Limits[p].max;
+      }
+      (UserSettings as any)[p] = value;
     }
   }
 }
