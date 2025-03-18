@@ -4,7 +4,8 @@ import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { getThumbnailedSize, getUnitSize } from './util';
 import Thumbnail from './thumbnail.vue';
-import { ArrowForward, ArrowBack, Reload, ArrowRedoOutline, ArrowUndoOutline } from '@vicons/ionicons5';
+import { ArrowForward, ArrowBack, ArrowRedoOutline, ArrowUndoOutline, ChevronForward, ChevronBack, Close } from '@vicons/ionicons5';
+import { title } from 'process';
 
 
 
@@ -29,6 +30,7 @@ const props = defineProps<{
 // emits
 const emit = defineEmits<{
   'demand-image': [index: number]
+  'close': []
 }>();
 
 // methods
@@ -48,10 +50,9 @@ const c = useThemeVars();
 
 // reactive values
 const initializing = ref(true);
-const index = ref(1);
+const index = ref(Math.max(props.index, 0) + 1);
 const width = ref(1);
 const height = ref(1);
-const size = ref(0);
 const src = ref('');
 
 const orgwidth = ref(1);
@@ -65,6 +66,20 @@ const isPreviewingConvertedImg = computed<boolean>(() => nImageGroupRef?.value?.
 const allowNext = computed<boolean>(() => index.value < props.length);
 const allowPrev = computed<boolean>(() => index.value > 1);
 
+
+
+// mounted
+onMounted(() => {
+  document.body.addEventListener('keydown', bindKeys);
+  document.body.addEventListener('keydown', onEscKeyDown);
+
+  if( props.url && props.index >= 0 ) {
+    initializing.value = false;
+    src.value = props.url;
+    return;
+  }
+  emit('demand-image', index.value - 1);
+});
 
 // watchers
 let timeoutid: any = -1;
@@ -82,6 +97,7 @@ watch(index, () => {
   }, 100);
 });
 
+// get demanded image src
 watch(() => props.index, () => {
   let newsrc = '';
   // initializing
@@ -134,18 +150,6 @@ watch(() => props.url, () => {
   }
 });
 
-
-// mounted
-onMounted(() => {
-  if( props.isSingle ) {
-    //initializing.value = false;
-    //return;
-  }
-  emit('demand-image', 0);
-
-  document.body.addEventListener('keydown', bindKeys);
-  document.body.addEventListener('keydown', onEscKeyDown);
-});
 
 onBeforeMount(() => {
   document.body.removeEventListener('keydown', bindKeys);
@@ -236,9 +240,10 @@ async function copyDataURL(url: string) {
     
     navigator.clipboard.writeText(durl);
 
+    const select = (ev: any) => {ev.target.focus(); ev.target.select()};
     dialog.info({
       title: t('copiedDataURLDialogTitle'),
-      content: () => h('div', [h('div', t('copiedDataURLMessage')), /*h(NInput, {type:'textarea', value:durl, readonly:true, size:'small'})*/]),
+      content: () => h('div', [h('div', t('copiedDataURLMessage')), h(NInput, {onFocus: select, onClick: select, type:'textarea', value:durl, readonly:true, size:'small', style:{marginTop:'2em'}})]),
       positiveText: 'OK',
     });
   } catch(e) {
@@ -319,65 +324,115 @@ function renderToolbar({ nodes }: ImageRenderToolbarProps) {
 </script>
 
 <template>
-  <n-spin size="large" :show="initializing">
+  <n-spin size="large" :show="initializing" class="body">
+  <n-image-group
+    ref="nImageGroupRef"
+    show-toolbar-tooltip
+    :render-toolbar="renderToolbar"
+    @preview-next="restoreTransform"
+  >
   <n-flex justify="center" align="center" vertical :style="{visibility: initializing ? 'hidden' : 'visible'}">
-    <n-flex align="center" :wrap="false">
-      
+    <n-flex :wrap="false" align="center">
+      <!-- left button -->
+      <n-button @click="moveIndex(-1)" :disabled="!allowPrev" block style="max-width: 1em; height:10em;" :class="{pale: !allowPrev}" :title="$t('Prev')">
+        <template #icon><n-icon size="30"><ChevronBack/></n-icon></template>
+      </n-button>
 
-      
-      <!-- output image -->
-      <n-image-group
-        ref="nImageGroupRef"
-        show-toolbar-tooltip
-        :render-toolbar="renderToolbar"
-        @preview-next="restoreTransform"
-      >
-      <n-flex align="center" justify="center" :wrap="false">
-        
-        <!-- ORIGINAL -->
-        <n-flex align="center" justify="center" vertical>
-          <n-flex align="center" justify="center" :wrap="false" style="font-size:smaller;" class="original-thumb">
+      <n-flex vertical>
+        <n-flex align="center" :wrap="false">
+          <n-flex vertical align="center" style="overflow: hidden;">
+            
+            <!-- index -->
+            <n-flex v-if="!isSingle" style="white-space: nowrap;" align="center" :wrap="false">
+              <span style="font-size: smaller;">{{t('status.index')}}:</span>
+              <span style="font-family: v-mono; font-size: smaller;">{{ index }} / {{ props.length }}</span>
+            </n-flex>
+            
+            <n-flex align="center" justify="center" :wrap="false">
+              <!-- ORIGINAL -->
+              <n-flex align="center" justify="center" vertical>
+                <a :href="originalUrl" @click.prevent="thumbOrgRef.openPreview();" :download="originalName" :title="originalName">
+                <n-flex align="center" justify="center" :wrap="false" style="" class="original-thumb">
 
-            <Thumbnail
-              ref="thumbOrgRef"
-              :src="originalUrl"
-              :width="100"
-              :max-width="100"
-              :max-height="80"
-              :loading="demandingImage"
-              :file-name="originalName"
-              :allow-next="index < props.length"
-              :allow-prev="index > 1"
-              @load="onOrgThumbnailLoad"
-              @next="moveIndex(1)"
-              @prev="moveIndex(-1)"
-            />
+                  <Thumbnail
+                    ref="thumbOrgRef"
+                    :src="originalUrl"
+                    :width="1"
+                    :max-width="1"
+                    :max-height="1"
+                    :loading="demandingImage"
+                    :file-name="originalName"
+                    :allow-next="index < props.length"
+                    :allow-prev="index > 1"
+                    @load="onOrgThumbnailLoad"
+                    @next="moveIndex(1)"
+                    @prev="moveIndex(-1)"
+                    :hidden="true"
+                  />
 
-            <n-space vertical align="center">
-              <span style="font-weight: bold; color:gray;">{{ t('status.Original') }}</span>
+                  <n-space vertical align="center">                    
+                    <span style="font-weight: bold; color:gray;">{{ t('status.Original') }}</span>
 
-              <!-- image size -->
-              <n-space justify="center" style="white-space:nowrap; font-family:v-mono;">
-                {{ String(orgwidth).padStart(4, '&nbsp;') }} × {{ String(orgheight).padStart(4, '&nbsp;') }}
-              </n-space>
+                    <!-- image size -->
+                    <n-space justify="center" style="font-size:smaller; white-space:nowrap; font-family:v-mono; width:10em;">
+                      {{ String(orgwidth).padStart(5, '&nbsp;') }} × {{ String(orgheight).padStart(5, '&nbsp;') }}
+                    </n-space>
 
-              <!-- image size -->
-              <n-space justify="center">
-                {{ getUnitSize(props.originalSize, 0) }}
-              </n-space>
+                    <!-- image size -->
+                    <n-space justify="center">
+                      {{ getUnitSize(props.originalSize, 0) }}
+                    </n-space>
 
-            </n-space>
+                  </n-space>
+                </n-flex>
+                </a>
+              </n-flex>
+
+
+              <n-flex style="margin:1em;" class="original-thumb">
+                <n-icon size="20" color="silver"><ArrowForward/></n-icon>
+              </n-flex>
+              
+              <!-- CONVERTED -->
+              <a :href="src" @click.prevent="thumbConvRef.openPreview();" :download="props.name" :title="props.name">
+              <n-flex vertical align="center" justify="center">
+                <n-flex justify="center" align="center" :size="0">
+                  <span style="font-weight: bold; color:gray;">{{t('status.Converted')}}</span>
+                </n-flex>
+                
+                <!-- image dimension -->
+                <n-flex vertical align="center" justify="center" :size="0">
+                  <n-flex justify="center" style="font-size:smaller; white-space:nowrap; font-family:v-mono; width:10em;">
+                    <span :style="props.variousInfo?.shrinked ? {color:'blue'} : {}">
+                    {{ String(width).padStart(5, '&nbsp;') }} × {{ String(height).padStart(5, '&nbsp;') }}
+                    </span>
+                  </n-flex>
+                  <!--
+                  <n-flex style="color:gray; font-size:xx-small;">
+                    {{ props.variousInfo?.shrinked ? '('+$t('status.Shrinked')+')' : '-'}}
+                  </n-flex>
+                  -->
+                </n-flex>
+                
+
+                <!-- image size -->
+                <n-flex justify="center">
+                  {{ getUnitSize(props.size, 0) }}
+                </n-flex>
+              </n-flex>
+              </a>
+            </n-flex>
+
+            <!-- file name -->
+            <n-flex ref="fileNameContainer" align="center" class="pathbox" :title="props.name">
+              <n-scrollbar :x-scrollable="true" trigger="hover" style="font-size:smaller; overflow:hidden; white-space:nowrap; text-overflow: ellipsis;">
+                {{props.name}}
+              </n-scrollbar>
+            </n-flex>
+
           </n-flex>
-        </n-flex>
 
-
-        <n-flex style="margin:1em;" class="original-thumb">
-          <n-icon size="48" color="silver"><ArrowForward/></n-icon>
-        </n-flex>
-        
-        <!-- CONVERTED -->
-        <n-flex vertical align="center" justify="center">
-          <n-flex align="center" justify="center" :wrap="false">
+          <n-flex vertical>
             <Thumbnail
               ref="thumbConvRef"
               :src="src"
@@ -392,98 +447,75 @@ function renderToolbar({ nodes }: ImageRenderToolbarProps) {
               @next="moveIndex(1)"
               @prev="moveIndex(-1)"
             />
-
-            <n-flex vertical align="center">
-              <n-flex justify="center" align="center" :size="0">
-                <span style="font-weight: bold; color:gray;">{{t('status.Converted')}}</span>
-              </n-flex>
-              <n-flex justify="center" :wrap="true">
-                
-                <!-- save blobURL -->
-                <n-popover v-if="props.url" display-directive="show" trigger="hover" :duration="0" :delay="0">
-                  <template #trigger>
-                  <a :href="props.url" ref="saveImg" target="_blank" :download="props.name"><n-button round size="tiny">{{$t('save')}}</n-button></a>
-                  </template>
-                  {{$t('save')}}
-                </n-popover>
-                
-                <!-- open blobURL -->
-                <!--
-                <n-popover v-if="props.url" display-directive="show" trigger="hover" :duration="0" :delay="0">
-                  <template #trigger>
-                  <a :href="props.url" target="_blank" @click.prevent="thumbref.openPreview();">
-                    <n-button round size="tiny">{{$t('open')}}</n-button>
-                  </a>
-                  </template>
-                  {{$t('convertedImageUrlTooltip')}}
-                </n-popover>
-                -->
-                
-                <!-- copy data url -->
-                <n-popover v-if="props.url" display-directive="show" trigger="hover" :duration="0" :delay="0">
-                  <template #trigger>
-                  <a :href="props.url" target="_self">
-                    <n-button @click.left.prevent.stop="copyDataURL(props.url)" round size="tiny">DataURL</n-button>
-                  </a>
-                  </template>
-                  {{$t('convertedImageDataUrlTooltip')}}
-                </n-popover>
-              </n-flex>
+            <n-flex justify="center" :wrap="true">
               
-              <!-- image dimension -->
-              <n-flex vertical align="center" justify="center" :size="0">
-                <n-flex justify="center" style="white-space:nowrap; font-family:v-mono;">
-                  <span :style="props.variousInfo?.shrinked ? {color:'blue'} : {}">
-                  {{ String(width).padStart(4, ' ') }} × {{ String(height).padStart(4, ' ') }}
-                  </span>
-                </n-flex>
-                <n-flex style="color:gray; font-size:xx-small;">
-                  {{ props.variousInfo?.shrinked ? '('+$t('status.Shrinked')+')' : '-'}}
-                </n-flex>
-              </n-flex>
+              <!-- save blobURL -->
+              <n-popover v-if="props.url" display-directive="show" trigger="hover" :duration="0" :delay="0">
+                <template #trigger>
+                <a :href="props.url" ref="saveImg" target="_blank" :download="props.name">
+                  <n-button round size="tiny">{{$t('save')}}</n-button>
+                </a>
+                </template>
+                {{$t('save')}}
+              </n-popover>
               
-
-              <!-- image size -->
-              <n-flex justify="center">
-                {{ getUnitSize(props.size, 0) }}
-              </n-flex>
+              <!-- copy data url -->
+              <n-popover v-if="props.url" display-directive="show" trigger="hover" :duration="0" :delay="0">
+                <template #trigger>
+                <n-button @click="copyDataURL(props.url)" round size="tiny">DataURL</n-button>
+                </template>
+                {{$t('convertedImageDataUrlTooltip')}}
+              </n-popover>
             </n-flex>
           </n-flex>
 
-
         </n-flex>
-      </n-flex>
-      </n-image-group>
 
-    </n-flex>
-    
+        <!-- slider for index -->
+        <n-flex v-if="!isSingle" align="center" justify="center" style="padding: 0px 1em;">
+          <n-slider v-model:value="index" :tooltip="false" :step="1" :min="1" :max="props.length"/>
+        </n-flex>
+      </n-flex> 
 
-    <!-- file name -->
-    <n-flex ref="fileNameContainer" justify="center" style="max-width:320px;" :title="props.name">
-      <n-scrollbar :x-scrollable="true" trigger="hover" style="font-size:smaller; overflow:hidden; white-space:nowrap; text-overflow: ellipsis;">{{props.name}}</n-scrollbar>
+      <!-- right button -->
+      <n-button @click="moveIndex(1)" :disabled="!allowNext" block style="max-width: 1em; height:9em;" :class="{pale: !allowNext}" :title="$t('Next')">
+        <template #icon><n-icon size="30"><ChevronForward/></n-icon></template>
+      </n-button>
     </n-flex>
-
-    <!-- index -->
-    <n-flex v-if="!isSingle" style="font-family: v-mono;" align="center">
-      <!-- <n-input-number v-model:value="index" :autofocus="false" step="1" min="1" :max="props.length" button-placement="both" size="small" style="width:8em;" /> / {{ props.length }} -->
-      <span style="font-size:0.8em;">{{t('status.index')}}:</span> {{ index }} / {{ props.length }}
-    </n-flex>
-
-    <!-- slider for index -->
-    <n-flex v-if="!isSingle" align="center" justify="center">
-      <n-button @click="moveIndex(-1)" :disabled="!allowPrev" :circle="true" size="large"><template #icon><n-icon><ArrowBack/></n-icon></template></n-button>
-      <n-slider v-model:value="index" :tooltip="false" :step="1" :min="1" :max="props.length" style="width:180px;" />
-      <n-button @click="moveIndex(1)" :disabled="!allowNext" :circle="true" size="large"><template #icon><n-icon><ArrowForward/></n-icon></template></n-button>
-    </n-flex>
+  
 
   </n-flex>
+
+  <!-- close button -->
+  <n-button @click="emit('close');" circle size="tiny" color="silver" style="position: absolute; right:-16px; top:-8px; opacity: 0.7;" :title="$t('close')">
+    <template #icon><n-icon size="12"><Close/></n-icon></template>
+  </n-button>
+
+  </n-image-group>
   </n-spin>
 </template>
 
 <style lang="scss" scoped>
+a {
+  color: black;
+}
+.body {
+  font-size: small;
+}
+.pathbox {
+  max-width: 250px;
+  font-size: smaller; overflow:hidden; white-space:nowrap; text-overflow: ellipsis;
+}
 @media screen and (max-width: 570px) {
 	.original-thumb * {
     display: none;
   }
+  .pathbox {
+    max-width: 100px;
+  }
+}
+
+.pale {
+  opacity: 0.2;
 }
 </style>

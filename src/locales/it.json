@@ -127,5 +127,7 @@
   "loadfolderNotifyingMessageTerm1": "Quando selezioni una cartella anziché un file come input su un sito Web, i principali browser Web visualizzeranno un avviso come l'immagine seguente.",
   "errMsgWorkerLoadError": "Questa pagina potrebbe essere una versione obsoleta. \nPer favore ricarica la pagina.",
   "Reload": "Ricaricare",
-  "annotationOutOfMemory": "Se il processo di conversione fallisce frequentemente e appare un messaggio \"fuori dalla memoria\", prova a ridurre o disabilitare il numero di \"multi-thread\" nelle \"impostazioni avanzate\"."
+  "annotationOutOfMemory": "Se il processo di conversione fallisce frequentemente e appare un messaggio \"fuori dalla memoria\", prova a ridurre o disabilitare il numero di \"multi-thread\" nelle \"impostazioni avanzate\".",
+  "Next": "Prossimo",
+  "Prev": "Precedente"
 }

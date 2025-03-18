@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { NButton, NIcon, NTooltip, type ImageRenderToolbarProps } from 'naive-ui';
+import { NTooltip } from 'naive-ui';
 import { getThumbnailedSize } from './util';
 import { RefSymbol } from '@vue/reactivity';
 import { ArrowBack, ArrowForward, DownloadOutline } from '@vicons/ionicons5';
@@ -18,6 +18,7 @@ const props = withDefaults(defineProps<{
   fileName?: string
   allowNext: boolean
   allowPrev: boolean
+  hidden?: boolean
 }>(), {
   maxWidth: 100,
   maxHeight: 100,
@@ -44,15 +45,15 @@ const nImageRef = ref();
 // reactives
 const imgloading = ref(true);
 const imgsrc = ref('');
-const twidth = ref(100);
-const theight = ref(100);
+const twidth = ref(props.width || 100);
+const theight = ref(props.height || 100);
 const disp = ref(false);
 
 const spincss = reactive({
-  width: 100 + 'px',
-  height: 100+ 'px',
-  minWidth: 50+ 'px',
-  minHeight: 50+ 'px',
+  width: twidth.value + 'px',
+  height: theight.value + 'px',
+  minWidth: 50 + 'px',
+  minHeight: 50 + 'px',
 });
 
 // watchers
@@ -68,16 +69,6 @@ watch(() => props.src, () => {
   changeSrc(props.src);
 }, {immediate:true});
 
-
-/*
-// mounted
-onMounted(() => {
-  document.body.addEventListener('keydown', onEscKeyDown);
-});
-onUnmounted(() => {
-  document.body.removeEventListener('keydown', onEscKeyDown);
-});
-*/
 
 
 // set onload event for the image
@@ -107,39 +98,7 @@ async function changeSrc(src: string) {
   await new Promise(r => setTimeout(r, 150));
   imgsrc.value = src;
   
-  // change previewed image
-  // HACK: *these properties are not documented in naive-ui manual.
-  // manually set preview src because preview-src attribute doesn't seem to work.
-  /*
-  try {
-    if( nImageRef.value?.previewInstRef?.displayed ) {
-      nImageRef.value.previewInstRef.setPreviewSrc(src);
-    }
-  } catch(e) {
-  }
-  */
 }
-
-/*
-function renderToolbar({ nodes }: ImageRenderToolbarProps) {
-  // add next and prev buttons manually
-  nodes.next = h(NButton, {onClick(){emit('next'); }, disabled:!props.allowNext, circle:true, textColor:'white', size:'tiny', style: { marginLeft: '4px' }}, {icon: () => h(ArrowForward)});
-  nodes.prev = h(NButton, {onClick(){emit('prev'); }, disabled:!props.allowPrev, circle:true, textColor:'white', size:'tiny', style: { marginLeft: '4px' }}, {icon: () => h(ArrowBack)});
-  
-  // NOTE: need to edit download button because the default download button opens the blob url in a new tab instead of downloading.
-  // HACK: could not find a proper way to edit the download button (NTooltip didn't work)
-  //nodes.download = h(NTooltip, {onClick(){download()}, round:true, textColor:'white', size:'small', style: { marginLeft: '12px' }}, {default: () => t('Download'), trigger: () => h(NButton, {onClick(){download()}, circle:true, textColor:'white', size:'small'}, {icon: () => h(DownloadOutline)})});
-  try {
-  const dlchilds = (nodes.download.children as any);
-  dlchilds.default = () => t('save');
-  const icon = dlchilds.trigger();
-  icon.props.onClick = download;
-  dlchilds.trigger = () => icon;//() => h(NIcon, {component:DownloadOutline, onClick(){download()}, circle:true, textColor:'white', size:'small', style: { marginLeft: '12px' }});
-  } catch(e) {}
-
-  return Object.values(nodes);
-}
-*/
 
 function download() {
   const a = document.createElement('a');
@@ -148,36 +107,23 @@ function download() {
   a.click();
 }
 
-/*
-function onEscKeyDown(ev: KeyboardEvent) {
-  if( ev.code !== 'Escape' )
-    return;
-  
-  // HACK: prevent the modal from being closed along with the previewed image when the ESC key is pressed
-  try {
-    if( nImageRef.value?.previewInstRef?.displayed ) {
-      ev.stopPropagation();
-      // manually close the preview
-      nImageRef.value?.previewInstRef?.toggleShow(false);
-    }
-  } catch(e) {
-  }
-}
-*/
-
 function openPreview() {
-  // HACK
+  nImageRef.value?.click();
+  /*
+  // HACK:
   try {
     nImageRef.value?.previewInstRef?.setPreviewSrc(props.src);
     nImageRef.value?.previewInstRef?.toggleShow(true);
   } catch(e) {
   }
+  */
 }
 
 
 </script>
 
 <template>
+  <div v-show="!hidden">
   <n-tooltip>
     <template #trigger>
     <n-spin :show="imgloading || props.loading">
@@ -187,7 +133,6 @@ function openPreview() {
         <n-image
           ref="nImageRef"
           show-toolbar-tooltip
-          _:render-toolbar="renderToolbar"
           @load="imgload"
           @error="imgerror"
           :src="imgsrc"
@@ -202,6 +147,7 @@ function openPreview() {
     </template>
     {{ props.fileName }}
   </n-tooltip>
+  </div>
 
 </template>
 

@@ -135,7 +135,7 @@ async function convertRecievedData(data: MessageToCanvasWorker[number]) {
   
   try {
     sourceBitmap = bitmap; //await createImageBitmap(file);
-    /*
+    
     ({width, height} = sourceBitmap);
     // resize the source bitmap
     if( maxSize ) {
@@ -156,8 +156,8 @@ async function convertRecievedData(data: MessageToCanvasWorker[number]) {
       shrinked = !!resize;
       
       sourceBitmap = await createImageBitmap(sourceBitmap, {resizeQuality:'high', ...(resize||{})});
+      bitmap.close();
     }
-    */
   } catch(e) {
     console.error('error occurred on canvas worker', fileId, path, e);
     messageToMain = {

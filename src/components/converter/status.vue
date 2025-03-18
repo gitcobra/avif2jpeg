@@ -655,7 +655,8 @@ function scrollLogViewToBottom(instant = false) {
   nextTick(() => {
     if( !instant && (!expandLog.value || !autoScrollLog.value) )
       return;
-    scrollref.value.scrollTo({behavior: instant ? 'instant' : 'smooth', top: workingLogs.value.length * 50});
+    //scrollref.value.scrollTo({behavior: instant ? 'instant' : 'smooth', top: workingLogs.value.length * 50});
+    scrollref.value.scrollTo({behavior: 'instant', top: workingLogs.value.length * 50});
 
     scrollTimeoutId = window.setTimeout(() => {
       scrollTimeoutId = 0;
@@ -692,7 +693,7 @@ function scrollLogViewToBottom(instant = false) {
         </n-statistic>
 
         <n-statistic tabular-nums :label="$t('status.multiThreading')">
-          <n-space :style="{color: !props.status.threads ? 'red' : ''}">
+          <n-space :style="{color: !props.status.threads ? 'red' : '', fontSize: 'smaller'}">
             {{ props.status.threads ? $rt('{n} @:threads', props.status.threads) : $t('disabled') }}
           </n-space>
         </n-statistic>
@@ -730,7 +731,7 @@ function scrollLogViewToBottom(instant = false) {
         class="center-column"
       >
         <!-- content in the center circle -->
-        <n-space vertical align="center" style="font-family:v-mono; font-size:xx-large; white-space: nowrap;" :wrap="false" :wrap-item="false">
+        <n-space vertical align="center" style="font-family:v-mono; white-space: nowrap;" :wrap="false" :wrap-item="false">
           <!-- percent -->
           <span :style="{color: failure[0] ? statusColor : processing ? c.successColor : statusColor}">
           <n-number-animation
@@ -925,12 +926,12 @@ function scrollLogViewToBottom(instant = false) {
  
       <!-- image browser -->
       <n-flex justify="center" align="center" vertical>
-        <div class="singleimage" :style="{maxHeight: imageViewerStarted ? '2000px' : '100px'}">
-        <n-button v-if="!imageViewerStarted && zippingFlag/* && props.status.threads*/" tertiary type="success" size="small" :disabled="!(status.success > 0)" @click="imageViewerStarted=true">
+        <transition>
+        <n-button v-if="!imageViewerStarted" tertiary type="success" size="small" :disabled="!(status.success > 0)" @click="imageViewerStarted=true">
           {{$t('status.browseConvertedImages')}}
         </n-button>
         <ImageViewer
-          v-else-if="status.success > 0 /*&& (props.status.threads || !zippingFlag)*/"
+          v-else-if="imageViewerStarted && status.success > 0 /*&& (props.status.threads || !zippingFlag)*/"
           ref="imageViewer"
           :url="outputImg.url"
           :size="outputImg.size"
@@ -944,8 +945,9 @@ function scrollLogViewToBottom(instant = false) {
           
           :is-single="!zippingFlag"
           @demand-image="index => emit('demand-image', index)"
+          @close="imageViewerStarted=false"
         />
-        </div>
+        </transition>
       </n-flex>
       
       <n-flex justify="center">
@@ -1234,6 +1236,10 @@ function scrollLogViewToBottom(instant = false) {
 .left-column {
   height:100%;
 }
+.center-column {
+  width: 7em;
+  font-size: 1.5em;
+}
 @media screen and (max-width: 512px) {
 	.left-column {
     > * {
@@ -1241,7 +1247,6 @@ function scrollLogViewToBottom(instant = false) {
     }
   }
   .center-column {
-    width: 45vw;
   }
   .hide-mobile {
     display: none;

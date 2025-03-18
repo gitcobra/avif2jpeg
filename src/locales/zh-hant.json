@@ -127,5 +127,7 @@
   "loadfolderNotifyingMessageTerm1": "當您在網站上選擇資料夾而不是檔案作為輸入時，主要網頁瀏覽器將顯示如下圖所示的警告。",
   "errMsgWorkerLoadError": "此頁面可能是過時的版本。\n請重新載入頁面。",
   "Reload": "重新載入",
-  "annotationOutOfMemory": "如果轉換過程經常失敗，並且出現“不含內存”消息，請嘗試減少或禁用“高級設置”中的“多線程”的數量。"
+  "annotationOutOfMemory": "如果轉換過程經常失敗，並且出現“不含內存”消息，請嘗試減少或禁用“高級設置”中的“多線程”的數量。",
+  "Next": "下一個",
+  "Prev": "以前的"
 }

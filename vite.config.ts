@@ -50,6 +50,7 @@ export default defineConfig(({mode}) => {
         include: [
           /\.vue$/,
           /\.vue\?vue/, // .vue
+          /\.ts$/,
         ],
         imports: [
           'vue',

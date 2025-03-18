@@ -53,7 +53,7 @@ const notification = useNotification();
 const ELAPSED_SECONDS_TO_CONFIRM_BEFORE_CLOSING = 10;
 const CoreCount = navigator.hardwareConcurrency;
 const OffscreenCanvas_Available = typeof OffscreenCanvas === 'function';
-const STATUS_UPDATE_INTERVAL = 300;
+const STATUS_UPDATE_INTERVAL = 100;
 const THREADS_MAX_LIMIT = 16;
 
 
@@ -170,8 +170,9 @@ async function onBeforeProcessingDialogClose() {
     }   
   }
 
-  if( !close )
-    return;
+  if( !close ) {
+    return false;
+  }
 
   notification.destroyAll();
   message.destroyAll();
@@ -353,7 +354,7 @@ async function startConvert(input: File[]) {
   let exception: Error | undefined;
   const result: ConverterResult = ( !disableMultiThreading && props.threads! >= 2 ) ?
     // multi-threading
-    await convertTargetFilesInMultithread(ConvStats, canceled, props, SingleImageData, message, notification, list, completedFileIdSet, format, quality, outputExt, format)
+    await convertTargetFilesInMultithread({files:list, completedFileIdSet, ConvStats, canceled, props, imageType:format, quality, outputExt, format, message, notification})
     :
     // single-threading
     await convertImagesInSingleThread(list, completedFileIdSet, SingleImageData, props, canceled, ConvStats);
@@ -489,15 +490,15 @@ function makeCurrentOutputName(format: string, quality: number, firstFilePath?: 
 
   const baseName = UserSettings.useFolderNameForZip && String(firstFilePath).match(/^\/?([^/]+)\//)?.[1] || 'avif2jpg';
   
-  const currentOutputFileName = `${baseName}-
+  const timestump = `
     ${ d.getFullYear().toString().substring(2) }
     ${ String((d.getMonth()+1) * 100 + d.getDate()).padStart(4, '0') }
     ${ String(d.getHours()*10000 + d.getMinutes()*100 + d.getSeconds()).padStart(6, '0') }
-    -${``/*
-    ${ String(d.getMilliseconds()).padStart(3, '0') }
-    -*/}
+    -
     ${ format + (/jpe?g|webp/i.test(format) ? quality : '') }
   `.replace(/\s/g, '');
+
+  const currentOutputFileName = `${baseName}-${timestump}`.replace(/\s+/g, ' ');
 
   return currentOutputFileName;
 }

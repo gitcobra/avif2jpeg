@@ -127,5 +127,7 @@
   "loadfolderNotifyingMessageTerm1": "Gdy jako dane wejściowe na stronie internetowej wybierzesz folder zamiast pliku, w głównych przeglądarkach internetowych wyświetli się ostrzeżenie, jak na obrazku poniżej.",
   "errMsgWorkerLoadError": "Ta strona może być nieaktualną wersją. \nZaładuj ponownie stronę.",
   "Reload": "Przeładować",
-  "annotationOutOfMemory": "Jeśli proces konwersji często się nie powiedzie i pojawia się komunikat „poza pamięcią”, spróbuj zmniejszyć lub wyłączyć liczbę „wielokrotnych” w „zaawansowanych ustawieniach”."
+  "annotationOutOfMemory": "Jeśli proces konwersji często się nie powiedzie i pojawia się komunikat „poza pamięcią”, spróbuj zmniejszyć lub wyłączyć liczbę „wielokrotnych” w „zaawansowanych ustawieniach”.",
+  "Next": "Następny",
+  "Prev": "Poprzedni"
 }

@@ -124,5 +124,7 @@
   "threads": "lanka | \nlangat",
   "title": "AVIF to JPEG \"Offline\" erämuunnin",
   "width": "Leveys",
-  "annotationOutOfMemory": "Jos muuntamisprosessi epäonnistuu usein ja \"muistista\" -viesti tulee näkyviin, yritä vähentää tai poistaa käytöstä \"monivarjojen\" lukumäärää \"edistyneissä asetuksissa\"."
+  "annotationOutOfMemory": "Jos muuntamisprosessi epäonnistuu usein ja \"muistista\" -viesti tulee näkyviin, yritä vähentää tai poistaa käytöstä \"monivarjojen\" lukumäärää \"edistyneissä asetuksissa\".",
+  "Next": "Seuraava",
+  "Prev": "Edellinen"
 }

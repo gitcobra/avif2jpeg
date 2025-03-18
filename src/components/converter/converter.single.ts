@@ -126,10 +126,19 @@ export async function convertImagesInSingleThread(list: FileWithId[], completedF
     ConvStats.thumbnail = img;
 
     // get the converted image as an ArrayBuffer
+    /*
     abuffer = await new Promise<ArrayBuffer>(resolve => {
       const callback = (blob: Blob) => {
         lastImageBlob = blob;
         resolve( blob?.arrayBuffer() );
+      };
+      canvas.toBlob(callback, type, quality);
+    });
+    */
+    const blob = await new Promise<Blob>(resolve => {
+      const callback = (blob: Blob) => {
+        lastImageBlob = blob;
+        resolve( blob );
       };
       canvas.toBlob(callback, type, quality);
     });
@@ -138,19 +147,21 @@ export async function convertImagesInSingleThread(list: FileWithId[], completedF
       break;
 
     // toBlob failure
-    if( !abuffer ) {
+    //if( !abuffer ) {
+    if( !blob ) {
       console.log('failed to toBlob', fileName);
       ConvStats.failure++;
       continue;
     }
 
-    outputSize = abuffer.byteLength;
+    outputSize = blob.size;//abuffer.byteLength;
     ConvStats.converted++;
     
     // emit a zip when the current total size exceeds maxZipSize
     let zipUrl = '';
     if( /*restItemCount > 5 &&*/ currentOutputSizeSum + outputSize >= maxZipSizeMB ) {
       try {
+        await azip.wait();
         zipUrl = azip.url();
       } catch(e: any) {
         memoryProblemOccurred = true;
@@ -186,7 +197,8 @@ export async function convertImagesInSingleThread(list: FileWithId[], completedF
     ConvStats.done++;
     try {
       zippedCount++;
-      azip.add(fname, abuffer);
+      //azip.add(fname, abuffer);
+      azip.add(fname, blob);
       zipIndex.increase();
       fileListByZippedIndex.push(file);
       ConvStats.inputTotalSize += inputSize;
@@ -212,12 +224,6 @@ export async function convertImagesInSingleThread(list: FileWithId[], completedF
   if( ConvStats.success > 0 ) {
     if( fileCount === 1 ) {
       if( lastImageBlob ) {
-        /*
-        SingleImageData.convertedImageBlob = lastImageBlob;
-        SingleImageData.convertedImageName = lastImageName;
-        SingleImageData.convertedImageWidth = lastImageWidth;
-        SingleImageData.convertedImageHeight = lastImageHeight;
-        */
         ConvStats.convertedImageIndex = 0;
         ConvStats.convertedImageName = lastImageName.replace(/^.*\/(?=[^/]+$)/, '').replace(props.retainExtension ? '' : /\.(jpe?g|gif|png|avif|webp|bmp)$/i, '') + '.' + ext;
         ConvStats.convertedImageUrl = URL.createObjectURL(lastImageBlob);
@@ -231,6 +237,7 @@ export async function convertImagesInSingleThread(list: FileWithId[], completedF
       try {
         if( memoryProblemOccurred )
           throw new Error(`terminated zipping process for memory problems`);
+        await azip.wait();
         const zipUrl = azip.url();
         ConvStats.zips.push({url: zipUrl, count: zippedCount, size:currentOutputSizeSum});
         ConvStats.zippedTotalCount += zippedCount;

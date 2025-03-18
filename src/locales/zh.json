@@ -127,5 +127,7 @@
   "loadfolderNotifyingMessageTerm1": "当您在网站上选择文件夹而不是文件作为输入时，主要网络浏览器将显示如下图所示的警告。",
   "errMsgWorkerLoadError": "此页面可能是过时的版本。\n请重新加载页面。",
   "Reload": "重新加载",
-  "annotationOutOfMemory": "如果转换过程经常失败，并且出现“不含内存”消息，请尝试减少或禁用“高级设置”中的“多线程”的数量。"
+  "annotationOutOfMemory": "如果转换过程经常失败，并且出现“不含内存”消息，请尝试减少或禁用“高级设置”中的“多线程”的数量。",
+  "Next": "下一个",
+  "Prev": "以前的"
 }

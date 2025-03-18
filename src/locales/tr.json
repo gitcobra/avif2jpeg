@@ -127,5 +127,7 @@
   "loadfolderNotifyingMessageTerm1": "Bir web sitesinde girdi olarak dosya yerine bir klasörü seçtiğinizde, büyük web tarayıcıları aşağıdaki görüntüye benzer bir uyarı görüntüleyecektir.",
   "errMsgWorkerLoadError": "Bu sayfa eski bir sürüm olabilir. \nLütfen sayfayı yeniden yükleyin.",
   "Reload": "Yeniden yükle",
-  "annotationOutOfMemory": "Dönüşüm işlemi sık sık başarısız olursa ve \"bellek dışı\" mesajı görünürse, \"Gelişmiş Ayarlar\" daki \"çoklu iplikler\" sayısını azaltmayı veya devre dışı bırakmayı deneyin."
+  "annotationOutOfMemory": "Dönüşüm işlemi sık sık başarısız olursa ve \"bellek dışı\" mesajı görünürse, \"Gelişmiş Ayarlar\" daki \"çoklu iplikler\" sayısını azaltmayı veya devre dışı bırakmayı deneyin.",
+  "Next": "Sonraki",
+  "Prev": "Öncesi"
 }

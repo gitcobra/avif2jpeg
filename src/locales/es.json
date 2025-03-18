@@ -127,5 +127,7 @@
   "loadfolderNotifyingMessageTerm1": "Cuando selecciona una carpeta en lugar de un archivo como entrada en un sitio web, los principales navegadores web mostrarán una advertencia como la imagen a continuación.",
   "errMsgWorkerLoadError": "Esta página puede ser una versión desactualizada. \nPor favor recarga la página.",
   "Reload": "Recargar",
-  "annotationOutOfMemory": "Si el proceso de conversión falla con frecuencia y aparece un mensaje de \"fuera de memoria\", intente reducir o deshabilitar el número de \"múltiples hilos\" en la \"configuración avanzada\"."
+  "annotationOutOfMemory": "Si el proceso de conversión falla con frecuencia y aparece un mensaje de \"fuera de memoria\", intente reducir o deshabilitar el número de \"múltiples hilos\" en la \"configuración avanzada\".",
+  "Next": "Próximo",
+  "Prev": "Anterior"
 }

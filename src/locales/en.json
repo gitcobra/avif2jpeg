@@ -128,5 +128,7 @@
   "loadfolderNotifyingMessageTerm1": "When you select a folder instead of a file as input on a website, major web browsers will display a warning like the image below.",
   "errMsgWorkerLoadError": "This page may be an outdated version. Please reload the page.",
   "Reload": "Reload",
-  "annotationOutOfMemory": "If the conversion process frequently fails and an “Out of Memory” message appears, try reducing or disabling the number of \"multi-threads\" in the \"Advanced Settings\"."
+  "annotationOutOfMemory": "If the conversion process frequently fails and an “Out of Memory” message appears, try reducing or disabling the number of \"multi-threads\" in the \"Advanced Settings\".",
+  "Next": "Next",
+  "Prev": "Previous"
 }
