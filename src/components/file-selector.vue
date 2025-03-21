@@ -2,11 +2,7 @@
   <div class="container-1">
   <div class="container-2">
   <n-space vertical align="center" justify="center" inline>
-    <n-space align="center" justify="space-around">
-      
-      <n-badge :value="inputtedFileCount" :max="999" :offset="[-8, 0]" color="#999999" style="margin-right:1em;">
-        <n-icon size="4em" color="#CCCCCC"><DocumentOutline /></n-icon>
-      </n-badge>
+    <n-space align="center" justify="space-around" class="main-buttons">
       
       <n-space vertical align="stretch" justify="center">
         <!-- file select -->
@@ -18,8 +14,10 @@
           <template #trigger>
             <n-button
               :disabled="!isAllowedInputs"
+              size="large"
               @click="onInputButtonClick(fileinput)"
-              round style="width:100%; background-color:white"
+              round
+              style="width:100%; background-color:white; font-size: large;"
             >
               <template #icon>
                 <n-icon size="large" color="gray"><ImageOutline /></n-icon>
@@ -40,8 +38,10 @@
           <template #trigger>
             <n-button
               :disabled="!isAllowedInputs"
+              size="large"
               @click="onInputButtonClick(folderinput)"
-              round style="width:100%; background-color:white"
+              round
+              style="width:100%; background-color:white; font-size: large;"
             >
               <template #icon>
                 <n-icon size="large" color="gray"><FolderOpenOutline /></n-icon>
@@ -52,10 +52,18 @@
           <div v-html="$t('loadfoldertooltip')"></div>
         </n-tooltip>
       </n-space>
+
+      <!-- drop target -->
+      <DropTarget
+        v-if="!INJ.IS_SP"
+        @drop="emitInputs"
+        :forbidden="!isAllowedInputs"
+        class="drop-target"
+      />
     </n-space>
 
     <!-- target file type menu -->
-    <div :class="{'expand-ext-list-container': expandedMenu}">
+    <div :class="{'expand-ext-list-container': expandedMenu}" style="margin-top: 1em;">
     <n-collapse display-directive="show" :expanded-names="expandedMenu ? ['extItem'] : ''" :on-update:expanded-names="names => {expandedMenu = !!(''+names)}" :class="{'expand-ext-list': expandedMenu}">
       <template #header-extra><n-icon size="large"><SearchCircle /></n-icon></template>
       
@@ -106,13 +114,8 @@
     </n-collapse>
     </div>
 
-    <!-- drop target -->
-    <DropTarget
-      v-if="!INJ.IS_SP"
-      @drop="emitInputs"
-      :forbidden="!isAllowedInputs"
-    />
-    
+
+
   </n-space>
   </div>
   </div>
@@ -366,6 +369,7 @@ ul, li {
 }
 
 .container-1 {
+  /*
   border-radius: 1em;
   border: 1px solid #DDDDDD;
   padding: 2px;
@@ -376,8 +380,22 @@ ul, li {
     padding: 16px;
     border: 1px dashed #BBBBBB;
   }
+  */
 }
 
+.main-buttons {
+  position: relative;
+}
+.drop-target {
+  position: absolute;
+  right: -15em;
+  top: 1.5em;
+}
+@media screen and (max-width: 640px) {
+  .drop-target {
+    display: none;
+  }	
+}
 
 .expand-ext-list-container {
   border-radius: 1em;

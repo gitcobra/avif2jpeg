@@ -306,6 +306,9 @@ onMounted(() => {
     clearTimeout(hookedUpdateTimeoutId);
     clearTimeout(scrollTimeoutId);
     window.removeEventListener('resize', changeLogMaxHeight);
+
+    URL.revokeObjectURL(outputImg.url);
+    URL.revokeObjectURL(outputImg.originalName);
   });
 });
 

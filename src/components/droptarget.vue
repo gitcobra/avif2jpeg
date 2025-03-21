@@ -2,13 +2,15 @@
 <template>
 
   <div class="container-1">
-    <n-tooltip :to="false" display-directive="show" trigger="hover" :duration="0" :delay="0" placement="left">
+    <n-tooltip :to="false" display-directive="show" trigger="hover" :duration="0" :delay="0" placement="bottom-end">
       <template #trigger>
         <n-space vertical class="container-2">
           <n-space align="center" :wrap="false" class="container-3">
+            <!--
             <n-space align="center">
-              <n-icon size="64" color="white"><ArrowRedoSharp /></n-icon>
+              <n-icon size="32" color="silver"><ArrowRedoSharp /></n-icon>
             </n-space>
+            -->
             <n-space vertical align="center" :wrap="false" style="font-weight:bold; font-size:1em; line-height: 90%; white-space: nowrap;">
               <span>Drag & Drop</span>
               <span style="position:relative">
@@ -35,17 +37,19 @@
       </template>
       <h3 v-html="$t('droptarget')" style="max-width:200px; text-align: center; word-break: keep-all; overflow-wrap: break-word; "></h3>
     </n-tooltip>
+  
+
+
+    <n-modal v-model:show="loading" :closable="true" preset="dialog" title="Parsing dropped items." type="info" :mask-closable="false" :negative-text="$t('cancel')">
+      <template #default>
+        <n-space vertical align="center">
+          <div style="width: 100%; overflow:hidden; text-overflow: ellipsis; font-size: xx-small; white-space: nowrap;">{{ parsingFolder }}</div>
+          <div>found {{ fileCount }} files</div>
+        </n-space>
+      </template>
+    </n-modal>
+
   </div>
-
-
-  <n-modal v-model:show="loading" :closable="true" preset="dialog" title="Parsing dropped items." type="info" :mask-closable="false" :negative-text="$t('cancel')">
-    <template #default>
-      <n-space vertical align="center">
-        <div style="width: 100%; overflow:hidden; text-overflow: ellipsis; font-size: xx-small; white-space: nowrap;">{{ parsingFolder }}</div>
-        <div>found {{ fileCount }} files</div>
-      </n-space>
-    </template>
-  </n-modal>
 </template>
 
 <script setup lang="ts">
@@ -151,6 +155,23 @@ async function digOutFileSystemEntries(entries: FileSystemEntry[], list?: File[]
 </script>
 
 <style lang="scss" scoped>
+.container-2 {
+  opacity: 0.2;
+  /*
+  border-radius: 1em;
+  border: 1px dashed #999;
+  padding: 1em;
+  */
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: x-small;
+  width: 100%;
+  height: 100%;
+}
+
+/*
 .container-1 {
   margin-top: 0.2em;
   border-radius: 1em;
@@ -179,8 +200,9 @@ async function digOutFileSystemEntries(entries: FileSystemEntry[], list?: File[]
   word-break: keep-all;
   cursor: crosshair;
 }
+*/
 .avif {
   max-width: 10vw;
-  width: 64px;
+  width: 48px;
 }
 </style>

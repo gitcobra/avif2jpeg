@@ -30,6 +30,7 @@ export type SingleImageDataType = {
 import { NButton, type NotificationType } from 'naive-ui';
 import { convertTargetFilesInMultithread } from './converter.multi';
 import { convertImagesInSingleThread, getAsPromise } from './converter.single';
+import { DocumentOutline } from '@vicons/ionicons5';
 
 // sub components
 import ConversionStatus from './status.vue';
@@ -182,6 +183,7 @@ async function onBeforeProcessingDialogClose() {
 
 function onDemandImage(index: number) {
   ConvStats.demandImage(index);
+  console.log(index, "demanded")
 }
 
 function onESCPress() {
@@ -564,7 +566,14 @@ function checkAvailableFeatures() {
   <n-space justify="center" align="center">
     <n-tooltip v-if="!processing && props.input?.length" trigger="hover" placement="top" :keep-alive-on-hover="false" :duration="0" :delay="50">
       <template #trigger>
-        <n-button @click="convertAgain" round>{{t('convertAgain')}}</n-button>
+        <n-badge :value="input?.length || 0" :offset="[-12, -5]" color="#99999966">
+          <n-button @click="convertAgain" round>
+            <template #icon>
+              <n-icon size="1.5em" color="#CCCCCC"><DocumentOutline /></n-icon>
+            </template>
+            {{t('convertAgain')}}
+          </n-button>
+        </n-badge>
       </template>
       <div v-html="t('reconvertTip', props.input?.length)"></div>
     </n-tooltip>

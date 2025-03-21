@@ -70,8 +70,33 @@ let outputExt: string;
 let imageType: string;
 let message: MessageApiInjection;
 let notification: NotificationApiInjection;
+function clearModuleVariables(param?: ConverterParameter) {
+  let obj = param || {} as any;
+  ({
+    files,
+    completedFileIdSet, 
+    ConvStats, 
+    canceled, 
+    props, 
+    format, 
+    quality, 
+    outputExt, 
+    imageType, 
+    message, 
+    notification
+  } = obj);
+  
+  chunksEachWorkerPossessed.clear();
+  retriedFileTime.clear();
 
+  targetFileMapById.clear();
+  failedFileCountMap.clear();
+  variousFileInfo.clear();
 
+  targetFileMapById.clear();
+  failedFileCountMap.clear();
+  variousFileInfo.clear();
+};
 
 
 
@@ -94,24 +119,8 @@ type ConverterParameter = {
 export async function convertTargetFilesInMultithread(param: ConverterParameter) {
   
   // init variables
-  ({
-    files,
-    completedFileIdSet, 
-    ConvStats, 
-    canceled, 
-    props, 
-    format, 
-    quality, 
-    outputExt, 
-    imageType, 
-    message, 
-    notification
-  } = param);
-  targetFileMapById.clear();
-  failedFileCountMap.clear();
-  variousFileInfo.clear();
+  clearModuleVariables(param);
   completedFileIdSet.clear();
-
   
   // initialize workers
   const canvasWorkerCount = Math.min(props.threads! - 1, files.length); // preserve +1 for worker.zip
@@ -125,6 +134,7 @@ export async function convertTargetFilesInMultithread(param: ConverterParameter)
     zipWorker = await setupWorkers(canvasWorkerCount, workerCountForHugeImages, canvasListener);
   } catch(e) {
     // terminate the entire application here if failed to load the worker
+    clearModuleVariables();
     return {
       exception: new Error('worker-load-error'),
       callbackToClearConverter: new Function as any,
@@ -374,6 +384,7 @@ export async function convertTargetFilesInMultithread(param: ConverterParameter)
     Terminated.value = true;
     WorkerManager.init();
     zipWorker.terminate();
+    clearModuleVariables();
   };
   let doneCalled = false;
   const callbackToGenerateFailedZips = async (list: FileWithId[]) => {
