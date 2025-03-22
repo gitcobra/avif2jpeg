@@ -129,5 +129,6 @@
   "Reload": "Recargar",
   "annotationOutOfMemory": "Si el proceso de conversión falla con frecuencia y aparece un mensaje de \"fuera de memoria\", intente reducir o deshabilitar el número de \"múltiples hilos\" en la \"configuración avanzada\".",
   "Next": "Próximo",
-  "Prev": "Anterior"
+  "Prev": "Anterior",
+  "or": "o"
 }

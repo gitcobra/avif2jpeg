@@ -129,5 +129,6 @@
   "Reload": "Herladen",
   "annotationOutOfMemory": "Als het conversieproces vaak mislukt en een \"geheugen\" -bericht verschijnt, probeer dan het aantal \"multi-threads\" te verminderen of uit te schakelen in de \"geavanceerde instellingen\".",
   "Next": "Volgende",
-  "Prev": "Vorig"
+  "Prev": "Vorig",
+  "or": "of"
 }

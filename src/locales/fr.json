@@ -129,5 +129,6 @@
   "Reload": "Recharger",
   "annotationOutOfMemory": "Si le processus de conversion échoue fréquemment et qu'un message «hors mémoire» apparaît, essayez de réduire ou de désactiver le nombre de «multi-threads» dans les «paramètres avancés».",
   "Next": "Suivant",
-  "Prev": "Précédent"
+  "Prev": "Précédent",
+  "or": "ou"
 }

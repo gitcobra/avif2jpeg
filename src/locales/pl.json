@@ -129,5 +129,6 @@
   "Reload": "Przeładować",
   "annotationOutOfMemory": "Jeśli proces konwersji często się nie powiedzie i pojawia się komunikat „poza pamięcią”, spróbuj zmniejszyć lub wyłączyć liczbę „wielokrotnych” w „zaawansowanych ustawieniach”.",
   "Next": "Następny",
-  "Prev": "Poprzedni"
+  "Prev": "Poprzedni",
+  "or": "Lub"
 }

@@ -563,8 +563,8 @@ function checkAvailableFeatures() {
 <template>
 
   <!-- re-convert button -->
-  <n-space justify="center" align="center">
-    <n-tooltip v-if="!processing && props.input?.length" trigger="hover" placement="top" :keep-alive-on-hover="false" :duration="0" :delay="50">
+  <n-space v-if="!processing && props.input?.length" justify="center" align="center">
+    <n-tooltip trigger="hover" placement="top" :keep-alive-on-hover="false" :duration="0" :delay="50">
       <template #trigger>
         <n-badge :value="input?.length || 0" :offset="[-12, -5]" color="#99999966">
           <n-button @click="convertAgain" round>

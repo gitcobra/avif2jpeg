@@ -129,5 +129,6 @@
   "Reload": "Ricaricare",
   "annotationOutOfMemory": "Se il processo di conversione fallisce frequentemente e appare un messaggio \"fuori dalla memoria\", prova a ridurre o disabilitare il numero di \"multi-thread\" nelle \"impostazioni avanzate\".",
   "Next": "Prossimo",
-  "Prev": "Precedente"
+  "Prev": "Precedente",
+  "or": "O"
 }

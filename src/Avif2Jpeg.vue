@@ -156,7 +156,7 @@ function onInputClick(flag: boolean) {
 
 <template>
 
-  <n-flex vertical align="stretch" justify="start" style="height:100%; position: relative;">
+  <n-flex vertical align="stretch" style="position: relative; height:100%;">
     <Header>
       <template #lang-switch>
         <Suspense>
@@ -171,70 +171,69 @@ function onInputClick(flag: boolean) {
     
     <transition name="fade">
     <n-flex v-if="contentVisible" vertical align="stretch" justify="space-between" style="height:100%;">
-      <n-flex vertical justify="space-around" style="height:100%;">    
-        <Title/>
+      <n-flex class="row-spacer"/>
 
-        <n-space justify="center">
-          <FileSelector
-            v-model:expanded="UserSettings.expandExtButtons"
-            v-model:target="UserSettings.acceptTypeValue"
-            v-model:userExtensions="UserSettings.editedAcceptTypes"
-            v-model:disable-notifying-folder-select="UserSettings.disableNotifyingFolderSelect"
-            :forbidden="processing"
-            @input="onInputFile"
-            @click="onInputClick(true)"
-            @cancel="onInputClick(false)"
-          />
-        </n-space>
+      <Title/>
+
+      <n-space justify="center">
+        <FileSelector
+          v-model:expanded="UserSettings.expandExtButtons"
+          v-model:target="UserSettings.acceptTypeValue"
+          v-model:userExtensions="UserSettings.editedAcceptTypes"
+          v-model:disable-notifying-folder-select="UserSettings.disableNotifyingFolderSelect"
+          :forbidden="processing"
+          @input="onInputFile"
+          @click="onInputClick(true)"
+          @cancel="onInputClick(false)"
+        />
+      </n-space>
+      
+      <!-- core component -->
+      <Converter
+        :input="inputConversionFiles"
+        :format="UserSettings.imageFormat"
+        :quality="UserSettings.imageQuality"
+        :retain-extension="UserSettings.retainExtension"
+        :maxZipSizeMB="UserSettings.maxZipSizeMB"
+        :threads="UserSettings.multithread ? UserSettings.threadCount : 0"
+        v-model:show-note="showNote"
         
-        <!-- core component -->
-        <Converter
-          :input="inputConversionFiles"
-          :format="UserSettings.imageFormat"
-          :quality="UserSettings.imageQuality"
-          :retain-extension="UserSettings.retainExtension"
-          :maxZipSizeMB="UserSettings.maxZipSizeMB"
-          :threads="UserSettings.multithread ? UserSettings.threadCount : 0"
-          v-model:show-note="showNote"
-          
-          @start="processing=true"
-          @end="processing=false"
-          @multi-thread-count="val => availableThreadCount = val"
+        @start="processing=true"
+        @end="processing=false"
+        @multi-thread-count="val => availableThreadCount = val"
+      />
+
+      <n-space vertical align="center">
+        <n-popover trigger="manual" placement="top" :keep-alive-on-hover="false" :duration="0" :delay="0">
+        <template #trigger>
+          <n-icon size="6vh" color="#DADADA" style="margin:0px;"><ArrowDown/></n-icon>
+        </template>
+        <span>CONVERT TO👇</span>
+        </n-popover>
+      </n-space>
+
+      <n-space vertical align="center">  
+        <OutputSettings
+          v-model:format="UserSettings.imageFormat"
+          v-model:quality="UserSettings.imageQuality"
         />
 
-        <n-space vertical align="center">
-          <n-popover trigger="manual" placement="top" :keep-alive-on-hover="false" :duration="0" :delay="0">
-          <template #trigger>
-            <n-icon size="6vh" color="#DADADA" style="margin:0px;"><ArrowDown/></n-icon>
-          </template>
-          <span>CONVERT TO👇</span>
-          </n-popover>
-        </n-space>
-
-        <n-space vertical align="center">  
-          <OutputSettings
-            v-model:format="UserSettings.imageFormat"
-            v-model:quality="UserSettings.imageQuality"
-          />
-
-          <AdvancedSettings
-            v-model:retain-ext="UserSettings.retainExtension"
-            v-model:use-folder-name-for-zip="UserSettings.useFolderNameForZip"
-            v-model:max-zip-size="UserSettings.maxZipSizeMB"
-            v-model:expanded="UserSettings.expandAdvSettings"
-            v-model:multithread="UserSettings.multithread"
-            v-model:thread-count="UserSettings.threadCount"
-            :thread-max="availableThreadCount || 0"
-            
-            v-model:shrink-image="UserSettings.shrinkImage"
-            v-model:max-width="UserSettings.maxWidth"
-            v-model:max-height="UserSettings.maxHeight"
-          />
+        <AdvancedSettings
+          v-model:retain-ext="UserSettings.retainExtension"
+          v-model:use-folder-name-for-zip="UserSettings.useFolderNameForZip"
+          v-model:max-zip-size="UserSettings.maxZipSizeMB"
+          v-model:expanded="UserSettings.expandAdvSettings"
+          v-model:multithread="UserSettings.multithread"
+          v-model:thread-count="UserSettings.threadCount"
+          :thread-max="availableThreadCount || 0"
           
-        </n-space>
+          v-model:shrink-image="UserSettings.shrinkImage"
+          v-model:max-width="UserSettings.maxWidth"
+          v-model:max-height="UserSettings.maxHeight"
+        />
         
-      </n-flex>
-
+      </n-space>
+      
       <Descriptions/>
       
     </n-flex>

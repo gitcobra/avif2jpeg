@@ -126,5 +126,6 @@
   "width": "Leveys",
   "annotationOutOfMemory": "Jos muuntamisprosessi epäonnistuu usein ja \"muistista\" -viesti tulee näkyviin, yritä vähentää tai poistaa käytöstä \"monivarjojen\" lukumäärää \"edistyneissä asetuksissa\".",
   "Next": "Seuraava",
-  "Prev": "Edellinen"
+  "Prev": "Edellinen",
+  "or": "tai"
 }

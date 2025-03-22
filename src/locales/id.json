@@ -129,5 +129,6 @@
   "Reload": "Muat ulang",
   "annotationOutOfMemory": "Jika proses konversi sering gagal dan pesan \"di luar memori\" muncul, cobalah mengurangi atau menonaktifkan jumlah \"multi-thread\" dalam \"pengaturan lanjutan\".",
   "Next": "Berikutnya",
-  "Prev": "Sebelumnya"
+  "Prev": "Sebelumnya",
+  "or": "atau"
 }

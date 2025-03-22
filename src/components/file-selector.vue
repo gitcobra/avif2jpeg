@@ -28,6 +28,12 @@
           <div v-html="$t('loadbuttontooltip')"></div>
         </n-tooltip>
 
+        <n-space align="center" justify="center" style="color:gray; margin:0em;">
+          <n-icon color="gray"><ArrowUp /></n-icon>
+          {{$t('or')}}
+          <n-icon color="gray"><ArrowDown /></n-icon>
+        </n-space>
+
         <!-- folder select -->
         <n-tooltip :to="false" display-directive="show" trigger="hover"
           placement="left" :keep-alive-on-hover="false" style="max-width: 40vw;"
@@ -125,7 +131,7 @@
 </template>
 
 <script setup lang="ts">
-import { ImageOutline, FolderOpenOutline, SearchCircle, DocumentOutline } from '@vicons/ionicons5';
+import { ImageOutline, FolderOpenOutline, SearchCircle, ArrowUp, ArrowDown } from '@vicons/ionicons5';
 import { NCheckbox, NEmpty, NImage } from "naive-ui";
 import { GlobalValsKey } from "../Avif2Jpeg.vue";
 import { useI18n } from 'vue-i18n';

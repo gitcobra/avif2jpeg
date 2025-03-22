@@ -130,5 +130,6 @@
   "Reload": "Reload",
   "annotationOutOfMemory": "If the conversion process frequently fails and an “Out of Memory” message appears, try reducing or disabling the number of \"multi-threads\" in the \"Advanced Settings\".",
   "Next": "Next",
-  "Prev": "Previous"
+  "Prev": "Previous",
+  "or": "or"
 }

@@ -129,5 +129,6 @@
   "Reload": "Yeniden yükle",
   "annotationOutOfMemory": "Dönüşüm işlemi sık sık başarısız olursa ve \"bellek dışı\" mesajı görünürse, \"Gelişmiş Ayarlar\" daki \"çoklu iplikler\" sayısını azaltmayı veya devre dışı bırakmayı deneyin.",
   "Next": "Sonraki",
-  "Prev": "Öncesi"
+  "Prev": "Öncesi",
+  "or": "veya"
 }
