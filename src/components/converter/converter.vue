@@ -563,8 +563,7 @@ function checkAvailableFeatures() {
 
 
 <template>
-  <template>
-
+  <n-flex justify="center">
   <!-- re-convert button -->
   <n-space v-if="!processing && props.input?.length" justify="center" align="center">
     <n-tooltip trigger="hover" placement="top" :keep-alive-on-hover="false" :duration="0" :delay="50">
@@ -647,7 +646,7 @@ function checkAvailableFeatures() {
     </template>
   </n-modal>
 
-  </template>
+  </n-flex>
 
 </template>
 
