@@ -66,7 +66,7 @@ function checkFormat(val) {
 
 function checkSupportedImageFormats() {
   for( const f of Formats ) {
-    const url = canvas.value.toDataURL(f);
+    const url = canvas.value!.toDataURL(f);
     if( url.indexOf(f) >= 0 ) {
       supportedFormats.value.push(f);
     }

@@ -35,7 +35,7 @@ import { DocumentOutline } from '@vicons/ionicons5';
 // sub components
 import ConversionStatus from './status.vue';
 import { GlobalValsKey } from '@/Avif2Jpeg.vue';
-import { UserSettings } from '@/user-settings';
+import { UserSettings, MaxThreads } from '@/user-settings';
 export type ConversionStatusType = InstanceType<typeof ConversionStatus>['$props']['status'];
 
 
@@ -78,7 +78,7 @@ const showNote = defineModel<boolean>('showNote');
 const emit = defineEmits<{
   start: []
   end: []
-  'multi-thread-count': [number]
+  //'multi-thread-count': [number]
 }>();
 
 
@@ -549,7 +549,9 @@ function checkAvailableFeatures() {
   if( !OffscreenCanvas_Available || CoreCount < 2 || !Promise.any ) {
     disableMultiThreading = true;
   }
-  emit('multi-thread-count', disableMultiThreading ? 0 : Math.min(CoreCount, THREADS_MAX_LIMIT));
+  
+  //emit('multi-thread-count', disableMultiThreading ? 0 : Math.min(CoreCount, THREADS_MAX_LIMIT));
+  MaxThreads.value = disableMultiThreading ? 0 : Math.min(CoreCount, THREADS_MAX_LIMIT);
 }
 
 
@@ -561,6 +563,7 @@ function checkAvailableFeatures() {
 
 
 <template>
+  <template>
 
   <!-- re-convert button -->
   <n-space v-if="!processing && props.input?.length" justify="center" align="center">
@@ -644,7 +647,7 @@ function checkAvailableFeatures() {
     </template>
   </n-modal>
 
-
+  </template>
 
 </template>
 

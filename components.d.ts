@@ -8,6 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     Converter: typeof import('./src/components/converter/converter.vue')['default']
+    DelLs: typeof import('./src/components/_test/del-ls.vue')['default']
     Descriptions: typeof import('./src/components/descriptions.vue')['default']
     Droptarget: typeof import('./src/components/droptarget.vue')['default']
     FileSelector: typeof import('./src/components/file-selector.vue')['default']
@@ -52,6 +53,7 @@ declare module 'vue' {
     NSpin: typeof import('naive-ui')['NSpin']
     NStatistic: typeof import('naive-ui')['NStatistic']
     NSwitch: typeof import('naive-ui')['NSwitch']
+    NTag: typeof import('naive-ui')['NTag']
     NTooltip: typeof import('naive-ui')['NTooltip']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

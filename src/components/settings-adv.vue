@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { nextTick } from "vue";
-import { resetUserSettings } from "@/user-settings";
+import { watch, computed, onMounted } from "vue";
+import { resetUserSettings, MaxThreads } from "@/user-settings";
 import { SettingsOutline, BuildOutline, ArchiveOutline, DocumentTextOutline, HardwareChipOutline, ImagesOutline, FolderOpenOutline } from "@vicons/ionicons5";
 import { NTooltip } from "naive-ui";
 
@@ -43,33 +43,37 @@ const maxHeight = defineModel<number>('maxHeight', {required:true});
 
 // props
 const props = defineProps<{
-  threadMax: number;
+  //threadMax: number;
 }>();
 
 
 // disable multi thread switch
-watch(() => props.threadMax, () => {
-  if( !(props.threadMax > 1) ) {
+watch(MaxThreads, (val) => {
+//watch(() => props.threadMax, (val) => {
+  if( !(val > 1) ) {
     multithread.value = false;
   }
-
+  if( threadCount.value > val )
+    threadCount.value = val;
 }, {immediate:true});
 
+/*
 watch(threadCount, (val) => {
   if( val === undefined ) {
     threadCount.value = Math.max(2, Math.min(props.threadMax, 16));
   }
 });
+*/
 
-
-const enableNewFeatures = computed(() => multithread.value && props.threadMax > 1);
+const enableNewFeatures = computed(() => multithread.value && MaxThreads.value > 1);
 
 
 
 onMounted(() => {
   // set thread count to max/2 if undefined
-  if( props.threadMax > 1 && typeof threadCount.value === 'undefined' )
-    threadCount.value = Math.max(props.threadMax / 2|0, 2);
+  if( MaxThreads.value > 1 && typeof threadCount.value === 'undefined' )
+    //threadCount.value = Math.max(props.threadMax / 2|0, 2);
+    threadCount.value = Math.max(MaxThreads.value, 2);
 });
 
 </script>
@@ -110,15 +114,15 @@ onMounted(() => {
             <template #trigger>
             <n-flex vertical>
               <n-flex :wrap="false" align="center">
-                <n-button text :disabled="!threadMax" style="font-size:smaller;" :bordered="false" :focusable="false" @click="multithread = !multithread">
+                <n-button text :disabled="!MaxThreads" style="font-size:smaller;" :bordered="false" :focusable="false" @click="multithread = !multithread">
                   <template #icon><n-icon><HardwareChipOutline /></n-icon></template>
                   {{ $t('settings.enableMultiThreads') }}
                 </n-button>
-                <n-switch v-model:value="multithread" :disabled="!threadMax" size="small" />
+                <n-switch v-model:value="multithread" :disabled="!MaxThreads" size="small" />
               </n-flex>
               <n-flex :wrap="false" align="center" style="padding-left: 2em;">
-                <n-slider v-model:value="threadCount" :disabled="!threadMax || !multithread" :step="1" :min="2" :max="threadMax" style="width:120px;"/>
-                <n-input-number @blur="threadCount??=2" size="tiny" v-model:value="threadCount" :disabled="!threadMax || !multithread" :step="1" :min="2" :max="threadMax" style="width:10em"><template #suffix>{{$t('threads', threadCount)}}</template></n-input-number>
+                <n-slider v-model:value="threadCount" :disabled="!MaxThreads || !multithread" :step="1" :min="2" :max="MaxThreads" style="width:120px;"/>
+                <n-input-number @blur="threadCount??=2" size="tiny" v-model:value="threadCount" :disabled="!MaxThreads || !multithread" :step="1" :min="2" :max="MaxThreads" style="width:10em"><template #suffix>{{$t('threads', threadCount!)}}</template></n-input-number>
               </n-flex>
             </n-flex>
             </template>

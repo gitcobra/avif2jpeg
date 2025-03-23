@@ -29,8 +29,9 @@ import FileSelector from './components/file-selector.vue'
 import OutputSettings from './components/settings-output.vue';
 import AdvancedSettings from './components/settings-adv.vue';
 import Descriptions from './components/descriptions.vue';
-import LangFlag from './components/lang-flag.vue';
+//import LangFlag from './components/lang-flag.vue';
 
+//import DelLocalStorage from './components/_test/del-ls.vue';
 
 
 
@@ -50,7 +51,7 @@ const IS_SP = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mob
 // reactive values
 
 const inputConversionFiles = ref(null);
-const availableThreadCount = ref(2);
+const availableThreadCount = ref(0);
 
 let showTooltipsBeforeMounted = ref<boolean | undefined>(undefined);
 const LANDSCAPE = ref(true);
@@ -156,7 +157,7 @@ function onInputClick(flag: boolean) {
 
 <template>
 
-  <n-flex vertical align="stretch" style="position: relative; height:100%;">
+  <n-flex vertical align="stretch" class="app">
     <Header>
       <template #lang-switch>
         <Suspense>
@@ -200,13 +201,13 @@ function onInputClick(flag: boolean) {
         
         @start="processing=true"
         @end="processing=false"
-        @multi-thread-count="val => availableThreadCount = val"
+        _:multi-thread-count="val => availableThreadCount = val"
       />
 
       <n-space vertical align="center">
         <n-popover trigger="manual" placement="top" :keep-alive-on-hover="false" :duration="0" :delay="0">
         <template #trigger>
-          <n-icon size="6vh" color="#DADADA" style="margin:0px;"><ArrowDown/></n-icon>
+          <n-icon size="5vh" color="#DADADA" style="margin:0px;"><ArrowDown/></n-icon>
         </template>
         <span>CONVERT TO👇</span>
         </n-popover>
@@ -225,7 +226,7 @@ function onInputClick(flag: boolean) {
           v-model:expanded="UserSettings.expandAdvSettings"
           v-model:multithread="UserSettings.multithread"
           v-model:thread-count="UserSettings.threadCount"
-          :thread-max="availableThreadCount || 0"
+          _:thread-max="availableThreadCount"
           
           v-model:shrink-image="UserSettings.shrinkImage"
           v-model:max-width="UserSettings.maxWidth"
@@ -238,9 +239,12 @@ function onInputClick(flag: boolean) {
       
     </n-flex>
     </transition>
+
+    <!-- <LangFlag/> -->
+    <!-- DelLocalStorage/> -->
   
   </n-flex>
-  <!-- <LangFlag/> -->
+
 </template>
 
 
@@ -272,11 +276,19 @@ a {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
-  height: 99%;
   box-sizing: border-box;
-  padding: 0px;
-  margin: 0px;
+  
+  position: relative;
+  height:100%;
 }
+.app {
+  overflow: visible;
+  height: 100%;
+  max-width: 1024px;
+  /*max-height: 900px;*/
+  margin: 0px auto;
+}
+
 
 /* transitions */
 .fade-enter-active {

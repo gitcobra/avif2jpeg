@@ -29,9 +29,9 @@
         </n-tooltip>
 
         <n-space align="center" justify="center" style="color:gray; margin:0em;">
-          <n-icon color="gray"><ArrowUp /></n-icon>
+          <!-- <n-icon color="gray"><ArrowUp /></n-icon> -->
           {{$t('or')}}
-          <n-icon color="gray"><ArrowDown /></n-icon>
+          <!-- <n-icon color="gray"><ArrowDown /></n-icon> -->
         </n-space>
 
         <!-- folder select -->
@@ -71,7 +71,13 @@
     <!-- target file type menu -->
     <div :class="{'expand-ext-list-container': expandedMenu}" style="margin-top: 1em;">
     <n-collapse display-directive="show" :expanded-names="expandedMenu ? ['extItem'] : ''" :on-update:expanded-names="names => {expandedMenu = !!(''+names)}" :class="{'expand-ext-list': expandedMenu}">
-      <template #header-extra><n-icon size="large"><SearchCircle /></n-icon></template>
+      
+      <!-- show current selected target -->
+      <template #header-extra>
+        <n-tag type="success" round size="tiny" style="margin-left:0.2em; font-size:8px; opacity:0.7;">
+          {{FileExtLabels[targetType]}}
+        </n-tag>
+      </template>
       
       <n-collapse-item :title="$t('fileTypeRadioTitle')" name="extItem">
         <n-radio-group v-model:value="targetType" name="filetyperadios" size="small">
@@ -151,7 +157,12 @@ const INJ = inject(GlobalValsKey);
 // constants
 const FileTypeRadioValues = ['avif_only', 'all_images', 'all_files', 'edit_type'] as const;
 type TargetTypes = typeof FileTypeRadioValues[number];
-
+const FileExtLabels: { [key in TargetTypes]: string } = {
+  avif_only: 'AVIF',
+  all_images: 'IMGS',
+  all_files: 'ALL',
+  edit_type: 'EDIT',
+};
 
 // properties
 const props = defineProps<{

@@ -1,5 +1,8 @@
 import { reactive } from 'vue';
 
+
+export const MaxThreads = ref(navigator.hardwareConcurrency || 0);
+
 const DefaultSettings = {
   imageFormat: 'image/jpeg',
   imageQuality: 90,
@@ -14,7 +17,7 @@ const DefaultSettings = {
   useFolderNameForZip: false,
 
   multithread: true,
-  threadCount: undefined,
+  threadCount: MaxThreads.value,
 
   shrinkImage: false,
   maxWidth: 4096,
@@ -44,6 +47,8 @@ export function resetUserSettings() {
 }
 
 
+
+
 function reset(obj: object): UserSettingsType {
   return Object.assign(obj, DefaultSettings);
 }
@@ -70,13 +75,17 @@ for( const p in UserSettings ) {
 }
 
 // save settings on unload
-window.addEventListener('unload', () => {
+const saveSettings = () => {
   const dat = {} as any;
   for( const p in UserSettings ) {
     dat[p] = (UserSettings as any)[p];
   }
   localStorage.setItem(storeName, JSON.stringify(dat));
-});
+};
+window.addEventListener('beforeunload', saveSettings);
 
-
-
+// clear and disable saving settings for testing initial value
+export function _deleteLocalStorage() {
+  localStorage.clear();
+  window.removeEventListener('beforeunload', saveSettings);
+}
