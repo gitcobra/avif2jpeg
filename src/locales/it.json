@@ -85,7 +85,8 @@
     "progressRetries": "Riprovare i file",
     "success": "successo",
     "started": "iniziato",
-    "total": "totale"
+    "total": "totale",
+    "files": "file"
   },
   "disabled": "Disabilitato",
   "threads": "discussione | discussioni",
@@ -135,5 +136,6 @@
   "annotationOutOfMemory": "Se il processo di conversione fallisce frequentemente e appare un messaggio \"fuori dalla memoria\", prova a ridurre o disabilitare il numero di \"multi-thread\" nelle \"impostazioni avanzate\".",
   "Next": "Prossimo",
   "Prev": "Precedente",
-  "or": "O"
+  "or": "O",
+  "TargetFileTypeExt": "Estensione del file di destinazione"
 }

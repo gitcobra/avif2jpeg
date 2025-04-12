@@ -124,7 +124,7 @@ watch(() => props.processing, (val) => {
         </td>
       </tr>
       <tr class="total">
-        <td>{{ $t('status.total') }}:</td>
+        <td>{{ $t('status.files') }}:</td>
         <td style="font-size: medium;">
           <n-popover trigger="hover" :duration="0" :delay="0" placement="bottom">
             <template #trigger>

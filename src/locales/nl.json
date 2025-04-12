@@ -85,7 +85,8 @@
     "progressRetries": "Bestanden opnieuw proberen",
     "success": "succes",
     "started": "begonnen",
-    "total": "totaal"
+    "total": "totaal",
+    "files": "bestanden"
   },
   "disabled": "Gehandicapt",
   "threads": "draad | \ndraden",
@@ -135,5 +136,6 @@
   "annotationOutOfMemory": "Als het conversieproces vaak mislukt en een \"geheugen\" -bericht verschijnt, probeer dan het aantal \"multi-threads\" te verminderen of uit te schakelen in de \"geavanceerde instellingen\".",
   "Next": "Volgende",
   "Prev": "Vorig",
-  "or": "of"
+  "or": "of",
+  "TargetFileTypeExt": "Target File Extension"
 }

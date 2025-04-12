@@ -123,7 +123,8 @@
     "progressRetries": "Tiedostot",
     "success": "menestys",
     "started": "aloittanut",
-    "total": "kokonais-"
+    "total": "kokonais-",
+    "files": "tiedostot"
   },
   "success": "Menestys",
   "threads": "lanka | \nlangat",
@@ -132,5 +133,6 @@
   "annotationOutOfMemory": "Jos muuntamisprosessi epäonnistuu usein ja \"muistista\" -viesti tulee näkyviin, yritä vähentää tai poistaa käytöstä \"monivarjojen\" lukumäärää \"edistyneissä asetuksissa\".",
   "Next": "Seuraava",
   "Prev": "Edellinen",
-  "or": "tai"
+  "or": "tai",
+  "TargetFileTypeExt": "Kohdetiedoston laajennus"
 }

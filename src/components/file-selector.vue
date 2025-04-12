@@ -1,7 +1,7 @@
 <template>
   <div class="container-1">
   <div class="container-2">
-  <n-flex vertical align="center" justify="center" inline>
+  <n-flex vertical align="center" justify="center" inline size="large">
     <n-flex align="center" justify="space-around" class="main-buttons">
       
       <n-flex vertical align="stretch" justify="center">
@@ -70,64 +70,55 @@
     </n-flex>
 
     <!-- target file type menu -->
-    <div :class="{'expand-ext-list-container': expandedMenu}" style="margin-top: 1em;">
-    <n-collapse display-directive="show" :expanded-names="expandedMenu ? ['extItem'] : ''" :on-update:expanded-names="names => {expandedMenu = !!(''+names)}" :class="{'expand-ext-list': expandedMenu}">
-      
-      <!-- show current selected target -->
-      <template #header-extra>
-        <n-tag type="success" round size="tiny" style="margin-left:0.2em; font-size:8px; opacity:0.7;">
-          {{FileExtLabels[targetType]}}
-        </n-tag>
-      </template>
-      
-      <n-collapse-item :title="$t('fileTypeRadioTitle')" name="extItem">
-        <n-radio-group v-model:value="targetType" name="filetyperadios" size="small">
-          <n-flex vertical style="padding-left:1em;">
+    <n-flex vertical>
+      <n-flex :wrap="INJ.IS_SP" align="center" justify="stretch">
+        <span style="white-space: nowrap">
+          {{ $t('TargetFileTypeExt') }}:
+        </span>
+        <n-tooltip :keep-alive-on-hover="false" placement="right" style="max-width:200px;" :duration="0" :delay="0">
+        <template #trigger>
+          <n-select
+            trigger="click" width="trigger" size="small"
+            v-model:value="targetType"
+            :options="FileExtOptions"
+            :render-option="FileExtRenderOpts"
+            :consistent-menu-width="false"
+          />
+        </template>
+        {{ getAcceptStringByTargetType(targetType).replace(/,/g, ', ') }}
+        </n-tooltip>
+      </n-flex>
 
-            <n-tooltip v-for="(val) in FileTypeRadioValues" :key="val" trigger="hover" :keep-alive-on-hover="false" :z-index="5" placement="left" style="max-width:200px;" :duration="0" :delay="0">
+      <n-tooltip v-if="targetType === 'edit_type'" trigger="hover" :keep-alive-on-hover="false" placement="bottom-start" :show="userExtInputActive" :duration="0" :delay="0">
+        <template #trigger>
+          <div style="padding-left:1em;">
+            <n-popover trigger="manual" placement="right-end" :show="targetType === 'edit_type' && userExtValidationStat !== 'success' && !!userExtInputActive">
               <template #trigger>
-                <n-radio :value="val">{{$t('fileTypeRadioOptions.'+val)}}</n-radio>
+                <n-input
+                  v-model:value="customExtensions"
+                  :status="userExtValidationStat"
+                  :disabled="targetType !== 'edit_type'"
+                  @focus="userExtInputActive=true"
+                  @blur="userExtInputActive=undefined"
+                  :clearable="true"
+                  size="small" placeholder=".jpg, .gif, .png"
+                  spellcheck="false"
+                />
               </template>
-              {{ getAcceptStringByTargetType(val).replace(/,/g, ', ') }}
-            </n-tooltip>
-
-            <n-tooltip trigger="hover" :keep-alive-on-hover="false" placement="bottom-start" :show="userExtInputActive" :duration="0" :delay="0">
-              <template #trigger>
-                <div style="padding-left:1em;">
-                  <n-popover trigger="manual" placement="right-end" :show="targetType === 'edit_type' && userExtValidationStat !== 'success' && !!userExtInputActive">
-                    <template #trigger>
-                      <n-input
-                        v-model:value="customExtensions"
-                        :status="userExtValidationStat"
-                        :disabled="targetType !== 'edit_type'"
-                        @focus="userExtInputActive=true"
-                        @blur="userExtInputActive=undefined"
-                        :clearable="true"
-                        size="small" placeholder=".jpg, .gif, .png"
-                        spellcheck="false"
-                      />
-                    </template>
-                    <n-alert type="error" :show-icon="true" title="Validation error">
-                      Please correct the extension list.<br>
-                      <ul>
-                        <li>Each extension must begin with a period. </li>
-                        <li>Separate each extension with a comma. </li>
-                        <li>Use alphameric characters.</li>
-                      </ul>
-                    </n-alert>
-                  </n-popover>
-                </div>
-              </template>
-              <span v-html="$t('editAcceptTypes')"></span>
-            </n-tooltip>
-
-          </n-flex>
-        </n-radio-group>
-      </n-collapse-item>
-    </n-collapse>
-    </div>
-
-
+              <n-alert type="error" :show-icon="true" title="Validation error">
+                Please correct the extension list.<br>
+                <ul>
+                  <li>Each extension must begin with a period. </li>
+                  <li>Separate each extension with a comma. </li>
+                  <li>Use alphameric characters.</li>
+                </ul>
+              </n-alert>
+            </n-popover>
+          </div>
+        </template>
+        <span v-html="$t('editAcceptTypes')"></span>
+      </n-tooltip>
+    </n-flex>
 
   </n-flex>
   </div>
@@ -152,13 +143,13 @@ export type FileWithId = File & {
 
 
 <script setup lang="ts">
-import { ImageOutline, FolderOpenOutline, SearchCircle, ArrowUp, ArrowDown } from '@vicons/ionicons5';
-import { NCheckbox, NEmpty, NImage } from "naive-ui";
+import { ImageOutline, FolderOpenOutline, SearchCircle, ArrowUp, ArrowDown, ChevronDown } from '@vicons/ionicons5';
+import { NCheckbox, NEmpty, NImage, NTooltip, SelectOption } from "naive-ui";
 import { GlobalValsKey } from "../Avif2Jpeg.vue";
 import { useI18n } from 'vue-i18n';
 import DropTarget from "./droptarget.vue";
-
-
+import { timeStamp } from 'console';
+import { VNode, VNodeChild } from 'vue';
 
 
 // common liblaries
@@ -169,14 +160,29 @@ const { t } = useI18n();
 // injections
 const INJ = inject(GlobalValsKey);
 
+
 // constants
 const FileTypeRadioValues = ['avif_only', 'all_images', 'all_files', 'edit_type'] as const;
 type TargetTypes = typeof FileTypeRadioValues[number];
+
+// for radios (no longer used)
 const FileExtLabels: { [key in TargetTypes]: string } = {
-  avif_only: 'AVIF',
-  all_images: 'IMGS',
-  all_files: 'ALL',
+  avif_only: 'Avif or WebP',
+  all_images: 'All Image Types',
+  all_files: 'ALL Files',
   edit_type: 'EDIT',
+};
+// for options
+const FileExtOptions: {label: SelectOption['label'], value: TargetTypes}[] = [];
+for( const key of FileTypeRadioValues ) {
+  FileExtOptions.push({ label: () => t('fileTypeRadioOptions.'+key), value: key });
+}
+// for tooltips
+const FileExtRenderOpts = ({ node, option }) => {
+  return h(NTooltip, {placement: 'right'}, {
+    trigger: () => node,
+    default: () => getAcceptStringByTargetType(option.value).replace(/,/g, ', ')
+  });
 };
 
 // properties
@@ -208,6 +214,7 @@ const emit = defineEmits<{
 const inputtedFileCount = ref(0);
 const userExtInputActive = ref(false);
 const disableInputButtons = ref(false);
+
 
 // computed
 const accept = computed(() => {

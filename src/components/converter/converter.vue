@@ -513,89 +513,87 @@ function checkAvailableFeatures() {
 
 
 <template>
-  <n-flex justify="center">
-  <!-- re-convert button -->
-  <n-flex v-if="!processing && props.input?.length" justify="center" align="center">
-    <n-tooltip trigger="hover" placement="top" :keep-alive-on-hover="false" :duration="0" :delay="50">
-      <template #trigger>
-        <n-badge :value="input?.length || 0" :offset="[-12, -5]" color="#99999966">
-          <n-button @click="convertAgain" round>
-            <template #icon>
-              <n-icon size="1.5em" color="#CCCCCC"><DocumentOutline /></n-icon>
-            </template>
-            {{t('convertAgain')}}
-          </n-button>
-        </n-badge>
-      </template>
-      <div v-html="t('reconvertTip', props.input?.length)"></div>
-    </n-tooltip>
-  </n-flex>
+  
+    <!-- re-convert button -->
+    <n-flex v-if="!processing && props.input?.length" justify="center" align="center" style="margin-top:0.4em">
+      <n-tooltip trigger="hover" placement="top" :keep-alive-on-hover="false" :duration="0" :delay="50">
+        <template #trigger>
+          <n-badge :value="input?.length || 0" :offset="[-12, -5]" color="#99999966">
+            <n-button @click="convertAgain" round>
+              <template #icon>
+                <n-icon size="1.5em" color="#CCCCCC"><DocumentOutline /></n-icon>
+              </template>
+              {{t('convertAgain')}}
+            </n-button>
+          </n-badge>
+        </template>
+        <div v-html="t('reconvertTip', props.input?.length)"></div>
+      </n-tooltip>
+    </n-flex>
 
-  <!-- message -->
-  <!--
-  <n-drawer :show="conversionModalActive || showNote" placement="right" :z-index="0" mask-closable :on-mask-click="e => showNote=false">
-    <n-drawer-content title="Note">
-      <p>
-        {{ $t('annotationOutOfMemory') }}
-      </p>
-      <p>
-      <img width="200" src="/outofmemory.png">
-      </p>
-    </n-drawer-content>
-  </n-drawer>
-  -->
+    <!-- message -->
+    <!--
+    <n-drawer :show="conversionModalActive || showNote" placement="right" :z-index="0" mask-closable :on-mask-click="e => showNote=false">
+      <n-drawer-content title="Note">
+        <p>
+          {{ $t('annotationOutOfMemory') }}
+        </p>
+        <p>
+        <img width="200" src="/outofmemory.png">
+        </p>
+      </n-drawer-content>
+    </n-drawer>
+    -->
 
-  <!-- open the modal dialog during the conversion -->
-  <n-modal
-    ref="processingModal"
-    display-directive="show"
-    v-model:show="conversionModalActive"
-    :closable="processCompleted"
-    :close-on-esc="false"
-    preset="dialog"
-    
-    @click="notification.destroyAll(); message.destroyAll();"
-    @mask-click="notification.destroyAll(); message.destroyAll();"
-    @close="onBeforeProcessingDialogClose"
-    @esc="onESCPress"
-    :title="processingMessage"
-    :type="processingType"
-    :mask-closable="false"
-    @after-leave="cleanUpProcessedData"
-    @before-leave="stat.cleanup()"
+    <!-- open the modal dialog during the conversion -->
+    <n-modal
+      ref="processingModal"
+      display-directive="show"
+      v-model:show="conversionModalActive"
+      :closable="processCompleted"
+      :close-on-esc="false"
+      preset="dialog"
+      
+      @click="notification.destroyAll(); message.destroyAll();"
+      @mask-click="notification.destroyAll(); message.destroyAll();"
+      @close="onBeforeProcessingDialogClose"
+      @esc="onESCPress"
+      :title="processingMessage"
+      :type="processingType"
+      :mask-closable="false"
+      @after-leave="cleanUpProcessedData"
+      @before-leave="stat.cleanup()"
 
-    class="processing-dialog"
-  >
-    <template #default>
-      <n-flex vertical  style="flex-grow: 1;">
-        <!-- conversion status -->
-        <ConversionStatus
-          ref="stat"
-          v-if="dispConvStatusComponent"
-          :processing="processing"
-          :status="ConvStats"
-          :interval="STATUS_UPDATE_INTERVAL"
-          @all-zips-clicked="allZipsClicked = true"
-          @demand-zip-errors="onDemandZipErrorsFromStatus"
-          @demand-image="onDemandImage"
-        />
+      class="processing-dialog"
+    >
+      <template #default>
+        <n-flex vertical  style="flex-grow: 1;">
+          <!-- conversion status -->
+          <ConversionStatus
+            ref="stat"
+            v-if="dispConvStatusComponent"
+            :processing="processing"
+            :status="ConvStats"
+            :interval="STATUS_UPDATE_INTERVAL"
+            @all-zips-clicked="allZipsClicked = true"
+            @demand-zip-errors="onDemandZipErrorsFromStatus"
+            @demand-image="onDemandImage"
+          />
 
-        <!-- control buttons -->
-        <n-flex justify="end">
-          <!-- cancel button -->
-          <n-button v-if="processing" :disabled="canceled" ref="cancelbutton" round size="large" @click="canceled = true">
-            <!-- spinner waiting for complete -->
-            <n-spin :show="canceled && !processCompleted" size="small">{{t('cancel')}}</n-spin>
-          </n-button>
-          <!-- close button -->
-          <n-button v-else-if="processCompleted" @click="onBeforeProcessingDialogClose" round size="large" style="font-size: small; margin-top:1em;">{{t('close')}}</n-button>
+          <!-- control buttons -->
+          <n-flex justify="end">
+            <!-- cancel button -->
+            <n-button v-if="processing" :disabled="canceled" ref="cancelbutton" round size="large" @click="canceled = true">
+              <!-- spinner waiting for complete -->
+              <n-spin :show="canceled && !processCompleted" size="small">{{t('cancel')}}</n-spin>
+            </n-button>
+            <!-- close button -->
+            <n-button v-else-if="processCompleted" @click="onBeforeProcessingDialogClose" round size="large" style="font-size: small; margin-top:1em;">{{t('close')}}</n-button>
+          </n-flex>
+
         </n-flex>
-
-      </n-flex>
-    </template>
-  </n-modal>
-
-  </n-flex>
+      </template>
+    </n-modal>
 
 </template>
 

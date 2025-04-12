@@ -85,7 +85,8 @@
     "progressRetries": "Representando arquivos",
     "success": "sucesso",
     "started": "iniciado",
-    "total": "total"
+    "total": "total",
+    "files": "arquivos"
   },
   "disabled": "Desabilitado",
   "threads": "fio | \ntópicos",
@@ -135,5 +136,6 @@
   "annotationOutOfMemory": "Se o processo de conversão frequentemente falhar e uma mensagem \"fora da memória\" aparecer, tente reduzir ou desativar o número de \"multi-threads\" nas \"Configurações avançadas\".",
   "Next": "Próximo",
   "Prev": "Anterior",
-  "or": "ou"
+  "or": "ou",
+  "TargetFileTypeExt": "Extensão do arquivo de destino"
 }

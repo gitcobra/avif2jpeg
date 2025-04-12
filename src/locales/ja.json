@@ -91,7 +91,8 @@
     "progressRetries": "再試行ファイル",
     "success": "成功",
     "started": "開始済",
-    "total": "総計"
+    "total": "総計",
+    "files": "ファイル数"
   },
   "disabled": "無効",
   "threads": "スレッド | スレッド",
@@ -136,5 +137,6 @@
   "annotationOutOfMemory": "頻繁に変換処理が失敗し\"Out of Memory\"のメッセージが表示される場合、詳細設定で「マルチスレッド」の数を減らすか又は無効にしてください。",
   "Next": "次",
   "Prev": "前",
-  "or": "又は"
+  "or": "又は",
+  "TargetFileTypeExt": "変換対象ファイルの拡張子"
 }

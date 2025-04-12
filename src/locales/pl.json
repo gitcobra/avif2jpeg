@@ -85,7 +85,8 @@
     "progressRetries": "Ponowne plik",
     "success": "sukces",
     "started": "zaczął",
-    "total": "całkowity"
+    "total": "całkowity",
+    "files": "akta"
   },
   "disabled": "Wyłączony",
   "threads": "wątek | \nwątki",
@@ -135,5 +136,6 @@
   "annotationOutOfMemory": "Jeśli proces konwersji często się nie powiedzie i pojawia się komunikat „poza pamięcią”, spróbuj zmniejszyć lub wyłączyć liczbę „wielokrotnych” w „zaawansowanych ustawieniach”.",
   "Next": "Następny",
   "Prev": "Poprzedni",
-  "or": "Lub"
+  "or": "Lub",
+  "TargetFileTypeExt": "Rozszerzenie pliku docelowego"
 }

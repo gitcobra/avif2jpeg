@@ -85,7 +85,8 @@
     "progressRetries": "Mencoba lagi file",
     "success": "kesuksesan",
     "started": "dimulai",
-    "total": "total"
+    "total": "total",
+    "files": "file"
   },
   "disabled": "Dengan disabilitas",
   "threads": "benang | \nbenang",
@@ -135,5 +136,6 @@
   "annotationOutOfMemory": "Jika proses konversi sering gagal dan pesan \"di luar memori\" muncul, cobalah mengurangi atau menonaktifkan jumlah \"multi-thread\" dalam \"pengaturan lanjutan\".",
   "Next": "Berikutnya",
   "Prev": "Sebelumnya",
-  "or": "atau"
+  "or": "atau",
+  "TargetFileTypeExt": "Ekstensi file target"
 }

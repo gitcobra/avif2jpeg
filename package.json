@@ -1,13 +1,13 @@
 {
   "name": "avif2jpeg",
   "private": true,
-  "version": "1.8.16",
+  "version": "1.8.17",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "preview": "vite preview",
     "build": "node src/version.js && vite-ssg build",
-    "build:inject-ga": "npm run build -- --mode ga",
+    "build:ga": "npm run build -- --mode ga",
     "build:test": "vite-ssg build --mode test",
     "preview:test": "vite preview --mode test",
     "build:ver": "vite-ssg build --mode ver",

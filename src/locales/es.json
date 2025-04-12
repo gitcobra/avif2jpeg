@@ -85,7 +85,8 @@
     "progressRetries": "Vuelva a intentar los archivos",
     "success": "éxito",
     "started": "comenzó",
-    "total": "total"
+    "total": "total",
+    "files": "archivos"
   },
   "disabled": "Desactivado",
   "threads": "hilo | \ntrapos",
@@ -135,5 +136,6 @@
   "annotationOutOfMemory": "Si el proceso de conversión falla con frecuencia y aparece un mensaje de \"fuera de memoria\", intente reducir o deshabilitar el número de \"múltiples hilos\" en la \"configuración avanzada\".",
   "Next": "Próximo",
   "Prev": "Anterior",
-  "or": "o"
+  "or": "o",
+  "TargetFileTypeExt": "Extensión del archivo de destino"
 }

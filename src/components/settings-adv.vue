@@ -124,7 +124,6 @@ onMounted(() => {
                 <n-slider v-model:value="threadCount" :disabled="!MaxThreads || !multithread" :step="1" :min="2" :max="MaxThreads" style="width:120px;"/>
                 <n-input-number @blur="threadCount??=2" size="tiny" v-model:value="threadCount" :disabled="!MaxThreads || !multithread" :step="1" :min="2" :max="MaxThreads" style="width:10em"><template #suffix>{{ $t('threads', threadCount!)}}</template></n-input-number>
               </n-flex>
-              {{ MaxThreads }}
             </n-flex>
             </template>
             {{ $t('settings.multiThreadsTooltip') }}

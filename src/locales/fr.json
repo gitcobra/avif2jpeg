@@ -85,7 +85,8 @@
     "progressRetries": "Réessayant des fichiers",
     "success": "succès",
     "started": "commencé",
-    "total": "total"
+    "total": "total",
+    "files": "fichiers"
   },
   "disabled": "Désactivé",
   "threads": "fil | \nfils de discussion",
@@ -135,5 +136,6 @@
   "annotationOutOfMemory": "Si le processus de conversion échoue fréquemment et qu'un message «hors mémoire» apparaît, essayez de réduire ou de désactiver le nombre de «multi-threads» dans les «paramètres avancés».",
   "Next": "Suivant",
   "Prev": "Précédent",
-  "or": "ou"
+  "or": "ou",
+  "TargetFileTypeExt": "Extension de fichier cible"
 }

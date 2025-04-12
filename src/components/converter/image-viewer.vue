@@ -99,6 +99,8 @@ onMounted(() => {
   }
   */
   demandImage(index.value - 1);
+  
+  setTouchEvents();
 });
 
 onBeforeUnmount(() => {
@@ -195,28 +197,6 @@ watch(() => props.url, () => {
   }
 }, {immediate:true});
 
-/*
-watch(() => props.url, () => {
-  
-  if( props.url !== prevUrl ) {
-    const purl = prevUrl;
-    const porgurl = prevOrgUrl;
-    setTimeout(() => {
-      URL.revokeObjectURL(purl);
-      URL.revokeObjectURL(porgurl);
-    }, 1000);
-    prevUrl = props.url;
-    prevOrgUrl = props.originalUrl;
-  }
-  
-  
-  if( props.isSingle ) {
-    initializing.value = false;
-    src.value = props.url;
-  }
-});
-*/
-
 
 
 
@@ -236,6 +216,58 @@ function demandImage(index: number) {
   thumbOrgloaded.value = false;
   
   nextTick(() => emit('demand-image', index));
+}
+
+// set touch event listener
+function setTouchEvents() {
+  let el = viewerItemContainer.value.$el;
+  let startX = 0, startY = 0;
+  let endX = 0, endY = 0;
+  let lastMoveTime = 0;
+  
+  const tstart = (ev) => {
+    startX = ev.touches[0].pageX;
+    startY = ev.touches[0].pageY;
+    lastMoveTime = Date.now();
+  };
+  el.addEventListener('touchstart', tstart);
+
+  const tmove = (ev) => {
+    endX = ev.touches[0].pageX;
+    endY = ev.touches[0].pageY;
+    checkDelay();
+  };
+  window.addEventListener('touchmove', tmove);
+
+  const tend = () => {
+    checkDelay();
+    const dx = endX - startX;
+    const adx = Math.abs(dx);
+    const dy = endY - startY;
+    const ady = Math.abs(dy);
+    if( adx < ady || adx < 20 )
+      return;
+    
+    moveIndex(dx > 0 ? -1 : 1);
+  };
+  window.addEventListener('touchend', tend);
+
+  // reset start position if touchmove doesn't fire for a certain time
+  const checkDelay = () => {
+    const now = Date.now();
+    if( now - lastMoveTime > 500 ) {
+      startX = endX;
+      startY = endY;
+    }
+    lastMoveTime = now;
+  };
+
+  onBeforeUnmount(() => {
+    el.removeEventListener('touchstart', tstart);
+    el.removeEventListener('touchmove', tmove);
+    el.removeEventListener('touchend', tend);
+    el = null;
+  });
 }
 
 function onEscKeyDown(ev: KeyboardEvent) {
@@ -402,18 +434,16 @@ function renderToolbar({ nodes }: ImageRenderToolbarProps) {
 }
 
 
-function test(el) {
-  setTimeout(() => viewerItemVisibility.value = true, 20);
-}
 
-let pref: any = null;
+
+
 function openPreview() {
   //thumbConvRef.value.test();
   
   thumbConvRef.value.openPreview();
 }
 
-const body = useTemplateRef('body');
+//const body = useTemplateRef('body');
 function cleanup() {
   //body.value.$el.innerHTML = '';
 }
@@ -437,142 +467,142 @@ function cleanup() {
       </n-button>
 
       <n-flex justify="center" ref="viewerItemContainer" class="viewer-item-container">
-      <transition :name="viewerTransitionName" @_after-leave="test">
-      
-      <n-flex vertical :key="viewTransKey" _v-show="viewerItemVisibility">
-        <n-flex align="center" :wrap="false">
-          <n-flex vertical align="center">
-            
-            <n-flex align="center" justify="center" :wrap="false">
-              <!-- ORIGINAL -->
-              <n-flex align="center" justify="center" vertical class="original-thumb">
-                <a :href="originalUrl" @click.prevent="thumbOrgRef.openPreview();" :download="originalName" :title="originalName" class="imglink">
-                <n-flex align="center" justify="center" :wrap="false">
+        <transition :name="viewerTransitionName">
+        
+        <n-flex vertical :key="viewTransKey" _v-show="viewerItemVisibility">
+          <n-flex align="center" :wrap="false">
+            <n-flex vertical align="center">
+              
+              <n-flex align="center" justify="center" :wrap="false">
+                <!-- ORIGINAL -->
+                <n-flex align="center" justify="center" vertical class="original-thumb">
+                  <a :href="originalUrl" @click.prevent="thumbOrgRef.openPreview();" :download="originalName" :title="originalName" class="imglink">
+                  <n-flex align="center" justify="center" :wrap="false">
 
-                  <Thumbnail
-                    :ref="(el: any) => {if( el?.active ) thumbOrgRef = el}"
-                    :src="originalUrl"
-                    :width="1"
-                    :max-width="1"
-                    :max-height="1"
-                    :loading="demandingImage"
-                    :file-name="originalName"
-                    :allow-next="index < props.length"
-                    :allow-prev="index > 1"
-                    @load="onOrgThumbnailLoad"
-                    @next="moveIndex(1)"
-                    @prev="moveIndex(-1)"
-                    :hidden="true"
-                  />
+                    <Thumbnail
+                      :ref="(el: any) => {if( el?.active ) thumbOrgRef = el}"
+                      :src="originalUrl"
+                      :width="1"
+                      :max-width="1"
+                      :max-height="1"
+                      :loading="demandingImage"
+                      :file-name="originalName"
+                      :allow-next="index < props.length"
+                      :allow-prev="index > 1"
+                      @load="onOrgThumbnailLoad"
+                      @next="moveIndex(1)"
+                      @prev="moveIndex(-1)"
+                      :hidden="true"
+                    />
 
-                  <n-flex vertical align="center">                    
-                    <n-flex class="imglink-label">{{ t('status.Original') }}</n-flex>
+                    <n-flex vertical align="center">                    
+                      <n-flex class="imglink-label">{{ t('status.Original') }}</n-flex>
 
-                    <!-- image dimension -->
-                    <n-flex justify="center" class="img-size" :wrap="false">
-                      <span class="left-num">{{ !thumbOrgloaded ? '?' : orgwidth }}</span>
-                      ×
-                      <span class="right-num">{{ !thumbOrgloaded ? '?' : orgheight }}</span>
+                      <!-- image dimension -->
+                      <n-flex justify="center" class="img-size" :wrap="false">
+                        <span class="left-num">{{ !thumbOrgloaded ? '?' : orgwidth }}</span>
+                        ×
+                        <span class="right-num">{{ !thumbOrgloaded ? '?' : orgheight }}</span>
+                      </n-flex>
+
+                      <!-- image size -->
+                      <n-flex justify="center">
+                        <n-flex v-once="viewerItemVisibility">
+                        {{ !thumbOrgloaded ? '?' : getUnitSize(props.originalSize, 0) }}
+                        </n-flex>
+                      </n-flex>
+
                     </n-flex>
+                  </n-flex>
+                  </a>
+                </n-flex>
 
-                    <!-- image size -->
+
+                <n-flex style="margin:1em;" class="original-thumb">
+                  <n-icon size="20" color="silver"><ArrowForward/></n-icon>
+                </n-flex>
+                
+                <!-- CONVERTED -->
+                <a :href="src" @click.prevent="openPreview()" :download="props.name" :title="props.name" class="imglink">
+                <n-flex vertical align="center" justify="center">
+                  <n-flex class="imglink-label">{{t('status.Converted')}}</n-flex>
+                  
+                  <!-- image dimension -->
+                  <n-flex vertical align="center" justify="center" :size="0">
                     <n-flex justify="center">
-                      <n-flex v-once="viewerItemVisibility">
-                      {{ !thumbOrgloaded ? '?' : getUnitSize(props.originalSize, 0) }}
+                      <n-flex :wrap="false" :style="props.variousInfo?.shrinked ? {color:'blue'} : {}" class="img-size">
+                      <span class="left-num">{{ !thumbloaded ? '?' : width }}</span>
+                      ×
+                      <span class="right-num">{{ !thumbloaded ? '?' : height }}</span>
                       </n-flex>
                     </n-flex>
-
-                  </n-flex>
-                </n-flex>
-                </a>
-              </n-flex>
-
-
-              <n-flex style="margin:1em;" class="original-thumb">
-                <n-icon size="20" color="silver"><ArrowForward/></n-icon>
-              </n-flex>
-              
-              <!-- CONVERTED -->
-              <a :href="src" @click.prevent="openPreview()" :download="props.name" :title="props.name" class="imglink">
-              <n-flex vertical align="center" justify="center">
-                <n-flex class="imglink-label">{{t('status.Converted')}}</n-flex>
-                
-                <!-- image dimension -->
-                <n-flex vertical align="center" justify="center" :size="0">
-                  <n-flex justify="center">
-                    <n-flex :wrap="false" :style="props.variousInfo?.shrinked ? {color:'blue'} : {}" class="img-size">
-                    <span class="left-num">{{ !thumbloaded ? '?' : width }}</span>
-                    ×
-                    <span class="right-num">{{ !thumbloaded ? '?' : height }}</span>
+                    <!--
+                    <n-flex style="color:gray; font-size:xx-small;">
+                      {{ props.variousInfo?.shrinked ? '('+$t('status.Shrinked')+')' : '-'}}
                     </n-flex>
+                    -->
                   </n-flex>
-                  <!--
-                  <n-flex style="color:gray; font-size:xx-small;">
-                    {{ props.variousInfo?.shrinked ? '('+$t('status.Shrinked')+')' : '-'}}
+                  
+
+                  <!-- image size -->
+                  <n-flex justify="center">
+                    {{ !thumbloaded ? '?' : getUnitSize(props.size, 0) }}
                   </n-flex>
-                  -->
                 </n-flex>
-                
-
-                <!-- image size -->
-                <n-flex justify="center">
-                  {{ !thumbloaded ? '?' : getUnitSize(props.size, 0) }}
-                </n-flex>
-              </n-flex>
-              </a>
-            </n-flex>
-
-            <!-- file name -->
-            <n-flex ref="fileNameContainer" align="center" class="pathbox" :title="props.name">
-              <n-scrollbar :x-scrollable="true" trigger="hover" style="font-size:smaller; overflow:hidden; white-space:nowrap; text-overflow: ellipsis;">
-                {{ !thumbloaded ? '?' : props.name }}
-              </n-scrollbar>
-            </n-flex>
-
-          </n-flex>
-          <n-flex vertical>
-            <Thumbnail
-              :ref="(el: any) => {if( el?.active ) thumbConvRef = el}"
-              :src="src"
-              :width="142"
-              :max-width="140"
-              :max-height="100"
-              :loading="demandingImage"
-              :file-name="props.name"
-              :allow-next="index < props.length"
-              :allow-prev="index > 1"
-              @load="onThumbnailLoad"
-              @next="moveIndex(1)"
-              @prev="moveIndex(-1)"
-            />
-            <n-flex justify="center" :wrap="true">
-              
-              <!-- save blobURL -->
-              <n-popover display-directive="show" trigger="hover" :duration="0" :delay="0">
-                <template #trigger>
-                <a :href="props.url" ref="saveImg" target="_blank" :download="props.name">
-                  <n-button :disabled="!thumbloaded" round size="tiny">{{$t('save')}}</n-button>
                 </a>
-                </template>
-                {{$t('save')}}
-              </n-popover>
-              
-              <!-- copy data url -->
-              <n-popover display-directive="show" trigger="hover" :duration="0" :delay="0">
-                <template #trigger>
-                  <n-button :disabled="!thumbloaded" @click="copyDataURL(props.url)" round size="tiny">DataURL</n-button>
-                </template>
-                {{$t('convertedImageDataUrlTooltip')}}
-              </n-popover>
+              </n-flex>
+
+              <!-- file name -->
+              <n-flex ref="fileNameContainer" align="center" class="pathbox" :title="props.name">
+                <n-scrollbar :x-scrollable="true" trigger="hover" style="font-size:smaller; overflow:hidden; white-space:nowrap; text-overflow: ellipsis;">
+                  {{ !thumbloaded ? '?' : props.name }}
+                </n-scrollbar>
+              </n-flex>
+
             </n-flex>
+            <n-flex vertical>
+              <Thumbnail
+                :ref="(el: any) => {if( el?.active ) thumbConvRef = el}"
+                :src="src"
+                :width="142"
+                :max-width="140"
+                :max-height="100"
+                :loading="demandingImage"
+                :file-name="props.name"
+                :allow-next="index < props.length"
+                :allow-prev="index > 1"
+                @load="onThumbnailLoad"
+                @next="moveIndex(1)"
+                @prev="moveIndex(-1)"
+              />
+              <n-flex justify="center" :wrap="true">
+                
+                <!-- save blobURL -->
+                <n-popover display-directive="show" trigger="hover" :duration="0" :delay="0">
+                  <template #trigger>
+                  <a :href="props.url" ref="saveImg" target="_blank" :download="props.name">
+                    <n-button :disabled="!thumbloaded" round size="tiny">{{$t('save')}}</n-button>
+                  </a>
+                  </template>
+                  {{$t('save')}}
+                </n-popover>
+                
+                <!-- copy data url -->
+                <n-popover display-directive="show" trigger="hover" :duration="0" :delay="0">
+                  <template #trigger>
+                    <n-button :disabled="!thumbloaded" @click="copyDataURL(props.url)" round size="tiny">DataURL</n-button>
+                  </template>
+                  {{$t('convertedImageDataUrlTooltip')}}
+                </n-popover>
+              </n-flex>
+            </n-flex>
+
           </n-flex>
-
+        
         </n-flex>
-      
-      </n-flex>
 
-      
-      </transition>
+        
+        </transition>
       </n-flex>
 
       <!-- right button -->

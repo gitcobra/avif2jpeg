@@ -86,7 +86,8 @@
     "progressRetries": "重試文件",
     "success": "成功",
     "started": "開始",
-    "total": "全部的"
+    "total": "全部的",
+    "files": "文件"
   },
   "disabled": "殘障人士",
   "threads": "thread | threads",
@@ -135,5 +136,6 @@
   "annotationOutOfMemory": "如果轉換過程經常失敗，並且出現“不含內存”消息，請嘗試減少或禁用“高級設置”中的“多線程”的數量。",
   "Next": "下一個",
   "Prev": "以前的",
-  "or": "或者"
+  "or": "或者",
+  "TargetFileTypeExt": "目標文件擴展"
 }
