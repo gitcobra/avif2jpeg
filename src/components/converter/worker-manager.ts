@@ -134,6 +134,7 @@ export function getBusyWorkers() {
 export function init() {
   releaseAllWorkers();
   for( const worker of workers ) {
+    worker.onmessage = null;
     worker.terminate();
   }
   workers.clear();

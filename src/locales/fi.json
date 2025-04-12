@@ -118,7 +118,12 @@
     "totalSize": "Kokonaiskoko",
     "zipFailedList": "Pakkaa epäonnistuneet tiedostot Zipsiin",
     "zipped": "Vetoketju",
-    "zippingProgress": "Zippauksen edistyminen"
+    "zippingProgress": "Zippauksen edistyminen",
+    "saveAll": "Pelastaa kaikki",
+    "progressRetries": "Tiedostot",
+    "success": "menestys",
+    "started": "aloittanut",
+    "total": "kokonais-"
   },
   "success": "Menestys",
   "threads": "lanka | \nlangat",

@@ -33,14 +33,9 @@ const emit = defineEmits<{
   'prev': []
 }>();
 
-// methods
-defineExpose({
-  download,
-  openPreview,
-});
-
 // refs
 const nImageRef = ref();
+const testref = ref<any>();
 
 // reactives
 const imgloading = ref(true);
@@ -56,6 +51,39 @@ const spincss = reactive({
   minHeight: 50 + 'px',
 });
 
+
+const BLANK_IMG = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"/>';
+onBeforeUnmount(() => {
+  //console.log('thmub unmounted', imgsrc.value)
+  //nImageRef.value?.imageGroupHandle?.setPreviewSrc(BLANK_IMG);
+  //nImageRef.value?.imageGroupHandle?.setThumbnailEl(null);
+
+  nImageRef.value?.previewInstRef?.setPreviewSrc(BLANK_IMG);
+  //nImageRef.value?.previewInstRef?.setThumbnailEl(null);
+  
+  // NOTE: *still needs prev image while sliding animation in image-viewer.vue
+  //(nImageRef.value?.imageRef || {}).src = BLANK_IMG;
+
+  URL.revokeObjectURL((nImageRef.value?.imageRef || {}).src);
+  nImageRef.value = null;
+})
+
+
+/*
+onDeactivated()
+https://vuejs.org/api/composition-api-lifecycle.html#ondeactivated
+​Registers a callback to be called after the component instance is removed from the DOM as part of a tree cached by <KeepAlive>.
+*/
+const active = ref(true);
+onDeactivated(() => {
+  //console.log("DEACTIVATED!", props.fileName);
+  active.value = false
+});
+onActivated(() => {
+  //console.log("ACTIVATED!", props.fileName);
+  active.value = true;
+});
+
 // watchers
 watch(props, (value, old) => {
   spincss.width = (props.width || 100) + 'px';
@@ -65,9 +93,23 @@ watch(props, (value, old) => {
   spincss.maxHeight = props.maxHeight || 100;
   */
 });
-watch(() => props.src, () => {
-  changeSrc(props.src);
+watch(() => props.src, (val, prev) => {
+  if( !active.value )
+    return;
+  changeSrc(val);
 }, {immediate:true});
+
+
+// members
+defineExpose({
+  download,
+  openPreview,
+  active,
+});
+
+
+
+
 
 
 
@@ -95,9 +137,9 @@ function imgerror(ev) {
 async function changeSrc(src: string) {
   imgloading.value = true;
   disp.value = false;
-  await new Promise(r => setTimeout(r, 150));
+  //await new Promise(r => setTimeout(r, 150));
   imgsrc.value = src;
-  
+  console.log('changeSrc:', imgsrc.value);
 }
 
 function download() {
@@ -127,8 +169,8 @@ function openPreview() {
   <n-tooltip>
     <template #trigger>
     <n-spin :show="imgloading || props.loading">
-      <n-flex justify="center" align="center" :style="spincss">
-      <a :href="imgsrc" @click.left.prevent="" target="_blank" :download="props.fileName" :title="props.fileName" style="line-height:0px;">
+      <n-flex justify="center" align="center" :style="spincss">      
+      <a _v-show="!(imgloading || props.loading)" :href="imgsrc" @click.left.prevent="" target="_blank" :download="props.fileName" :title="props.fileName" style="line-height:0px;">
         <Transition mode="in-out">
         <n-image
           ref="nImageRef"
@@ -142,6 +184,7 @@ function openPreview() {
         />
         </Transition>
       </a>
+      <n-empty v-if="imgloading || props.loading" />
       </n-flex>
     </n-spin>
     </template>

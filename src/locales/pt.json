@@ -80,7 +80,12 @@
     "Shrinking": "Encolhendo",
     "convertedZips": "ZIP concluído com sucesso",
     "outInRate": "Proporção de saída/entrada",
-    "zipped": "ZIPADO"
+    "zipped": "ZIPADO",
+    "saveAll": "Salve tudo",
+    "progressRetries": "Representando arquivos",
+    "success": "sucesso",
+    "started": "iniciado",
+    "total": "total"
   },
   "disabled": "Desabilitado",
   "threads": "fio | \ntópicos",

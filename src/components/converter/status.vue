@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { Directive, VNode } from 'vue';
+import { Directive } from 'vue';
 import { dataTableDark, type DropdownOption, NIcon, NScrollbar, NSpin, useThemeVars } from 'naive-ui';
-import { ImageSharp, Archive, Warning, WarningOutline, DocumentTextOutline, DownloadOutline, Resize, UnlinkOutline } from '@vicons/ionicons5';
+import { ImageSharp, Archive, Warning, WarningOutline, DocumentTextOutline, DownloadOutline } from '@vicons/ionicons5';
 import { useI18n } from 'vue-i18n';
 import ImageViewer from './image-viewer.vue';
+import CenterColumn from './status.center-column.vue';
 import { getThumbnailedSize, getUnitSize } from './util';
 
 // common components
@@ -16,7 +17,7 @@ const c = useThemeVars();
 // constants
 const THUMB_SIZE = {W:160, H:80};
 const LOG_SIZE_LIMIT = 99999;
-
+const LOG_EXPANDED_MINHEIGHT = 250;
 
 
 // props
@@ -31,6 +32,7 @@ const props = defineProps<{
     converted: number
     success: number
     failure: number
+    retried: number
     done: number
     zippedTotalCount: number
     zippedTotalSize: number
@@ -111,6 +113,7 @@ const vHidden: Directive<HTMLElement, boolean> = (el, binding) => {
 const zippingFlag = ref(false);
 const workingLogs = ref<typeof props["status"]["logs"]>([]);
 const demandedFailedZips = ref(false);
+const logtable = useTemplateRef('table');
 
 type ZipList = {
   url: string
@@ -130,6 +133,7 @@ const success = ref([0, 0]);
 const failure = ref([0, 0]);
 const done = ref([0, 0]);
 const converted = ref([0, 0]);
+const retried = ref(0);
 const length = ref(0);
 const zipped = ref([0, 0]);
 const statusColor = ref(c.value.infoColor);
@@ -164,7 +168,7 @@ const outputImg = reactive({
   originalUrl: '',
   originalSize: 0,
   dataUrl: '',
-  index: -1,
+  index: 0,
   various: {
     shrinked: false,
   }
@@ -174,14 +178,22 @@ const outputImg = reactive({
 
 
 // element references
+const body = useTemplateRef('body');
 const thumbcanvas = ref<HTMLCanvasElement>(null);
 const processingBitmap = ref<ImageBitmap | HTMLImageElement | null>(null);
 const scrollref = ref<InstanceType<typeof NScrollbar>>();
-const imageViewer = ref<typeof ImageViewer>();
+const imageViewer = useTemplateRef('imageViewer');
 
 
 // common variables
 let _tmpCounter = 0;
+
+
+defineExpose({
+  cleanup,
+});
+
+
 
 
 
@@ -211,12 +223,13 @@ onMounted(() => {
     else {
       const ctxThumb = thumbcanvas.value.getContext('bitmaprenderer');
       ctxThumb.transferFromImageBitmap(processingBitmap.value);
+      processingBitmap.value.close();
       processingBitmap.value = null;
       props.status.thumbnail = null;
     }
   });
 
-
+  
   // update elapsed timer
   let _intvId = 0;
   const startTimer = () => {
@@ -248,23 +261,8 @@ onMounted(() => {
     }
     else {
       clearInterval(_intvId);
-      update();
       _intvId = 0;
     }
-
-    // close log view when there is only one item in the list
-    /*
-    if( newv ) {
-      if( props.status.length > 1 )
-        logOpened.value = true;
-    }
-    else {
-      if( props.status.length < 2 )
-        logOpened.value = false;
-    }
-    */
-    logOpened.value = false;
-    imageViewerStarted.value = true;
 
     // on finished
     if( !props.processing ) {
@@ -286,7 +284,7 @@ onMounted(() => {
       const logHeight = scrollref.value.$parent.$el.offsetHeight;
       const modalMargin = window.innerHeight - inst.parent.parent.vnode.el.offsetHeight - 8;
       
-      logMaxHeight.value = Math.max(logHeight + modalMargin, 50) + 'px';
+      logMaxHeight.value = Math.max(logHeight + modalMargin, LOG_EXPANDED_MINHEIGHT) + 'px';
 
     }, 100);
   };
@@ -298,6 +296,9 @@ onMounted(() => {
 
 
   let _unmounted = false;
+  
+  
+  
   onBeforeUnmount(() => {
     _unmounted = true;
     observer.disconnect();
@@ -306,11 +307,12 @@ onMounted(() => {
     clearTimeout(hookedUpdateTimeoutId);
     clearTimeout(scrollTimeoutId);
     window.removeEventListener('resize', changeLogMaxHeight);
-
-    URL.revokeObjectURL(outputImg.url);
-    URL.revokeObjectURL(outputImg.originalName);
   });
 });
+
+onBeforeUnmount(() => {
+  cleanup();
+}); 
 
 
 watch([() => props.status.zips.length, () => props.status.failedZips.length], () => {
@@ -370,6 +372,9 @@ watch([() => props.status.zips.length, () => props.status.failedZips.length], ()
 
 
 
+
+
+
 // update status
 const UPDATE_INTERVAL_MSEC = props.interval || 100;
 let updateWaitingFlag = false;
@@ -402,6 +407,7 @@ function update() {
   done.value[0] = stat.done;
   converted.value[1] = converted.value[0];
   converted.value[0] = stat.converted;
+  retried.value = stat.retried;
   length.value = stat.length;
   zipped.value[1] = zipped.value[0];
   zipped.value[0] = stat.zippedTotalCount;
@@ -455,7 +461,7 @@ function update() {
 
   // current status color
   if( props.processing ) {
-    statusColor.value = failure.value[0] ? c.value.warningColor : c.value.infoColor;
+    statusColor.value = failure.value[0] ? c.value.errorColor : retried.value ? c.value.warningColor : c.value.infoColor;
   }
 
   // update output image
@@ -479,65 +485,29 @@ function update() {
   }
 }
 
+let vm = getCurrentInstance();
 function onFinished() {
   const stat = props.status;
 
   statusColor.value = props.status.success === props.status.length ? c.value.successColor : c.value.errorColor;
-  
-  // update output image
-  /*
-  if( stat.convertedImageUrl !== outputImg.url ) {
-    outputImg.url = stat.convertedImageUrl;
-    outputImg.name = stat.convertedImageName;
-    outputImg.dataUrl = stat.convertedImageDataUrl;
-    outputImg.size = stat.outputTotalSize;
-    outputImg.width = stat.convertedImageWidth;
-    outputImg.height = stat.convertedImageHeight;
-    //const {width ,height} = getThumbnailedSize(outputImg, {width:320, height:100});
-    //outputImg.twidth = width;
-    //outputImg.theight = height;
-  }
-  */
-  
 
-  // set tooltip for save button 
-  /*
-  if( zippingFlag.value ) {
-    let count = 0;
-    let size = 0;
-    for( const item of zipList.value ) {
-      count += item.count;
-      size += item.size;
-    }
-    const completed = length.value === count;
-    const failedCount = length.value - count;
-  }
-  else {
-    saveButtonTooltipText.value = 'Save the Converted Image';
-  }
-  */
-
-  // set tooltip for error button
-  if( stat.unconvertedFileCount > 0 ) {
-    /*
-    setTimeout(() => {
-      autoPopoverErrorButtonFlag.value = true;
-      setTimeout(() => autoPopoverErrorButtonFlag.value = undefined, 2000);
-    }, 500);
-    */
-  }
-  
-
-
-  // manage error files
-  if( failure.value[0] > 0 || success.value[0] !== length.value ) {
-
-  }
-
-  // check showEntireLog
+  // close log unless it is expanded
   if( !expandLog.value ) {
+    logOpened.value = false;
+    // check showEntireLog
     expandLog.value = true;
   }
+  imageViewerStarted.value = true;
+
+  if( logOpened.value ) {
+    setTimeout(scrollLogViewToBottom, 500);
+    
+    // focce rerendering for log table
+    vm.proxy.$forceUpdate();
+    vm = null;
+  }
+
+  update();
 }
 
 
@@ -671,9 +641,30 @@ function scrollLogViewToBottom(instant = false) {
   });
 }
 
+const cleaningUp = ref(false);
+function cleanup() {
+  cleaningUp.value = true;
+  //imageViewer.value?.cleanup();
 
+  // cleanup
+  URL.revokeObjectURL(outputImg.url);
+  URL.revokeObjectURL(outputImg.originalName);
 
+  outputImg.originalUrl = '';
+  outputImg.url = '';
+  outputImg.index = 0;
+  
+  props.status.logs.length = 0;
+  workingLogs.value.length = 0;
+  failedZipList.value.length = 0;
+  zipList.value.length = 0;
+  //body.value.$el.innerHTML = '';
 
+  //getCurrentInstance()?.update();
+
+  expandLog.value = false;
+  imageViewerStarted.value = false;
+}
 
 
 
@@ -683,168 +674,74 @@ function scrollLogViewToBottom(instant = false) {
 
 
 <template>
-  <n-flex vertical justify="center">
-    <n-space justify="center" align="center" :wrap="false" style="white-space: nowrap;">
+  <n-flex ref="body" vertical justify="center">
+    <n-flex justify="center" align="center" :wrap="false" style="white-space: nowrap;">
 
       <!-- left column -->
-      <n-space vertical justify="center" class="left-column">
+      <n-flex vertical justify="center" class="left-column">
    
         <n-statistic tabular-nums :label="$t('status.elapsedTime')">
-          <n-space>
+          <n-flex>
             {{ elapsedTime }}
-          </n-space>
+          </n-flex>
         </n-statistic>
 
         <n-statistic tabular-nums :label="$t('status.multiThreading')">
-          <n-space :style="{color: !props.status.threads ? 'red' : '', fontSize: 'smaller'}">
+          <n-flex :style="{color: !props.status.threads ? 'red' : '', fontSize: 'smaller'}">
             {{ props.status.threads ? $rt('{n} @:threads', props.status.threads) : $t('disabled') }}
-          </n-space>
+          </n-flex>
         </n-statistic>
 
         <n-statistic tabular-nums :label="$t('status.outputSettings')">
-          <n-space vertical justify="end" style="font-size: smaller; line-height:1em;">
+          <n-flex vertical justify="end" style="font-size: smaller; line-height:1em;">
             <div>{{$t('settings.imageType')}}: {{ props.status.type }}</div>
             <div v-if="status.shrink">{{$t('status.Shrinking')}}: <span style="font-size:smaller">{{status.shrink[0]}}×{{status.shrink[1]}}</span></div>
             <div>Zip: {{ props.status.zipSize }}MB</div>
-          </n-space>
+          </n-flex>
         </n-statistic>
 
-      </n-space>
+      </n-flex>
 
 
       <!-- center column - progress circle -->
-      <n-progress
-        type="multiple-circle"
-        :stroke-width="1"
-        :percentage="[
-          //zipped[0] / length * 100 |0,
-          success[0] / length * 100 |0,
-          index[0] / length * 100 |0,
-        ]"
-        :color="[
-          //'lime',
-          c.successColor,
-          statusColor,
-        ]"
-        :rail-style="[
-          //{stroke: 'lime', opacity:0.1},
-          {stroke: processing ? c.successColor : statusColor, opacity:0.3},
-          {stroke: statusColor, opacity:0.3},
-        ]"
+      <center-column
+        :index="index[0]"
+        :success="status.success"
+        :length="status.length"
+        :success-to="success[0]"
+        :success-from="success[1]"
+        :failure="failure[0]"
+        :success-perc-to="successPercentage[0]"
+        :success-perc-from="successPercentage[1]"
+        :retried="retried"
+        
+        :processing="processing"
+        :interval="UPDATE_INTERVAL_MSEC"
+        :status-color="statusColor"
+
         class="center-column"
-      >
-        <!-- content in the center circle -->
-        <n-space vertical align="center" style="font-family:v-mono; white-space: nowrap;" :wrap="false" :wrap-item="false">
-          <!-- percent -->
-          <span :style="{color: failure[0] ? statusColor : processing ? c.successColor : statusColor}">
-          <n-number-animation
-            :duration="UPDATE_INTERVAL_MSEC * 3 | 0"
-            :from="successPercentage[1] |0"
-            :to="successPercentage[0] |0"
-            :active="true"
-          />%
-          </span>
-          
-          <!-- progress -->
-          <n-flex :wrap="false" style="border:0px solid">
-            <n-flex vertical size="small" justify="end">
-              
-              <n-flex justify="end" :wrap="false">
-                <!-- error count -->
-                <n-popover v-if="failure[0] > 0" trigger="hover" :duration="0" :delay="0" :style="{color:c.errorColor}" placement="left">
-                  <template #trigger>
-                    <span :style="{fontSize:'xx-small', color:c.errorColor,lineHeight:'0'}">
-                      ({{failure[0].toLocaleString('en-us')}})
-                    </span>
-                  </template>
-                  {{$t('status.progressErrors')}} ({{ failure[0].toLocaleString('en-us') }})
-                </n-popover>
-                
-                <!-- started count -->
-                <n-popover trigger="hover" :duration="0" :delay="0" :style="{color:c.infoColor}" placement="left">
-                  <template #trigger>
-                    <span :style="{fontSize:'xx-small', color:c.infoColor, lineHeight:'0'}">
-                      {{index[0].toLocaleString('en-us')}}
-                    </span>
-                  </template>
-                  {{$t('status.progressStarted')}} ({{ index[0].toLocaleString('en-us') }})
-                </n-popover>
-              </n-flex>
-
-              <!-- success count -->
-              <n-flex justify="end">
-              <n-popover trigger="hover" :duration="0" :delay="0" :style="{color:c.successColor}" placement="bottom">
-                <template #trigger>
-                  <span :style="{fontSize:'medium', color:c.successColor}">
-                  <n-number-animation
-                    :duration="UPDATE_INTERVAL_MSEC * 3 | 0"
-                    :from="success[1]"
-                    :to="success[0]"
-                    :active="true"
-                    :show-separator="true"
-                  />
-                  </span>
-                </template>
-                {{$t('status.progressSuccess')}} ({{ success[0].toLocaleString('en-us') }})
-              </n-popover>
-              </n-flex>
-
-              <!-- zipped count -->
-              <!--
-              <n-flex justify="end" style="line-height: 0.5em;">
-              <n-popover trigger="hover" :duration="0" :delay="0" :style="{color:'lime'}" placement="bottom">
-                <template #trigger>
-                  <span :style="{fontSize:'medium', color:'lime'}">
-                  <n-number-animation
-                    :duration="UPDATE_INTERVAL_MSEC * 10 | 0"
-                    :from="zipped[1]"
-                    :to="zipped[0]"
-                    :active="true"
-                    :show-separator="true"
-                  />
-                  </span>
-                </template>
-                Zipped Image Count ({{ zipped[0].toLocaleString('en-us') }})
-              </n-popover>
-              </n-flex>
-              -->
-
-            </n-flex>
-            
-            <n-flex align="end" style="font-size:medium; border: 0px solid">
-              <n-popover trigger="hover" :duration="0" :delay="0" placement="bottom">
-                <template #trigger>
-                  / {{length.toLocaleString('en-us')}}
-                </template>
-                {{$t('status.progressTotal')}} ({{ length.toLocaleString('en-us') }})
-              </n-popover>
-            </n-flex>
-          </n-flex>
-        </n-space>
-
-
-      </n-progress>
+      />
 
       <!-- right column -->
-      <n-space vertical style="height:100%;" justify="center">
+      <n-flex vertical style="height:100%;" justify="center">
         <n-statistic tabular-nums :label="$t('status.inputSize')">
-          <n-space justify="end" :wrap="false" style="font-family:v-mono;">{{(inputTotalSize / 1024 | 0).toLocaleString('en-us')}} KB</n-space>
+          <n-flex justify="end" :wrap="false" style="font-family:v-mono;">{{(inputTotalSize / 1024 | 0).toLocaleString('en-us')}} KB</n-flex>
         </n-statistic>
 
         <n-statistic tabular-nums :label="$t('status.outputSize')">
-          <n-space justify="end" :wrap="false" style="font-family:v-mono;">{{(outputTotalSize / 1024 | 0).toLocaleString('en-us')}} KB</n-space>
+          <n-flex justify="end" :wrap="false" style="font-family:v-mono;">{{(outputTotalSize / 1024 | 0).toLocaleString('en-us')}} KB</n-flex>
         </n-statistic>
 
         <n-statistic tabular-nums :label="$t('status.outInRate')">
-          <n-space vertical align="end" justify="start" style="font-size: xx-small; font-family:v-mono; line-height:50%;">
+          <n-flex vertical align="end" justify="start" style="font-size: xx-small; font-family:v-mono; line-height:50%;">
             <span :style="{color:rateColor, fontSize:'larger'}">× {{ (outputTotalSize / inputTotalSize || 1).toFixed(2) }}</span>
             <span :style="{color:difColor}">({{ totalSizeDifStr }})</span>
             
-          </n-space>
+          </n-flex>
         </n-statistic>
-      </n-space>
+      </n-flex>
 
-    </n-space>
+    </n-flex>
 
 
     <!-- log view -->
@@ -853,20 +750,20 @@ function scrollLogViewToBottom(instant = false) {
       :trigger-areas="['arrow', 'main']" 
       default-expanded-names="log-collapse" 
       :expanded-names="logOpened ? ['log-collapse']:[]" 
-      @update:expanded-names="names => {logOpened = !!String(names)}"
+      @update-expanded-names="names => {logOpened = !!String(names)}"
     >
     <n-collapse-item title="Log" name="log-collapse" style="white-space:nowrap;">
       <template #header>
-        <n-flex align="center" :wrap="false">{{$t('status.log')}}<n-spin :size="16" v-if="processing && !logOpened"> </n-spin></n-flex>
+        <n-flex align="center" :wrap="false">{{$t('status.log')}}<n-spin :size="16" v-show="processing && !logOpened"> </n-spin></n-flex>
       </template>
-      <template #header-extra v-if="logOpened">
-        <n-flex align="center" :wrap="false">
+      <template #header-extra>
+        <n-flex v-show="logOpened" align="center" :wrap="false">
           <transition-group>
           <!-- filter completed item -->
           <n-checkbox key="a" v-model:checked="hideSuccess" size="small" style="font-size: smaller" class="hide-mobile">{{$t('status.filterSuccess')}}</n-checkbox>
           
           <!-- auto scroll -->
-          <n-checkbox key="b" v-if="expandLog" v-model:checked="autoScrollLog" @update:checked="flag => flag && scrollLogViewToBottom(true)" size="small" style="font-size: smaller">{{$t('status.autoScroll')}}</n-checkbox>
+          <n-checkbox key="b" v-show="expandLog" v-model:checked="autoScrollLog" @update:checked="flag => flag && scrollLogViewToBottom(true)" size="small" style="font-size: smaller">{{$t('status.autoScroll')}}</n-checkbox>
           </transition-group>
 
           <!-- expand log -->
@@ -879,19 +776,22 @@ function scrollLogViewToBottom(instant = false) {
             </template>
           </n-tooltip>
         </n-flex>
-        
       </template>
       
       <n-flex :wrap="false" :class="{'log-container':1, 'expand-log': expandLog}" align="stretch" :style="expandLog ? {height: logMaxHeight, maxHeight: logMaxHeight} : {}">
         <!-- filename table -->
         <n-scrollbar ref="scrollref" :x-scrollable="true" @mouseup="autoScrollLog=false" @wheel="autoScrollLog=false" trigger="none" style="z-index:2; padding-right:10px; min-height:7em;" :size="50" :style="{maxHeight: logMaxHeight}">
-          <table class="log-table">
+          <table v-if="logOpened" class="log-table" ref="table">
+          <tbody>
           <tr class="log-tr">
             <th class="log-th">{{$t('status.table.core')}}</th><th class="log-th"> {{$t('status.table.index')}} </th><th style="min-width:7em;" class="log-th">{{$t('status.table.status')}}</th><th style="padding-left:2em;" class="log-th">{{$t('status.table.details')}}</th>
           </tr>
+          
+          <!-- converting items -->
           <tr v-for="{index, key, command, path, core} in (hideSuccess ? workingLogs.filter(item => !item.completed) : workingLogs).slice(-logViewSize)" :key="key" class="log-tr">
             <td class="log-td">{{ (core >= 0 ? core+1 : '-') }}</td><td class="log-td">{{ index+1 }}</td><td class="log-td">{{ command }}</td><td class="log-td">{{path}}</td>
           </tr>
+          </tbody>
           </table>
         </n-scrollbar>
 
@@ -929,34 +829,35 @@ function scrollLogViewToBottom(instant = false) {
  
       <!-- image browser -->
       <n-flex justify="center" align="center" vertical>
-        <transition>
-        <n-button v-if="!imageViewerStarted" tertiary type="success" size="small" :disabled="!(status.success > 0)" @click="imageViewerStarted=true">
-          {{$t('status.browseConvertedImages')}}
-        </n-button>
-        <ImageViewer
-          v-else-if="imageViewerStarted && status.success > 0 /*&& (props.status.threads || !zippingFlag)*/"
-          ref="imageViewer"
-          :url="outputImg.url"
-          :size="outputImg.size"
-          :original-url="outputImg.originalUrl"
-          :original-size="outputImg.originalSize"   
-          :name="outputImg.name"
-          :originalName="outputImg.originalName"
-          :length="props.status.success"
-          :index="outputImg.index"
-          :various-info="outputImg.various"
+          <transition>
+            <n-button v-if="!imageViewerStarted" tertiary type="success" size="small" :disabled="!(status.success > 0)" @click="imageViewerStarted=true">
+              {{$t('status.browseConvertedImages')}}
+            </n-button>
           
-          :is-single="!zippingFlag"
-          @demand-image="index => emit('demand-image', index)"
-          @close="imageViewerStarted=false"
-        />
+            <ImageViewer
+              v-else-if="imageViewerStarted && status.success > 0 /*&& (props.status.threads || !zippingFlag)*/ && !cleaningUp"
+              ref="imageViewer"
+              :url="outputImg.url"
+              :size="outputImg.size"
+              :original-url="outputImg.originalUrl"
+              :original-size="outputImg.originalSize"   
+              :name="outputImg.name"
+              :originalName="outputImg.originalName"
+              :length="props.status.success"
+              :index="outputImg.index"
+              :various-info="outputImg.various"
+              
+              :is-single="!zippingFlag"
+              @demand-image="index => emit('demand-image', index)"
+              @close="imageViewerStarted=false"
+            />
         </transition>
       </n-flex>
       
       <n-flex justify="center">
         
         <!-- zip list -->
-        <n-flex v-if="zippingFlag" vertical align="center">
+        <n-flex v-show="zippingFlag" vertical align="center">
           
           <!-- zipping progress -->
           <n-popover placement="left">
@@ -1020,7 +921,7 @@ function scrollLogViewToBottom(instant = false) {
 
       <!-- result -->
       <Transition>
-      <n-flex v-if="!props.processing" justify="center" align="center">
+      <n-flex v-show="!props.processing" justify="center" align="center">
 
         <!-- save button -->
         <n-popover trigger="hover" :duration="0" :delay="0" placement="left" :style="{color:'white', backgroundColor:c.successColor}" :arrow-style="{backgroundColor:c.successColor}">
@@ -1032,7 +933,7 @@ function scrollLogViewToBottom(instant = false) {
                 <template v-if="zippingFlag">
                   <a v-if="zipList.length" :href="zipList[0].url" :download="zipList[0].name" class="in-button-anchor" @click.prevent>
                     <Zipicon/> × {{ zipList.length }}
-                    {{$t('save')}}
+                    {{$t('status.saveAll')}}
                   </a>
                 </template>
                 <template v-else>
@@ -1090,7 +991,7 @@ function scrollLogViewToBottom(instant = false) {
       
       <!-- zipping progress for failed files -->
       <transition name="zipcontainer">
-      <n-flex v-if="demandedFailedZips" vertical align="center">
+      <n-flex v-show="demandedFailedZips" vertical align="center">
         
         <n-popover placement="left">
           <template #trigger>
@@ -1240,10 +1141,10 @@ function scrollLogViewToBottom(instant = false) {
   height:100%;
 }
 .center-column {
-  width: 7em;
+  width: 8.6em;
   font-size: 1.5em;
 }
-@media screen and (max-width: 512px) {
+@media screen and (max-width: 580px) {
 	.left-column {
     > * {
       display: none;

@@ -87,7 +87,12 @@
     "Converted": "Converted",
     "saveAllZipsTooltip": "Save all ZIP files",
     "Shrinked": "Shrinked",
-    "Shrinking": "Shrinking"
+    "Shrinking": "Shrinking",
+    "saveAll": "Save All",
+    "progressRetries": "Retrying files",
+    "success": "success",
+    "started": "started",
+    "total": "total"
   },
   "settings": {
     "maxZipFileSize": "Max zip file size",

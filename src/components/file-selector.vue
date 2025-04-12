@@ -1,10 +1,10 @@
 <template>
   <div class="container-1">
   <div class="container-2">
-  <n-space vertical align="center" justify="center" inline>
-    <n-space align="center" justify="space-around" class="main-buttons">
+  <n-flex vertical align="center" justify="center" inline>
+    <n-flex align="center" justify="space-around" class="main-buttons">
       
-      <n-space vertical align="stretch" justify="center">
+      <n-flex vertical align="stretch" justify="center">
         <!-- file select -->
         <n-tooltip :to="false" display-directive="show"
           :show="INJ.showTooltipsBeforeMounted.value" trigger="hover" :keep-alive-on-hover="false"
@@ -28,36 +28,37 @@
           <div v-html="$t('loadbuttontooltip')"></div>
         </n-tooltip>
 
-        <n-space align="center" justify="center" style="color:gray; margin:0em;">
-          <!-- <n-icon color="gray"><ArrowUp /></n-icon> -->
-          {{$t('or')}}
-          <!-- <n-icon color="gray"><ArrowDown /></n-icon> -->
-        </n-space>
+        <template v-if="!INJ.IS_SP && folderInputSupport || INJ.SSR">
+          <n-flex align="center" justify="center" style="color:gray; margin:0em;">
+            <!-- <n-icon color="gray"><ArrowUp /></n-icon> -->
+            {{$t('or')}}
+            <!-- <n-icon color="gray"><ArrowDown /></n-icon> -->
+          </n-flex>
 
-        <!-- folder select -->
-        <n-tooltip :to="false" display-directive="show" trigger="hover"
-          placement="left" :keep-alive-on-hover="false" style="max-width: 40vw;"
-          :duration="0" :delay="0" :z-index="10"
-          v-if="!INJ.IS_SP && folderInputSupport || INJ.SSR"
-          :show="INJ.showTooltipsBeforeMounted.value"
-        >
-          <template #trigger>
-            <n-button
-              :disabled="!isAllowedInputs"
-              size="large"
-              @click="onInputButtonClick(folderinput)"
-              round
-              style="width:100%; background-color:white; font-size: large;"
-            >
-              <template #icon>
-                <n-icon size="large" color="gray"><FolderOpenOutline /></n-icon>
-              </template>
-              {{$t('loadfolderbutton')}}
-            </n-button>
-          </template>
-          <div v-html="$t('loadfoldertooltip')"></div>
-        </n-tooltip>
-      </n-space>
+          <!-- folder select -->
+          <n-tooltip :to="false" display-directive="show" trigger="hover"
+            placement="left" :keep-alive-on-hover="false" style="max-width: 40vw;"
+            :duration="0" :delay="0" :z-index="10"
+            :show="INJ.showTooltipsBeforeMounted.value"
+          >
+            <template #trigger>
+              <n-button
+                :disabled="!isAllowedInputs"
+                size="large"
+                @click="onInputButtonClick(folderinput)"
+                round
+                style="width:100%; background-color:white; font-size: large;"
+              >
+                <template #icon>
+                  <n-icon size="large" color="gray"><FolderOpenOutline /></n-icon>
+                </template>
+                {{$t('loadfolderbutton')}}
+              </n-button>
+            </template>
+            <div v-html="$t('loadfoldertooltip')"></div>
+          </n-tooltip>
+        </template>
+      </n-flex>
 
       <!-- drop target -->
       <DropTarget
@@ -66,7 +67,7 @@
         :forbidden="!isAllowedInputs"
         class="drop-target"
       />
-    </n-space>
+    </n-flex>
 
     <!-- target file type menu -->
     <div :class="{'expand-ext-list-container': expandedMenu}" style="margin-top: 1em;">
@@ -81,7 +82,7 @@
       
       <n-collapse-item :title="$t('fileTypeRadioTitle')" name="extItem">
         <n-radio-group v-model:value="targetType" name="filetyperadios" size="small">
-          <n-space vertical style="padding-left:1em;">
+          <n-flex vertical style="padding-left:1em;">
 
             <n-tooltip v-for="(val) in FileTypeRadioValues" :key="val" trigger="hover" :keep-alive-on-hover="false" :z-index="5" placement="left" style="max-width:200px;" :duration="0" :delay="0">
               <template #trigger>
@@ -120,7 +121,7 @@
               <span v-html="$t('editAcceptTypes')"></span>
             </n-tooltip>
 
-          </n-space>
+          </n-flex>
         </n-radio-group>
       </n-collapse-item>
     </n-collapse>
@@ -128,13 +129,27 @@
 
 
 
-  </n-space>
+  </n-flex>
   </div>
   </div>
 
   <input ref="fileinput" @input="onInputFile" @cancel="onInputButtonCancel" type="file" multiple :accept="accept" style="display:none">
   <input ref="folderinput" webkitdirectory directory @input="onInputFile" @cancel="onInputButtonCancel" type="file" style="display:none">
 </template>
+
+
+<script lang="ts">
+/*
+https://github.com/vuejs/core/issues/4644
+defineProps() in <script setup> cannot reference locally declared variables because it will be hoisted outside of the setup() function.
+If your component options require initialization in the module scope, use a separate normal <script> to export the options instead.
+*/
+export type FileWithId = File & {
+  readonly _id: number
+};
+
+</script>
+
 
 <script setup lang="ts">
 import { ImageOutline, FolderOpenOutline, SearchCircle, ArrowUp, ArrowDown } from '@vicons/ionicons5';
@@ -166,16 +181,17 @@ const FileExtLabels: { [key in TargetTypes]: string } = {
 
 // properties
 const props = defineProps<{
-  expanded?: boolean
+  //expanded?: boolean
   target?: TargetTypes
   userExtensions?: string
   forbidden?: boolean
 }>();
 
 
+
 // emits
 const emit = defineEmits<{
-  input: [val: File[]]
+  input: [val: FileWithId[]]
   click: []
   cancel: []
   
@@ -184,7 +200,7 @@ const emit = defineEmits<{
   'update:target': [val: TargetTypes]
   'update:userExtensions': [val: string]
 
-  'update:expanded': [val: boolean]
+  //'update:expanded': [val: boolean]
 }>();
 
 
@@ -204,12 +220,16 @@ const userExtValidationStat = computed(() => {
 const isAllowedInputs = computed( () => !props.forbidden && !disableInputButtons.value );
 
 // v-model values
+/*
 const expandedMenu = computed({
   get: () => props.expanded,
   set: (flag: boolean) => {
     emit('update:expanded', flag);
   },
 });
+*/
+const expandedMenu = defineModel<boolean>('expanded', {required: false});
+
 const targetType = computed({
   get: () => {
     return FileTypeRadioValues.indexOf(props.target) >= 0 ? props.target : FileTypeRadioValues[0];
@@ -359,9 +379,23 @@ async function emitInputs(list: File[]) {
   inputtedFileCount.value = list.length;
   
   if( list.length > 0 ) {
-    emit('input', list);
+    emit('input', assignIdToFiles(list));
   }
   disableInputButtons.value = false;
+}
+
+// add id to File[]
+let _fileIdCounter = 0;
+function assignIdToFiles(list: File[]): FileWithId[] {
+  const output: File[] = [];
+  // add id to each file
+  for( const file of list ) {
+    if( !file.hasOwnProperty('_id') )
+      Object.defineProperty(file, '_id', { value: _fileIdCounter++ });
+    output.push(file);
+  }
+
+  return output as FileWithId[];
 }
 
 

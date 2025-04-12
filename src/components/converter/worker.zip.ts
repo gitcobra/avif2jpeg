@@ -143,6 +143,9 @@ self.onmessage = async (params: ZipMessageType) => {
         fileId: fileIdByIndex.get(index!)!,
         size: blob.size,
       };
+
+      //await new Promise(r => setTimeout(r, 3000)); // delay for debug
+
       self.postMessage( message );
       break;
     }

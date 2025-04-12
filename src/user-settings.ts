@@ -1,7 +1,17 @@
 import { reactive } from 'vue';
 
-
-export const MaxThreads = ref(navigator.hardwareConcurrency || 0);
+export const MaxThreads = ref(navigator.hardwareConcurrency ? Math.min(navigator.hardwareConcurrency, 12) : 0);
+const Limits: {
+  [key: string]: {
+    min?: number
+    max?: number
+  }
+} = {
+  threadCount: {
+    min: 2,
+    max: Math.max(2, MaxThreads.value),
+  },
+} as const;
 
 const DefaultSettings = {
   imageFormat: 'image/jpeg',
@@ -24,18 +34,6 @@ const DefaultSettings = {
   maxHeight: 4096,
 
   disableNotifyingFolderSelect: false,
-} as const;
-
-const Limits: {
-  [key: string]: {
-    min?: number
-    max?: number
-  }
-} = {
-  threadCount: {
-    min: 2,
-    max: 16,
-  },
 } as const;
 
 export type UserSettingsType = Omit<typeof DefaultSettings, "threadCount"> & {

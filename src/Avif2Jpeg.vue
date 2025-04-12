@@ -1,6 +1,5 @@
 <script lang="ts">
 import SwitchLanguages from './components/header/switch-lang.vue';
-
 // for provide
 import { type InjectionKey, type Ref } from 'vue';
 
@@ -29,8 +28,8 @@ import FileSelector from './components/file-selector.vue'
 import OutputSettings from './components/settings-output.vue';
 import AdvancedSettings from './components/settings-adv.vue';
 import Descriptions from './components/descriptions.vue';
-//import LangFlag from './components/lang-flag.vue';
 
+//import LangFlag from './components/lang-flag.vue';
 //import DelLocalStorage from './components/_test/del-ls.vue';
 
 
@@ -72,6 +71,10 @@ const showNote = ref(false);
 
 
 
+
+
+// global variables
+
 provide(GlobalValsKey, {
   showTooltipsBeforeMounted,
   LANDSCAPE,
@@ -99,7 +102,9 @@ onMounted(() => {
   setTimeout(() => mounted.value = true, 3000);
 });
 
-
+onUnmounted(() => {
+  window.removeEventListener('resize', checkLandScape);
+});
 
 
 
@@ -157,7 +162,7 @@ function onInputClick(flag: boolean) {
 
 <template>
 
-  <n-flex vertical align="stretch" class="app">
+  <n-flex vertical align="stretch" class="avif2jpeg">
     <Header>
       <template #lang-switch>
         <Suspense>
@@ -172,76 +177,76 @@ function onInputClick(flag: boolean) {
     
     <transition name="fade">
     <n-flex v-if="contentVisible" vertical align="stretch" justify="space-between" style="height:100%;">
-      <n-flex class="row-spacer"/>
-
-      <Title/>
-
-      <n-space justify="center">
-        <FileSelector
-          v-model:expanded="UserSettings.expandExtButtons"
-          v-model:target="UserSettings.acceptTypeValue"
-          v-model:userExtensions="UserSettings.editedAcceptTypes"
-          v-model:disable-notifying-folder-select="UserSettings.disableNotifyingFolderSelect"
-          :forbidden="processing"
-          @input="onInputFile"
-          @click="onInputClick(true)"
-          @cancel="onInputClick(false)"
-        />
-      </n-space>
-      
-      <!-- core component -->
-      <Converter
-        :input="inputConversionFiles"
-        :format="UserSettings.imageFormat"
-        :quality="UserSettings.imageQuality"
-        :retain-extension="UserSettings.retainExtension"
-        :maxZipSizeMB="UserSettings.maxZipSizeMB"
-        :threads="UserSettings.multithread ? UserSettings.threadCount : 0"
-        v-model:show-note="showNote"
+      <n-flex justify="space-around" vertical style="height:100%;">
+        <Title/>
+        <n-flex justify="center">
+          <FileSelector
+            _v-model:expanded="UserSettings.expandExtButtons"
+            v-model:target="UserSettings.acceptTypeValue"
+            v-model:userExtensions="UserSettings.editedAcceptTypes"
+            v-model:disable-notifying-folder-select="UserSettings.disableNotifyingFolderSelect"
+            :forbidden="processing"
+            @input="onInputFile"
+            @click="onInputClick(true)"
+            @cancel="onInputClick(false)"
+          />
+        </n-flex>
         
-        @start="processing=true"
-        @end="processing=false"
-        _:multi-thread-count="val => availableThreadCount = val"
-      />
-
-      <n-space vertical align="center">
-        <n-popover trigger="manual" placement="top" :keep-alive-on-hover="false" :duration="0" :delay="0">
-        <template #trigger>
-          <n-icon size="5vh" color="#DADADA" style="margin:0px;"><ArrowDown/></n-icon>
-        </template>
-        <span>CONVERT TO👇</span>
-        </n-popover>
-      </n-space>
-
-      <n-space vertical align="center">  
-        <OutputSettings
-          v-model:format="UserSettings.imageFormat"
-          v-model:quality="UserSettings.imageQuality"
-        />
-
-        <AdvancedSettings
-          v-model:retain-ext="UserSettings.retainExtension"
-          v-model:use-folder-name-for-zip="UserSettings.useFolderNameForZip"
-          v-model:max-zip-size="UserSettings.maxZipSizeMB"
-          v-model:expanded="UserSettings.expandAdvSettings"
-          v-model:multithread="UserSettings.multithread"
-          v-model:thread-count="UserSettings.threadCount"
-          _:thread-max="availableThreadCount"
+        <!-- core component -->
+        <Converter
+          :input="inputConversionFiles"
+          :format="UserSettings.imageFormat"
+          :quality="UserSettings.imageQuality"
+          :retain-extension="UserSettings.retainExtension"
+          :maxZipSizeMB="UserSettings.maxZipSizeMB"
+          :threads="UserSettings.multithread ? UserSettings.threadCount : 0"
+          v-model:show-note="showNote"
           
-          v-model:shrink-image="UserSettings.shrinkImage"
-          v-model:max-width="UserSettings.maxWidth"
-          v-model:max-height="UserSettings.maxHeight"
+          @start="processing=true"
+          @end="processing=false"
+          _:multi-thread-count="val => availableThreadCount = val"
         />
-        
-      </n-space>
-      
-      <Descriptions/>
+
+        <n-flex vertical align="center">
+          <n-popover trigger="manual" placement="top" :keep-alive-on-hover="false" :duration="0" :delay="0">
+          <template #trigger>
+            <n-icon size="5vh" color="#DADADA" style="margin:0px;"><ArrowDown/></n-icon>
+          </template>
+          <span>CONVERT TO👇</span>
+          </n-popover>
+        </n-flex>
+
+        <n-flex vertical align="center">  
+          <OutputSettings
+            v-model:format="UserSettings.imageFormat"
+            v-model:quality="UserSettings.imageQuality"
+          />
+
+          <AdvancedSettings
+            v-model:retain-ext="UserSettings.retainExtension"
+            v-model:use-folder-name-for-zip="UserSettings.useFolderNameForZip"
+            v-model:max-zip-size="UserSettings.maxZipSizeMB"
+            _v-model:expanded="UserSettings.expandAdvSettings"
+            v-model:multithread="UserSettings.multithread"
+            v-model:thread-count="UserSettings.threadCount"
+            _:thread-max="availableThreadCount"
+            
+            v-model:shrink-image="UserSettings.shrinkImage"
+            v-model:max-width="UserSettings.maxWidth"
+            v-model:max-height="UserSettings.maxHeight"
+          />
+          
+        </n-flex>
+
+        <Descriptions/>
+
+      </n-flex> 
       
     </n-flex>
     </transition>
 
     <!-- <LangFlag/> -->
-    <!-- DelLocalStorage/> -->
+    <!-- <DelLocalStorage/> -->
   
   </n-flex>
 
@@ -281,7 +286,7 @@ a {
   position: relative;
   height:100%;
 }
-.app {
+.avif2jpeg {
   overflow: visible;
   height: 100%;
   max-width: 1024px;

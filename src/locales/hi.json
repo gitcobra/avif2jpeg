@@ -80,7 +80,12 @@
     "Shrinking": "सिकुड़",
     "convertedZips": "ज़िप सफलतापूर्वक पूरा किया गया",
     "outInRate": "आउट/इन अनुपात",
-    "zipped": "ज़िपित"
+    "zipped": "ज़िपित",
+    "saveAll": "सब को सुरक्षित करें",
+    "progressRetries": "फाइलें फिर से तैयार करना",
+    "success": "सफलता",
+    "started": "शुरू कर दिया",
+    "total": "कुल"
   },
   "disabled": "अक्षम",
   "threads": "धागा | \nधागे",

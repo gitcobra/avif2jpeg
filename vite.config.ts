@@ -10,7 +10,7 @@ import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 import beautify from 'js-beautify';
-
+//import vueDevTools from 'vite-plugin-vue-devtools';
 
 
 export default defineConfig(({mode}) => {
@@ -92,6 +92,8 @@ export default defineConfig(({mode}) => {
           }] : [] as any
         ],
       }),
+
+      //vueDevTools(),
     ],
 
     server: {

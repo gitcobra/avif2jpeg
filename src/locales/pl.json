@@ -80,7 +80,12 @@
     "Shrinking": "Kurczący się",
     "convertedZips": "pomyślnie ukończono ZIP",
     "outInRate": "Stosunek wyjścia/wejścia",
-    "zipped": "ZAPINANE"
+    "zipped": "ZAPINANE",
+    "saveAll": "Zapisz wszystkie",
+    "progressRetries": "Ponowne plik",
+    "success": "sukces",
+    "started": "zaczął",
+    "total": "całkowity"
   },
   "disabled": "Wyłączony",
   "threads": "wątek | \nwątki",

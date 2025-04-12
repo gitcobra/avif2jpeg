@@ -1,6 +1,6 @@
 // legacy converter that runs in single thread
 
-import type { FileWithId, SingleImageDataType } from './converter.vue';
+import type { FileWithId } from '../file-selector.vue';
 import AnZip from '@gitcobra/anzip-es6';
 import { SplitZipsIndexer } from './util';
 
@@ -14,7 +14,7 @@ type ConversionStatusType = InstanceType<typeof ConversionStatus>;
 type Stat = ConversionStatusType['status'];
 
 
-export async function convertImagesInSingleThread(list: FileWithId[], completedFileIdSet: Set<number>, SingleImageData: SingleImageDataType, props: Props, canceled, ConvStats: Stat ) {
+export async function convertImagesInSingleThread(list: FileWithId[], completedFileIdSet: Set<number>, props: Props, canceled, ConvStats: Stat ) {
   let currentImgBlobUrl = '';
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');

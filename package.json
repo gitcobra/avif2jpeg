@@ -1,7 +1,7 @@
 {
   "name": "avif2jpeg",
   "private": true,
-  "version": "1.8.11",
+  "version": "1.8.16",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -25,7 +25,7 @@
     "jest-environment-jsdom": "^29.7.0",
     "js-beautify": "^1.15.1",
     "modern-normalize": "^3.0.1",
-    "naive-ui": "^2.40.1",
+    "naive-ui": "^2.41.0",
     "sass": "^1.79.4",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
@@ -35,7 +35,7 @@
     "vfonts": "^0.0.3",
     "vite": "^5.4.8",
     "vite-plugin-html-injection": "^1.4.2",
-    "vite-ssg": "^0.23.8",
+    "vite-ssg": "^26.1.1",
     "vite-ssg-sitemap": "^0.8.1",
     "vue-i18n": "^9.14.1",
     "vue-router": "^4.4.5",

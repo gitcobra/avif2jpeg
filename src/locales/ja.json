@@ -86,7 +86,12 @@
     "Converted": "変換後",
     "saveAllZipsTooltip": "すべての ZIP ファイルを保存する",
     "Shrinked": "縮小済",
-    "Shrinking": "縮小"
+    "Shrinking": "縮小",
+    "saveAll": "全て保存",
+    "progressRetries": "再試行ファイル",
+    "success": "成功",
+    "started": "開始済",
+    "total": "総計"
   },
   "disabled": "無効",
   "threads": "スレッド | スレッド",

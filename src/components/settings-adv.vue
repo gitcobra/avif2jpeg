@@ -27,7 +27,7 @@ Component v-model | Vue.js
 https://vuejs.org/guide/components/v-model
 Starting in Vue 3.4, the recommended approach to achieve this is using the defineModel() macro
 */
-const expanded = defineModel<boolean>('expanded', {required:true});
+const expanded = defineModel<boolean>('expanded', {required: false});
 
 const multithread = defineModel<boolean>('multithread', {required:true});
 const threadCount = defineModel<number|undefined>('threadCount', {required:true});
@@ -122,8 +122,9 @@ onMounted(() => {
               </n-flex>
               <n-flex :wrap="false" align="center" style="padding-left: 2em;">
                 <n-slider v-model:value="threadCount" :disabled="!MaxThreads || !multithread" :step="1" :min="2" :max="MaxThreads" style="width:120px;"/>
-                <n-input-number @blur="threadCount??=2" size="tiny" v-model:value="threadCount" :disabled="!MaxThreads || !multithread" :step="1" :min="2" :max="MaxThreads" style="width:10em"><template #suffix>{{$t('threads', threadCount!)}}</template></n-input-number>
+                <n-input-number @blur="threadCount??=2" size="tiny" v-model:value="threadCount" :disabled="!MaxThreads || !multithread" :step="1" :min="2" :max="MaxThreads" style="width:10em"><template #suffix>{{ $t('threads', threadCount!)}}</template></n-input-number>
               </n-flex>
+              {{ MaxThreads }}
             </n-flex>
             </template>
             {{ $t('settings.multiThreadsTooltip') }}

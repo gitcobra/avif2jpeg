@@ -80,7 +80,12 @@
     "Shrinking": "收缩",
     "convertedZips": "成功完成 ZIP",
     "outInRate": "输出/输入比率",
-    "zipped": "压缩"
+    "zipped": "压缩",
+    "saveAll": "保存全部",
+    "progressRetries": "重试文件",
+    "success": "成功",
+    "started": "开始",
+    "total": "全部的"
   },
   "disabled": "残疾人",
   "threads": "thread | threads",

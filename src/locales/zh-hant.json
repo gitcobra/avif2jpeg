@@ -81,7 +81,12 @@
     "Shrinking": "收縮",
     "convertedZips": "成功完成 ZIP",
     "outInRate": "輸出/輸入比率",
-    "zipped": "壓縮"
+    "zipped": "壓縮",
+    "saveAll": "保存全部",
+    "progressRetries": "重試文件",
+    "success": "成功",
+    "started": "開始",
+    "total": "全部的"
   },
   "disabled": "殘障人士",
   "threads": "thread | threads",

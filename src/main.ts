@@ -5,6 +5,7 @@ import App from "./App.vue";
 //import naive from "naive-ui";
 import { I18n, LANG_ID_LIST } from './i18n';
 
+
 const routes: RouteRecordRaw[] = [
   {
     path: "/",

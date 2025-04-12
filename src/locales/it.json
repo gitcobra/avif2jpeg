@@ -80,7 +80,12 @@
     "Shrinked": "Rimpicciolito",
     "Shrinking": "Restringendosi",
     "convertedZips": "ZIP completato con successo",
-    "zipped": "ZIP"
+    "zipped": "ZIP",
+    "saveAll": "Salva tutto",
+    "progressRetries": "Riprovare i file",
+    "success": "successo",
+    "started": "iniziato",
+    "total": "totale"
   },
   "disabled": "Disabilitato",
   "threads": "discussione | discussioni",

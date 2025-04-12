@@ -1,26 +1,26 @@
 <template>
-  <n-space vertical justify="start">
-    <n-space justify="space-between" style="box-sizing:border-box; padding:4px; margin:0px;">      
+  <n-flex vertical justify="start">
+    <n-flex justify="space-between" align="center">      
 
-      <n-space align="start">
+      <n-flex align="center">
         <Github/>
 
         <Version/>
         
-        <n-space align="center">
-          <Licenses/>
-        </n-space>
+        
+        <Licenses/>
+        
 
-      </n-space>
+      </n-flex>
       
       <!-- language switches -->
-      <n-space align="end" style="font-size: x-small;">          
+      <n-flex align="end" style="font-size: x-small;">          
         <slot name="lang-switch"></slot>
-      </n-space>
-    </n-space>
+      </n-flex>
+    </n-flex>
 
     <n-divider style="margin:0px;" />
-  </n-space>
+  </n-flex>
 </template>
 
 <script setup lang="ts">

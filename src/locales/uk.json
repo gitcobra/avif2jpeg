@@ -80,7 +80,12 @@
     "Shrinking": "скорочення",
     "convertedZips": "успішно завершено ZIP",
     "outInRate": "Співвідношення вихід/вхід",
-    "zipped": "ЗАПІДАНИЙ"
+    "zipped": "ЗАПІДАНИЙ",
+    "saveAll": "Зберегти все",
+    "progressRetries": "Повторне повторне файли",
+    "success": "успіх",
+    "started": "розпочато",
+    "total": "загальний"
   },
   "disabled": "Вимкнено",
   "threads": "нитка | \nнитки",

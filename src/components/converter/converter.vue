@@ -1,31 +1,3 @@
-<script lang="ts">
-/*
-https://github.com/vuejs/core/issues/4644
-defineProps() in <script setup> cannot reference locally declared variables because it will be hoisted outside of the setup() function.
-If your component options require initialization in the module scope, use a separate normal <script> to export the options instead.
-*/
-export type FileWithId = File & {
-  readonly _id: number
-};
-export type SingleImageDataType = {
-  convertedImageBlob: Blob | null
-  convertedImageWidth?: number
-  convertedImageHeight?: number
-  convertedImageName: string
-
-  convertedImageUrl?: string
-  convertedImageOrgUrl?: string
-  convertedImageDataUrl?: string
-  convertedImageSize?: number
-  convertedImageOrgSize?: number
-  convertedImageIndex?: number
-  convertedImageFileId?: number
-};
-</script>
-
-
-
-
 <script setup lang="ts">
 import { NButton, type NotificationType } from 'naive-ui';
 import { convertTargetFilesInMultithread } from './converter.multi';
@@ -38,6 +10,7 @@ import { GlobalValsKey } from '@/Avif2Jpeg.vue';
 import { UserSettings, MaxThreads } from '@/user-settings';
 export type ConversionStatusType = InstanceType<typeof ConversionStatus>['$props']['status'];
 
+import type { FileWithId } from '../file-selector.vue';
 
 // common
 const INJ = inject(GlobalValsKey);
@@ -61,7 +34,7 @@ const THREADS_MAX_LIMIT = 16;
 // properties
 
 const props = defineProps<{
-  input?: File[]
+  input?: FileWithId[]
   format: string
   quality: number
   retainExtension: boolean
@@ -91,7 +64,6 @@ const emit = defineEmits<{
 const processing = ref(false);
 const canceled = ref(false);
 const processCompleted = ref(false);
-const refreshStatKey = ref(0);
 
 // component display flags
 const conversionModalActive = ref(false);
@@ -104,6 +76,7 @@ const processingType = ref<NotificationType>('info');
 // an object for ConversionStatus["status"] property
 const ConvStats: ConversionStatusType = reactive( initConvStatPropObj() );
 
+const stat = useTemplateRef('stat');
 
 
 
@@ -123,11 +96,17 @@ let allZipsClicked = false;
 
 // watchers
 
-watch(() => props.input!, (val: File[]) => {
+watch(() => props.input!, (val: FileWithId[]) => {
   if( val?.length ) {
     startConvert(val);
   }
 });
+
+// hide browser's scrollbar while the processing modal is active
+watch(conversionModalActive, (val) => {
+  document.body.style.overflowY = val ? 'hidden' : 'auto';
+});
+
 
 
 
@@ -175,6 +154,7 @@ async function onBeforeProcessingDialogClose() {
     return false;
   }
 
+  //stat.value.cleanup();
   notification.destroyAll();
   message.destroyAll();
   conversionModalActive.value = false;
@@ -217,6 +197,7 @@ function initConvStatPropObj(obj?: ConversionStatusType): ConversionStatusType {
     converted: 0,
     success: 0,
     failure: 0,
+    retried: 0,
     done: 0,
     length: 0,
     zippedTotalCount: 0,
@@ -285,7 +266,7 @@ function cleanUpProcessedData() {
 }
 
 
-async function startConvert(input: File[]) {
+async function startConvert(input: FileWithId[]) {
   // conversion process is already in progress
   if( processing.value ) {
     dialog.error({
@@ -296,21 +277,11 @@ async function startConvert(input: File[]) {
     return;
   }
 
-  let fileList = assignIdToFiles(input);
+  let fileList = input.concat();//[...input];//assignIdToFiles(input);
 
   // initialize before starting conversion
   initConvStatPropObj(ConvStats);
   cleanUpProcessedData();
-  
-  const SingleImageData: SingleImageDataType = {
-    convertedImageBlob: null,
-    convertedImageWidth: 0,
-    convertedImageHeight: 0,
-    convertedImageName: '',
-  };
-
-  // refresh StatusComponent
-  refreshStatKey.value++;
 
   // show child components
   conversionModalActive.value = true;
@@ -351,15 +322,14 @@ async function startConvert(input: File[]) {
   const startedTime = Date.now();
   emit('start');
   
-  const list = fileList.concat();
   let callbackToGenerateFailedZips;
   let exception: Error | undefined;
   const result: ConverterResult = ( !disableMultiThreading && props.threads! >= 2 ) ?
     // multi-threading
-    await convertTargetFilesInMultithread({files:list, completedFileIdSet, ConvStats, canceled, props, imageType:format, quality, outputExt, format, message, notification})
+    await convertTargetFilesInMultithread({files:fileList, completedFileIdSet, ConvStats, canceled, props, imageType:format, quality, outputExt, format, message, notification})
     :
     // single-threading
-    await convertImagesInSingleThread(list, completedFileIdSet, SingleImageData, props, canceled, ConvStats);
+    await convertImagesInSingleThread(fileList, completedFileIdSet, props, canceled, ConvStats);
   
   ({exception, callbackToGenerateFailedZips, callbackToClearConverter} = result);
   
@@ -409,7 +379,7 @@ async function startConvert(input: File[]) {
   
   // when error files exist
   if( completedFileIdSet.size !== fileList.length ) {
-    const failedFileList = processFailedFiles( fileList, completedFileIdSet );
+    const failedFileList = processFailedFiles( input, completedFileIdSet );
     
     onDemandZipErrorsFromStatus.value = () => {
       if( !failedFileList || !failedFileList.length )
@@ -423,6 +393,8 @@ async function startConvert(input: File[]) {
   processing.value = false;
   ConvStats.processing = false;
   processCompleted.value = true;
+  fileList.length = 0;
+  //input.length = 0;
 
   elapsedTimeForConversion = Date.now() - startedTime;
   emit('end');
@@ -432,19 +404,7 @@ async function startConvert(input: File[]) {
 
 
 
-async function outputSingleImageData(ext, SingleImageData: SingleImageDataType) {
-  if( SingleImageData.convertedImageBlob ) {
-    const reader = new FileReader;
-    reader.readAsDataURL(SingleImageData.convertedImageBlob);
-    const dataUrl = await getAsPromise(reader).then((ev:any) => ev.target.result);
 
-    ConvStats.convertedImageName = SingleImageData.convertedImageName.replace(/^.*\/(?=[^/]+$)/, '').replace(props.retainExtension ? '' : /\.(jpe?g|gif|png|avif|webp|bmp)$/i, '') + '.' + ext;
-    ConvStats.convertedImageUrl = URL.createObjectURL(SingleImageData.convertedImageBlob);
-    ConvStats.convertedImageDataUrl = dataUrl;
-    //ConvStats.convertedImageWidth = SingleImageData.convertedImageWidth;
-    //ConvStats.convertedImageHeight = SingleImageData.convertedImageHeight;
-  }
-}
 
 function processFailedFiles( list: FileWithId[], completedFileIdSet: Set<number> ) {
   const errorList: FileWithId[] = [];
@@ -471,19 +431,7 @@ function processFailedFiles( list: FileWithId[], completedFileIdSet: Set<number>
 
 // general functions
 
-// add id to File[]
-let _fileIdCounter = 0;
-function assignIdToFiles(list: File[]): FileWithId[] {
-  const output: File[] = [];
-  // add id to each file
-  for( const file of list ) {
-    if( !file.hasOwnProperty('_id') )
-      Object.defineProperty(file, '_id', { value: _fileIdCounter++ });
-    output.push(file);
-  }
 
-  return output as FileWithId[];
-}
 
 function makeCurrentOutputName(format: string, quality: number, firstFilePath?: string) {
   const d = new Date();
@@ -551,7 +499,9 @@ function checkAvailableFeatures() {
   }
   
   //emit('multi-thread-count', disableMultiThreading ? 0 : Math.min(CoreCount, THREADS_MAX_LIMIT));
-  MaxThreads.value = disableMultiThreading ? 0 : Math.min(CoreCount, THREADS_MAX_LIMIT);
+  //MaxThreads.value = disableMultiThreading ? 0 : Math.min(CoreCount, THREADS_MAX_LIMIT);
+  if( disableMultiThreading )
+    MaxThreads.value = 0;
 }
 
 
@@ -565,7 +515,7 @@ function checkAvailableFeatures() {
 <template>
   <n-flex justify="center">
   <!-- re-convert button -->
-  <n-space v-if="!processing && props.input?.length" justify="center" align="center">
+  <n-flex v-if="!processing && props.input?.length" justify="center" align="center">
     <n-tooltip trigger="hover" placement="top" :keep-alive-on-hover="false" :duration="0" :delay="50">
       <template #trigger>
         <n-badge :value="input?.length || 0" :offset="[-12, -5]" color="#99999966">
@@ -579,7 +529,7 @@ function checkAvailableFeatures() {
       </template>
       <div v-html="t('reconvertTip', props.input?.length)"></div>
     </n-tooltip>
-  </n-space>
+  </n-flex>
 
   <!-- message -->
   <!--
@@ -597,12 +547,12 @@ function checkAvailableFeatures() {
 
   <!-- open the modal dialog during the conversion -->
   <n-modal
-    ref="processingModal"   
+    ref="processingModal"
+    display-directive="show"
     v-model:show="conversionModalActive"
     :closable="processCompleted"
     :close-on-esc="false"
     preset="dialog"
-    display-directive="show"
     
     @click="notification.destroyAll(); message.destroyAll();"
     @mask-click="notification.destroyAll(); message.destroyAll();"
@@ -611,16 +561,16 @@ function checkAvailableFeatures() {
     :title="processingMessage"
     :type="processingType"
     :mask-closable="false"
-    :on-after-leave="cleanUpProcessedData"
+    @after-leave="cleanUpProcessedData"
+    @before-leave="stat.cleanup()"
 
     class="processing-dialog"
   >
     <template #default>
       <n-flex vertical  style="flex-grow: 1;">
         <!-- conversion status -->
-        <div style="flex-grow: 1;">
         <ConversionStatus
-          :key="refreshStatKey"
+          ref="stat"
           v-if="dispConvStatusComponent"
           :processing="processing"
           :status="ConvStats"
@@ -629,7 +579,6 @@ function checkAvailableFeatures() {
           @demand-zip-errors="onDemandZipErrorsFromStatus"
           @demand-image="onDemandImage"
         />
-        </div>
 
         <!-- control buttons -->
         <n-flex justify="end">
@@ -655,7 +604,7 @@ function checkAvailableFeatures() {
   min-width: 640px;
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 580px) {
   .processing-dialog {
     min-width: 320px;
   }	

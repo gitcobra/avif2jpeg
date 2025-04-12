@@ -4,14 +4,14 @@
   <div class="container-1">
     <n-tooltip :to="false" display-directive="show" trigger="hover" :duration="0" :delay="0" placement="bottom-end">
       <template #trigger>
-        <n-space vertical class="container-2">
-          <n-space align="center" :wrap="false" class="container-3">
+        <n-flex vertical class="container-2">
+          <n-flex align="center" :wrap="false" class="container-3">
             <!--
-            <n-space align="center">
+            <n-flex align="center">
               <n-icon size="32" color="silver"><ArrowRedoSharp /></n-icon>
-            </n-space>
+            </n-flex>
             -->
-            <n-space vertical align="center" :wrap="false" style="font-weight:bold; font-size:1em; line-height: 90%; white-space: nowrap;">
+            <n-flex vertical align="center" :wrap="false" style="font-weight:bold; font-size:1em; line-height: 90%; white-space: nowrap;">
               <span>Drag & Drop</span>
               <span style="position:relative">
                 AVIF Images
@@ -28,12 +28,12 @@
                   </n-popover>
                 </span>
               </span>
-            </n-space>
-            <n-space>
+            </n-flex>
+            <n-flex>
               <img src="/avif.png" class="avif">
-            </n-space>
-          </n-space>
-        </n-space>
+            </n-flex>
+          </n-flex>
+        </n-flex>
       </template>
       <h3 v-html="$t('droptarget')" style="max-width:200px; text-align: center; word-break: keep-all; overflow-wrap: break-word; "></h3>
     </n-tooltip>
@@ -42,10 +42,10 @@
 
     <n-modal v-model:show="loading" :closable="true" preset="dialog" title="Parsing dropped items." type="info" :mask-closable="false" :negative-text="$t('cancel')">
       <template #default>
-        <n-space vertical align="center">
+        <n-flex vertical align="center">
           <div style="width: 100%; overflow:hidden; text-overflow: ellipsis; font-size: xx-small; white-space: nowrap;">{{ parsingFolder }}</div>
           <div>found {{ fileCount }} files</div>
-        </n-space>
+        </n-flex>
       </template>
     </n-modal>
 

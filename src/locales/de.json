@@ -80,7 +80,12 @@
     "Shrinking": "Schrumpfung",
     "convertedZips": "ZIP erfolgreich abgeschlossen",
     "outInRate": "Out/In-Verhältnis",
-    "zipped": "ZIPPED"
+    "zipped": "ZIPPED",
+    "saveAll": "Rette alles",
+    "progressRetries": "Dateien wiederholen",
+    "success": "Erfolg",
+    "started": "begonnen",
+    "total": "gesamt"
   },
   "disabled": "Deaktiviert",
   "threads": "Thread | \nThreads",

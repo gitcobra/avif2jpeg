@@ -3,7 +3,7 @@ import * as WorkerManager from './worker-manager';
 import ZipWorker from './worker.zip.ts?worker';
 //import ZipWorkerURL from './worker.zip.ts?worker&url';
 import type { MessageToCanvasWorker, MessageFromCanvasWorker } from './worker.canvas';
-import type { FileWithId } from './converter.vue';
+import type { FileWithId } from '../file-selector.vue'
 import type Converter from './converter.vue';
 import type ConversionStatus from './status.vue';
 import { MessageToMainFromZipWorker } from './worker.zip';
@@ -17,7 +17,7 @@ type ConverterType = InstanceType<typeof Converter>;
 type Props = ConverterType['$props'];
 type ConversionStatusType = InstanceType<typeof ConversionStatus>;
 type Stat = ConversionStatusType['status'];
-
+type LogType = Stat['logs'][number];
 
 
 // constants
@@ -28,16 +28,16 @@ const TIMEOUT_WORKER_AVAILABILITY_MSEC = 1000 * 10;
 const MAX_RETRY_COUNT = 1;
 
 // large image size
-const IMG_OVER_LOADING_SIZE = 2000 * 2000 * 4;
+const IMG_OVER_LOADING_SIZE = 2000 * 2000 * 5;
 
 // max number of threads processing large images
 const MAX_HEAVY_LOADING_THREADS = 5;
 // max list length for each thread
-const LIST_MAX_LEN = 3;
+const LIST_MAX_LEN = 2;
 // max total file size for each list
 const LIST_CHUNK_SIZE_LIMIT = IMG_OVER_LOADING_SIZE * 1;
 // max total file size for all lists
-const TOTAL_CHUNK_SIZE_LIMIT = IMG_OVER_LOADING_SIZE * 8;
+const TOTAL_CHUNK_SIZE_LIMIT = IMG_OVER_LOADING_SIZE * 6;
 
 // demand a thumbnail from a worker at the intervals
 const THUMB_DEMAND_INTERVAL = 300; // (msec)
@@ -52,6 +52,7 @@ const chunksEachWorkerPossessed = new Map<Worker, number>;
 const retriedFileTime = new Map<File, number>;
 let totalChunkSize = 0;
 
+const processingCoreLogItems = new Map<number, LogType>;//ref(new Map<number, LogType>).value;
 const targetFileMapById = new Map<number, FileWithId>;
 const failedFileCountMap = new Map<File, number>;
 const variousFileInfo = new Map<number, {
@@ -70,6 +71,7 @@ let outputExt: string;
 let imageType: string;
 let message: MessageApiInjection;
 let notification: NotificationApiInjection;
+// set or clear the variables
 function clearModuleVariables(param?: ConverterParameter) {
   let obj = param || {} as any;
   ({
@@ -89,6 +91,7 @@ function clearModuleVariables(param?: ConverterParameter) {
   chunksEachWorkerPossessed.clear();
   retriedFileTime.clear();
 
+  processingCoreLogItems.clear();
   targetFileMapById.clear();
   failedFileCountMap.clear();
   variousFileInfo.clear();
@@ -127,7 +130,7 @@ export async function convertTargetFilesInMultithread(param: ConverterParameter)
   const workerCountForHugeImages = Math.min(MAX_HEAVY_LOADING_THREADS, canvasWorkerCount);//Math.min(MAX_HEAVY_LOADING_THREADS, Math.max(0, canvasWorkerCount / 2 |0));
   
   // create a listener for canvas Workers
-  const canvasListener = createCanvasWorkerListener(ConvStats, canceled, message, notification, files);
+  const canvasListener = createCanvasWorkerListener(ConvStats, canceled, message, notification);
   // setup zip worker
   let zipWorker: Worker;
   try {
@@ -152,10 +155,10 @@ export async function convertTargetFilesInMultithread(param: ConverterParameter)
       return;
     
     unwatchCancelButton();
-    WorkerManager.releaseAllWorkers();
+    //WorkerManager.releaseAllWorkers();
   });
 
-  // HACK: send a message from status.vue directly
+  // FIXME: send a message from status.vue directly
   ConvStats.demandImage = (index: number) => {
     zipWorker.postMessage({action: 'request-image', index});
   };
@@ -177,16 +180,20 @@ export async function convertTargetFilesInMultithread(param: ConverterParameter)
   chunksEachWorkerPossessed.clear();
 
   while( index < files.length ) {    
+    /*
     // abort
     if( canceled.value ) {
       //WorkerManager.releaseWorker(worker);
       break;
     }
+    */
 
     if( totalChunkSize > TOTAL_CHUNK_SIZE_LIMIT ) {
-      console.log(index, "overload", totalChunkSize);
-      await new Promise(r => setTimeout(r, 100));
-      continue; 
+      if( !canceled.value ) {
+        console.log(index, "overload", totalChunkSize);
+        await new Promise(r => setTimeout(r, 100));
+        continue;
+      }
     }
     
     // create message list
@@ -203,16 +210,18 @@ export async function convertTargetFilesInMultithread(param: ConverterParameter)
     let includesRetryingFile = false;
     for( ;index < len; index++ ) {
       if( chunkSize > LIST_CHUNK_SIZE_LIMIT || totalChunkSize > TOTAL_CHUNK_SIZE_LIMIT ) {
-        break;
+        if( !canceled.value )
+          break;
       }
     
       const file = files[index];
+      const path = file.webkitRelativePath || file.name;
 
       // wait a second for retrying
       const retriedTime = retriedFileTime.get(file);
       includesRetryingFile = includesRetryingFile || !!retriedTime;
-      const retryingDelay = retriedTime ? Math.max(0, 100 - (Date.now() - (lastRetriedTime || retriedTime))) : 0;
-      if( retryingDelay ) {
+      const retryingDelay = 0;//retriedTime ? Math.max(0, 100 - (Date.now() - (lastRetriedTime || retriedTime))) : 0;
+      if( !canceled.value && retryingDelay ) {
         console.log('retrying', "retryingDelay", retryingDelay);
         await new Promise(r => setTimeout(r, retryingDelay));
       }
@@ -228,32 +237,36 @@ export async function convertTargetFilesInMultithread(param: ConverterParameter)
         targetFileMapById.set(fileId, file);
       }
       
-      // HACK: execute canvas listener directly
-      const startmsg = {data: {
-        action: 'file-start', 
-        path: file.webkitRelativePath || file.name, 
-        fileId, 
-        index,
-      }} as MessageEvent<MessageFromCanvasWorker>;
-      startmsgs.push(startmsg);
+      // create an info item to start
+      fileStart(index, path, fileId);
 
+      if( !failedFileCountMap.has(file) ) {   
+        startedCount++;
+        //if( !canceled.value ) {
+          ConvStats.index = startedCount;
+        //}
+      }
+      else {
+        console.warn(`retry "${path}".`);
+      }
+
+      // cancel remaining processes here if canceled flag is true
+      if( canceled.value ) {
+        fileCanceled(fileId);
+        continue;
+      }
+      
+      // try to parse the file as an image
       let bitmap: ImageBitmap;
       try {
         bitmap = await createImageBitmap(file);
       } catch(e) {
+        // error
         console.error('error occurred while creating a bitmap', fileId, file.webkitRelativePath, e);
-
-        // HACK: execute canvas listener directly
-        const errmsg = {data: {
-          action: 'file-error', 
-          path: file.webkitRelativePath || file.name, 
-          fileId, 
-          index,
-        }} as MessageEvent<MessageFromCanvasWorker>;
-        errmsgs.push(errmsg);
-
+        fileError(index, path, fileId);
         continue;
       }
+
       trnsBitmaps.push(bitmap);
       const bitmapSize = bitmap.width * bitmap.height * 4;
       chunkSize += bitmapSize + file.size;
@@ -285,27 +298,17 @@ export async function convertTargetFilesInMultithread(param: ConverterParameter)
         // (Firefox can) so send the property directly.
         webkitRelativePath: file.webkitRelativePath,
       });
-     
-      const path = file.webkitRelativePath || file.name;
-      if( !failedFileCountMap.has(file) ) {   
-        startedCount++;
-        ConvStats.index = startedCount;
-      }
-      else {
-        console.warn(`retry "${path}".`);
-      }
 
       demandThumbnail = false;
       
     }
 
-    // post the messages to canvas worker
+    // post the messages to canvas worker if messages exist
     let worker: WorkerManager.WorkerWithId;
     if( messages.length ) {
-
       // wait to get an available worker
       const heavyImage = chunkSize > IMG_OVER_LOADING_SIZE;
-      console.log(workerCountForHugeImages > 0 && (includesRetryingFile ? 1 : heavyImage), 'getworker');
+      //console.log(workerCountForHugeImages > 0 && (includesRetryingFile ? 1 : heavyImage), 'getworker');
       worker = await WorkerManager.getWorker(workerCountForHugeImages > 0 && (includesRetryingFile ? 1 : heavyImage));
       
       //worker.postMessage( messages, trnsBitmaps );
@@ -319,21 +322,24 @@ export async function convertTargetFilesInMultithread(param: ConverterParameter)
       WorkerManager.releaseWorker(worker);
     */
 
+    /*
     // abort
     if( canceled.value ) {
       WorkerManager.releaseWorker(worker);
       break;
     }
-
     for( const msg of startmsgs.concat(errmsgs) ) {
       // @ts-ignore
       msg.target = worker || {id:-1};
       canvasListener(msg);
     }
+    */
 
     // post
     if( worker ) {
       worker.postMessage( messages, trnsBitmaps );
+      
+      trnsBitmaps.forEach(item => item.close());
       trnsBitmaps.length = 0;
     }
     
@@ -349,12 +355,6 @@ export async function convertTargetFilesInMultithread(param: ConverterParameter)
 
 
 
-
-
-  // wait until all workers are resolved
-  await WorkerManager.waitAllWorkers();
-  console.log('resolved all workers');
-  
   if( !canceled.value ) {
     // wait to complete conversion process
     let unwatch: WatchStopHandle;
@@ -369,20 +369,26 @@ export async function convertTargetFilesInMultithread(param: ConverterParameter)
 
     console.log('processed all files');
   }
+  
   unwatchCancelButton();
 
   // close all canvas workers
-  setTimeout(() => WorkerManager.init(), 500);
+  //setTimeout(() => WorkerManager.init(), 500);
 
   // squeeze remaining zip
   zipWorker.postMessage({action: 'squeeze'});
   await promiseToWaitSqueezingZip;
+
+  // wait until all workers are resolved
+  await WorkerManager.waitAllWorkers();
+  console.log('resolved all workers');
 
   // create callbacks
   const Terminated = {value: false};
   const callbackToClearConverter = () => {
     Terminated.value = true;
     WorkerManager.init();
+    zipWorker.onmessage = null;
     zipWorker.terminate();
     clearModuleVariables();
   };
@@ -578,16 +584,12 @@ function createZipWorkerListenerAndPromise(zipWorker: Worker) {
 
 // create a listener for canvas worker
 // all canvas workers share the single listener
-function createCanvasWorkerListener(ConvStats: Stat, canceled, message: MessageApiInjection, notification, fileList: File[]) {
-  type LogType = Stat['logs'][number];
-  
-  
-  let _keyCounter = 0;
+function createCanvasWorkerListener(ConvStats: Stat, canceled, message: MessageApiInjection, notification) {
   // Map<worker.id, logitem>
-  const processingCoreLogItems = ref(new Map<number, LogType>);
+  //const processingCoreLogItems = new Map<number, LogType>;//ref(new Map<number, LogType>).value;
   //const processingCoreLogItems = { value: new Map<number, LogType> };
   // Map<fileId, logitem>
-  const completedItemsLog = ref(new Map<number, LogType>); 
+  //const completedItemsLog = new Map<number, LogType>;//ref(new Map<number, LogType>); 
   //const completedItemsLog = { value: new Map<number, LogType> };
   
   // message type
@@ -616,10 +618,10 @@ function createCanvasWorkerListener(ConvStats: Stat, canceled, message: MessageA
         case 'file-converted':
           return;
         */
-        
+        /*
         case 'file-canceled':
           console.log('file-canceled');
-          ConvStats.done++;
+          ConvStats.done++;*/
           //ConvStats.failure++;
           /*
           try {
@@ -629,34 +631,27 @@ function createCanvasWorkerListener(ConvStats: Stat, canceled, message: MessageA
             console.warn(action);
           }
           */
-          return;
+          //return;
       }
     }
 
 
     switch(action) {
       case 'list-start':
-        console.log(`list started on worker ${worker.id}`);
+        //console.log(`list started on worker ${worker.id}`);
         break;
       case 'file-start': {
         const { index, path, fileId } = data;
         //console.log(`file-start ${index}`);
-
-        const item = {
-          key:_keyCounter++,
-          core:worker.id,
-          index: index,//fileId,
-          path,
-          command: `➡️started`,
-        };
-        processingCoreLogItems.value.set(fileId, item);
-        ConvStats.logs.push(item);
-        //console.log(item);
+        fileStart(/*worker.id,*/ index, path, fileId);
         break;
       }
       case 'file-load': {
         const { thumbnail, width, height, fileId, shrinked } = data;
-        processingCoreLogItems.value.get(fileId)!.command = `🖼️loaded`;
+        const item = processingCoreLogItems.get(fileId)!;
+        item.core = worker.id;
+        item.command = `🖼️loaded`;
+
         if( thumbnail ) {
           ConvStats.thumbnail = thumbnail;
         }
@@ -674,10 +669,10 @@ function createCanvasWorkerListener(ConvStats: Stat, canceled, message: MessageA
       case 'file-converted': {
         const { index, path, fileId/*, image, blobUrl*/ } = data;
 
-        const item = processingCoreLogItems.value.get(fileId)!;
+        const item = processingCoreLogItems.get(fileId)!;
         item.command = `🔃converted`;
         //processingCoreLogItems.delete(worker.id);
-        completedItemsLog.value.set(fileId, item);
+        //completedItemsLog.set(fileId, item);
         ConvStats.converted++;
 
         break;
@@ -686,8 +681,6 @@ function createCanvasWorkerListener(ConvStats: Stat, canceled, message: MessageA
       // otherwese 'file-completed' action is caused by worker.zip
       case 'file-completed': {
         const { inputsize, outputsize, fileId } = data;
-        ConvStats.inputTotalSize += inputsize;
-        ConvStats.outputTotalSize += outputsize;
         
         // NOTE: these commands moved in zip listener
         //ConvStats.done++;
@@ -697,66 +690,30 @@ function createCanvasWorkerListener(ConvStats: Stat, canceled, message: MessageA
         //progressingFileMapById.delete(fileId);
         
         // NOTE:
-        // the listener may recieves 'file-completed' before 'file-converted' depending on the load situation.
+        // the listener may recieve 'file-completed' before 'file-converted' depending on the load situation.
         // completedItemsLog doesn't have an item for the file in that case.
-        const item = completedItemsLog.value.get(fileId);
+        const item = processingCoreLogItems.get(fileId);//completedItemsLog.get(fileId);
         if( item ) {
           item.command = `✅completed`;
           item.completed = true;
         }
         
+        ConvStats.inputTotalSize += inputsize;
+        ConvStats.outputTotalSize += outputsize;
 
         break;
       }
       
       case 'file-error': {
         const { index, path, fileId } = data;
-        const file = targetFileMapById.get(fileId);
-        if( !file )
-          throw new Error(`the file doesn't exist in the Map. "${fileId}":"${path}"`);
-        
-        const failedCount = failedFileCountMap.get(file) || 0;
-        const item = processingCoreLogItems.value.get(fileId)!;
-        if( failedCount < MAX_RETRY_COUNT ) {
-          failedFileCountMap.set(file, failedCount + 1);
-          
-          // append the failed file to the conversion list to retry
-          fileList.push(file);
-          retriedFileTime.set(file, Date.now());
-
-          //progressingFileMapById.delete(fileId);
-          console.error(`worker ${worker.id} threw an error when loading "${path}". retrying the file.`);
-          item.command = `⚠️retrying`;
-          item.error = true;
-          
-          message.warning(`retrying "${path}"`, {
-            duration: 3000,
-          });
-        }
-        else {
-          console.error(`failed to load "${path}" after ${MAX_RETRY_COUNT} retries. the image may be corrupted or cannot be read by some reason.`);
-          ConvStats.done++;
-          ConvStats.failure++;
-          item.command = `❗failed`;
-          item.error = true;
-
-          notification.error({
-            content: `failed to load "${path}"`,
-            duration: 5000,
-          });
-        }
+        fileError(index, path, fileId);
 
         break;
       }
       // canceled before zippping
       case 'file-canceled': {
         const { fileId, path } = data;
-        const item = completedItemsLog.value.get(fileId)!;
-        ConvStats.done++;
-        ConvStats.failure++;
-        item.command = `❗zip-aborted`;
-        item.error = true;
-
+        fileCanceled(fileId);
         break;
       }
       
@@ -775,7 +732,65 @@ function createCanvasWorkerListener(ConvStats: Stat, canceled, message: MessageA
   return cworkerlistener;
 }
 
+let _keyCounter = 0;
+function fileStart(/*workerId: number,*/ index: number, path: string, fileId: number) {
+  const item = {
+    key: _keyCounter++,
+    core: -1,//workerId, *it is unknown which worker is used at this point.
+    index: index,//fileId,
+    path,
+    command: `➡️started`,
+  };
+  processingCoreLogItems.set(fileId, item);
+  ConvStats.logs.push(item);
+  //console.log(item);
+}
 
+function fileError(index: number, path: string, fileId: number) {
+  const file = targetFileMapById.get(fileId);
+  if( !file )
+    throw new Error(`the file doesn't exist in the Map. "${fileId}":"${path}"`);
+  
+  const failedCount = failedFileCountMap.get(file) || 0;
+  const item = processingCoreLogItems.get(fileId)!;
+  if( failedCount < MAX_RETRY_COUNT ) {
+    failedFileCountMap.set(file, failedCount + 1);
+    
+    // append the failed file to the conversion list to retry
+    files.push(file);
+    retriedFileTime.set(file, Date.now());
+
+    //progressingFileMapById.delete(fileId);
+    //console.error(`worker ${worker.id} threw an error when loading "${path}". retrying the file.`);
+    item.command = `⚠️retrying`;
+    item.error = true;
+    
+    message.warning(`retrying "${path}"`, {
+      duration: 3000,
+    });
+
+    ConvStats.retried++;
+  }
+  else {
+    console.error(`failed to load "${path}" after ${MAX_RETRY_COUNT} retries. the image may be corrupted or cannot be read by some reason.`);
+    ConvStats.done++;
+    ConvStats.failure++;
+    item.command = `❗failed`;
+    item.error = true;
+
+    notification.error({
+      content: `failed to load "${path}"`,
+      duration: 5000,
+    });
+  }
+}
+
+function fileCanceled(fileId: number) {
+  const item = processingCoreLogItems.get(fileId);
+  ConvStats.done++;
+  item.command = `❗canceled`;
+  item.error = true;
+}
 
 
 // create zips for failed files
@@ -817,6 +832,8 @@ async function pushErrorZipsInMultithread(list: FileWithId[], zipWorker: Worker,
     action: 'squeeze-filelist',
   });
 }
+
+
 
 async function checkIsWorkerUrlAvailable(url: string) {
   // check if the workers are exist on the server

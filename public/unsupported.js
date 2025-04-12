@@ -17,6 +17,6 @@
       }
       disclaimer = null;
       app = null;
-    }, 3000);
+    }, 7000);
   });
 })();

@@ -80,7 +80,12 @@
     "Shrinking": "Küçülen",
     "convertedZips": "ZIP başarıyla tamamlandı",
     "outInRate": "Çıkış / Giriş Oranı",
-    "zipped": "Fermuarlı"
+    "zipped": "Fermuarlı",
+    "saveAll": "Hepsini kurtar",
+    "progressRetries": "Dosyaları yeniden deneme",
+    "success": "başarı",
+    "started": "başlayan",
+    "total": "toplam"
   },
   "disabled": "Engelli",
   "threads": "konu | \nKonular",
