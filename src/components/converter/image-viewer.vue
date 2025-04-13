@@ -264,8 +264,8 @@ function setTouchEvents() {
 
   onBeforeUnmount(() => {
     el.removeEventListener('touchstart', tstart);
-    el.removeEventListener('touchmove', tmove);
-    el.removeEventListener('touchend', tend);
+    window.removeEventListener('touchmove', tmove);
+    window.removeEventListener('touchend', tend);
     el = null;
   });
 }
