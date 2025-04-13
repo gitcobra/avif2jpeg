@@ -77,7 +77,7 @@ const processingType = ref<NotificationType>('info');
 const ConvStats: ConversionStatusType = reactive( initConvStatPropObj() );
 
 const stat = useTemplateRef('stat');
-
+const convStatKeyToRefresh = ref(0);
 
 
 // normal variables
@@ -275,6 +275,11 @@ async function startConvert(input: FileWithId[]) {
       content: t('interfered'),
     });
     return;
+  }
+
+  // refresh ConversionStatus if it already exists
+  if( conversionModalActive.value ) {
+    convStatKeyToRefresh.value ^= 1;
   }
 
   let fileList = input.concat();//[...input];//assignIdToFiles(input);
@@ -572,6 +577,7 @@ function checkAvailableFeatures() {
           <ConversionStatus
             ref="stat"
             v-if="dispConvStatusComponent"
+            :key="convStatKeyToRefresh"
             :processing="processing"
             :status="ConvStats"
             :interval="STATUS_UPDATE_INTERVAL"

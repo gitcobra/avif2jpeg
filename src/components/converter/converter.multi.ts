@@ -564,6 +564,7 @@ function createZipWorkerListenerAndPromise(zipWorker: Worker) {
           console.log('push-filelist-zip', count)
           ConvStats.failedZips.push({url, size, count});
           //ConvStats.failedFileZippedCount += count;
+          console.log(count);
           break;
         
         // NOTE:
@@ -788,6 +789,7 @@ function fileError(index: number, path: string, fileId: number) {
 function fileCanceled(fileId: number) {
   const item = processingCoreLogItems.get(fileId);
   ConvStats.done++;
+  ConvStats.failure++;
   item.command = `❗canceled`;
   item.error = true;
 }
