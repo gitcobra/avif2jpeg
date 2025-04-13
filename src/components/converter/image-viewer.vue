@@ -349,10 +349,13 @@ async function copyDataURL(url: string) {
     
     navigator.clipboard.writeText(durl);
 
-    const select = (ev: any) => {ev.target.focus(); ev.target.select()};
+    //const select = (ev: any) => {ev.target.focus(); ev.target.select()};
     dialog.info({
       title: t('copiedDataURLDialogTitle'),
-      content: () => h('div', [h('div', t('copiedDataURLMessage')), h(NInput, {onFocus: select, onClick: select, type:'textarea', value:durl, readonly:true, size:'small', style:{marginTop:'2em', fontSize:'x-small'}})]),
+      content: () => h('div', [
+        h('div', t('copiedDataURLMessage')),
+        //h(NInput, {onFocus: select, onClick: select, type:'textarea', value:durl, readonly:true, size:'small', style:{marginTop:'2em', fontSize:'x-small'}})
+      ]),
       positiveText: 'OK',
     });
   } catch(e) {

@@ -524,7 +524,7 @@ function checkAvailableFeatures() {
       <n-tooltip trigger="hover" placement="top" :keep-alive-on-hover="false" :duration="0" :delay="50">
         <template #trigger>
           <n-badge :value="input?.length || 0" :offset="[-12, -5]" color="#99999966">
-            <n-button @click="convertAgain" round>
+            <n-button @click="convertAgain" round size="large">
               <template #icon>
                 <n-icon size="1.5em" color="#CCCCCC"><DocumentOutline /></n-icon>
               </template>
