@@ -86,7 +86,13 @@
     "success": "نجاح",
     "started": "بدأ",
     "total": "المجموع",
-    "files": "الملفات"
+    "files": "الملفات",
+    "failure": "فشل",
+    "all": "الجميع",
+    "filterLogSelect": "فلتر",
+    "showOnlySuccess": "النجاحات فقط",
+    "showOnlyError": "أخطاء فقط",
+    "showAll": "أظهر كل شيء"
   },
   "disabled": "عاجز",
   "threads": "خيط | \nالمواضيع",

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Directive } from 'vue';
 import { dataTableDark, type DropdownOption, NIcon, NScrollbar, NSpin, useThemeVars } from 'naive-ui';
-import { ImageSharp, Archive, Warning, WarningOutline, DocumentTextOutline, DownloadOutline } from '@vicons/ionicons5';
+import { ImageSharp, Archive, Warning, WarningOutline, DocumentTextOutline, DownloadOutline, Filter } from '@vicons/ionicons5';
 import { useI18n } from 'vue-i18n';
 import ImageViewer from './image-viewer.vue';
 import CenterColumn from './status.center-column.vue';
@@ -46,6 +46,15 @@ const props = defineProps<{
       path: string
       error?: boolean
       completed?: boolean
+      zippedIndex?: number
+      fileId?: number
+      size?: number
+      width?: number
+      height?: number
+    }[]
+    ziplogs: {
+      fileId: number
+      storedPath: string
     }[]
     
     baseZipName: string
@@ -75,7 +84,6 @@ const props = defineProps<{
     convertedImageOrgSize?: number
     convertedImageOrgName?: string
     convertedImageIndex?: number
-    convertedImageFileId?: number
     convertedImageShrinked?: boolean
     
 
@@ -83,8 +91,6 @@ const props = defineProps<{
     threads?: number
     zipSize: number
     shrink?: [number, number]
-
-    demandImage: (index: number) => void
   }
   interval?: number
 }>();
@@ -96,8 +102,13 @@ const emit = defineEmits<{
   'all-zips-clicked': []
   'demand-zip-errors': []
   'demand-image': [index: number]
+  'delete-image': [index: number]
 }>();
 
+// exposes
+defineExpose({
+  cleanup,
+});
 
 
 // directives
@@ -114,6 +125,7 @@ const zippingFlag = ref(false);
 const workingLogs = ref<typeof props["status"]["logs"]>([]);
 const demandedFailedZips = ref(false);
 const logtable = useTemplateRef('table');
+const currentSelectedLogNode = ref<HTMLTableRowElement>(null);
 
 type ZipList = {
   url: string
@@ -145,18 +157,29 @@ const outputTotalSize = ref(0);
 const totalSizeDifStr = ref('');
 const elapsedTime = ref('00:00:00');
 
-const saveButtonTooltipText = ref('');
-const errorFileToolTipText = ref('');
 const autoPopoverErrorButtonFlag = ref(undefined);
 
 const expandLog = ref(false);
 const autoScrollLog = ref(true);
 const hideSuccess = ref(false);
-const logViewSize = computed(() => expandLog.value ? maxLogSize.value : minLogSize.value);
 const logMaxHeight = ref('16em');
-const minLogSize = ref(5);
-const maxLogSize = ref(1000);
+//const minLogSize = ref(5);
+//const maxLogSize = ref(999999);
 const logOpened = ref(true);
+const logViewSize = computed(() => expandLog.value ? 99999 : 5);
+const filteredLogList = computed(() => {
+  let list = workingLogs.value;
+  switch( filterLogValue.value ) {
+    case 'success':
+      list = list.filter(item => item.completed);
+      break;
+    case 'error':
+      list = list.filter(item => !item.completed);
+      break;
+  }
+
+  return list.slice( - logViewSize.value );
+});
 
 const imageViewerStarted = ref(false);
 
@@ -177,6 +200,7 @@ const outputImg = reactive({
 
 
 
+
 // element references
 const body = useTemplateRef('body');
 const thumbcanvas = ref<HTMLCanvasElement>(null);
@@ -189,9 +213,9 @@ const imageViewer = useTemplateRef('imageViewer');
 let _tmpCounter = 0;
 
 
-defineExpose({
-  cleanup,
-});
+
+
+
 
 
 
@@ -364,7 +388,29 @@ watch([() => props.status.zips.length, () => props.status.failedZips.length], ()
   }
 });
 
+// focus current selected log item
+let causedScrollIntoViewByArrowUpKey = false;
+let prevFocusedLogNode: HTMLElement = null;
+watch(() => outputImg.index, () => {
+  nextTick( () => {
+    let node = currentSelectedLogNode.value;
+    
+    // sticky "<th>"s may hide the selected node if the node is aligned to the top of the visible area of the scrollable ancestor.
+    // when scrolling up, focus previous sibling of the node instad of it for that reason.
+    if( prevFocusedLogNode?.offsetTop > node?.offsetTop ) {
+    //if( causedScrollIntoViewByArrowUpKey ) {
+      node = <HTMLTableRowElement>node.previousSibling || node;
+      causedScrollIntoViewByArrowUpKey = false;
+      if( !(node instanceof HTMLElement) ) {
+        scrollref.value?.scrollTo(0, 0);
+        node = null;
+      }
+    }
 
+    node?.scrollIntoView?.({behavior: 'auto', block: 'nearest'});
+    prevFocusedLogNode = currentSelectedLogNode.value;
+  });
+});
 
 
 
@@ -445,9 +491,11 @@ function update() {
       scrollLogViewToBottom();
     }
 
+    /*
     if( workingLogs.value.length > maxLogSize.value ) {
       maxLogSize.value *= 2;
     }
+    */
   }
   else {
     //logCollapseExtra.value = `(${workingLogs.value.length || ''})`;
@@ -520,6 +568,108 @@ function onFinished() {
 
 
 // functions for the components' event handlers
+
+async function changeViewerIndexBySelectedLogItem(completed: boolean, path:string, fileId: number, zippedIndex: number) {
+  //alert([index, outputImg.index, path]);
+  if( completed ) {
+    const index = props.status.ziplogs.findIndex(item => item.fileId === fileId);
+    if( index === -1 )
+      return;
+    
+    if( !imageViewerStarted.value ) {
+      imageViewerStarted.value = true;
+      await nextTick();
+    }
+    imageViewer.value?.changeIndex(index + 1);
+  }
+}
+
+function onKeyPressInLogTable(ev: KeyboardEvent) {
+  const logs = workingLogs.value;
+  const currentSelectedIndex = logs.findIndex(item => item.zippedIndex === outputImg.index);
+  
+  let sign = 0;
+  let count = 1;
+  switch( ev.code ) {
+    case 'ArrowUp':
+      sign = -1;
+      causedScrollIntoViewByArrowUpKey = true;
+      break;
+    case 'ArrowDown':
+      sign = 1;
+      break;
+    case 'PageUp':
+      sign = -1;
+      count = 10;
+      break;
+    case 'PageDown':
+      sign = 1;
+      count = 10;
+      break;
+    
+    case 'Enter':
+      if( currentSelectedIndex >= 0 ) {
+        nextTick(() => imageViewer.value?.openPreview());
+      }
+      break;
+
+    default:
+      return;
+  }
+  
+  let i = currentSelectedIndex;
+  const len = logs.length;
+  do {
+    i += sign;
+    /*
+    if( i < 0 )
+      i = len - 1;
+    else if( i > len -1 )
+      i = 0;
+    */
+    if( i < 0 || i > len - 1 )
+      break;
+    
+    if( i === currentSelectedIndex )
+      break;
+    
+    if( logs[i].completed ) {
+      imageViewer.value?.changeIndex(logs[i].zippedIndex + 1);
+      //nextTick( () => currentSelectedLogNode.value?.scrollIntoView({behavior: 'auto', block: 'nearest'}) );
+      ev.preventDefault();
+      
+      if( --count > 0 )
+        continue;
+      
+      break;
+    }
+  } while( true )
+}
+
+type RecursivePartial<T> = {
+  readonly [P in keyof T]: T[P] extends (infer U)[]
+    ? RecursivePartial<U>[]
+    : T[P] extends object
+    ? RecursivePartial<T[P]>
+    : T[P];
+};
+
+// filter for log
+const FilterOptions: {label:string, readonly value: 'success'|'error'|''}[] = [
+  {
+    label: t('status.showAll'),
+    value: '',
+  }, {
+    label: t('status.showOnlySuccess'),
+    value: 'success',
+  }, {
+    label: t('status.showOnlyError'),
+    value: 'error',
+  },
+];
+
+const filterLogValue = ref<typeof FilterOptions[number]['value']>(FilterOptions[0].value);
+
 
 
 // PopSelects for errors 
@@ -664,7 +814,12 @@ function cleanup() {
 
   expandLog.value = false;
   imageViewerStarted.value = false;
+
+  prevFocusedLogNode = null;
 }
+
+
+
 
 
 
@@ -687,15 +842,15 @@ function cleanup() {
         </n-statistic>
 
         <n-statistic tabular-nums :label="$t('status.multiThreading')">
-          <n-flex :style="{color: !props.status.threads ? 'red' : '', fontSize: 'smaller'}">
+          <n-flex :style="{color: !props.status.threads ? 'red' : '', fontSize: '0.7em'}">
             {{ props.status.threads ? $rt('{n} @:threads', props.status.threads) : $t('disabled') }}
           </n-flex>
         </n-statistic>
 
         <n-statistic tabular-nums :label="$t('status.outputSettings')">
-          <n-flex vertical justify="end" style="font-size: smaller; line-height:1em;">
+          <n-flex vertical justify="end" style="font-size: 0.6em; line-height:0.6em;">
             <div>{{$t('settings.imageType')}}: {{ props.status.type }}</div>
-            <div v-if="status.shrink">{{$t('status.Shrinking')}}: <span style="font-size:smaller">{{status.shrink[0]}}×{{status.shrink[1]}}</span></div>
+            <div v-if="status.shrink">{{$t('status.Shrinking')}}: <span style="">{{status.shrink[0]}}×{{status.shrink[1]}}</span></div>
             <div>Zip: {{ props.status.zipSize }}MB</div>
           </n-flex>
         </n-statistic>
@@ -705,6 +860,7 @@ function cleanup() {
 
       <!-- center column - progress circle -->
       <center-column
+        v-if="!cleaningUp"
         :index="index[0]"
         :success="status.success"
         :length="status.length"
@@ -757,10 +913,11 @@ function cleanup() {
         <n-flex align="center" :wrap="false">{{$t('status.log')}}<n-spin :size="16" v-show="processing && !logOpened"> </n-spin></n-flex>
       </template>
       <template #header-extra>
-        <n-flex v-show="logOpened" align="center" :wrap="false">
+        <n-flex v-show="logOpened" align="center" justify="end" :wrap="true" style="margin-left:0.5em;">
           <transition-group>
           <!-- filter completed item -->
-          <n-checkbox key="a" v-model:checked="hideSuccess" size="small" style="font-size: smaller" class="hide-mobile">{{$t('status.filterSuccess')}}</n-checkbox>
+          <n-select v-model:value="filterLogValue" :placeholder="$t('status.filterLogSelect')" :options="FilterOptions" size="tiny" style="width:auto; font-size: smaller" :consistent-menu-width="false" :show-on-focus="false"/>
+          <!--<n-checkbox key="a" v-model:checked="hideSuccess" size="small" style="font-size: smaller" class="hide-mobile">{{$t('status.filterSuccess')}}</n-checkbox>-->
           
           <!-- auto scroll -->
           <n-checkbox key="b" v-show="expandLog" v-model:checked="autoScrollLog" @update:checked="flag => flag && scrollLogViewToBottom(true)" size="small" style="font-size: smaller">{{$t('status.autoScroll')}}</n-checkbox>
@@ -778,21 +935,51 @@ function cleanup() {
         </n-flex>
       </template>
       
-      <n-flex :wrap="false" :class="{'log-container':1, 'expand-log': expandLog}" align="stretch" :style="expandLog ? {height: logMaxHeight, maxHeight: logMaxHeight} : {}">
+      <n-flex :wrap="false" :class="{'log-container':1, 'expand-log': expandLog}" align="stretch" :style="expandLog ? {height: logMaxHeight, maxHeight: logMaxHeight} : {}"
+        @keydown="onKeyPressInLogTable"
+        tabindex="-1"
+      >
         <!-- filename table -->
-        <n-scrollbar ref="scrollref" :x-scrollable="true" @mouseup="autoScrollLog=false" @wheel="autoScrollLog=false" trigger="none" style="z-index:2; padding-right:10px; min-height:7em;" :size="50" :style="{maxHeight: logMaxHeight}">
+        <n-scrollbar
+          ref="scrollref"
+          :distance="10"
+          :x-scrollable="true"
+          @mouseup="autoScrollLog=false"
+          @wheel="autoScrollLog=false"
+          load="handleLogLoad"
+          trigger="none"
+          style="z-index:2; padding-right:10px; min-height:7em;"
+          :size="50"
+          :style="{maxHeight: logMaxHeight}"
+        >
           <table v-if="logOpened" class="log-table" ref="table">
-          <tbody>
-          <tr class="log-tr">
-            <th class="log-th">{{$t('status.table.core')}}</th><th class="log-th"> {{$t('status.table.index')}} </th><th style="min-width:7em;" class="log-th">{{$t('status.table.status')}}</th><th style="padding-left:2em;" class="log-th">{{$t('status.table.details')}}</th>
+          <thead>
+          <tr class="log-tr label">
+            <th class="log-th">{{$t('status.table.core')}}</th>
+            <th class="log-th">no.<!--{{$t('status.table.index')}}--></th>
+            <th style="min-width:7em;" class="log-th">{{$t('status.table.status')}}</th>
+            <th style="padding-left:2em;" class="log-th">{{$t('status.table.details')}}</th>
           </tr>
+          </thead>
           
           <!-- converting items -->
-          <tr v-for="{index, key, command, path, core} in (hideSuccess ? workingLogs.filter(item => !item.completed) : workingLogs).slice(-logViewSize)" :key="key" class="log-tr">
-            <td class="log-td">{{ (core >= 0 ? core+1 : '-') }}</td><td class="log-td">{{ index+1 }}</td><td class="log-td">{{ command }}</td><td class="log-td">{{path}}</td>
+          <tbody>
+          <tr
+            v-for="({index, key, command, path, core, zippedIndex, completed, fileId}, i) in filteredLogList"
+            :key="key"
+            :class="{'log-tr':1, completed, selected:outputImg.index === zippedIndex}"
+            :ref="(el: any) => {if( outputImg.index === zippedIndex ) currentSelectedLogNode = el}"
+            @click="changeViewerIndexBySelectedLogItem(completed, path, fileId, zippedIndex)"
+            @dblclick="imageViewer.openPreview()"
+          >
+            <td class="log-td">{{ (core >= 0 ? core+1 : '-') }}</td>
+            <td class="log-td">{{ index+1 }}</td>
+            <td class="log-td">{{ command }}</td>
+            <td class="log-td">{{path}}</td>
           </tr>
           </tbody>
           </table>
+          <div style="height:1em"></div>
         </n-scrollbar>
 
         <!-- processing image -->
@@ -806,23 +993,25 @@ function cleanup() {
       </n-flex>
 
 
-      <!-- log size slider 
+      <!-- log size slider -->
+      <!--
       <n-flex :wrap="false" align="center" style="padding: 0px 2em;">
         <span style="white-space:nowrap">Log size:</span>
-        <n-slider v-model:value="logViewSize" :format-tooltip="value => `Log size: ${value}`" :step="1" :min="1" :max="maxLogSize" style="z-index:3;"/>
+        <n-slider v-model:value="logViewSize" :format-tooltip="value => `Log size: ${value}`" :step="1" :min="1000" :max="maxLogSize" style="z-index:3;"/>
         <n-tooltip style="max-width:30em;">
           <template #trigger>
             <n-flex align="center" style="font-size:smaller; white-space:nowrap;" :wrap="false">
-              <n-input-number size="tiny" v-model:value="logViewSize" step="1" :min="1" :max="maxLogSize"></n-input-number>
+              <n-input-number size="tiny" v-model:value="logViewSize" step="1" :min="1000" :max="maxLogSize"></n-input-number>
             </n-flex>
           </template>
         </n-tooltip>
+      </n-flex>
       -->
 
     </n-collapse-item>
     </n-collapse>
 
-    <n-divider style="margin:0.2em;"></n-divider>
+    <n-divider style="margin:0em;"><!-- without this, a x-scrollbar of n-scrollbar overlaps on the last table row --></n-divider>
 
     <!-- output files -->
     <n-flex :wrap="false" vertical>  
@@ -849,12 +1038,13 @@ function cleanup() {
               
               :is-single="!zippingFlag"
               @demand-image="index => emit('demand-image', index)"
+              @_delete-image="index => emit('delete-image', index)"
               @close="imageViewerStarted=false"
             />
         </transition>
       </n-flex>
       
-      <n-flex justify="center">
+      <n-flex justify="center" v-if="!cleaningUp">
         
         <!-- zip list -->
         <n-flex v-show="zippingFlag" vertical align="center">
@@ -921,7 +1111,7 @@ function cleanup() {
 
       <!-- result -->
       <Transition>
-      <n-flex v-show="!props.processing" justify="center" align="center">
+      <n-flex v-show="!props.processing" justify="center" align="center" v-if="!cleaningUp">
 
         <!-- save button -->
         <n-popover trigger="hover" :duration="0" :delay="0" placement="left" :style="{color:'white', backgroundColor:c.successColor}" :arrow-style="{backgroundColor:c.successColor}">
@@ -991,7 +1181,7 @@ function cleanup() {
       
       <!-- zipping progress for failed files -->
       <transition name="zipcontainer">
-      <n-flex v-show="demandedFailedZips" vertical align="center">
+      <n-flex v-show="demandedFailedZips" vertical align="center" v-if="!cleaningUp">
         
         <n-popover placement="left">
           <template #trigger>
@@ -1073,15 +1263,16 @@ function cleanup() {
 
 .log-container {
   position: relative;
-  margin-top: -1em;
-  padding-bottom: 0.5em;
-  overflow: hidden;  
+  overflow: visible;
   font-size: 1em;
 
   transition: all .2s ease;
   min-height: 7em;
   height: 7em;
 
+  &:focus {
+    outline: 0px;
+  }
   /* log table */
   .log-table {
     z-index: 1;
@@ -1091,8 +1282,14 @@ function cleanup() {
     white-space: nowrap;
     border-collapse: collapse;
     
-
-    .log-tr:first-child {
+    .completed {
+      cursor: pointer;
+    }
+    .selected {
+      background-color: #29a36155;
+      /*color: white;*/
+    }
+    .label {
       position:sticky;
       top:0px;
       
@@ -1103,6 +1300,9 @@ function cleanup() {
       .log-th:nth-of-type(4) {
         text-align: left;
       }
+    }
+    .blank-space {
+      height: 1em;
     }
     .log-td {
       border-left: 1px dotted #CCC;

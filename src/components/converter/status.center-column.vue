@@ -56,84 +56,98 @@ watch(() => props.processing, (val) => {
   >
     <!-- content in the center circle -->
     <n-flex vertical align="center" justify="center" :size="0" style="font-family:v-mono; white-space: nowrap;" :wrap="false" :wrap-item="false">
-      <!-- percent -->
-      <n-flex :size="0" align="center" :style="{color: processing ? statusColor : mainColor, fontSize: '1.4em'}" :wrap="false">
-        <n-icon v-if="completedAll"><Checkmark/></n-icon>
-        <n-number-animation
-          :duration="interval * 3 | 0"
-          :from="successPercFrom |0"
-          :to="successPercTo |0"
-          :active="true"
-        />%
-      </n-flex>
-      
+
       <!-- progress counter -->          
       <table class="status-table">
       <tbody>
-      <tr class="started">
-        <td>{{ $t('status.started') }}:</td>
-        <td>
-          <!-- started -->
-          <n-popover trigger="hover" :style="{color:c.infoColor}" placement="left">
-            <template #trigger>
-              <span :style="{fontSize:'xx-small', color:statusColor, lineHeight:'0'}">
-                {{index.toLocaleString('en-us')}}
-              </span>
-            </template>
-            {{$t('status.progressStarted')}} ({{ index.toLocaleString('en-us') }})
-          </n-popover>
-          
-          <!-- retry -->
-          <n-popover v-if="retried > 0" trigger="hover" :style="{color:c.warningColor}" placement="left">
-            <template #trigger>
-              <span :style="{fontSize:'xx-small', color:c.warningColor,lineHeight:'0'}">
-                ({{retried.toLocaleString('en-us')}})
-              </span>
-            </template>
-            {{$t('status.progressRetries')}} ({{ retried.toLocaleString('en-us') }})
-          </n-popover>
-          
-          <!-- failure -->
-          <n-popover v-if="failure > 0" trigger="hover" :style="{color:c.errorColor}" placement="left">
-            <template #trigger>
-              <span :style="{fontSize:'xx-small', color:c.errorColor,lineHeight:'0'}">
-                ({{failure.toLocaleString('en-us')}})
-              </span>
-            </template>
-            {{$t('status.progressErrors')}} ({{ failure.toLocaleString('en-us') }})
-          </n-popover>
-        </td>
-      </tr>
-      <tr class="completed">
-        <td>{{ $t('status.success') }}:</td>
-        <td style="font-size: medium;">
-          <n-popover trigger="hover" :duration="0" :delay="0" :style="{color:c.successColor}" placement="bottom">
-            <template #trigger>
-              <span :style="{color:c.successColor}">
+
+        <!-- started, failure -->
+        <tr class="started">
+          <td>{{ $t('status.started') }}:</td>
+          <td class="mini-counter">
+            <!-- started -->
+            <n-popover trigger="hover" :style="{color:c.infoColor}" placement="left">
+              <template #trigger>
+                <span :style="{color:c.infoColor}">
+                  {{index.toLocaleString('en-us')}}
+                </span>
+              </template>
+              {{$t('status.progressStarted')}} ({{ index.toLocaleString('en-us') }})
+            </n-popover>
+          </td>
+        </tr>
+        <tr class="failure">
+          <td>{{ $t('status.failure') }}:</td>
+          <td class="mini-counter">
+      
+            <!-- failure -->
+            <n-popover trigger="hover" :style="{color:c.errorColor}" placement="left">
+              <template #trigger>
+                <span :style="{color:c.errorColor}">
+                  {{failure.toLocaleString('en-us')}}
+                </span>
+              </template>
+              {{$t('status.progressErrors')}} ({{ failure.toLocaleString('en-us') }})
+            </n-popover>
+
+            <!-- retry -->
+            <n-popover v-if="retried > 0" trigger="hover" :style="{color:c.warningColor}" placement="left">
+              <template #trigger>
+                <span :style="{color:c.warningColor}">
+                  ({{retried.toLocaleString('en-us')}})
+                </span>
+              </template>
+              {{$t('status.progressRetries')}} ({{ retried.toLocaleString('en-us') }})
+            </n-popover>
+          </td>
+        </tr>
+        
+        <!-- percent -->
+        <tr>
+          <td colspan="2">
+            <n-flex :size="0" align="center" justify="center" :style="{color: processing ? statusColor : mainColor}" :wrap="false" class="perc">
+              <n-icon v-if="completedAll" :component="Checkmark"></n-icon>
               <n-number-animation
                 :duration="interval * 3 | 0"
-                :from="successFrom"
-                :to="successTo"
+                :from="successPercFrom |0"
+                :to="successPercTo |0"
                 :active="true"
-                :show-separator="true"
-              />
-              </span>
-            </template>
-            {{$t('status.progressSuccess')}} ({{ successTo.toLocaleString('en-us') }})
-          </n-popover>
+              />%
+            </n-flex>
         </td>
-      </tr>
-      <tr class="total">
-        <td>{{ $t('status.files') }}:</td>
-        <td style="font-size: medium;">
-          <n-popover trigger="hover" :duration="0" :delay="0" placement="bottom">
-            <template #trigger>
-              {{length.toLocaleString('en-us')}}
-            </template>
-            {{$t('status.progressTotal')}} ({{ length.toLocaleString('en-us') }})
-          </n-popover>
-        </td>
-      </tr>
+        </tr>
+        
+        <tr class="completed">
+          <td>{{ $t('status.success') }}:</td>
+          <td class="main-counter">
+            <n-popover trigger="hover" :duration="0" :delay="0" :style="{color:c.successColor}" placement="bottom">
+              <template #trigger>
+                <span :style="{color:c.successColor}">
+                <n-number-animation
+                  :duration="interval * 3 | 0"
+                  :from="successFrom"
+                  :to="successTo"
+                  :active="true"
+                  :show-separator="true"
+                />
+                </span>
+              </template>
+              {{$t('status.progressSuccess')}} ({{ successTo.toLocaleString('en-us') }})
+            </n-popover>
+          </td>
+        </tr>
+
+        <tr class="total">
+          <td>{{ $t('status.all') }}:</td>
+          <td class="main-counter">
+            <n-popover trigger="hover" :duration="0" :delay="0" placement="bottom">
+              <template #trigger>
+                {{length.toLocaleString('en-us')}}
+              </template>
+              {{$t('status.progressTotal')}} ({{ length.toLocaleString('en-us') }})
+            </n-popover>
+          </td>
+        </tr>
       </tbody>
       </table>
 
@@ -143,7 +157,7 @@ watch(() => props.processing, (val) => {
   </n-progress>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss">
 .status-table {
   border-collapse: collapse;
   border-spacing: 0px;
@@ -155,9 +169,30 @@ watch(() => props.processing, (val) => {
     padding: 0px;
     margin: 0px;
   }
-  tr>*:first-child {
+  td * {
+    vertical-align: middle;
+  }
+  tr >*:first-child {
+    font-size: 0.7em;
     text-align: right;
     padding-right: 0.2em;
+  }
+  td.mini-counter {
+    font-size: 0.9em;
+    text-align: left;
+    line-height: 1em;
+  }
+  .perc {
+    font-size: 32px;
+    width: 100%;
+    height: 100%;
+    line-height:1.2em;
+  }
+  td.main-counter {
+    font-size: 1.4em;
+    min-width:2em;
+    text-align: left;
+    line-height: 1em;
   }
 }
 

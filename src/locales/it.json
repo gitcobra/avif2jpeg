@@ -86,7 +86,13 @@
     "success": "successo",
     "started": "iniziato",
     "total": "totale",
-    "files": "file"
+    "files": "file",
+    "failure": "fallimento",
+    "all": "Tutto",
+    "filterLogSelect": "filtro",
+    "showOnlySuccess": "Solo successi",
+    "showOnlyError": "Solo errori",
+    "showAll": "Mostra tutto"
   },
   "disabled": "Disabilitato",
   "threads": "discussione | discussioni",

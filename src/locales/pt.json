@@ -86,7 +86,13 @@
     "success": "sucesso",
     "started": "iniciado",
     "total": "total",
-    "files": "arquivos"
+    "files": "arquivos",
+    "failure": "falha",
+    "all": "todos",
+    "filterLogSelect": "filtro",
+    "showOnlySuccess": "Apenas sucessos",
+    "showOnlyError": "Apenas erros",
+    "showAll": "mostre tudo"
   },
   "disabled": "Desabilitado",
   "threads": "fio | \ntópicos",

@@ -86,7 +86,13 @@
     "success": "성공",
     "started": "시작",
     "total": "총",
-    "files": "파일"
+    "files": "파일",
+    "failure": "실패",
+    "all": "모두",
+    "filterLogSelect": "필터",
+    "showOnlySuccess": "성공 만",
+    "showOnlyError": "오류 만",
+    "showAll": "모두 보여주세요"
   },
   "disabled": "장애가 있는",
   "threads": "스레드 | \n스레드",

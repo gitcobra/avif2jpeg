@@ -86,7 +86,13 @@
     "success": "успех",
     "started": "начал",
     "total": "общий",
-    "files": "файлы"
+    "files": "файлы",
+    "failure": "отказ",
+    "all": "все",
+    "filterLogSelect": "фильтр",
+    "showOnlySuccess": "Только успехи",
+    "showOnlyError": "Только ошибки",
+    "showAll": "Покажите все"
   },
   "disabled": "Неполноценный",
   "threads": "нить | \nнити",

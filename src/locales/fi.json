@@ -124,7 +124,13 @@
     "success": "menestys",
     "started": "aloittanut",
     "total": "kokonais-",
-    "files": "tiedostot"
+    "files": "tiedostot",
+    "failure": "epäonnistuminen",
+    "all": "kaikki",
+    "filterLogSelect": "suodattaa",
+    "showOnlySuccess": "Vain menestykset",
+    "showOnlyError": "Vain virheet",
+    "showAll": "näyttää kaikki"
   },
   "success": "Menestys",
   "threads": "lanka | \nlangat",

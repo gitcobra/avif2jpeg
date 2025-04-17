@@ -93,7 +93,13 @@
     "success": "success",
     "started": "started",
     "total": "total",
-    "files": "files"
+    "files": "files",
+    "failure": "failure",
+    "all": "all",
+    "filterLogSelect": "filter",
+    "showOnlySuccess": "Only successes",
+    "showOnlyError": "Only errors",
+    "showAll": "Show all"
   },
   "settings": {
     "maxZipFileSize": "Max zip file size",

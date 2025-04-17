@@ -5,12 +5,13 @@ import ZipWorker from './worker.zip.ts?worker';
 import type { MessageToCanvasWorker, MessageFromCanvasWorker } from './worker.canvas';
 import type { FileWithId } from '../file-selector.vue'
 import type Converter from './converter.vue';
-import type ConversionStatus from './status.vue';
+import ConversionStatus from './status.vue';
 import { MessageToMainFromZipWorker } from './worker.zip';
 import { UserSettings } from '@/user-settings';
 import { MessageApiInjection } from 'naive-ui/es/message/src/MessageProvider';
 import { useMessage } from 'naive-ui';
 import { NotificationApiInjection } from 'naive-ui/es/notification/src/NotificationProvider';
+import { ConverterResult } from './converter.vue';
 
 
 type ConverterType = InstanceType<typeof Converter>;
@@ -51,6 +52,7 @@ const THUMB_DEMAND_INTERVAL = 300; // (msec)
 const chunksEachWorkerPossessed = new Map<Worker, number>;
 const retriedFileTime = new Map<File, number>;
 let totalChunkSize = 0;
+let zipWorkerModuleScope: Worker;
 
 const processingCoreLogItems = new Map<number, LogType>;//ref(new Map<number, LogType>).value;
 const targetFileMapById = new Map<number, FileWithId>;
@@ -85,8 +87,10 @@ function clearModuleVariables(param?: ConverterParameter) {
     outputExt, 
     imageType, 
     message, 
-    notification
+    notification,
   } = obj);
+
+  zipWorkerModuleScope = null;
   
   chunksEachWorkerPossessed.clear();
   retriedFileTime.clear();
@@ -99,6 +103,13 @@ function clearModuleVariables(param?: ConverterParameter) {
   targetFileMapById.clear();
   failedFileCountMap.clear();
   variousFileInfo.clear();
+
+  // clear param object
+  if( param ) {
+    for( const p in param ) {
+      delete param[p];
+    }
+  }
 };
 
 
@@ -119,7 +130,7 @@ type ConverterParameter = {
   message: MessageApiInjection;
   notification: NotificationApiInjection
 };
-export async function convertTargetFilesInMultithread(param: ConverterParameter) {
+export async function convertTargetFilesInMultithread(param: ConverterParameter): Promise<ConverterResult> {
   
   // init variables
   clearModuleVariables(param);
@@ -147,6 +158,7 @@ export async function convertTargetFilesInMultithread(param: ConverterParameter)
   
   // create a listener for the zip worker
   const promiseToWaitSqueezingZip = createZipWorkerListenerAndPromise(zipWorker);
+  zipWorkerModuleScope = zipWorker;
 
 
   // prepare watcher in case of the conversion process is canceled
@@ -158,10 +170,12 @@ export async function convertTargetFilesInMultithread(param: ConverterParameter)
     //WorkerManager.releaseAllWorkers();
   });
 
+  /*
   // FIXME: send a message from status.vue directly
   ConvStats.demandImage = (index: number) => {
     zipWorker.postMessage({action: 'request-image', index});
   };
+  */
 
   // post all image files to workers
   // NOTE:
@@ -403,6 +417,7 @@ export async function convertTargetFilesInMultithread(param: ConverterParameter)
   return {
     callbackToClearConverter,
     callbackToGenerateFailedZips,
+  
   };
 }
 
@@ -502,37 +517,53 @@ function createZipWorkerListenerAndPromise(zipWorker: Worker) {
       */
 
       // completion
-      if( action === 'add-zip-completed' ) {
-        const {fileId} = data;
-        ConvStats.done++;
-        ConvStats.success++;
-        completedFileIdSet.add(fileId);
-        return;
-      }
+      switch( action ) {
+        case 'add-zip-completed': {
+          const {fileId, entireIndex, storedPath} = data;
+          ConvStats.done++;
+          ConvStats.success++;
+          completedFileIdSet.add(fileId);
+          
+          const item = processingCoreLogItems.get(fileId);
+          item.zippedIndex = entireIndex;
+          ConvStats.ziplogs.push({
+            fileId,
+            storedPath,
+          });
 
-      if( action === 'respond-image' ) {
-        const {url, index, path, size, fileId} = data;
-        
-        ConvStats.convertedImageUrl = url;
-        ConvStats.convertedImageSize = size;
-        ConvStats.convertedImageIndex = index;
-        ConvStats.convertedImageName = path;
-        ConvStats.convertedImageFileId = fileId;
-        
-        // create an object url of the original image
-        let orgUrl = '', orgSize = 0, orgName = '';
-        if( fileId >= 0 ) {
-          const file = targetFileMapById.get(fileId);
-          orgUrl = URL.createObjectURL(file);
-          orgSize = file.size;
-          orgName = file.name;
+          return;
         }
-        ConvStats.convertedImageOrgUrl = orgUrl;
-        ConvStats.convertedImageOrgSize = orgSize;
-        ConvStats.convertedImageOrgName = orgName;
-        ConvStats.convertedImageShrinked = variousFileInfo.get(fileId)?.shrinked;
+
+        case 'respond-image': {
+          const {url, index, path, size, fileId} = data;
+          
+          ConvStats.convertedImageUrl = url;
+          ConvStats.convertedImageSize = size;
+          ConvStats.convertedImageIndex = index;
+          ConvStats.convertedImageName = path;
+          
+          // create an object url of the original image
+          let orgUrl = '', orgSize = 0, orgName = '';
+          if( fileId >= 0 ) {
+            const file = targetFileMapById.get(fileId);
+            orgUrl = URL.createObjectURL(file);
+            orgSize = file.size;
+            orgName = file.webkitRelativePath || file.name;
+          }
+          ConvStats.convertedImageOrgUrl = orgUrl;
+          ConvStats.convertedImageOrgSize = orgSize;
+          ConvStats.convertedImageOrgName = orgName;
+          ConvStats.convertedImageShrinked = variousFileInfo.get(fileId)?.shrinked;
+          
+          return;
+        }
         
-        return;
+        case 'respond-delete': {
+          const {index, success, fileId} = data;
+          processingCoreLogItems.get(fileId).command = '❌deleted';
+          processingCoreLogItems.get(fileId).completed = false;
+          return;   
+        }
       }
 
       const { size, count } = data;
@@ -697,6 +728,7 @@ function createCanvasWorkerListener(ConvStats: Stat, canceled, message: MessageA
         if( item ) {
           item.command = `✅completed`;
           item.completed = true;
+          item.fileId = fileId;
         }
         
         ConvStats.inputTotalSize += inputsize;
@@ -794,6 +826,14 @@ function fileCanceled(fileId: number) {
   item.error = true;
 }
 
+
+
+export function demandImage(index: number) {
+  zipWorkerModuleScope?.postMessage({action: 'request-image', index});
+}
+export function deleteImage(index: number) {
+  zipWorkerModuleScope?.postMessage({action: 'delete-image', index});
+}
 
 // create zips for failed files
 async function pushErrorZipsInMultithread(list: FileWithId[], zipWorker: Worker, Terminated, ConvStats: Stat) {

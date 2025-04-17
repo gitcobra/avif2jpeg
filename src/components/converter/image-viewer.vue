@@ -1,14 +1,17 @@
 <script setup lang="ts">
 import { ImageRenderToolbarProps, NBadge, NButton, NInput, useDialog, useThemeVars } from 'naive-ui';
-import { ref } from 'vue';
+import { ref, render } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { getThumbnailedSize, getUnitSize } from './util';
 import Thumbnail from './thumbnail.vue';
 import { ArrowForward, ArrowBack, ArrowRedoOutline, ArrowUndoOutline, ChevronForward, ChevronBack, Close } from '@vicons/ionicons5';
 import { title } from 'process';
 import { RefSymbol } from '@vue/reactivity';
+import { GlobalValsKey } from '@/Avif2Jpeg.vue';
 
 
+// injections
+const INJ = inject(GlobalValsKey);
 
 // props
 
@@ -31,6 +34,7 @@ const props = defineProps<{
 // emits
 const emit = defineEmits<{
   'demand-image': [index: number]
+  'delete-image': [index: number]
   'close': []
 }>();
 
@@ -38,6 +42,10 @@ const emit = defineEmits<{
 defineExpose({
   download,
   cleanup,
+  openPreview,
+  changeIndex(i: number) {
+    index.value = i;
+  }
 });
 
 
@@ -73,6 +81,7 @@ const orgheight = ref(1);
 const demandingImage = ref(false);
 const thumbloaded = ref(false);
 const thumbOrgloaded = ref(false);
+const isPreviewing = computed<boolean>(() => nImageGroupRef.value?.previewInstRef?.displayed);
 const isPreviewingConvertedImg = computed<boolean>(() => nImageGroupRef?.value?.previewInstRef?.previewSrc === src.value);
 
 const allowNext = computed<boolean>(() => index.value < props.length);
@@ -118,7 +127,7 @@ onUnmounted(() => {
 // watchers
 let timeoutid: any = -1;
 watch(index, (val, prev) => {
-  if( index.value < 1 || index.value > props.length )
+  if( index.value < 1 || index.value > props.length || val === prev )
     return;
   clearTimeout(timeoutid);
   
@@ -127,13 +136,13 @@ watch(index, (val, prev) => {
   else
     viewerTransitionName.value = 'viewer-item-prev';
   
-  console.log(viewerTransitionName.value);
-  viewTransKey.value = initializing.value ? viewTransKey.value : ~viewTransKey.value;
+  //console.log(viewerTransitionName.value);
 
   timeoutid = setTimeout(() => {
     if( props.index === index.value - 1 )
       return;
-    
+
+    viewTransKey.value = initializing.value ? viewTransKey.value : ~viewTransKey.value;    
     /*
     const { clientWidth: w, clientHeight: h } = viewerItemContainer.value.$el;
     vItemContainerStyle.value = { width: w + 'px', height: h + 'px' };
@@ -180,14 +189,24 @@ watch(() => props.url, () => {
 
   if( newsrc ) {
     // change previewed image
-    // HACK: *these properties are not documented in naive-ui manual.
-    // manually set preview src because preview-src attribute doesn't seem to work.
+    // HACK: these properties are not documented in naive-ui manual.
+    // manually set preview src.
     try {
       if( nImageGroupRef.value?.previewInstRef?.displayed ) {
         if( isPreviewingConvertedImg.value )
           nImageGroupRef.value.previewInstRef.setPreviewSrc(newsrc);
         else
           nImageGroupRef.value.previewInstRef.setPreviewSrc(props.originalUrl);
+        
+        // reset rotate value
+        try {
+          // HACK: to reset "rotate" variable inside ImagePreview
+          const disp = nImageGroupRef.value.previewInstRef.displayed;
+          nImageGroupRef.value.previewInstRef.handleAfterLeave();
+          nImageGroupRef.value.previewInstRef.displayed = disp;
+        } catch(e) {
+          console.error(e);
+        }
       }
     } catch(e) {
     }
@@ -220,6 +239,9 @@ function demandImage(index: number) {
 
 // set touch event listener
 function setTouchEvents() {
+  if( !INJ.IS_SP )
+    return;
+  
   let el = viewerItemContainer.value.$el;
   let startX = 0, startY = 0;
   let endX = 0, endY = 0;
@@ -245,7 +267,7 @@ function setTouchEvents() {
     const adx = Math.abs(dx);
     const dy = endY - startY;
     const ady = Math.abs(dy);
-    if( adx < ady || adx < 20 )
+    if( adx < ady || adx < 30 )
       return;
     
     moveIndex(dx > 0 ? -1 : 1);
@@ -286,35 +308,52 @@ function onEscKeyDown(ev: KeyboardEvent) {
 }
 
 function bindKeys(ev: KeyboardEvent) {
-  switch( ev.key ) {
+  switch( ev.code ) {
     case 'ArrowRight':
-    case 'PageDown':
-    case 'ArrowDown':
       moveIndex(1);
       break;
+    /*
+    case 'PageDown':
+      moveIndex(props.length / 10 |0);
+      break;
+    */
+    
     case 'ArrowLeft':
-    case 'PageUp':
-    case 'ArrowUp':
       moveIndex(-1);
       break;
+    /*
+    case 'PageUp':
+      moveIndex(- props.length / 10 |0);
+      break;
+    */
+    
     case 'Home':
       index.value = 1;
       break;
     case 'End':
       index.value = props.length;
       break;
-    case ' ':
-    case 'Enter':
+    
+    case 'Space':
+    //case 'Enter':
+      if( !isPreviewing.value ) {
+        return;
+      }
       switchImage();
       break;
+    
+    case 'ArrowUp':
+    case 'ArrowDown':
+      //ev.preventDefault();
     default:
       return;
   }
-
+  
   ev.stopPropagation();
+  ev.preventDefault();
   //ev.stopImmediatePropagation();
-  if( nImageGroupRef.value?.previewInstRef?.displayed )
-    ev.preventDefault();
+  //if( nImageGroupRef.value?.previewInstRef?.displayed )
+  //  ev.preventDefault();
 }
 
 function onThumbnailLoad({width: tw, height: th}) {
@@ -329,6 +368,12 @@ function onOrgThumbnailLoad({width: tw, height: th}) {
   thumbOrgloaded.value = true;
   //size.value = tsize;
 }
+/*
+function onClickDelete() {
+  alert("del:"+index.value);
+  emit('delete-image', index.value - 1);
+}
+*/
 
 function download() {
   if( isPreviewingConvertedImg.value )
@@ -336,6 +381,8 @@ function download() {
   else
     thumbOrgRef.value.download();
 }
+
+
 
 async function copyDataURL(url: string) {
   try {
@@ -355,6 +402,10 @@ async function copyDataURL(url: string) {
       content: () => h('div', [
         h('div', t('copiedDataURLMessage')),
         //h(NInput, {onFocus: select, onClick: select, type:'textarea', value:durl, readonly:true, size:'small', style:{marginTop:'2em', fontSize:'x-small'}})
+        h('p',
+          {style:{padding: '1em'}},
+          h('a', {onClick(ev){ openImage(durl); ev.stopPropagation(); }, href:durl, style:{}}, 'URL'),
+        ),
       ]),
       positiveText: 'OK',
     });
@@ -369,11 +420,11 @@ async function copyDataURL(url: string) {
 }
 
 function moveIndex(val: number) {
-  if( val > 0 && index.value < props.length ) {
-    index.value++;
+  if( val > 0 ) {
+    index.value = Math.min(props.length, index.value + val) |0;
   }
-  else if( val < 0 && index.value > 1 ) {
-    index.value--;
+  else if( val < 0 ) {
+    index.value = Math.max(1, index.value + val) |0;
   }
 }
 
@@ -386,22 +437,24 @@ function openImage(url: string) {
 /*
 HACK: switch between Original image and Converted image for preview
 */
-let reservedTransform = '';
+let preservedTransform = '';
 const switchImage = () => {
   // preserve transform
-  reservedTransform = window.getComputedStyle(nImageGroupRef?.value?.previewInstRef?.previewRef)?.transform;
+  preservedTransform = window.getComputedStyle(nImageGroupRef?.value?.previewInstRef?.previewRef)?.transform;
   
   const prev = isPreviewingConvertedImg.value;
-  nImageGroupRef?.value?.previewInstRef?.handleSwitchNext?.();
+  //nImageGroupRef?.value?.previewInstRef?.handleSwitchNext?.();
+  nImageGroupRef?.value?.next();
   nextTick(() => {
     if( isPreviewingConvertedImg.value === prev )
-      nImageGroupRef?.value?.previewInstRef?.handleSwitchNext?.();
+      //nImageGroupRef?.value?.previewInstRef?.handleSwitchNext?.();
+      nImageGroupRef?.value?.next();
   });
 };
 // HACK: Image Preview resets its own CSS transform each time it loads an image, so restore them manually
 function restoreTransform() {
   try {
-    nextTick(() => nImageGroupRef.value.previewInstRef.previewRef.style.transform = reservedTransform);
+    nextTick(() => nImageGroupRef.value.previewInstRef.previewRef.style.transform = preservedTransform);
   } catch(e) {}
 }
 
@@ -411,9 +464,10 @@ function renderToolbar({ nodes }: ImageRenderToolbarProps) {
   const switchOrgConv = h(NBadge, {
     color:isPreviewingConvertedImg.value ? 'green' : 'gray',
     offset:[-20, -12],
-    value: (isPreviewingConvertedImg.value ? t('status.Converted') : t('status.Original')) + ' ' + index.value,
+    value: (isPreviewingConvertedImg.value ? t('status.Converted') : t('status.Original')), // + ' ' + index.value,
   }, () => h(NButton, {
-    round:true, onClick(){ switchImage() },
+    round:true,
+    onClick(){ switchImage() },
     textColor:'white',
     size:'small',
     style: { marginLeft: '4px' },
@@ -433,17 +487,61 @@ function renderToolbar({ nodes }: ImageRenderToolbarProps) {
   dlchilds.trigger = () => icon;//() => h(NIcon, {component:DownloadOutline, onClick(){download()}, circle:true, textColor:'white', size:'small', style: { marginLeft: '12px' }});
   } catch(e) {}
 
+  renderPathBox();
+
   return [switchOrgConv, ...Object.values(nodes)];
 }
 
+// create a pathbox in the top-left
+const WRAPPER_ID = '#pathbox-' + String(Math.random()).substring(2);
+let prevwrapper;
+function renderPathBox() {
+  // HACK:
+  // directly render path box in the ImagePreview wrapper
+  try {
+    prevwrapper = nImageGroupRef.value?.previewInstRef?.previewWrapperRef?.parentNode;
+    if( !prevwrapper || prevwrapper.querySelector(WRAPPER_ID) ) {
+      return;
+    }
 
+    let pbox = h('div', {
+      id: WRAPPER_ID,
+      onMousedown:(ev) => {ev.stopPropagation()},
+      //onVnodeBeforeUnmount: () => console.log('pathbox unmounted'),
+      className: '__preview-injected-pathbox' + (isPreviewingConvertedImg.value ? ' converted' : ''),
+    }, [
+      // index
+      h('div', `${String(index.value).padStart(String(props.length).length,'0')}/${String(props.length).padStart(String(props.length).length,'0')}`),
+      // size
+      h('div', getUnitSize(isPreviewingConvertedImg.value ? props.size : props.originalSize, 0)),
+      // path
+      h('div', /*{onVnodeBeforeUnmount(){console.log('childumounted')}},*/ isPreviewingConvertedImg.value ? props.name : props.originalName),
+    ]);
+
+
+    render(pbox, prevwrapper);
+    pbox = null;
+  } catch(e) {
+    console.error(e);
+  }
+}
+// unmount pathbox
+onBeforeUnmount(() => {
+  if( !prevwrapper )
+    return;
+  
+  render(null, prevwrapper);
+  prevwrapper = null;
+});
 
 
 
 function openPreview() {
   //thumbConvRef.value.test();
+
+    thumbConvRef.value.openPreview();
+
   
-  thumbConvRef.value.openPreview();
 }
 
 //const body = useTemplateRef('body');
@@ -474,8 +572,15 @@ function cleanup() {
         
         <n-flex vertical :key="viewTransKey" _v-show="viewerItemVisibility">
           <n-flex align="center" :wrap="false">
-            <n-flex vertical align="center">
-              
+            
+            <!-- left column (org => conv) -->
+            <n-flex vertical>
+              <!--
+              <n-flex justify="end">
+                <n-button @click="onClickDelete" size="tiny" color="red" ghost>Delete</n-button>
+              </n-flex>
+              -->
+
               <n-flex align="center" justify="center" :wrap="false">
                 <!-- ORIGINAL -->
                 <n-flex align="center" justify="center" vertical class="original-thumb">
@@ -521,8 +626,8 @@ function cleanup() {
                 </n-flex>
 
 
-                <n-flex style="margin:1em;" class="original-thumb">
-                  <n-icon size="20" color="silver"><ArrowForward/></n-icon>
+                <n-flex vertical align="center" style="margin:1em;" class="original-thumb">
+                  <n-icon size="20" color="silver" :component="ArrowForward"/>
                 </n-flex>
                 
                 <!-- CONVERTED -->
@@ -556,14 +661,17 @@ function cleanup() {
               </n-flex>
 
               <!-- file name -->
-              <n-flex ref="fileNameContainer" align="center" class="pathbox" :title="props.name">
-                <n-scrollbar :x-scrollable="true" trigger="hover" style="font-size:smaller; overflow:hidden; white-space:nowrap; text-overflow: ellipsis;">
+              <n-flex ref="fileNameContainer" justify="center" align="center" class="pathbox" :title="props.name">
+                <n-scrollbar :x-scrollable="true" trigger="hover" style="text-align: center; font-size:smaller; overflow:hidden; white-space:nowrap; text-overflow: ellipsis;">
                   {{ !thumbloaded ? '?' : props.name }}
                 </n-scrollbar>
               </n-flex>
 
             </n-flex>
+
+            <!-- right column (thumb) -->
             <n-flex vertical>
+
               <Thumbnail
                 :ref="(el: any) => {if( el?.active ) thumbConvRef = el}"
                 :src="src"
@@ -597,6 +705,7 @@ function cleanup() {
                   </template>
                   {{$t('convertedImageDataUrlTooltip')}}
                 </n-popover>
+
               </n-flex>
             </n-flex>
 
@@ -617,7 +726,7 @@ function cleanup() {
         
     <n-flex v-show="!isSingle" style="width:100%;" :wrap="false">
       <!-- slider for index -->
-      <n-slider v-model:value="index" :tooltip="false" :step="1" :min="1" :max="props.length" @keydown.prevent.stop class="index-slider" />
+      <n-slider v-model:value="index" :tooltip="false" :step="1" :min="1" :max="props.length" :keyboard="false" class="index-slider" />
       
       <!-- index -->
       <n-flex class="index" align="center" justify="center" :wrap="false" :size="3">
@@ -648,8 +757,11 @@ a {
   color: black;
 }
 .pathbox {
-  max-width: 250px;
-  font-size: smaller; overflow:hidden; white-space:nowrap; text-overflow: ellipsis;
+  max-width: 280px;
+  font-size: smaller;
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow: ellipsis;
 }
 
 .thumb-arrow {
@@ -669,6 +781,7 @@ a {
 }
 
 .close-button {
+  z-index: 999;
   position: absolute;
   right:-16px; top:-26px;
   opacity: 0.7;
@@ -764,6 +877,41 @@ a {
 .viewer-item-prev-leave-active {
   position: absolute;
 }
+</style>
 
+<style lang="scss">
+
+.__preview-injected-pathbox {
+  font-size: 0.9em;
+  z-index: 999999999999;
+  position: fixed;
+  display: flex;
+  left: 0px;
+  bottom: 0px;
+  color: white;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding: 0px 4px;
+  background-color: #00000088;
+  font-family: v-mono;
+  padding: 1px;
+
+  &.converted {
+    background-color: #115511aa;
+  }
+
+  > * {
+    margin-right: 0.2em;
+  }
+  > :nth-child(2) {
+    min-width: 5em;
+    text-align: center;
+  }
+  > .path {
+    font-family: v-sans;
+  }
+}
 
 </style>

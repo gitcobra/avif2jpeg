@@ -86,7 +86,13 @@
     "success": "başarı",
     "started": "başlayan",
     "total": "toplam",
-    "files": "dosyalar"
+    "files": "dosyalar",
+    "failure": "arıza",
+    "all": "Tümü",
+    "filterLogSelect": "filtre",
+    "showOnlySuccess": "Sadece başarılar",
+    "showOnlyError": "Sadece Hatalar",
+    "showAll": "hepsini göster"
   },
   "disabled": "Engelli",
   "threads": "konu | \nKonular",

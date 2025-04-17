@@ -90,9 +90,15 @@
     "saveAll": "全て保存",
     "progressRetries": "再試行ファイル",
     "success": "成功",
-    "started": "開始済",
+    "started": "開始",
     "total": "総計",
-    "files": "ファイル数"
+    "files": "ファイル",
+    "failure": "失敗",
+    "all": "全体",
+    "filterLogSelect": "絞り込み",
+    "showOnlySuccess": "成功のみ",
+    "showOnlyError": "失敗のみ",
+    "showAll": "全て表示"
   },
   "disabled": "無効",
   "threads": "スレッド | スレッド",

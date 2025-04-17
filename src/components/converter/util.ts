@@ -37,6 +37,7 @@ export function getThumbnailedSize(image: {width:number, height:number}, maxSize
 // get a split zips index and a file index from an entire index
 export class SplitZipsIndexer {
   private _currentFileCount = 0;
+  private _currentZipIndex = 0;
   private _totalFileCount = 0;
   private _zipLengthSumList: number[] = [];
   private _pathBank: {
@@ -50,13 +51,14 @@ export class SplitZipsIndexer {
       this._pathBank[path] = [this._zipLengthSumList.length, this._currentFileCount];
     
     this._currentFileCount++;
-    this._totalFileCount++;
+    return this._totalFileCount++;
   }
   split() {
     this._zipLengthSumList.push(this._totalFileCount);
+    this._currentZipIndex++;
     this._currentFileCount = 0;
   }
-  get(index: number | string) {
+  get(index: number | string): [zipIndex: number, fileIndex: number] {
     if( typeof index === 'number' ) {
       let zipIndex = this._zipLengthSumList.findIndex((val, i) => index < val);
       if( zipIndex === -1 )
@@ -73,5 +75,11 @@ export class SplitZipsIndexer {
     }
     
     return null;
+  }
+  getZipIndex() {
+    return this._currentZipIndex;
+  }
+  getIndex() {
+    return this._totalFileCount;
   }
 }

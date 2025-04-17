@@ -1,10 +1,13 @@
 <template>
   <n-flex align="center" justify="center" style="margin:0px;">
     <h1 style="padding:0px; margin:0px; text-align:center;">
+      <!--
       <span v-if="isLangRoot">{{$t('title')}}</span>
       <router-link v-else to="../" #="{ navigate, href }" custom>
         <n-a :href="href" @click="navigate" style="color:black; word-break: keep-all; overflow-wrap: break-word;">{{$t('title')}}</n-a>
       </router-link>
+      -->
+      {{$t('title')}}
     </h1>
   </n-flex>
 </template>

@@ -126,7 +126,6 @@ async function setLocaleByBrowserLanguage() {
   const userlang = getBrowserLanguage().toLowerCase();
   const langhead = userlang.split(/[-_]/)[0];
 
-  
   if( LANG_ID_LIST.includes(langhead) ) {
     let lang = langhead;
     

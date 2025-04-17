@@ -57,7 +57,7 @@ const LANDSCAPE = ref(true);
 const processing = ref(false);
 const mounted = ref(false);
 
-const contentVisible = ref(false);
+const contentVisible = ref(true);
 
 // for SSG
 if( import.meta.env.SSR ) {
@@ -176,7 +176,7 @@ function onInputClick(flag: boolean) {
 
     
     <transition name="fade">
-    <n-flex v-if="contentVisible" vertical align="stretch" justify="space-between" style="height:100%;">
+    <n-flex v-show="contentVisible" vertical align="stretch" justify="space-between" style="height:100%;">
       <n-flex justify="space-around" vertical style="height:100%;">
         <Title/>
         <n-flex justify="center">
@@ -205,7 +205,13 @@ function onInputClick(flag: boolean) {
           @start="processing=true"
           @end="processing=false"
           _:multi-thread-count="val => availableThreadCount = val"
-        />
+        >
+          <template #lang-switch>
+            <Suspense>
+              <SwitchLanguages/>
+            </Suspense>
+          </template>
+        </Converter>
 
         <n-flex vertical align="center">
           <n-popover trigger="manual" placement="top" :keep-alive-on-hover="false" :duration="0" :delay="0">

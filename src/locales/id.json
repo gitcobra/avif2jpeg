@@ -86,7 +86,13 @@
     "success": "kesuksesan",
     "started": "dimulai",
     "total": "total",
-    "files": "file"
+    "files": "file",
+    "failure": "kegagalan",
+    "all": "semua",
+    "filterLogSelect": "menyaring",
+    "showOnlySuccess": "Hanya keberhasilan",
+    "showOnlyError": "Hanya kesalahan",
+    "showAll": "tunjukkan semua"
   },
   "disabled": "Dengan disabilitas",
   "threads": "benang | \nbenang",

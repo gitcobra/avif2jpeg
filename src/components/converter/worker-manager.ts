@@ -118,8 +118,6 @@ export function releaseWorker(worker: WorkerWithId) {
 export function releaseAllWorkers() {
   for( const worker of resolverFromWorker.keys() )
     releaseWorker(worker);
-  
-  console.log(resolverFromWorker);
 }
 
 

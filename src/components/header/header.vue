@@ -1,15 +1,17 @@
 <template>
   <n-flex vertical justify="start">
-    <n-flex justify="space-between" align="center">      
+    <n-flex justify="space-between" align="center" :wrap="false">
 
       <n-flex align="center">
         <Github/>
-
-        <Version/>
         
+        <Version/>
         
         <Licenses/>
         
+        <n-flex style="font-size:small">
+          <a href="/" v-if="route.path !== '/'">HOME</a>
+        </n-flex>
 
       </n-flex>
       
@@ -28,4 +30,6 @@ import { useI18n } from "vue-i18n";
 import Github from './github.vue';
 import Licenses from './licenses.vue'
 import Version from './version.vue';
+const route = useRoute();
+
 </script>

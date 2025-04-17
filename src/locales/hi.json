@@ -86,7 +86,13 @@
     "success": "सफलता",
     "started": "शुरू कर दिया",
     "total": "कुल",
-    "files": "फ़ाइलें"
+    "files": "फ़ाइलें",
+    "failure": "असफलता",
+    "all": "सभी",
+    "filterLogSelect": "फ़िल्टर",
+    "showOnlySuccess": "केवल सफलता",
+    "showOnlyError": "केवल त्रुटियां",
+    "showAll": "सब दिखाएं"
   },
   "disabled": "अक्षम",
   "threads": "धागा | \nधागे",

@@ -86,7 +86,13 @@
     "success": "sukces",
     "started": "zaczął",
     "total": "całkowity",
-    "files": "akta"
+    "files": "akta",
+    "failure": "awaria",
+    "all": "Wszystko",
+    "filterLogSelect": "filtr",
+    "showOnlySuccess": "Tylko sukcesy",
+    "showOnlyError": "Tylko błędy",
+    "showAll": "Pokaż wszystko"
   },
   "disabled": "Wyłączony",
   "threads": "wątek | \nwątki",

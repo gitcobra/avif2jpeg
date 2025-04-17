@@ -86,7 +86,13 @@
     "success": "Erfolg",
     "started": "begonnen",
     "total": "gesamt",
-    "files": "Dateien"
+    "files": "Dateien",
+    "failure": "Versagen",
+    "all": "alle",
+    "filterLogSelect": "Filter",
+    "showOnlySuccess": "Nur Erfolge",
+    "showOnlyError": "Nur Fehler",
+    "showAll": "Zeigen Sie alles"
   },
   "disabled": "Deaktiviert",
   "threads": "Thread | \nThreads",

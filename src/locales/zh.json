@@ -86,7 +86,13 @@
     "success": "成功",
     "started": "开始",
     "total": "全部的",
-    "files": "文件"
+    "files": "文件",
+    "failure": "失败",
+    "all": "全部",
+    "filterLogSelect": "筛选",
+    "showOnlySuccess": "只有成功",
+    "showOnlyError": "只有错误",
+    "showAll": "显示全部"
   },
   "disabled": "残疾人",
   "threads": "thread | threads",

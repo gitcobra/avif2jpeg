@@ -86,7 +86,13 @@
     "success": "успіх",
     "started": "розпочато",
     "total": "загальний",
-    "files": "файли"
+    "files": "файли",
+    "failure": "несправність",
+    "all": "все",
+    "filterLogSelect": "фільтрувати",
+    "showOnlySuccess": "Тільки успіхи",
+    "showOnlyError": "Тільки помилки",
+    "showAll": "показати все"
   },
   "disabled": "Вимкнено",
   "threads": "нитка | \nнитки",

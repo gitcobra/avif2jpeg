@@ -1,11 +1,22 @@
+<script lang="ts">
+export type ConverterResult = {
+    exception?: Error;
+    callbackToGenerateFailedZips: (any?) => any;
+    callbackToClearConverter: (any?) => any;
+    //demandImage: (index: number) => any | null;
+};
+</script>
+
+
 <script setup lang="ts">
 import { NButton, type NotificationType } from 'naive-ui';
-import { convertTargetFilesInMultithread } from './converter.multi';
-import { convertImagesInSingleThread, getAsPromise } from './converter.single';
+import { convertTargetFilesInMultithread, demandImage as demandImageMulti, deleteImage } from './converter.multi';
+import { convertImagesInSingleThread, getAsPromise, demandImage as demandImageSingle } from './converter.single';
 import { DocumentOutline } from '@vicons/ionicons5';
 
 // sub components
 import ConversionStatus from './status.vue';
+import SwitchLanguage from '../header/switch-lang.vue';
 import { GlobalValsKey } from '@/Avif2Jpeg.vue';
 import { UserSettings, MaxThreads } from '@/user-settings';
 export type ConversionStatusType = InstanceType<typeof ConversionStatus>['$props']['status'];
@@ -86,6 +97,8 @@ let disableMultiThreading = false;
 
 // clean up workes
 let callbackToClearConverter = () => {};
+//
+let demandImage: (index: number) => any | null;
 
 // conversion statuses
 let elapsedTimeForConversion = 0;
@@ -162,8 +175,13 @@ async function onBeforeProcessingDialogClose() {
 }
 
 function onDemandImage(index: number) {
-  ConvStats.demandImage(index);
+  //ConvStats.demandImage(index);
+  demandImage?.(index);
   console.log(index, "demanded")
+}
+function onDeleteImage(index: number) {
+  deleteImage?.(index);
+  console.log(index, "delete");
 }
 
 function onESCPress() {
@@ -192,6 +210,7 @@ let onDemandZipErrorsFromStatus = ref(() => {});
 function initConvStatPropObj(obj?: ConversionStatusType): ConversionStatusType {
   const initBaseObj: ConversionStatusType = {
     logs: [],
+    ziplogs: [],
     
     index: 0,
     converted: 0,
@@ -220,7 +239,6 @@ function initConvStatPropObj(obj?: ConversionStatusType): ConversionStatusType {
     convertedImageUrl: '',
     convertedImageOrgUrl: '',
     convertedImageIndex: -1,
-    convertedImageFileId: -1,
     convertedImageShrinked: false,
     
     zipSize: props.maxZipSizeMB,
@@ -233,8 +251,6 @@ function initConvStatPropObj(obj?: ConversionStatusType): ConversionStatusType {
     unconvertedTotalSize: 0,
     failedFileZippedCount: 0,
     failedToCreateFailedZip: false,
-
-    demandImage: () => {}
   };
   return Object.assign(obj || {}, initBaseObj);
 }
@@ -259,6 +275,7 @@ function cleanUpProcessedData() {
   initConvStatPropObj(ConvStats);
   callbackToClearConverter();
   callbackToClearConverter = () => {};
+  demandImage = null;
 
   allZipsClicked = false;
   processCompleted.value = false;
@@ -318,24 +335,23 @@ async function startConvert(input: FileWithId[]) {
   
   
   // start converting 
-  type ConverterResult = {
-     exception?: Error;
-     callbackToGenerateFailedZips: (any?) => any;
-     callbackToClearConverter: (any?) => any;
-  };
-  
   const startedTime = Date.now();
   emit('start');
   
   let callbackToGenerateFailedZips;
   let exception: Error | undefined;
-  const result: ConverterResult = ( !disableMultiThreading && props.threads! >= 2 ) ?
-    // multi-threading
-    await convertTargetFilesInMultithread({files:fileList, completedFileIdSet, ConvStats, canceled, props, imageType:format, quality, outputExt, format, message, notification})
-    :
-    // single-threading
-    await convertImagesInSingleThread(fileList, completedFileIdSet, props, canceled, ConvStats);
-  
+  let result: ConverterResult;
+  // multi-threading
+  if( !disableMultiThreading && props.threads! >= 2 ) {
+    demandImage = demandImageMulti;
+    //deleteImage = deleteImage;
+    result = await convertTargetFilesInMultithread({files:fileList, completedFileIdSet, ConvStats, canceled, props, imageType:format, quality, outputExt, format, message, notification});
+  }
+  // single-threading
+  else {
+    demandImage = demandImageSingle;
+    result = await convertImagesInSingleThread(fileList, completedFileIdSet, props, canceled, ConvStats);
+  }
   ({exception, callbackToGenerateFailedZips, callbackToClearConverter} = result);
   
   // terminate the application when recieved an exception 
@@ -518,88 +534,93 @@ function checkAvailableFeatures() {
 
 
 <template>
-  
-    <!-- re-convert button -->
-    <n-flex v-if="!processing && props.input?.length" justify="center" align="center" style="margin-top:0.4em">
-      <n-tooltip trigger="hover" placement="top" :keep-alive-on-hover="false" :duration="0" :delay="50">
-        <template #trigger>
-          <n-badge :value="input?.length || 0" :offset="[-12, -5]" color="#99999966">
-            <n-button @click="convertAgain" round size="large">
-              <template #icon>
-                <n-icon size="1.5em" color="#CCCCCC"><DocumentOutline /></n-icon>
-              </template>
-              {{t('convertAgain')}}
-            </n-button>
-          </n-badge>
-        </template>
-        <div v-html="t('reconvertTip', props.input?.length)"></div>
-      </n-tooltip>
-    </n-flex>
-
-    <!-- message -->
-    <!--
-    <n-drawer :show="conversionModalActive || showNote" placement="right" :z-index="0" mask-closable :on-mask-click="e => showNote=false">
-      <n-drawer-content title="Note">
-        <p>
-          {{ $t('annotationOutOfMemory') }}
-        </p>
-        <p>
-        <img width="200" src="/outofmemory.png">
-        </p>
-      </n-drawer-content>
-    </n-drawer>
-    -->
-
-    <!-- open the modal dialog during the conversion -->
-    <n-modal
-      ref="processingModal"
-      display-directive="show"
-      v-model:show="conversionModalActive"
-      :closable="processCompleted"
-      :close-on-esc="false"
-      preset="dialog"
-      
-      @click="notification.destroyAll(); message.destroyAll();"
-      @mask-click="notification.destroyAll(); message.destroyAll();"
-      @close="onBeforeProcessingDialogClose"
-      @esc="onESCPress"
-      :title="processingMessage"
-      :type="processingType"
-      :mask-closable="false"
-      @after-leave="cleanUpProcessedData"
-      @before-leave="stat.cleanup()"
-
-      class="processing-dialog"
-    >
-      <template #default>
-        <n-flex vertical  style="flex-grow: 1;">
-          <!-- conversion status -->
-          <ConversionStatus
-            ref="stat"
-            v-if="dispConvStatusComponent"
-            :key="convStatKeyToRefresh"
-            :processing="processing"
-            :status="ConvStats"
-            :interval="STATUS_UPDATE_INTERVAL"
-            @all-zips-clicked="allZipsClicked = true"
-            @demand-zip-errors="onDemandZipErrorsFromStatus"
-            @demand-image="onDemandImage"
-          />
-
-          <!-- control buttons -->
-          <n-flex justify="end">
-            <!-- cancel button -->
-            <n-button v-if="processing" :disabled="canceled" ref="cancelbutton" round size="large" @click="canceled = true">
-              <!-- spinner waiting for complete -->
-              <n-spin :show="canceled && !processCompleted" size="small">{{t('cancel')}}</n-spin>
-            </n-button>
-            <!-- close button -->
-            <n-button v-else-if="processCompleted" @click="onBeforeProcessingDialogClose" round size="large" style="font-size: small; margin-top:1em;">{{t('close')}}</n-button>
-          </n-flex>
-
-        </n-flex>
+  <!-- re-convert button -->
+  <n-flex v-if="!processing && props.input?.length" justify="center" align="center" style="margin-top:0.4em">
+    <n-tooltip trigger="hover" placement="top" :keep-alive-on-hover="false" :duration="0" :delay="50">
+      <template #trigger>
+        <n-badge :value="input?.length || 0" :offset="[-12, -5]" color="#99999966">
+          <n-button @click="convertAgain" round size="medium">
+            <template #icon>
+              <n-icon size="1.2em" color="#CCCCCC"><DocumentOutline /></n-icon>
+            </template>
+            {{t('convertAgain')}}
+          </n-button>
+        </n-badge>
       </template>
-    </n-modal>
+      <div v-html="t('reconvertTip', props.input?.length)"></div>
+    </n-tooltip>
+  </n-flex>
+
+  <!-- message -->
+  <!--
+  <n-drawer :show="conversionModalActive || showNote" placement="right" :z-index="0" mask-closable :on-mask-click="e => showNote=false">
+    <n-drawer-content title="Note">
+      <p>
+        {{ $t('annotationOutOfMemory') }}
+      </p>
+      <p>
+      <img width="200" src="/outofmemory.png">
+      </p>
+    </n-drawer-content>
+  </n-drawer>
+  -->
+
+  <!-- open the modal dialog during the conversion -->
+  <n-modal
+    ref="processingModal"
+    display-directive="show"
+    v-model:show="conversionModalActive"
+    :closable="processCompleted"
+    :close-on-esc="false"
+    preset="dialog"
+    
+    @click="notification.destroyAll(); message.destroyAll();"
+    @mask-click="notification.destroyAll(); message.destroyAll();"
+    @close="onBeforeProcessingDialogClose"
+    @esc="onESCPress"
+    :title="processingMessage"
+    :type="processingType"
+    :mask-closable="false"
+    @after-leave="cleanUpProcessedData"
+    @before-leave="stat.cleanup();"
+
+    class="processing-dialog"
+  >
+    <template #default>
+      <n-flex vertical  style="flex-grow: 1;">
+        <!-- conversion status -->
+        <ConversionStatus
+          ref="stat"
+          v-if="dispConvStatusComponent"
+          :key="convStatKeyToRefresh"
+          :processing="processing"
+          :status="ConvStats"
+          :interval="STATUS_UPDATE_INTERVAL"
+          @all-zips-clicked="allZipsClicked = true"
+          @demand-zip-errors="onDemandZipErrorsFromStatus"
+          @demand-image="onDemandImage"
+          @delete-image="onDeleteImage"
+        />
+
+        <!-- control buttons -->
+        <n-flex justify="end" align="center" :wrap="false">
+          <!--
+          <n-flex justify="start" align="center">
+            <slot name="lang-switch"></slot>
+          </n-flex>
+          -->
+          <!-- cancel button -->
+          <n-button v-if="processing" :disabled="canceled" ref="cancelbutton" round size="large" @click="canceled = true">
+            <!-- spinner waiting for complete -->
+            <n-spin :show="canceled && !processCompleted" size="small">{{t('cancel')}}</n-spin>
+          </n-button>
+          <!-- close button -->
+          <n-button v-else-if="processCompleted" @click="onBeforeProcessingDialogClose" round size="large" style="font-size: small; margin-top:1em;">{{t('close')}}</n-button>
+        </n-flex>
+
+      </n-flex>
+    </template>
+  </n-modal>
 
 </template>
 

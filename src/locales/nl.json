@@ -86,7 +86,13 @@
     "success": "succes",
     "started": "begonnen",
     "total": "totaal",
-    "files": "bestanden"
+    "files": "bestanden",
+    "failure": "mislukking",
+    "all": "alle",
+    "filterLogSelect": "filter",
+    "showOnlySuccess": "Alleen successen",
+    "showOnlyError": "Alleen fouten",
+    "showAll": "Toon alles"
   },
   "disabled": "Gehandicapt",
   "threads": "draad | \ndraden",
