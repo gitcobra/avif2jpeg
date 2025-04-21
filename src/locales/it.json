@@ -44,7 +44,6 @@
     "expandLog": "Mostra l'intero registro",
     "autoScroll": "Scorrimento automatico",
     "showOnlyErrors": "Mostra solo errori",
-    "log": "Tronco d'albero",
     "outInRate": "Rapporto uscita/entrata",
     "elapsedTime": "Tempo trascorso",
     "multiThreading": "Multithreading",
@@ -92,7 +91,12 @@
     "filterLogSelect": "filtro",
     "showOnlySuccess": "Solo successi",
     "showOnlyError": "Solo errori",
-    "showAll": "Mostra tutto"
+    "showAll": "Mostra tutto",
+    "Progress": "Progressi",
+    "PreviewImage": "Anteprima immagini",
+    "Log": "Tronco d'albero",
+    "log": "Tronco d'albero",
+    "Output": "Risultati di output"
   },
   "disabled": "Disabilitato",
   "threads": "discussione | discussioni",

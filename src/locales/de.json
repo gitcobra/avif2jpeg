@@ -44,7 +44,6 @@
     "expandLog": "Gesamtes Protokoll anzeigen",
     "autoScroll": "Automatisches Scrollen",
     "showOnlyErrors": "Nur Fehler anzeigen",
-    "log": "Protokoll",
     "elapsedTime": "Verstrichene Zeit",
     "multiThreading": "Multithreading",
     "outputSettings": "Ausgabeeinstellungen",
@@ -92,7 +91,12 @@
     "filterLogSelect": "Filter",
     "showOnlySuccess": "Nur Erfolge",
     "showOnlyError": "Nur Fehler",
-    "showAll": "Zeigen Sie alles"
+    "showAll": "Zeigen Sie alles",
+    "Progress": "Fortschritt",
+    "PreviewImage": "Vorschau -Bilder",
+    "Log": "Protokoll",
+    "log": "Protokoll",
+    "Output": "Ausgangsergebnisse"
   },
   "disabled": "Deaktiviert",
   "threads": "Thread | \nThreads",

@@ -44,7 +44,6 @@
     "expandLog": "显示整个日志",
     "autoScroll": "自动滚动",
     "showOnlyErrors": "仅显示错误",
-    "log": "日志",
     "elapsedTime": "经过时间",
     "multiThreading": "多线程",
     "outputSettings": "输出设置",
@@ -92,7 +91,12 @@
     "filterLogSelect": "筛选",
     "showOnlySuccess": "只有成功",
     "showOnlyError": "只有错误",
-    "showAll": "显示全部"
+    "showAll": "显示全部",
+    "Progress": "进步",
+    "PreviewImage": "预览图像",
+    "Log": "日志",
+    "log": "日志",
+    "Output": "输出结果"
   },
   "disabled": "残疾人",
   "threads": "thread | threads",

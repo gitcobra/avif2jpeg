@@ -45,7 +45,6 @@
     "expandLog": "顯示整個日誌",
     "autoScroll": "自動捲動",
     "showOnlyErrors": "僅顯示錯誤",
-    "log": "紀錄",
     "elapsedTime": "經過時間",
     "multiThreading": "多執行緒",
     "outputSettings": "輸出設定",
@@ -93,7 +92,12 @@
     "filterLogSelect": "篩選",
     "showOnlySuccess": "只有成功",
     "showOnlyError": "只有錯誤",
-    "showAll": "顯示全部"
+    "showAll": "顯示全部",
+    "Progress": "進步",
+    "PreviewImage": "預覽圖像",
+    "Log": "紀錄",
+    "log": "紀錄",
+    "Output": "輸出結果"
   },
   "disabled": "殘障人士",
   "threads": "thread | threads",

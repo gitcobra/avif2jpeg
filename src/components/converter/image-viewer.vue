@@ -43,9 +43,12 @@ defineExpose({
   download,
   cleanup,
   openPreview,
+  isPreviewing() {
+    return isPreviewing.value;
+  },
   changeIndex(i: number) {
     index.value = i;
-  }
+  },
 });
 
 
@@ -335,7 +338,7 @@ function bindKeys(ev: KeyboardEvent) {
       break;
     
     case 'Space':
-    //case 'Enter':
+    case 'Enter':
       if( !isPreviewing.value ) {
         return;
       }
@@ -402,10 +405,12 @@ async function copyDataURL(url: string) {
       content: () => h('div', [
         h('div', t('copiedDataURLMessage')),
         //h(NInput, {onFocus: select, onClick: select, type:'textarea', value:durl, readonly:true, size:'small', style:{marginTop:'2em', fontSize:'x-small'}})
+        /*
         h('p',
           {style:{padding: '1em'}},
           h('a', {onClick(ev){ openImage(durl); ev.stopPropagation(); }, href:durl, style:{}}, 'URL'),
         ),
+        */
       ]),
       positiveText: 'OK',
     });
@@ -738,9 +743,11 @@ function cleanup() {
     </n-flex>
   
     <!-- close button -->
+    <!--
     <n-button @click="emit('close');" circle size="tiny" color="silver" class="close-button" :title="$t('close')">
       <template #icon><n-icon size="12"><Close/></n-icon></template>
     </n-button>
+    -->
 
   </n-image-group>
   </n-flex>

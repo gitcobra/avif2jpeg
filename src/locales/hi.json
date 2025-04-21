@@ -44,7 +44,6 @@
     "expandLog": "संपूर्ण लॉग दिखाएँ",
     "autoScroll": "स्वतः स्क्रॉल",
     "showOnlyErrors": "केवल त्रुटियाँ दिखाएँ",
-    "log": "लकड़ी का लट्ठा",
     "elapsedTime": "बीता हुआ समय",
     "multiThreading": "मल्टी-थ्रेडिंग",
     "outputSettings": "उत्पादन का वातावरण",
@@ -92,7 +91,12 @@
     "filterLogSelect": "फ़िल्टर",
     "showOnlySuccess": "केवल सफलता",
     "showOnlyError": "केवल त्रुटियां",
-    "showAll": "सब दिखाएं"
+    "showAll": "सब दिखाएं",
+    "Progress": "प्रगति",
+    "PreviewImage": "पूर्वावलोकन चित्र",
+    "Log": "लकड़ी का लट्ठा",
+    "log": "लकड़ी का लट्ठा",
+    "Output": "आउटपुट परिणाम"
   },
   "disabled": "अक्षम",
   "threads": "धागा | \nधागे",

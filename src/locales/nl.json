@@ -44,7 +44,6 @@
     "expandLog": "Toon het volledige logboek",
     "autoScroll": "Automatisch scrollen",
     "showOnlyErrors": "Toon alleen fouten",
-    "log": "Logboek",
     "elapsedTime": "Verstreken tijd",
     "multiThreading": "Multi-threading",
     "outputSettings": "Uitvoerinstellingen",
@@ -92,7 +91,12 @@
     "filterLogSelect": "filter",
     "showOnlySuccess": "Alleen successen",
     "showOnlyError": "Alleen fouten",
-    "showAll": "Toon alles"
+    "showAll": "Toon alles",
+    "Progress": "Voortgang",
+    "PreviewImage": "Voorbeeld afbeeldingen",
+    "Log": "Logboek",
+    "log": "Aanroepen",
+    "Output": "Uitgangsresultaten"
   },
   "disabled": "Gehandicapt",
   "threads": "draad | \ndraden",

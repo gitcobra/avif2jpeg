@@ -44,7 +44,6 @@
     "expandLog": "Afficher l'intégralité du journal",
     "autoScroll": "Défilement automatique",
     "showOnlyErrors": "Afficher uniquement les erreurs",
-    "log": "Enregistrer",
     "elapsedTime": "Temps écoulé",
     "multiThreading": "Multi-thread",
     "outputSettings": "Paramètres de sortie",
@@ -92,7 +91,12 @@
     "filterLogSelect": "filtre",
     "showOnlySuccess": "Seuls succès",
     "showOnlyError": "Seules les erreurs",
-    "showAll": "tout montrer"
+    "showAll": "tout montrer",
+    "Progress": "Progrès",
+    "PreviewImage": "Aperçu des images",
+    "Log": "Enregistrer",
+    "log": "Enregistrer",
+    "Output": "Résultats de sortie"
   },
   "disabled": "Désactivé",
   "threads": "fil | \nfils de discussion",

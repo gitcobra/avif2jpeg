@@ -44,7 +44,6 @@
     "expandLog": "전체 로그 표시",
     "autoScroll": "자동 스크롤",
     "showOnlyErrors": "오류만 표시",
-    "log": "통나무",
     "elapsedTime": "경과 시간",
     "multiThreading": "멀티스레딩",
     "outputSettings": "출력 설정",
@@ -92,7 +91,12 @@
     "filterLogSelect": "필터",
     "showOnlySuccess": "성공 만",
     "showOnlyError": "오류 만",
-    "showAll": "모두 보여주세요"
+    "showAll": "모두 보여주세요",
+    "Progress": "진전",
+    "PreviewImage": "이미지 미리보기",
+    "Log": "통나무",
+    "log": "통나무",
+    "Output": "출력 결과"
   },
   "disabled": "장애가 있는",
   "threads": "스레드 | \n스레드",

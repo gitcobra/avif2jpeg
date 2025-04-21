@@ -44,7 +44,6 @@
     "expandLog": "Pokaż cały dziennik",
     "autoScroll": "Automatyczne przewijanie",
     "showOnlyErrors": "Pokaż tylko błędy",
-    "log": "Dziennik",
     "elapsedTime": "Czas, który upłynął",
     "multiThreading": "Wielowątkowość",
     "outputSettings": "Ustawienia wyjściowe",
@@ -92,7 +91,12 @@
     "filterLogSelect": "filtr",
     "showOnlySuccess": "Tylko sukcesy",
     "showOnlyError": "Tylko błędy",
-    "showAll": "Pokaż wszystko"
+    "showAll": "Pokaż wszystko",
+    "Progress": "Postęp",
+    "PreviewImage": "Podgląd obrazów",
+    "Log": "Dziennik",
+    "log": "Dziennik",
+    "Output": "Wyniki wyjściowe"
   },
   "disabled": "Wyłączony",
   "threads": "wątek | \nwątki",

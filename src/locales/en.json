@@ -51,7 +51,6 @@
     "expandLog": "Show entire log",
     "autoScroll": "Auto scroll",
     "showOnlyErrors": "Show only errors",
-    "log": "Log",
     "outInRate": "Out / In Ratio",
     "elapsedTime": "Elapsed Time",
     "multiThreading": "Multi-Threading",
@@ -99,7 +98,12 @@
     "filterLogSelect": "filter",
     "showOnlySuccess": "Only successes",
     "showOnlyError": "Only errors",
-    "showAll": "Show all"
+    "showAll": "Show all",
+    "Progress": "Progress",
+    "PreviewImage": "Preview Images",
+    "Log": "Log",
+    "log": "Log",
+    "Output": "Output Results"
   },
   "settings": {
     "maxZipFileSize": "Max zip file size",

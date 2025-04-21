@@ -1,3 +1,5 @@
+import { sleep } from '../util';
+
 console.log('running converter.worker.canvas');
 
 const canvas = new OffscreenCanvas(100, 100);
@@ -101,7 +103,16 @@ self.onmessage = async (params: MessageEvent<MessageToCanvasWorker | null>) => {
   canvas.height = 1;
 };
 
-
+export type MessageToZipFromCanvasType = {
+  //action: string
+  //data?: ArrayBuffer | Uint8Array
+  blob: Blob
+  crc?: number
+  //zipSize?: number
+  path?: string
+  outputPath?: string
+  fileId: number
+};
 async function convertRecievedData(data: MessageToCanvasWorker[number]) {
   const { index, file, bitmap, fileId, type, quality, demandThumbnail, isSingleImage, webkitRelativePath, maxSize } = data;
   const { retriedTime } = data;
@@ -213,14 +224,18 @@ async function convertRecievedData(data: MessageToCanvasWorker[number]) {
     return;
   }
   const outputsize = blob.size;
+
   
-  // output to worker.zip  
-  dataOutputPort.postMessage({
+  //const crc = await AnZip.getCRC32(blob);
+  
+  // output to worker.zip
+  const dataToZip: MessageToZipFromCanvasType = {
     //data: abuffer, 
     blob,
     path, 
     fileId
-  }/*, [blob]*/);
+  };
+  dataOutputPort.postMessage(dataToZip);
 
   // send "file-end" message to the main thread
   messageToMain = {

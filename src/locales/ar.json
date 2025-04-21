@@ -44,7 +44,6 @@
     "expandLog": "عرض السجل بأكمله",
     "autoScroll": "التمرير التلقائي",
     "showOnlyErrors": "إظهار الأخطاء فقط",
-    "log": "سجل",
     "elapsedTime": "الوقت المنقضي",
     "multiThreading": "متعدد الخيوط",
     "outputSettings": "إعدادات الإخراج",
@@ -92,7 +91,12 @@
     "filterLogSelect": "فلتر",
     "showOnlySuccess": "النجاحات فقط",
     "showOnlyError": "أخطاء فقط",
-    "showAll": "أظهر كل شيء"
+    "showAll": "أظهر كل شيء",
+    "Progress": "تقدم",
+    "PreviewImage": "معاينة الصور",
+    "Log": "سجل",
+    "log": "سجل",
+    "Output": "نتائج الإخراج"
   },
   "disabled": "عاجز",
   "threads": "خيط | \nالمواضيع",

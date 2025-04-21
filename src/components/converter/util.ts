@@ -83,3 +83,7 @@ export class SplitZipsIndexer {
     return this._totalFileCount;
   }
 }
+
+export function sleep(msec: number) {
+  return new Promise(res => setTimeout(res, msec));
+}

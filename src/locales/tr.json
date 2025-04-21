@@ -44,7 +44,6 @@
     "expandLog": "Günlüğün tamamını göster",
     "autoScroll": "Otomatik kaydırma",
     "showOnlyErrors": "Yalnızca hataları göster",
-    "log": "Kayıt",
     "elapsedTime": "Geçen Süre",
     "multiThreading": "Çoklu İş Parçacığı",
     "outputSettings": "Çıkış Ayarları",
@@ -92,7 +91,12 @@
     "filterLogSelect": "filtre",
     "showOnlySuccess": "Sadece başarılar",
     "showOnlyError": "Sadece Hatalar",
-    "showAll": "hepsini göster"
+    "showAll": "hepsini göster",
+    "Progress": "İlerlemek",
+    "PreviewImage": "Önizleme Resimleri",
+    "Log": "Kayıt",
+    "log": "Kayıt",
+    "Output": "Çıktı sonuçları"
   },
   "disabled": "Engelli",
   "threads": "konu | \nKonular",

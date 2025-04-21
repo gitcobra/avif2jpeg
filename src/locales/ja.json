@@ -98,7 +98,11 @@
     "filterLogSelect": "絞り込み",
     "showOnlySuccess": "成功のみ",
     "showOnlyError": "失敗のみ",
-    "showAll": "全て表示"
+    "showAll": "全て表示",
+    "Log": "ログ",
+    "PreviewImage": "画像閲覧",
+    "Progress": "進行状況",
+    "Output": "出力結果"
   },
   "disabled": "無効",
   "threads": "スレッド | スレッド",

@@ -95,7 +95,6 @@
     "filterSuccess": "Piilota valmis kohde",
     "index": "Indeksi",
     "inputSize": "Syöttökoko",
-    "log": "Loki",
     "multiThreading": "Monisäikeistys",
     "openFailedList": "Avaa epäonnistuneiden tiedostojen luettelo",
     "outInRate": "Out / In Ratio",
@@ -130,7 +129,12 @@
     "filterLogSelect": "suodattaa",
     "showOnlySuccess": "Vain menestykset",
     "showOnlyError": "Vain virheet",
-    "showAll": "näyttää kaikki"
+    "showAll": "näyttää kaikki",
+    "Progress": "Edistyminen",
+    "PreviewImage": "Esikatselukuvia",
+    "Log": "Loki",
+    "log": "Loki",
+    "Output": "Lähtötulokset"
   },
   "success": "Menestys",
   "threads": "lanka | \nlangat",

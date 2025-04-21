@@ -44,7 +44,6 @@
     "expandLog": "Показать весь журнал",
     "autoScroll": "Автоматическая прокрутка",
     "showOnlyErrors": "Показать только ошибки",
-    "log": "Бревно",
     "elapsedTime": "Прошедшее время",
     "multiThreading": "Многопоточность",
     "outputSettings": "Настройки вывода",
@@ -92,7 +91,12 @@
     "filterLogSelect": "фильтр",
     "showOnlySuccess": "Только успехи",
     "showOnlyError": "Только ошибки",
-    "showAll": "Покажите все"
+    "showAll": "Покажите все",
+    "Progress": "Прогресс",
+    "PreviewImage": "Предварительный просмотр изображений",
+    "Log": "Бревно",
+    "log": "Бревно",
+    "Output": "Выходные результаты"
   },
   "disabled": "Неполноценный",
   "threads": "нить | \nнити",

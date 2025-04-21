@@ -1,3 +1,4 @@
+import type { MessageToZipFromCanvasType } from "./worker.canvas";
 import AnZip from "@gitcobra/anzip-es6";
 import {SplitZipsIndexer} from "@/components/converter/util";
 
@@ -98,18 +99,27 @@ self.onmessage = async (params: ZipMessageType) => {
       if( bytesSum >= MaxZipSize ) {
         outputZipUrl('push-filelist-zip');
       }
-      //const path = (webkitRelativePath || file.webkitRelativePath || file.name).replace(/^\//, '');
-      //const buf = await file.arrayBuffer();
-      //azip.add(path, buffer);
-      //bytesSum += buffer.byteLength;      
 
-      const success = azip.add(path!, file!);
-      await azip.wait();
-      if( success ) {
-        bytesSum += file!.size;
-        count++;
-        //console.log(count, 'add');
+      let errorAddFilelist = false;
+      await azip.add(path!, file!).catch((e: any) => {
+        console.error(e);
+        errorAddFilelist = true;
+      });
+      
+      // error
+      if( errorAddFilelist ) {
+        const message: ZippingListErrorMessageToMain = {
+          action: 'error-push-filelist-zip',
+          path,
+        };
+        self.postMessage( message );
+        break;
       }
+
+
+      bytesSum += file!.size;
+      count++;
+
       let message: ZippingMessageToMain = {
         action: 'push-filelist',
         size: bytesSum,
@@ -124,21 +134,6 @@ self.onmessage = async (params: ZipMessageType) => {
       break;
     
     case 'request-image': {
-      /*
-      let targetazip: AnZip = azip;
-      let targetidx = index;
-      for( let i = 0; i < zipListLengthStack.length; i++ ) {
-        if( index! <= zipListLengthStack[i] - 1 ) {
-          targetidx = i > 0 ? index! - zipListLengthStack[i - 1] : index;
-          targetazip = zipList[i];
-          break;
-        }
-        if( i === zipListLengthStack.length - 1 ) {
-          targetidx = index! - zipListLengthStack[i];
-          break;
-        }
-      }
-      */
       // get split zip index and file index
       const [zindex, findex] = zipIndexer.get(index);
       const targetazip = zipList[zindex];
@@ -195,24 +190,17 @@ self.onmessage = async (params: ZipMessageType) => {
 
 
 // message from canvas worker
-type ZipMessageFromCanvasType = MessageEvent<{
-  //action: string
-  //data?: ArrayBuffer | Uint8Array
-  blob: Blob
-  //zipSize?: number
-  path?: string
-  outputPath?: string
-  fileId: number
-}>;
+type MessageFromCanvasWorker = MessageEvent<MessageToZipFromCanvasType>;
 type AddingZipMessageToMain = {
   action: 'add-zip-completed'
   fileId: number
   entireIndex: number
   storedPath: string
 };
+
 // listener for canvasWorker
-const onmessageFromCanvasWorkers = (params: ZipMessageFromCanvasType, port: MessagePort) => {
-  let { data: { /*data,*/ blob, path, fileId } } = params;
+const onmessageFromCanvasWorkers = (params: MessageFromCanvasWorker, port: MessagePort) => {
+  let { data: { /*data,*/ blob, path, fileId, crc } } = params;
   
   if( terminated ) {
     port.postMessage({fileId, canceled: true});
@@ -255,7 +243,7 @@ const onmessageFromCanvasWorkers = (params: ZipMessageFromCanvasType, port: Mess
   fileIdByIndex.set(entireIndex++, fileId);
   zipIndexer.increase();
   //await azip.add(outputPath, blob);
-  azip.add(outputPath, blob, undefined);
+  azip.add(outputPath, blob, undefined/*, crc*/);
   
   // inform main thread that adding the file to the zip is completed
   let message: AddingZipMessageToMain = {
@@ -293,6 +281,10 @@ type ZippingMessageToMain = FileInfo & (
     action: 'zip-squeeze-error' | 'zip-error' | 'push-filelist'
   }
 );
+type ZippingListErrorMessageToMain = {
+  action: 'error-push-filelist-zip'
+  path: string
+};
 function outputZipUrl(action: ZippingMessageToMain['action']) {
   console.log('zipworker emitZIP: ' + MaxZipSize, action);
   
@@ -344,5 +336,6 @@ export type MessageToMainFromZipWorker =
   ZippingMessageToMain |
   AddingZipMessageToMain |
   ImageMessageToMain |
-  DeleteMessageToMain
+  DeleteMessageToMain |
+  ZippingListErrorMessageToMain
   ;

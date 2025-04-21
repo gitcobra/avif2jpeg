@@ -44,7 +44,6 @@
     "expandLog": "Mostrar registro completo",
     "autoScroll": "Desplazamiento automático",
     "showOnlyErrors": "Mostrar solo errores",
-    "log": "Registro",
     "elapsedTime": "Tiempo transcurrido",
     "multiThreading": "Subprocesos múltiples",
     "outputSettings": "Configuración de salida",
@@ -92,7 +91,12 @@
     "filterLogSelect": "filtrar",
     "showOnlySuccess": "Solo éxitos",
     "showOnlyError": "Solo errores",
-    "showAll": "mostrar todo"
+    "showAll": "mostrar todo",
+    "Progress": "Progreso",
+    "PreviewImage": "Imágenes de vista previa",
+    "Log": "Registro",
+    "log": "Registro",
+    "Output": "Resultados de salida"
   },
   "disabled": "Desactivado",
   "threads": "hilo | \ntrapos",

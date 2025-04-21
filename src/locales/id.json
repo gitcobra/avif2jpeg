@@ -44,7 +44,6 @@
     "expandLog": "Tampilkan seluruh log",
     "autoScroll": "Gulir otomatis",
     "showOnlyErrors": "Tampilkan hanya kesalahan",
-    "log": "Catatan",
     "elapsedTime": "Waktu yang Berlalu",
     "multiThreading": "Multi-Threading",
     "outputSettings": "Pengaturan Keluaran",
@@ -92,7 +91,12 @@
     "filterLogSelect": "menyaring",
     "showOnlySuccess": "Hanya keberhasilan",
     "showOnlyError": "Hanya kesalahan",
-    "showAll": "tunjukkan semua"
+    "showAll": "tunjukkan semua",
+    "Progress": "Kemajuan",
+    "PreviewImage": "Gambar pratinjau",
+    "Log": "Catatan",
+    "log": "Log",
+    "Output": "Hasil output"
   },
   "disabled": "Dengan disabilitas",
   "threads": "benang | \nbenang",

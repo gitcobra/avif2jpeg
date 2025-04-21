@@ -1,12 +1,14 @@
 import { ref, watch, WatchStopHandle } from 'vue';
-import * as WorkerManager from './worker-manager';
-import ZipWorker from './worker.zip.ts?worker';
+
+import * as WorkerManager from './workers/worker-manager';
+import ZipWorker from './workers/worker.zip.ts?worker';
 //import ZipWorkerURL from './worker.zip.ts?worker&url';
-import type { MessageToCanvasWorker, MessageFromCanvasWorker } from './worker.canvas';
+import type { MessageToCanvasWorker, MessageFromCanvasWorker } from './workers/worker.canvas';
+
 import type { FileWithId } from '../file-selector.vue'
 import type Converter from './converter.vue';
 import ConversionStatus from './status.vue';
-import { MessageToMainFromZipWorker } from './worker.zip';
+import { MessageToMainFromZipWorker } from './workers/worker.zip';
 import { UserSettings } from '@/user-settings';
 import { MessageApiInjection } from 'naive-ui/es/message/src/MessageProvider';
 import { useMessage } from 'naive-ui';
@@ -566,6 +568,18 @@ function createZipWorkerListenerAndPromise(zipWorker: Worker) {
         }
       }
 
+      // error creating failed zips
+      switch( action ) {
+        case 'error-push-filelist-zip':
+          const {path} = data;
+          ConvStats.failedZipDone = true;
+          notification.error({
+            content: `an error occurred "${path}"`,
+            duration: 3000,
+          });
+          return;
+      }
+
       const { size, count } = data;
       const url = ('url' in params.data) ? params.data.url : '';
       
@@ -853,6 +867,10 @@ async function pushErrorZipsInMultithread(list: FileWithId[], zipWorker: Worker,
     }
     */
     
+
+    if( ConvStats.failedZipDone ) {
+      break;
+    }
     if( Terminated.value )
       return;
 
@@ -868,6 +886,14 @@ async function pushErrorZipsInMultithread(list: FileWithId[], zipWorker: Worker,
     });
 
     count++;
+  }
+
+  if( ConvStats.failedZipDone ) {
+    notification.error({
+      content: `Zipping error files was aborted`,
+      duration: 5000,
+    });
+    return;
   }
   
   zipWorker.postMessage({

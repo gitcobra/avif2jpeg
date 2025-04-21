@@ -7,6 +7,15 @@ import ImageViewer from './image-viewer.vue';
 import CenterColumn from './status.center-column.vue';
 import { getThumbnailedSize, getUnitSize } from './util';
 
+import type { CollapseProps } from 'naive-ui';
+type CollapseThemeOverrides = NonNullable<CollapseProps['themeOverrides']>;
+const collapseThemeOverrides: CollapseThemeOverrides = {
+  itemMargin: '1px',
+  titlePadding: '1px',
+  titleFontSize: '0.9em',
+};
+
+
 // common components
 const dialog = useDialog();
 const { t } = useI18n();
@@ -162,10 +171,11 @@ const autoPopoverErrorButtonFlag = ref(undefined);
 const expandLog = ref(false);
 const autoScrollLog = ref(true);
 const hideSuccess = ref(false);
+
 const logMaxHeight = ref('16em');
 //const minLogSize = ref(5);
 //const maxLogSize = ref(999999);
-const logOpened = ref(true);
+const logOpened = computed(() => expandedNames.value.includes('log'));
 const logViewSize = computed(() => expandLog.value ? 99999 : 5);
 const filteredLogList = computed(() => {
   let list = workingLogs.value;
@@ -180,8 +190,17 @@ const filteredLogList = computed(() => {
 
   return list.slice( - logViewSize.value );
 });
+const expandedNames = ref<string[]>(['progress', 'log', 'output']);
+const isExpanded = (name: string) => expandedNames.value.includes(name);
+const setExpanded = (name: string) => expandedNames.value.push(name);
+const removeExpanded = (name: string) => {
+  const index = expandedNames.value.findIndex(v => v === name);
+  if( index >= 0 )
+    expandedNames.value.splice( index, 1)
+};
 
-const imageViewerStarted = ref(false);
+
+//const imageViewerStarted = ref(false);
 
 const outputImg = reactive({
   name: '',
@@ -389,6 +408,7 @@ watch([() => props.status.zips.length, () => props.status.failedZips.length], ()
 });
 
 // focus current selected log item
+let causedChangeSelectByKeyboard = false;
 let causedScrollIntoViewByArrowUpKey = false;
 let prevFocusedLogNode: HTMLElement = null;
 watch(() => outputImg.index, () => {
@@ -396,7 +416,7 @@ watch(() => outputImg.index, () => {
     let node = currentSelectedLogNode.value;
     
     // sticky "<th>"s may hide the selected node if the node is aligned to the top of the visible area of the scrollable ancestor.
-    // when scrolling up, focus previous sibling of the node instad of it for that reason.
+    // when scrolling up, focus previous sibling of the node instead of it for that reason.
     if( prevFocusedLogNode?.offsetTop > node?.offsetTop ) {
     //if( causedScrollIntoViewByArrowUpKey ) {
       node = <HTMLTableRowElement>node.previousSibling || node;
@@ -407,8 +427,18 @@ watch(() => outputImg.index, () => {
       }
     }
 
-    node?.scrollIntoView?.({behavior: 'auto', block: 'nearest'});
+    //if( causedChangeSelectByKeyboard ) {
+      node?.scrollIntoView?.({behavior: 'smooth', block: 'nearest'});
+    //}
+
+    if( !causedChangeSelectByKeyboard ) {
+      if( isExpanded('preview') ) {
+        imageViewer.value?.$el.scrollIntoView({behavior: 'smooth', block: 'nearest'});
+      }
+    }
+
     prevFocusedLogNode = currentSelectedLogNode.value;
+    causedChangeSelectByKeyboard = false;
   });
 });
 
@@ -541,11 +571,11 @@ function onFinished() {
 
   // close log unless it is expanded
   if( !expandLog.value ) {
-    logOpened.value = false;
-    // check showEntireLog
+    removeExpanded('log');
     expandLog.value = true;
   }
-  imageViewerStarted.value = true;
+  setExpanded('preview');
+  //imageViewerStarted.value = true;
 
   if( logOpened.value ) {
     setTimeout(scrollLogViewToBottom, 500);
@@ -576,11 +606,18 @@ async function changeViewerIndexBySelectedLogItem(completed: boolean, path:strin
     if( index === -1 )
       return;
     
-    if( !imageViewerStarted.value ) {
-      imageViewerStarted.value = true;
+    if( !isExpanded('preview') ) {
+      setExpanded('preview');
+      //imageViewerStarted.value = true;
       await nextTick();
     }
     imageViewer.value?.changeIndex(index + 1);
+
+    await nextTick(() => {
+      try {
+        imageViewer.value?.$el.scrollIntoView({behavior: 'smooth', block: 'nearest'});
+      } catch(e){}
+    });
   }
 }
 
@@ -609,7 +646,11 @@ function onKeyPressInLogTable(ev: KeyboardEvent) {
     
     case 'Enter':
       if( currentSelectedIndex >= 0 ) {
-        nextTick(() => imageViewer.value?.openPreview());
+        if( !imageViewer.value?.isPreviewing() ) {
+          nextTick(() => imageViewer.value?.openPreview());
+          ev.stopPropagation();
+          ev.preventDefault();
+        }
       }
       break;
 
@@ -644,6 +685,8 @@ function onKeyPressInLogTable(ev: KeyboardEvent) {
       break;
     }
   } while( true )
+
+  causedChangeSelectByKeyboard = true;
 }
 
 type RecursivePartial<T> = {
@@ -749,7 +792,13 @@ async function onSaveButtonClick() {
   }
 }
 
-
+/*
+function preventOutputCollapsing({name, expanded, event}) {
+  if( name === 'output' && !expanded ) {
+    setExpanded('output');
+  }
+}
+*/
 
 
 function createFailedFileLink(download = false) {
@@ -813,7 +862,7 @@ function cleanup() {
   //getCurrentInstance()?.update();
 
   expandLog.value = false;
-  imageViewerStarted.value = false;
+  //imageViewerStarted.value = false;
 
   prevFocusedLogNode = null;
 }
@@ -830,90 +879,105 @@ function cleanup() {
 
 <template>
   <n-flex ref="body" vertical justify="center">
-    <n-flex justify="center" align="center" :wrap="false" style="white-space: nowrap;">
-
-      <!-- left column -->
-      <n-flex vertical justify="center" class="left-column">
-   
-        <n-statistic tabular-nums :label="$t('status.elapsedTime')">
-          <n-flex>
-            {{ elapsedTime }}
-          </n-flex>
-        </n-statistic>
-
-        <n-statistic tabular-nums :label="$t('status.multiThreading')">
-          <n-flex :style="{color: !props.status.threads ? 'red' : '', fontSize: '0.7em'}">
-            {{ props.status.threads ? $rt('{n} @:threads', props.status.threads) : $t('disabled') }}
-          </n-flex>
-        </n-statistic>
-
-        <n-statistic tabular-nums :label="$t('status.outputSettings')">
-          <n-flex vertical justify="end" style="font-size: 0.6em; line-height:0.6em;">
-            <div>{{$t('settings.imageType')}}: {{ props.status.type }}</div>
-            <div v-if="status.shrink">{{$t('status.Shrinking')}}: <span style="">{{status.shrink[0]}}×{{status.shrink[1]}}</span></div>
-            <div>Zip: {{ props.status.zipSize }}MB</div>
-          </n-flex>
-        </n-statistic>
-
-      </n-flex>
-
-
-      <!-- center column - progress circle -->
-      <center-column
-        v-if="!cleaningUp"
-        :index="index[0]"
-        :success="status.success"
-        :length="status.length"
-        :success-to="success[0]"
-        :success-from="success[1]"
-        :failure="failure[0]"
-        :success-perc-to="successPercentage[0]"
-        :success-perc-from="successPercentage[1]"
-        :retried="retried"
-        
-        :processing="processing"
-        :interval="UPDATE_INTERVAL_MSEC"
-        :status-color="statusColor"
-
-        class="center-column"
-      />
-
-      <!-- right column -->
-      <n-flex vertical style="height:100%;" justify="center">
-        <n-statistic tabular-nums :label="$t('status.inputSize')">
-          <n-flex justify="end" :wrap="false" style="font-family:v-mono;">{{(inputTotalSize / 1024 | 0).toLocaleString('en-us')}} KB</n-flex>
-        </n-statistic>
-
-        <n-statistic tabular-nums :label="$t('status.outputSize')">
-          <n-flex justify="end" :wrap="false" style="font-family:v-mono;">{{(outputTotalSize / 1024 | 0).toLocaleString('en-us')}} KB</n-flex>
-        </n-statistic>
-
-        <n-statistic tabular-nums :label="$t('status.outInRate')">
-          <n-flex vertical align="end" justify="start" style="font-size: xx-small; font-family:v-mono; line-height:50%;">
-            <span :style="{color:rateColor, fontSize:'larger'}">× {{ (outputTotalSize / inputTotalSize || 1).toFixed(2) }}</span>
-            <span :style="{color:difColor}">({{ totalSizeDifStr }})</span>
-            
-          </n-flex>
-        </n-statistic>
-      </n-flex>
-
-    </n-flex>
-
-
-    <!-- log view -->
+    
     <n-collapse
       display-directive="show" 
       :trigger-areas="['arrow', 'main']" 
-      default-expanded-names="log-collapse" 
-      :expanded-names="logOpened ? ['log-collapse']:[]" 
-      @update-expanded-names="names => {logOpened = !!String(names)}"
+      v-model:expanded-names="expandedNames" 
+      :theme-overrides="collapseThemeOverrides"
+      _item-header-click="preventOutputCollapsing"
     >
-    <n-collapse-item title="Log" name="log-collapse" style="white-space:nowrap;">
+    <n-collapse-item name="progress" style="white-space:nowrap;">
+      <template #header="{collapsed}">
+        <n-flex>
+          {{ $t('status.Progress') }}
+          <template v-if="collapsed">
+            ({{ successPercentage[0] |0 }}%)
+          </template>
+        </n-flex>
+      </template>
+      <n-flex justify="center" align="center" :wrap="false" style="white-space: nowrap; margin-top:-2em">
+
+        <!-- left column -->
+        <n-flex vertical justify="center" class="left-column">
+    
+          <n-statistic tabular-nums :label="$t('status.elapsedTime')">
+            <n-flex>
+              {{ elapsedTime }}
+            </n-flex>
+          </n-statistic>
+
+          <n-statistic tabular-nums :label="$t('status.multiThreading')">
+            <n-flex :style="{color: !props.status.threads ? 'red' : '', fontSize: '0.7em'}">
+              {{ props.status.threads ? $rt('{n} @:threads', props.status.threads) : $t('disabled') }}
+            </n-flex>
+          </n-statistic>
+
+          <n-statistic tabular-nums :label="$t('status.outputSettings')">
+            <n-flex vertical justify="end" style="font-size: 0.6em; line-height:0.6em;">
+              <div>{{$t('settings.imageType')}}: {{ props.status.type }}</div>
+              <div v-if="status.shrink">{{$t('status.Shrinking')}}: <span style="">{{status.shrink[0]}}×{{status.shrink[1]}}</span></div>
+              <div>Zip: {{ props.status.zipSize }}MB</div>
+            </n-flex>
+          </n-statistic>
+
+        </n-flex>
+
+
+        <!-- center column - progress circle -->
+        <center-column
+          v-if="!cleaningUp"
+          :index="index[0]"
+          :success="status.success"
+          :length="status.length"
+          :success-to="success[0]"
+          :success-from="success[1]"
+          :failure="failure[0]"
+          :success-perc-to="successPercentage[0]"
+          :success-perc-from="successPercentage[1]"
+          :retried="retried"
+          
+          :processing="processing"
+          :interval="UPDATE_INTERVAL_MSEC"
+          :status-color="statusColor"
+
+          class="center-column"
+        />
+
+        <!-- right column -->
+        <n-flex vertical style="height:100%;" justify="center">
+          <n-statistic tabular-nums :label="$t('status.inputSize')">
+            <n-flex justify="end" :wrap="false" style="font-family:v-mono;">{{(inputTotalSize / 1024 | 0).toLocaleString('en-us')}} KB</n-flex>
+          </n-statistic>
+
+          <n-statistic tabular-nums :label="$t('status.outputSize')">
+            <n-flex justify="end" :wrap="false" style="font-family:v-mono;">{{(outputTotalSize / 1024 | 0).toLocaleString('en-us')}} KB</n-flex>
+          </n-statistic>
+
+          <n-statistic tabular-nums :label="$t('status.outInRate')">
+            <n-flex vertical align="end" justify="start" style="font-size: xx-small; font-family:v-mono; line-height:50%;">
+              <span :style="{color:rateColor, fontSize:'larger'}">× {{ (outputTotalSize / inputTotalSize || 1).toFixed(2) }}</span>
+              <span :style="{color:difColor}">({{ totalSizeDifStr }})</span>
+              
+            </n-flex>
+          </n-statistic>
+        </n-flex>
+
+      </n-flex>
+    </n-collapse-item>
+
+
+
+
+
+
+    <!-- log view -->
+    <n-collapse-item name="log" style="white-space:nowrap;">
       <template #header>
-        <n-flex align="center" :wrap="false">{{$t('status.log')}}<n-spin :size="16" v-show="processing && !logOpened"> </n-spin></n-flex>
+        <n-flex align="center" :wrap="false">{{$t('status.Log')}}<n-spin :size="16" v-show="processing && !logOpened"> </n-spin></n-flex>
       </template>
       <template #header-extra>
-        <n-flex v-show="logOpened" align="center" justify="end" :wrap="true" style="margin-left:0.5em;">
+        <n-flex v-show="logOpened" align="center" justify="end" :wrap="true" style="margin-top:0.2em; margin-left:0.5em;">
           <transition-group>
           <!-- filter completed item -->
           <n-select v-model:value="filterLogValue" :placeholder="$t('status.filterLogSelect')" :options="FilterOptions" size="tiny" style="width:auto; font-size: smaller" :consistent-menu-width="false" :show-on-focus="false"/>
@@ -935,7 +999,9 @@ function cleanup() {
         </n-flex>
       </template>
       
-      <n-flex :wrap="false" :class="{'log-container':1, 'expand-log': expandLog}" align="stretch" :style="expandLog ? {height: logMaxHeight, maxHeight: logMaxHeight} : {}"
+      <n-flex :wrap="false" align="stretch"
+        :class="{'log-container':1, 'expand-log': expandLog}"
+        :style="expandLog ? {height: logMaxHeight, maxHeight: logMaxHeight} : {}"
         @keydown="onKeyPressInLogTable"
         tabindex="-1"
       >
@@ -1009,41 +1075,60 @@ function cleanup() {
       -->
 
     </n-collapse-item>
-    </n-collapse>
 
-    <n-divider style="margin:0em;"><!-- without this, a x-scrollbar of n-scrollbar overlaps on the last table row --></n-divider>
 
-    <!-- output files -->
-    <n-flex :wrap="false" vertical>  
- 
+    
+
+
+
+
+
+    
+    <n-collapse-item :title="$t('status.PreviewImage')" name="preview" style="white-space:nowrap;" :disabled="!(status.success > 0)">
       <!-- image browser -->
       <n-flex justify="center" align="center" vertical>
+          <!--
           <transition>
             <n-button v-if="!imageViewerStarted" tertiary type="success" size="small" :disabled="!(status.success > 0)" @click="imageViewerStarted=true">
               {{$t('status.browseConvertedImages')}}
             </n-button>
+          -->
           
-            <ImageViewer
-              v-else-if="imageViewerStarted && status.success > 0 /*&& (props.status.threads || !zippingFlag)*/ && !cleaningUp"
-              ref="imageViewer"
-              :url="outputImg.url"
-              :size="outputImg.size"
-              :original-url="outputImg.originalUrl"
-              :original-size="outputImg.originalSize"   
-              :name="outputImg.name"
-              :originalName="outputImg.originalName"
-              :length="props.status.success"
-              :index="outputImg.index"
-              :various-info="outputImg.various"
-              
-              :is-single="!zippingFlag"
-              @demand-image="index => emit('demand-image', index)"
-              @_delete-image="index => emit('delete-image', index)"
-              @close="imageViewerStarted=false"
-            />
-        </transition>
+        <ImageViewer
+          _v-else-if="imageViewerStarted && status.success > 0 /*&& (props.status.threads || !zippingFlag)*/ && !cleaningUp"
+          ref="imageViewer"
+          
+          :url="outputImg.url"
+          :size="outputImg.size"
+          :original-url="outputImg.originalUrl"
+          :original-size="outputImg.originalSize"   
+          :name="outputImg.name"
+          :originalName="outputImg.originalName"
+          :length="props.status.success"
+          :index="outputImg.index"
+          :various-info="outputImg.various"
+          
+          :is-single="!zippingFlag"
+          @demand-image="index => emit('demand-image', index)"
+          @_delete-image="index => emit('delete-image', index)"
+          _close="imageViewerStarted=false"
+        />
+        <!--</transition>-->
       </n-flex>
+    </n-collapse-item>
+
       
+    
+    
+    
+    
+    
+    <n-collapse-item name="output" style="white-space:nowrap;" disabled>
+      <template #header>
+        <span style="color:black;" v-html="$t('status.Output')" />
+      </template>
+      <!-- output files -->
+      <n-flex :wrap="false" vertical style="margin-top: -1.3em">
       <n-flex justify="center" v-if="!cleaningUp">
         
         <!-- zip list -->
@@ -1238,6 +1323,9 @@ function cleanup() {
       </transition>
 
     </n-flex>
+    </n-collapse-item>
+    </n-collapse>
+
   </n-flex>
 </template>
 
@@ -1267,6 +1355,8 @@ function cleanup() {
   font-size: 1em;
 
   transition: all .2s ease;
+  margin-top: -1em;
+  margin-left: 1em;
   min-height: 7em;
   height: 7em;
 

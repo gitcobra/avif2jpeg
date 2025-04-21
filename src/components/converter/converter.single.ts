@@ -84,12 +84,13 @@ export async function convertImagesInSingleThread(list: FileWithId[], completedF
     const item: Stat['logs'][number] = {
       key: _keyCounter++,
       core: -1,
-      index: index,
+      index: index++,
       path,
       command: `➡️start`,
     };
+    
+    // started count
     ConvStats.index = index;
-    index++;
 
     ConvStats.logs.push(item);
     let curLogItemIdx = ConvStats.logs.length - 1;
@@ -223,7 +224,6 @@ export async function convertImagesInSingleThread(list: FileWithId[], completedF
       storedPath: fname,
     });
     
-    console.log(ConvStats.ziplogs.length, zippedCount);
 
     lastImageName = fname;
     item.zippedIndex = ConvStats.success;
@@ -311,7 +311,12 @@ async function pushErrorZips(list: File[], maxZipSizeMB: number, ConvStats: Stat
     if( Terminated.value )
       return;
     //azip.add(path, buffer);
-    await azip.add(path, file);
+    try {
+      await azip.add(path, file);
+    } catch(e) {
+      alert(`an error occurred during access to "${path}"`);
+      break;
+    }
     size += file.size;
     count++;
     ConvStats.failedFileZippedCount++;
