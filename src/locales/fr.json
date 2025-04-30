@@ -41,8 +41,6 @@
   "copiedDataURLMessage": "L'image convertie a été copiée dans votre presse-papiers en tant que DataURL.",
   "status": {
     "expandLogTooltip": "L'affichage de l'intégralité du journal peut réduire considérablement la vitesse de conversion.",
-    "expandLog": "Afficher l'intégralité du journal",
-    "autoScroll": "Défilement automatique",
     "showOnlyErrors": "Afficher uniquement les erreurs",
     "elapsedTime": "Temps écoulé",
     "multiThreading": "Multi-thread",
@@ -96,7 +94,9 @@
     "PreviewImage": "Aperçu des images",
     "Log": "Enregistrer",
     "log": "Enregistrer",
-    "Output": "Résultats de sortie"
+    "Output": "Résultats de sortie",
+    "expandLog": "Développer la taille du journal",
+    "autoScroll": "scintiller automatiquement"
   },
   "disabled": "Désactivé",
   "threads": "fil | \nfils de discussion",

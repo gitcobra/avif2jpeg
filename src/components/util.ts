@@ -87,3 +87,19 @@ export class SplitZipsIndexer {
 export function sleep(msec: number) {
   return new Promise(res => setTimeout(res, msec));
 }
+
+// this is needed for some naive-ui components such as n-tooltip, n-popover
+// that are triggered by "show" property.
+export function useTimeoutRef<T>(val?: T, ms: number = 100) {
+  const tflag = ref(val);
+  watch(tflag, (val) => {
+    if( val === undefined )
+      return;
+    
+    nextTick(() => {
+      setTimeout(() => tflag.value = undefined, ms);
+    });
+  }, {immediate:true});
+
+  return tflag;
+}

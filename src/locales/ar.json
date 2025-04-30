@@ -41,8 +41,6 @@
   "copiedDataURLMessage": "تم نسخ الصورة المحولة إلى الحافظة الخاصة بك باسم DataURL.",
   "status": {
     "expandLogTooltip": "قد يؤدي عرض السجل بأكمله إلى تقليل سرعة التحويل بشكل كبير.",
-    "expandLog": "عرض السجل بأكمله",
-    "autoScroll": "التمرير التلقائي",
     "showOnlyErrors": "إظهار الأخطاء فقط",
     "elapsedTime": "الوقت المنقضي",
     "multiThreading": "متعدد الخيوط",
@@ -96,7 +94,9 @@
     "PreviewImage": "معاينة الصور",
     "Log": "سجل",
     "log": "سجل",
-    "Output": "نتائج الإخراج"
+    "Output": "نتائج الإخراج",
+    "expandLog": "توسيع حجم السجل",
+    "autoScroll": "SCROLL"
   },
   "disabled": "عاجز",
   "threads": "خيط | \nالمواضيع",

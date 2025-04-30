@@ -1,7 +1,6 @@
 <template>
   <n-config-provider :theme-overrides="themeOverrides" style="width:100%; height:100%;">
   <n-loading-bar-provider>
-  <n-notification-provider placement="top-right" :max="20">
   <n-message-provider placement="top-left" :closable="true" :max="50">
   <n-dialog-provider>
   <n-modal-provider>
@@ -9,7 +8,6 @@
   </n-modal-provider>
   </n-dialog-provider>
   </n-message-provider>
-  </n-notification-provider>
   </n-loading-bar-provider>
   </n-config-provider>
 </template>
@@ -37,10 +35,10 @@ const themeOverrides: GlobalThemeOverrides = {
   },
   Image: {
     toolbarColor: '#00000099',
-  }
+  },
 };
 
-// hide SSGed html until mounted
+// hide SSGed html until app has mounted
 const hide = ref(true);
 onMounted(() => {
   hide.value = false;

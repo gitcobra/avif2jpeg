@@ -1,6 +1,6 @@
 import type { MessageToZipFromCanvasType } from "./worker.canvas";
 import AnZip from "@gitcobra/anzip-es6";
-import {SplitZipsIndexer} from "@/components/converter/util";
+import {SplitZipsIndexer} from "@/components/util";
 
 console.log('converter.worker.zip started');
 
@@ -69,9 +69,26 @@ self.onmessage = async (params: ZipMessageType) => {
       outputImageType = imageType || '';
       self.postMessage({action: 'respond-set-config'});
       break;
+    /*
     case 'set-port': {
       const port = ports[0];
       port.onmessage = (params) => onmessageFromCanvasWorkers(params, port);
+      return;
+    }
+    */
+    case 'set-port-loader': {
+      const port = ports[0];
+      self.postMessage({action: 'respond-to-first-message'});
+
+      port.onmessage = (params: MessageEvent) => {
+        const { data: {action}, ports } = params;
+        // set canvas port
+        if( action === 'set-port-canvas' ) {
+          const port = ports[0];
+          port.onmessage = (params) => onmessageFromCanvasWorkers(params, port);
+          console.log('set-port-canvas');
+        }
+      };
       return;
     }
     case 'squeeze':
@@ -199,11 +216,11 @@ type AddingZipMessageToMain = {
 };
 
 // listener for canvasWorker
-const onmessageFromCanvasWorkers = (params: MessageFromCanvasWorker, port: MessagePort) => {
+const onmessageFromCanvasWorkers = (params: MessageFromCanvasWorker, portToCanvas: MessagePort) => {
   let { data: { /*data,*/ blob, path, fileId, crc } } = params;
   
   if( terminated ) {
-    port.postMessage({fileId, canceled: true});
+    portToCanvas.postMessage({fileId, canceled: true});
     return;
   }
   
@@ -261,9 +278,17 @@ const onmessageFromCanvasWorkers = (params: MessageFromCanvasWorker, port: Messa
     return;
   }
   */
-  port.postMessage({fileId, /*canceled: terminated,*/ renamed: dupCounter >= 2, outputPath});
+  portToCanvas.postMessage({
+    canceled: false, //canceled: terminated,
+    fileId, 
+    renamed: dupCounter >= 2,
+    outputPath,
+    storedPath: outputPath,
+    entireIndex: entireIndex - 1,
+  });
   
 };
+
 
 
 

@@ -113,6 +113,8 @@ export function releaseWorker(worker: WorkerWithId) {
   //busyWorkerList.delete(worker);
   
   resolve();
+  resolverWaitingNextRelease?.();
+  resolverWaitingNextRelease = null;
 }
 
 export function releaseAllWorkers() {
@@ -120,9 +122,17 @@ export function releaseAllWorkers() {
     releaseWorker(worker);
 }
 
-
 export async function waitAllWorkers() {
   return await Promise.all([...workerPromises, ...priorWorkerPromises]);
+}
+
+let promiseWaitingNextRelease: Promise<void>;
+let resolverWaitingNextRelease: () => void | null = null;
+export async function waitNextRelease() {
+  if( !resolverWaitingNextRelease ) {
+    promiseWaitingNextRelease = new Promise(resolve => resolverWaitingNextRelease = resolve);
+  }
+  await promiseWaitingNextRelease;
 }
 
 export function getBusyWorkers() {

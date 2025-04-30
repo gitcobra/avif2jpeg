@@ -136,7 +136,7 @@ defineProps() in <script setup> cannot reference locally declared variables beca
 If your component options require initialization in the module scope, use a separate normal <script> to export the options instead.
 */
 export type FileWithId = File & {
-  readonly _id: number
+  /*readonly*/ _id: number
 };
 
 </script>

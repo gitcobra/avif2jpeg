@@ -46,9 +46,7 @@
   "convertedImageDataUrlTooltip": "変換した画像をDataURLとしてコピー",
   "convertAgain": "もう一度変換",
   "status": {
-    "expandLog": "ログ全体を表示",
     "expandLogTooltip": "ログの全体表示は変換速度を大幅に低下させる可能性があります。",
-    "autoScroll": "自動スクロール",
     "showOnlyErrors": "エラーだけを表示",
     "log": "ログ",
     "outInRate": "出力 / 入力 比率",
@@ -102,7 +100,9 @@
     "Log": "ログ",
     "PreviewImage": "画像閲覧",
     "Progress": "進行状況",
-    "Output": "出力結果"
+    "Output": "出力結果",
+    "expandLog": "ログサイズを拡張",
+    "autoScroll": "自動スクロール"
   },
   "disabled": "無効",
   "threads": "スレッド | スレッド",

@@ -41,8 +41,6 @@
   "copiedDataURLMessage": "변환된 이미지가 클립보드에 DataURL로 복사되었습니다.",
   "status": {
     "expandLogTooltip": "전체 로그를 표시하면 변환 속도가 크게 저하될 수 있습니다.",
-    "expandLog": "전체 로그 표시",
-    "autoScroll": "자동 스크롤",
     "showOnlyErrors": "오류만 표시",
     "elapsedTime": "경과 시간",
     "multiThreading": "멀티스레딩",
@@ -96,7 +94,9 @@
     "PreviewImage": "이미지 미리보기",
     "Log": "통나무",
     "log": "통나무",
-    "Output": "출력 결과"
+    "Output": "출력 결과",
+    "expandLog": "로그 크기를 확장합니다",
+    "autoScroll": "자동 스크롤"
   },
   "disabled": "장애가 있는",
   "threads": "스레드 | \n스레드",

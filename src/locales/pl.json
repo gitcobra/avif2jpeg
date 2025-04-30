@@ -41,8 +41,6 @@
   "copiedDataURLMessage": "Przekonwertowany obraz został skopiowany do schowka jako DataURL.",
   "status": {
     "expandLogTooltip": "Wyświetlenie całego dziennika może poważnie zmniejszyć prędkość konwersji.",
-    "expandLog": "Pokaż cały dziennik",
-    "autoScroll": "Automatyczne przewijanie",
     "showOnlyErrors": "Pokaż tylko błędy",
     "elapsedTime": "Czas, który upłynął",
     "multiThreading": "Wielowątkowość",
@@ -96,7 +94,9 @@
     "PreviewImage": "Podgląd obrazów",
     "Log": "Dziennik",
     "log": "Dziennik",
-    "Output": "Wyniki wyjściowe"
+    "Output": "Wyniki wyjściowe",
+    "expandLog": "rozmiar dziennika",
+    "autoScroll": "Auto-Scroll"
   },
   "disabled": "Wyłączony",
   "threads": "wątek | \nwątki",

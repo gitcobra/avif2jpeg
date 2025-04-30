@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { NTooltip } from 'naive-ui';
-import { getThumbnailedSize } from './util';
+import { getThumbnailedSize } from '@/components/util';
 import { RefSymbol } from '@vue/reactivity';
 import { ArrowBack, ArrowForward, DownloadOutline } from '@vicons/ionicons5';
 

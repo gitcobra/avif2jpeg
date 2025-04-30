@@ -41,8 +41,6 @@
   "copiedDataURLMessage": "Gambar yang dikonversi disalin ke clipboard Anda sebagai DataURL.",
   "status": {
     "expandLogTooltip": "Menampilkan seluruh log mungkin sangat mengurangi kecepatan konversi.",
-    "expandLog": "Tampilkan seluruh log",
-    "autoScroll": "Gulir otomatis",
     "showOnlyErrors": "Tampilkan hanya kesalahan",
     "elapsedTime": "Waktu yang Berlalu",
     "multiThreading": "Multi-Threading",
@@ -96,7 +94,9 @@
     "PreviewImage": "Gambar pratinjau",
     "Log": "Catatan",
     "log": "Log",
-    "Output": "Hasil output"
+    "Output": "Hasil output",
+    "expandLog": "Perluas ukuran log",
+    "autoScroll": "gulir otomatis"
   },
   "disabled": "Dengan disabilitas",
   "threads": "benang | \nbenang",

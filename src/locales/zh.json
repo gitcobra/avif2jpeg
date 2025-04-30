@@ -41,8 +41,6 @@
   "copiedDataURLMessage": "转换后的图像已作为 DataURL 复制到剪贴板。",
   "status": {
     "expandLogTooltip": "显示整个日志可能会严重降低转换速度。",
-    "expandLog": "显示整个日志",
-    "autoScroll": "自动滚动",
     "showOnlyErrors": "仅显示错误",
     "elapsedTime": "经过时间",
     "multiThreading": "多线程",
@@ -96,7 +94,9 @@
     "PreviewImage": "预览图像",
     "Log": "日志",
     "log": "日志",
-    "Output": "输出结果"
+    "Output": "输出结果",
+    "expandLog": "扩展日志大小",
+    "autoScroll": "自动滚动"
   },
   "disabled": "残疾人",
   "threads": "thread | threads",

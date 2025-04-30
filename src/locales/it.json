@@ -41,8 +41,6 @@
   "copiedDataURLMessage": "L'immagine convertita è stata copiata negli appunti come DataURL.",
   "status": {
     "expandLogTooltip": "La visualizzazione dell'intero registro può ridurre notevolmente la velocità di conversione.",
-    "expandLog": "Mostra l'intero registro",
-    "autoScroll": "Scorrimento automatico",
     "showOnlyErrors": "Mostra solo errori",
     "outInRate": "Rapporto uscita/entrata",
     "elapsedTime": "Tempo trascorso",
@@ -96,7 +94,9 @@
     "PreviewImage": "Anteprima immagini",
     "Log": "Tronco d'albero",
     "log": "Tronco d'albero",
-    "Output": "Risultati di output"
+    "Output": "Risultati di output",
+    "expandLog": "espandere la dimensione del registro",
+    "autoScroll": "scrollo automatico"
   },
   "disabled": "Disabilitato",
   "threads": "discussione | discussioni",

@@ -2,7 +2,7 @@
 import { ImageRenderToolbarProps, NBadge, NButton, NInput, useDialog, useThemeVars } from 'naive-ui';
 import { ref, render } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { getThumbnailedSize, getUnitSize } from './util';
+import { getThumbnailedSize, getUnitSize } from '@/components/util';
 import Thumbnail from './thumbnail.vue';
 import { ArrowForward, ArrowBack, ArrowRedoOutline, ArrowUndoOutline, ChevronForward, ChevronBack, Close } from '@vicons/ionicons5';
 import { title } from 'process';
@@ -756,7 +756,7 @@ function cleanup() {
 
 <style lang="scss" scoped>
 .body {
-  font-size: small;
+  font-size: 0.8rem;
   
   position: relative;
 }
@@ -765,7 +765,7 @@ a {
 }
 .pathbox {
   max-width: 280px;
-  font-size: smaller;
+  font-size: 0.7em;
   overflow:hidden;
   white-space:nowrap;
   text-overflow: ellipsis;
@@ -778,6 +778,7 @@ a {
 }
 
 .imglink {
+  font-size: 0.8rem;
   &:hover, &:hover .imglink-label {
     color: blue;
   }
@@ -800,22 +801,22 @@ a {
 .index {
   white-space: nowrap;
   font-family: v-mono;
-  font-size: smaller;
+  font-size: 0.7rem;
   .counter {
     min-width:2.5em;
   }
 }
 
 .img-size {
-  font-size:smaller;
+  font-size: 0.7rem;
   white-space:nowrap;
   font-family:v-mono;
   .left-num {
-    min-width: 3.5em;
+    min-width: 3rem;
     text-align: right;
   }
   .right-num {
-    min-width: 3.5em;
+    min-width: 3rem;
     text-align: left;
   }
 }
@@ -889,7 +890,7 @@ a {
 <style lang="scss">
 
 .__preview-injected-pathbox {
-  font-size: 0.9em;
+  font-size: 0.8rem;
   z-index: 999999999999;
   position: fixed;
   display: flex;

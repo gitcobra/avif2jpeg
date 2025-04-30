@@ -1,5 +1,3 @@
-import { sleep } from '../util';
-
 console.log('running converter.worker.canvas');
 
 const canvas = new OffscreenCanvas(100, 100);
@@ -22,7 +20,7 @@ type FileInfo = {
 };
 
 export type MessageFromCanvasWorker = {
-  action: 'list-start' | 'list-end'
+  action: 'list-start' | 'list-end' | 'respond-to-first-message'
 } |
 FileInfo & (
   {
@@ -33,6 +31,7 @@ FileInfo & (
     width: number
     height: number
     shrinked: boolean
+    workerId?: number
   } | {
     action: 'file-converted'
     image?: Blob
@@ -42,11 +41,13 @@ FileInfo & (
     inputsize: number
     outputsize: number
   } | {
-    action: 'file-error' | 'file-canceled'
+    action: 'file-error' | 'file-canceled' | 'file-retry'
   } | {
     action: 'file-completed'
     inputsize: number
     outputsize: number
+    entireIndex: number
+    storedPath: string
   }
 );
 
@@ -75,6 +76,7 @@ self.onmessage = async (params: MessageEvent<MessageToCanvasWorker | null>) => {
     // set a listener that get messages from zip.worker
     dataOutputPort.onmessage = listenerForZipWorker;
 
+    console.log('respond-to-first-message');
     self.postMessage({action: 'respond-to-first-message'});
 
     return;
@@ -257,7 +259,7 @@ async function convertRecievedData(data: MessageToCanvasWorker[number]) {
 
 const listenerForZipWorker = (params) => {
   // informed that the file was zipped
-  const {fileId, renamed, outputPath, canceled} = params.data;
+  const {fileId, renamed, outputPath, canceled, entireIndex, storedPath} = params.data;
   
   // post to main thread
   const {inputsize, outputsize, path, index} = fileStat.get(fileId)!;
@@ -269,6 +271,9 @@ const listenerForZipWorker = (params) => {
     index,
     inputsize, 
     outputsize, 
+    
+    entireIndex,
+    storedPath,
     //renamed,
   };
   self.postMessage( messageToMain );

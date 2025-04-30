@@ -41,8 +41,6 @@
   "copiedDataURLMessage": "De geconverteerde afbeelding is als DataURL naar uw klembord gekopieerd.",
   "status": {
     "expandLogTooltip": "Het weergeven van het volledige logboek kan de conversiesnelheid ernstig verminderen.",
-    "expandLog": "Toon het volledige logboek",
-    "autoScroll": "Automatisch scrollen",
     "showOnlyErrors": "Toon alleen fouten",
     "elapsedTime": "Verstreken tijd",
     "multiThreading": "Multi-threading",
@@ -96,7 +94,9 @@
     "PreviewImage": "Voorbeeld afbeeldingen",
     "Log": "Logboek",
     "log": "Aanroepen",
-    "Output": "Uitgangsresultaten"
+    "Output": "Uitgangsresultaten",
+    "expandLog": "Breid de loggrootte uit",
+    "autoScroll": "automatisch schelden"
   },
   "disabled": "Gehandicapt",
   "threads": "draad | \ndraden",

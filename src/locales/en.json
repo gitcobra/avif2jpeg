@@ -48,8 +48,6 @@
   "convertAgain": "Convert Again",
   "status": {
     "expandLogTooltip": "Displaying the entire log may severely reduce conversion speed.",
-    "expandLog": "Show entire log",
-    "autoScroll": "Auto scroll",
     "showOnlyErrors": "Show only errors",
     "outInRate": "Out / In Ratio",
     "elapsedTime": "Elapsed Time",
@@ -103,7 +101,9 @@
     "PreviewImage": "Preview Images",
     "Log": "Log",
     "log": "Log",
-    "Output": "Output Results"
+    "Output": "Output Results",
+    "expandLog": "expand log size",
+    "autoScroll": "auto-scroll"
   },
   "settings": {
     "maxZipFileSize": "Max zip file size",

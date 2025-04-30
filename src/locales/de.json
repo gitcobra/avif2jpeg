@@ -41,8 +41,6 @@
   "copiedDataURLMessage": "Das konvertierte Bild wurde als DataURL in Ihre Zwischenablage kopiert.",
   "status": {
     "expandLogTooltip": "Die Anzeige des gesamten Protokolls kann die Konvertierungsgeschwindigkeit erheblich verringern.",
-    "expandLog": "Gesamtes Protokoll anzeigen",
-    "autoScroll": "Automatisches Scrollen",
     "showOnlyErrors": "Nur Fehler anzeigen",
     "elapsedTime": "Verstrichene Zeit",
     "multiThreading": "Multithreading",
@@ -96,7 +94,9 @@
     "PreviewImage": "Vorschau -Bilder",
     "Log": "Protokoll",
     "log": "Protokoll",
-    "Output": "Ausgangsergebnisse"
+    "Output": "Ausgangsergebnisse",
+    "expandLog": "Protokollgröße erweitern",
+    "autoScroll": "Auto-Scroll"
   },
   "disabled": "Deaktiviert",
   "threads": "Thread | \nThreads",

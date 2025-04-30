@@ -41,8 +41,6 @@
   "copiedDataURLMessage": "A imagem convertida foi copiada para sua área de transferência como DataURL.",
   "status": {
     "expandLogTooltip": "Exibir o log inteiro pode reduzir drasticamente a velocidade de conversão.",
-    "expandLog": "Mostrar registro inteiro",
-    "autoScroll": "Rolagem automática",
     "showOnlyErrors": "Mostrar apenas erros",
     "elapsedTime": "Tempo decorrido",
     "multiThreading": "Multi-threading",
@@ -96,7 +94,9 @@
     "PreviewImage": "Visualizar imagens",
     "Log": "Registro",
     "log": "Registro",
-    "Output": "Resultados de saída"
+    "Output": "Resultados de saída",
+    "expandLog": "Expanda o tamanho do log",
+    "autoScroll": "rolagem automática"
   },
   "disabled": "Desabilitado",
   "threads": "fio | \ntópicos",

@@ -42,8 +42,6 @@
   "copiedDataURLMessage": "轉換後的影像已複製為 DataURL 到剪貼簿。",
   "status": {
     "expandLogTooltip": "顯示整個日誌可能會嚴重降低轉換速度。",
-    "expandLog": "顯示整個日誌",
-    "autoScroll": "自動捲動",
     "showOnlyErrors": "僅顯示錯誤",
     "elapsedTime": "經過時間",
     "multiThreading": "多執行緒",
@@ -97,7 +95,9 @@
     "PreviewImage": "預覽圖像",
     "Log": "紀錄",
     "log": "紀錄",
-    "Output": "輸出結果"
+    "Output": "輸出結果",
+    "expandLog": "擴展日誌大小",
+    "autoScroll": "自動滾動"
   },
   "disabled": "殘障人士",
   "threads": "thread | threads",

@@ -41,8 +41,6 @@
   "copiedDataURLMessage": "Dönüştürülen görüntü panonuza DataURL olarak kopyalandı.",
   "status": {
     "expandLogTooltip": "Günlüğün tamamının görüntülenmesi dönüşüm hızını ciddi şekilde azaltabilir.",
-    "expandLog": "Günlüğün tamamını göster",
-    "autoScroll": "Otomatik kaydırma",
     "showOnlyErrors": "Yalnızca hataları göster",
     "elapsedTime": "Geçen Süre",
     "multiThreading": "Çoklu İş Parçacığı",
@@ -96,7 +94,9 @@
     "PreviewImage": "Önizleme Resimleri",
     "Log": "Kayıt",
     "log": "Kayıt",
-    "Output": "Çıktı sonuçları"
+    "Output": "Çıktı sonuçları",
+    "expandLog": "Günlük boyutunu genişletin",
+    "autoScroll": "otomatik kaydırma"
   },
   "disabled": "Engelli",
   "threads": "konu | \nKonular",

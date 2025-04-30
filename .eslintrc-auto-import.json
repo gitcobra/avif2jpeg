@@ -70,7 +70,6 @@
     "useLoadingBar": true,
     "useMessage": true,
     "useModel": true,
-    "useNotification": true,
     "useRoute": true,
     "useRouter": true,
     "useSlots": true,
@@ -80,6 +79,9 @@
     "watchPostEffect": true,
     "watchSyncEffect": true,
     "useModal": true,
-    "useI18n": true
+    "useI18n": true,
+    "Slot": true,
+    "Slots": true,
+    "useNotification": true
   }
 }

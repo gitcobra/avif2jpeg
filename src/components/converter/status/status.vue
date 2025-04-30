@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { Directive } from 'vue';
+import { ComponentInstance, ComponentInternalInstance, Directive, type CSSProperties } from 'vue';
 import { dataTableDark, type DropdownOption, NIcon, NScrollbar, NSpin, useThemeVars } from 'naive-ui';
 import { ImageSharp, Archive, Warning, WarningOutline, DocumentTextOutline, DownloadOutline, Filter } from '@vicons/ionicons5';
 import { useI18n } from 'vue-i18n';
 import ImageViewer from './image-viewer.vue';
 import CenterColumn from './status.center-column.vue';
-import { getThumbnailedSize, getUnitSize } from './util';
+import { getThumbnailedSize, getUnitSize, sleep, useTimeoutRef } from '../../util';
 
 import type { CollapseProps } from 'naive-ui';
 type CollapseThemeOverrides = NonNullable<CollapseProps['themeOverrides']>;
 const collapseThemeOverrides: CollapseThemeOverrides = {
   itemMargin: '1px',
-  titlePadding: '1px',
-  titleFontSize: '0.9em',
+  titlePadding: '2px',
+  titleFontSize: '0.8rem',
 };
 
 
@@ -25,8 +25,9 @@ const c = useThemeVars();
 
 // constants
 const THUMB_SIZE = {W:160, H:80};
-const LOG_SIZE_LIMIT = 99999;
-const LOG_EXPANDED_MINHEIGHT = 250;
+//const LOG_SIZE_LIMIT = 999999;
+//const LOG_EXPANDED_MINHEIGHT = 250;
+const LOG_INVISIBLE_ITEM_MARGIN = 3;
 
 
 // props
@@ -37,7 +38,7 @@ const props = defineProps<{
     processing: boolean
     length: number
     
-    index: number
+    startedCount: number
     converted: number
     success: number
     failure: number
@@ -134,6 +135,7 @@ const zippingFlag = ref(false);
 const workingLogs = ref<typeof props["status"]["logs"]>([]);
 const demandedFailedZips = ref(false);
 const logtable = useTemplateRef('table');
+const logtbody = useTemplateRef<HTMLTableSectionElement>('tbody');
 const currentSelectedLogNode = ref<HTMLTableRowElement>(null);
 
 type ZipList = {
@@ -149,7 +151,7 @@ const zipList = ref<ZipList>([]);
 const failedZipList = ref<ZipList>([]);
 
 const successPercentage = ref([0, 0]); // [to, from] for n-number-animation
-const index = ref([0, 0]); 
+const startedCount = ref([0, 0]); 
 const success = ref([0, 0]);
 const failure = ref([0, 0]);
 const done = ref([0, 0]);
@@ -172,11 +174,9 @@ const expandLog = ref(false);
 const autoScrollLog = ref(true);
 const hideSuccess = ref(false);
 
-const logMaxHeight = ref('16em');
-//const minLogSize = ref(5);
-//const maxLogSize = ref(999999);
+const logMaxHeightPX = ref(80);
+const expandedLogMinHeight = ref(200);
 const logOpened = computed(() => expandedNames.value.includes('log'));
-const logViewSize = computed(() => expandLog.value ? 99999 : 5);
 const filteredLogList = computed(() => {
   let list = workingLogs.value;
   switch( filterLogValue.value ) {
@@ -188,8 +188,10 @@ const filteredLogList = computed(() => {
       break;
   }
 
-  return list.slice( - logViewSize.value );
+  return list;
 });
+const logSizeSliderShow = useTimeoutRef(false);
+
 const expandedNames = ref<string[]>(['progress', 'log', 'output']);
 const isExpanded = (name: string) => expandedNames.value.includes(name);
 const setExpanded = (name: string) => expandedNames.value.push(name);
@@ -295,7 +297,8 @@ onMounted(() => {
       startTimer();
       
       // some reactive values need to clean up
-      workingLogs.value = [];
+      //workingLogs.value = [];
+      workingLogs.value.length = 0;
       zippingFlag.value = false;
       demandedFailedZips.value = false;
       zipList.value = [];
@@ -315,47 +318,66 @@ onMounted(() => {
 
   
 
+  let _unmounted = false;
+  
+  
   // FIXME: change max-height of the log-container when the window is resized
-  const inst = getCurrentInstance();
-  let _tid;
-  
-  const changeLogMaxHeight = () => {
-    clearTimeout(_tid);
-    _tid = setTimeout(() => {
-      if( !logOpened.value || _unmounted )
-        return;
-      const logHeight = scrollref.value.$parent.$el.offsetHeight;
-      const modalMargin = window.innerHeight - inst.parent.parent.vnode.el.offsetHeight - 8;
-      
-      logMaxHeight.value = Math.max(logHeight + modalMargin, LOG_EXPANDED_MINHEIGHT) + 'px';
-
-    }, 100);
-  };
-  
+  inst = getCurrentInstance();
   changeLogMaxHeight();
   window.addEventListener('resize', changeLogMaxHeight);
   const observer = new ResizeObserver(changeLogMaxHeight);
   observer.observe( inst.parent.parent.vnode.el as HTMLElement );
 
-
-  let _unmounted = false;
-  
-  
   
   onBeforeUnmount(() => {
     _unmounted = true;
-    observer.disconnect();
     clearInterval(_intvId);
     clearTimeout(_tid);
     clearTimeout(hookedUpdateTimeoutId);
     clearTimeout(scrollTimeoutId);
     window.removeEventListener('resize', changeLogMaxHeight);
+    observer.disconnect();
   });
+  onUnmounted(() => clearInterval(_intvId));
 });
+
+
+
+// FIXME: change max-height of the log-container when the window is resized
+let _tid;
+let inst: ComponentInternalInstance;
+const availDocumentHeight = ref(document.documentElement.clientHeight);
+const availDialogHeight = ref(10);
+const changeLogMaxHeight = () => {
+  clearTimeout(_tid);
+  _tid = setTimeout(() => {
+    const logHeight = scrollref.value.$parent.$el.offsetHeight;
+    const modalMargin = window.innerHeight - inst.parent.parent.vnode.el.offsetHeight - 8;
+    const availModalHeight = Math.max(100, logHeight + modalMargin);
+    
+    availDocumentHeight.value = document.documentElement.clientHeight;
+    availDialogHeight.value = availModalHeight;
+
+    if( !logOpened.value || !expandLog.value /*|| _unmounted*/ )
+      return;
+    
+    logMaxHeightPX.value = Math.max(availModalHeight, expandedLogMinHeight.value);
+  }, 100);
+};
+
+
+
+
 
 onBeforeUnmount(() => {
   cleanup();
-}); 
+});
+onUnmounted(() => {
+  clearTimeout(_tid);
+  clearTimeout(hookedUpdateTimeoutId);
+  clearTimeout(scrollTimeoutId);
+  clearTimeout(_tidLogItem);
+});
 
 
 watch([() => props.status.zips.length, () => props.status.failedZips.length], () => {
@@ -407,29 +429,43 @@ watch([() => props.status.zips.length, () => props.status.failedZips.length], ()
   }
 });
 
+
 // focus current selected log item
 let causedChangeSelectByKeyboard = false;
-let causedScrollIntoViewByArrowUpKey = false;
-let prevFocusedLogNode: HTMLElement = null;
-watch(() => outputImg.index, () => {
+let prevOpindexInLog = 0;
+watch(() => outputImg.index, async () => {
+  // calculate the index in the log item list
+  const opindex = outputImg.index;
+  let opindexInLog = filteredLogList.value.findIndex(item => item.zippedIndex === opindex);
+  if( opindexInLog === -1 )
+    opindexInLog = opindex;
+
+  // recalculate current table view if selected item was out of the view
+  let redrawnView = false;
+  if( logStartIndex.value > opindexInLog || logStartIndex.value + logDisplayQuantity.value < opindexInLog ) {
+    scrollref.value?.scrollTo({behavior: 'instant', top: opindexInLog * logItemHeight});
+    await nextTick();
+    calculateLogTableViewRange(true);
+    await nextTick();
+
+    redrawnView = true;
+  }
+  
   nextTick( () => {
     let node = currentSelectedLogNode.value;
     
-    // sticky "<th>"s may hide the selected node if the node is aligned to the top of the visible area of the scrollable ancestor.
-    // when scrolling up, focus previous sibling of the node instead of it for that reason.
-    if( prevFocusedLogNode?.offsetTop > node?.offsetTop ) {
-    //if( causedScrollIntoViewByArrowUpKey ) {
+    // *sticky "<th>"s may hide the selected target node if the node is aligned to the top of the visible area of the scrollable ancestor.
+    //  hence when scrolling up, focus previous sibling of the target instead of the target itself for that reason.
+    if( prevOpindexInLog > opindexInLog ) {
       node = <HTMLTableRowElement>node.previousSibling || node;
-      causedScrollIntoViewByArrowUpKey = false;
+      
       if( !(node instanceof HTMLElement) ) {
         scrollref.value?.scrollTo(0, 0);
         node = null;
       }
     }
 
-    //if( causedChangeSelectByKeyboard ) {
-      node?.scrollIntoView?.({behavior: 'smooth', block: 'nearest'});
-    //}
+    node?.scrollIntoView?.({behavior: 'instant', block: redrawnView ? prevOpindexInLog > opindexInLog ? 'start' : 'end' : 'nearest'});
 
     if( !causedChangeSelectByKeyboard ) {
       if( isExpanded('preview') ) {
@@ -437,7 +473,7 @@ watch(() => outputImg.index, () => {
       }
     }
 
-    prevFocusedLogNode = currentSelectedLogNode.value;
+    prevOpindexInLog = opindexInLog;
     causedChangeSelectByKeyboard = false;
   });
 });
@@ -473,8 +509,8 @@ function update() {
 
   const stat = props.status;
   zippingFlag.value = stat.length >= 2 /*|| props.status.threads >= 2*/;
-  index.value[1] = index.value[0];
-  index.value[0] = stat.index;
+  startedCount.value[1] = startedCount.value[0];
+  startedCount.value[0] = stat.startedCount;
   success.value[1] = success.value[0];
   success.value[0] = stat.success;
   failure.value[1] = failure.value[0];
@@ -511,24 +547,20 @@ function update() {
 
   // update log
   if( logOpened.value || !props.processing ) {
-    const recievedlog = stat.logs.slice(-LOG_SIZE_LIMIT);
+    const recievedlog = stat.logs;//stat.logs.slice(-LOG_SIZE_LIMIT);
     workingLogs.value.push(...recievedlog);
+    /*
     const excess = workingLogs.value.length - LOG_SIZE_LIMIT;
     if( excess > 0 )
       workingLogs.value.splice(0, excess);
-    
-    if( autoScrollLog.value && recievedlog.length ) {
-      scrollLogViewToBottom();
-    }
-
-    /*
-    if( workingLogs.value.length > maxLogSize.value ) {
-      maxLogSize.value *= 2;
-    }
     */
-  }
-  else {
-    //logCollapseExtra.value = `(${workingLogs.value.length || ''})`;
+    
+    if( recievedlog.length ) {
+      if( autoScrollLog.value ) {
+        scrollLogViewToBottom();
+      }
+      nextTick( calculateLogTableViewRange );
+    }
   }
   stat.logs.length = 0; // clear the log;
 
@@ -563,7 +595,7 @@ function update() {
   }
 }
 
-let vm = getCurrentInstance();
+
 function onFinished() {
   const stat = props.status;
 
@@ -577,6 +609,7 @@ function onFinished() {
   setExpanded('preview');
   //imageViewerStarted.value = true;
 
+  /*
   if( logOpened.value ) {
     setTimeout(scrollLogViewToBottom, 500);
     
@@ -586,6 +619,7 @@ function onFinished() {
   }
 
   update();
+  */
 }
 
 
@@ -600,25 +634,28 @@ function onFinished() {
 // functions for the components' event handlers
 
 async function changeViewerIndexBySelectedLogItem(completed: boolean, path:string, fileId: number, zippedIndex: number) {
-  //alert([index, outputImg.index, path]);
-  if( completed ) {
-    const index = props.status.ziplogs.findIndex(item => item.fileId === fileId);
-    if( index === -1 )
-      return;
-    
-    if( !isExpanded('preview') ) {
-      setExpanded('preview');
-      //imageViewerStarted.value = true;
-      await nextTick();
-    }
-    imageViewer.value?.changeIndex(index + 1);
+  if( !completed )
+    return;
 
-    await nextTick(() => {
-      try {
-        imageViewer.value?.$el.scrollIntoView({behavior: 'smooth', block: 'nearest'});
-      } catch(e){}
-    });
+  const index = props.status.ziplogs.findIndex(item => item.fileId === fileId);
+  if( index === -1 )
+    return;
+  
+  console.log(path, fileId, zippedIndex);
+  console.log(index, props.status.ziplogs[index]);
+
+  if( !isExpanded('preview') ) {
+    setExpanded('preview');
+    //imageViewerStarted.value = true;
+    await nextTick();
   }
+  imageViewer.value?.changeIndex(index + 1);
+
+  await nextTick(() => {
+    try {
+      imageViewer.value?.$el.scrollIntoView({behavior: 'instant', block: 'nearest'});
+    } catch(e){}
+  });
 }
 
 function onKeyPressInLogTable(ev: KeyboardEvent) {
@@ -630,18 +667,17 @@ function onKeyPressInLogTable(ev: KeyboardEvent) {
   switch( ev.code ) {
     case 'ArrowUp':
       sign = -1;
-      causedScrollIntoViewByArrowUpKey = true;
       break;
     case 'ArrowDown':
       sign = 1;
       break;
     case 'PageUp':
       sign = -1;
-      count = 10;
+      count = logMaxHeightPX.value / logItemHeight |0;
       break;
     case 'PageDown':
       sign = 1;
-      count = 10;
+      count = logMaxHeightPX.value / logItemHeight |0;
       break;
     
     case 'Enter':
@@ -659,6 +695,7 @@ function onKeyPressInLogTable(ev: KeyboardEvent) {
   }
   
   let i = currentSelectedIndex;
+  let lastTargetedIndex = -1;
   const len = logs.length;
   do {
     i += sign;
@@ -675,27 +712,20 @@ function onKeyPressInLogTable(ev: KeyboardEvent) {
       break;
     
     if( logs[i].completed ) {
-      imageViewer.value?.changeIndex(logs[i].zippedIndex + 1);
-      //nextTick( () => currentSelectedLogNode.value?.scrollIntoView({behavior: 'auto', block: 'nearest'}) );
-      ev.preventDefault();
-      
+      lastTargetedIndex = i;
       if( --count > 0 )
         continue;
-      
       break;
     }
   } while( true )
 
+  if( lastTargetedIndex >= 0 ) {
+    imageViewer.value?.changeIndex(logs[lastTargetedIndex].zippedIndex + 1);
+    ev.preventDefault();
+  }
+
   causedChangeSelectByKeyboard = true;
 }
-
-type RecursivePartial<T> = {
-  readonly [P in keyof T]: T[P] extends (infer U)[]
-    ? RecursivePartial<U>[]
-    : T[P] extends object
-    ? RecursivePartial<T[P]>
-    : T[P];
-};
 
 // filter for log
 const FilterOptions: {label:string, readonly value: 'success'|'error'|''}[] = [
@@ -792,13 +822,68 @@ async function onSaveButtonClick() {
   }
 }
 
-/*
+
 function preventOutputCollapsing({name, expanded, event}) {
+  console.log(expandedNames)
   if( name === 'output' && !expanded ) {
     setExpanded('output');
   }
 }
-*/
+
+
+const logTopMarginStyle = ref<CSSProperties>({height: '0px'});
+const logBottomMarginStyle = ref<CSSProperties>({height: '0px'});
+const logStartIndex = ref(0);
+const logDisplayQuantity = computed(() => logMaxHeightPX.value / logItemHeight + LOG_INVISIBLE_ITEM_MARGIN*2 |0);
+let logItemHeight = 15;
+let realLogHeight = 0;
+let _tidLogItem = 0;
+let lastTimeLogViewUpdated = 0;
+function calculateLogTableViewRange(force?: any/*ev: Event*/) {
+  const now = Date.now();
+  if( force !== true ) {
+    if( _tidLogItem )
+      return;
+    
+    if( now - lastTimeLogViewUpdated < 30 ) {
+      _tidLogItem = window.setTimeout(() => {
+        _tidLogItem = 0;
+        calculateLogTableViewRange();
+      }, 30 - (now - lastTimeLogViewUpdated));
+      return;
+    }
+  }
+  lastTimeLogViewUpdated = now;
+  
+  if( !realLogHeight ) {
+    realLogHeight = logtbody.value.rows[1].offsetHeight;
+    logItemHeight = realLogHeight;
+  }
+
+  //const scrollEl = ev.target! as HTMLElement;
+  const scrollEl = scrollref.value.scrollbarInstRef.containerRef; // *HACK: get container element
+  //const bottomScrollVal = scrollEl.scrollHeight - scrollEl.clientHeight - 1;
+  const scrtop = scrollEl.scrollTop;
+  const loglen = filteredLogList.value.length;//workingLogs.value.length;
+
+  const viewStartIndex = Math.max(0, (scrtop / logItemHeight | 0) - LOG_INVISIBLE_ITEM_MARGIN);
+  logStartIndex.value = viewStartIndex;
+  logTopMarginStyle.value.height = (viewStartIndex * logItemHeight) + 'px';
+  logBottomMarginStyle.value.height = Math.max(0, loglen - (viewStartIndex + logDisplayQuantity.value)) * logItemHeight + 'px';
+}
+
+function resetLogTableViewRange() {
+  scrollref.value?.scrollTo(0, 0);
+  calculateLogTableViewRange();
+}
+
+watch(logOpened, (val) => {
+  if( val ) {
+    calculateLogTableViewRange();
+  }
+});
+
+
 
 
 function createFailedFileLink(download = false) {
@@ -825,7 +910,7 @@ function scrollLogViewToBottom(instant = false) {
     return;
   }
   nextTick(() => {
-    if( !instant && (!expandLog.value || !autoScrollLog.value) )
+    if( !instant && (/*!expandLog.value ||*/ !autoScrollLog.value) )
       return;
     //scrollref.value.scrollTo({behavior: instant ? 'instant' : 'smooth', top: workingLogs.value.length * 50});
     scrollref.value.scrollTo({behavior: 'instant', top: workingLogs.value.length * 50});
@@ -863,10 +948,7 @@ function cleanup() {
 
   expandLog.value = false;
   //imageViewerStarted.value = false;
-
-  prevFocusedLogNode = null;
 }
-
 
 
 
@@ -881,9 +963,9 @@ function cleanup() {
   <n-flex ref="body" vertical justify="center">
     
     <n-collapse
-      display-directive="show" 
-      :trigger-areas="['arrow', 'main']" 
-      v-model:expanded-names="expandedNames" 
+      display-directive="show"
+      :trigger-areas="['arrow', 'main']"
+      v-model:expanded-names="expandedNames"
       :theme-overrides="collapseThemeOverrides"
       _item-header-click="preventOutputCollapsing"
     >
@@ -908,13 +990,13 @@ function cleanup() {
           </n-statistic>
 
           <n-statistic tabular-nums :label="$t('status.multiThreading')">
-            <n-flex :style="{color: !props.status.threads ? 'red' : '', fontSize: '0.7em'}">
+            <n-flex :style="{color: !props.status.threads ? 'red' : '', fontSize: '0.7rem'}">
               {{ props.status.threads ? $rt('{n} @:threads', props.status.threads) : $t('disabled') }}
             </n-flex>
           </n-statistic>
 
           <n-statistic tabular-nums :label="$t('status.outputSettings')">
-            <n-flex vertical justify="end" style="font-size: 0.6em; line-height:0.6em;">
+            <n-flex vertical justify="end" style="font-size: 0.6rem; line-height:0.6rem;">
               <div>{{$t('settings.imageType')}}: {{ props.status.type }}</div>
               <div v-if="status.shrink">{{$t('status.Shrinking')}}: <span style="">{{status.shrink[0]}}×{{status.shrink[1]}}</span></div>
               <div>Zip: {{ props.status.zipSize }}MB</div>
@@ -927,8 +1009,8 @@ function cleanup() {
         <!-- center column - progress circle -->
         <center-column
           v-if="!cleaningUp"
-          :index="index[0]"
-          :success="status.success"
+          :index="startedCount[0]"
+          :success="success[0]"
           :length="status.length"
           :success-to="success[0]"
           :success-from="success[1]"
@@ -955,7 +1037,7 @@ function cleanup() {
           </n-statistic>
 
           <n-statistic tabular-nums :label="$t('status.outInRate')">
-            <n-flex vertical align="end" justify="start" style="font-size: xx-small; font-family:v-mono; line-height:50%;">
+            <n-flex vertical align="end" justify="start" style="font-size: smaller; font-family:v-mono; line-height:50%;">
               <span :style="{color:rateColor, fontSize:'larger'}">× {{ (outputTotalSize / inputTotalSize || 1).toFixed(2) }}</span>
               <span :style="{color:difColor}">({{ totalSizeDifStr }})</span>
               
@@ -978,30 +1060,69 @@ function cleanup() {
       </template>
       <template #header-extra>
         <n-flex v-show="logOpened" align="center" justify="end" :wrap="true" style="margin-top:0.2em; margin-left:0.5em;">
-          <transition-group>
+          <!--<transition-group>-->
           <!-- filter completed item -->
-          <n-select v-model:value="filterLogValue" :placeholder="$t('status.filterLogSelect')" :options="FilterOptions" size="tiny" style="width:auto; font-size: smaller" :consistent-menu-width="false" :show-on-focus="false"/>
+          <n-select
+            v-model:value="filterLogValue"
+            :options="FilterOptions"
+            @update:value="resetLogTableViewRange()"
+            :placeholder="$t('status.filterLogSelect')" size="tiny" style="width:auto; font-size: smaller;" :consistent-menu-width="false" :show-on-focus="false"
+          />
           <!--<n-checkbox key="a" v-model:checked="hideSuccess" size="small" style="font-size: smaller" class="hide-mobile">{{$t('status.filterSuccess')}}</n-checkbox>-->
           
           <!-- auto scroll -->
-          <n-checkbox key="b" v-show="expandLog" v-model:checked="autoScrollLog" @update:checked="flag => flag && scrollLogViewToBottom(true)" size="small" style="font-size: smaller">{{$t('status.autoScroll')}}</n-checkbox>
-          </transition-group>
+          <n-checkbox key="b" v-model:checked="autoScrollLog" @update:checked="flag => flag && scrollLogViewToBottom(true)" size="small" style="font-size: smaller">
+            {{$t('status.autoScroll')}}
+          </n-checkbox>
+          <!--</transition-group>-->
 
           <!-- expand log -->
-          <n-tooltip style="max-width:30em;">
+          <n-popover trigger="hover" :show="logSizeSliderShow" :disabled="!expandLog" placement="top" :delay="0">
             <template #trigger>
-              <n-checkbox size="small" v-model:checked="expandLog" @update:checked="flag => {autoScrollLog = flag; scrollLogViewToBottom(true)}" style="font-size:smaller;">{{ $t('status.expandLog') }}</n-checkbox>
+              <n-tooltip style="max-width:30em;" :disabled="true">
+                <template #trigger>
+                  <n-checkbox
+                    size="small"
+                    v-model:checked="expandLog"
+                    @update:checked="flag => { if( flag ) {scrollLogViewToBottom(true);changeLogMaxHeight();logSizeSliderShow=true;} }"
+                    style="font-size:smaller;"
+                  >
+                    {{ $t('status.expandLog') }}
+                  </n-checkbox>
+                </template>
+                <template #default>
+                  <!-- {{$t('status.expandLogTooltip')}} -->
+                  {{ $t('status.expandLog') }}
+                </template>
+              </n-tooltip>
             </template>
-            <template #default>
-              {{$t('status.expandLogTooltip')}}
-            </template>
-          </n-tooltip>
+
+            <n-flex :wrap="false" align="center" style="font-size: 0.8rem">
+              <n-slider
+                v-model:value="expandedLogMinHeight"
+                @update-value="changeLogMaxHeight"
+                :disabled="!expandLog"
+                :format-tooltip="value => `Log size: ${value}`"
+                :tooltip="true"
+                :step="1"
+                :min="availDialogHeight"
+                :max="availDocumentHeight"
+                style="z-index:3; width:100px;"
+              />
+              <!--
+              <span style="width:3em; text-align: center;">
+                {{ LOG_EXPANDED_MINHEIGHT }}px
+              </span>
+              -->
+            </n-flex>
+          </n-popover>
+
         </n-flex>
       </template>
       
       <n-flex :wrap="false" align="stretch"
         :class="{'log-container':1, 'expand-log': expandLog}"
-        :style="expandLog ? {height: logMaxHeight, maxHeight: logMaxHeight} : {}"
+        :style="expandLog ? {maxHeight: logMaxHeightPX + 'px'} : {height: '110px'}"
         @keydown="onKeyPressInLogTable"
         tabindex="-1"
       >
@@ -1010,18 +1131,19 @@ function cleanup() {
           ref="scrollref"
           :distance="10"
           :x-scrollable="true"
-          @mouseup="autoScrollLog=false"
+          @mousedown.capture="autoScrollLog=false"
           @wheel="autoScrollLog=false"
+          @scroll="calculateLogTableViewRange"
           load="handleLogLoad"
           trigger="none"
-          style="z-index:2; padding-right:10px; min-height:7em;"
+          style="z-index:2; padding-right:10px; height:100%;"
           :size="50"
-          :style="{maxHeight: logMaxHeight}"
+          :style="expandLog ? {height: logMaxHeightPX + 'px'} : {}"
         >
           <table v-if="logOpened" class="log-table" ref="table">
           <thead>
           <tr class="log-tr label">
-            <th class="log-th">{{$t('status.table.core')}}</th>
+            <th class="log-th" :title="$t('status.table.core')">th</th>
             <th class="log-th">no.<!--{{$t('status.table.index')}}--></th>
             <th style="min-width:7em;" class="log-th">{{$t('status.table.status')}}</th>
             <th style="padding-left:2em;" class="log-th">{{$t('status.table.details')}}</th>
@@ -1029,27 +1151,29 @@ function cleanup() {
           </thead>
           
           <!-- converting items -->
-          <tbody>
+          <tbody ref="tbody">
+          <tr :style="logTopMarginStyle"></tr>
           <tr
-            v-for="({index, key, command, path, core, zippedIndex, completed, fileId}, i) in filteredLogList"
+            v-for="({index, key, command, path, core, zippedIndex, completed, fileId}, i) in filteredLogList.slice(logStartIndex, logStartIndex + logDisplayQuantity)"
             :key="key"
             :class="{'log-tr':1, completed, selected:outputImg.index === zippedIndex}"
             :ref="(el: any) => {if( outputImg.index === zippedIndex ) currentSelectedLogNode = el}"
             @click="changeViewerIndexBySelectedLogItem(completed, path, fileId, zippedIndex)"
-            @dblclick="imageViewer.openPreview()"
+            @dblclick="() => {if( outputImg.index === zippedIndex ) imageViewer.openPreview()}"
           >
             <td class="log-td">{{ (core >= 0 ? core+1 : '-') }}</td>
             <td class="log-td">{{ index+1 }}</td>
             <td class="log-td">{{ command }}</td>
             <td class="log-td">{{path}}</td>
           </tr>
+          <tr :style="logBottomMarginStyle"></tr>
           </tbody>
           </table>
           <div style="height:1em"></div>
         </n-scrollbar>
 
         <!-- processing image -->
-        <n-flex style="align-self:center; position:absolute; z-index:0; margin-top:0.5em; right:0.1em; line-height:0px;" :style="{width:THUMB_SIZE.W+'px', height:THUMB_SIZE.H+'px'}" justify="center" align="center">
+        <n-flex style="align-self:center; position:absolute; z-index:0; margin-top:10px; right:0.1em; line-height:0px;" :style="{width:THUMB_SIZE.W+'px', height:THUMB_SIZE.H+'px'}" justify="center" align="center">
           <n-spin size="small" :show="processing">
             <n-empty v-if="props.status.thumbnail===undefined" description="EMPTY" />
             <canvas v-show="props.status.thumbnail!==undefined" ref="thumbcanvas" width="106" height="80" :style="{border:'1px solid gray', filter: processing? '' : 'opacity(0.35)'}"/>
@@ -1057,23 +1181,6 @@ function cleanup() {
         </n-flex>
 
       </n-flex>
-
-
-      <!-- log size slider -->
-      <!--
-      <n-flex :wrap="false" align="center" style="padding: 0px 2em;">
-        <span style="white-space:nowrap">Log size:</span>
-        <n-slider v-model:value="logViewSize" :format-tooltip="value => `Log size: ${value}`" :step="1" :min="1000" :max="maxLogSize" style="z-index:3;"/>
-        <n-tooltip style="max-width:30em;">
-          <template #trigger>
-            <n-flex align="center" style="font-size:smaller; white-space:nowrap;" :wrap="false">
-              <n-input-number size="tiny" v-model:value="logViewSize" step="1" :min="1000" :max="maxLogSize"></n-input-number>
-            </n-flex>
-          </template>
-        </n-tooltip>
-      </n-flex>
-      -->
-
     </n-collapse-item>
 
 
@@ -1084,7 +1191,7 @@ function cleanup() {
 
 
     
-    <n-collapse-item :title="$t('status.PreviewImage')" name="preview" style="white-space:nowrap;" :disabled="!(status.success > 0)">
+    <n-collapse-item :title="$t('status.PreviewImage')" name="preview" style="white-space:nowrap;" :disabled="!(success[0] > 0)">
       <!-- image browser -->
       <n-flex justify="center" align="center" vertical>
           <!--
@@ -1104,7 +1211,7 @@ function cleanup() {
           :original-size="outputImg.originalSize"   
           :name="outputImg.name"
           :originalName="outputImg.originalName"
-          :length="props.status.success"
+          :length="success[0]"
           :index="outputImg.index"
           :various-info="outputImg.various"
           
@@ -1237,7 +1344,7 @@ function cleanup() {
 
         <!-- failed button -->
         <n-dropdown
-          v-if="!processing && !(status.success === length)"
+          _v-if="!processing && !(status.success === length)"
           :options="PopSelectErrorItems"
           @select="(k, opt) => PopSelectErrorItems.find(({key}) => k === key)?.onSelect()"
           :show-arrow="true"
@@ -1334,7 +1441,10 @@ function cleanup() {
 
 
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
+.body {
+  font-size: 1rem;
+}
 
 .zip-buttons-parent {
   display: flex;
@@ -1344,21 +1454,20 @@ function cleanup() {
   .zip-button {
     box-shadow: 0px 0px 1px black;
     margin: 0.2em;
-    margin-left: -0.5em;
-    font-size: xx-small;
+    margin-left: -0.5rem;
+    font-size: 0.5rem;
   }
 }
 
 .log-container {
   position: relative;
-  overflow: visible;
-  font-size: 1em;
+  overflow: hidden;
+  font-size: 1rem;
 
   transition: all .2s ease;
   margin-top: -1em;
   margin-left: 1em;
-  min-height: 7em;
-  height: 7em;
+  /*height: 7em;*/
 
   &:focus {
     outline: 0px;
@@ -1367,8 +1476,8 @@ function cleanup() {
   .log-table {
     z-index: 1;
     position:relative;
-    font-size:0.9em;
-    line-height:1em;
+    font-size: 0.7rem;
+    line-height: 0.7rem;
     white-space: nowrap;
     border-collapse: collapse;
     
@@ -1386,9 +1495,14 @@ function cleanup() {
       .log-th {
         color: #666;
         padding: 0px 3px 3px;
+        background-color: white;
       }
       .log-th:nth-of-type(4) {
         text-align: left;
+        width: 250px;
+      }
+      .log-th:nth-of-type(5) {
+        background-color: transparent;
       }
     }
     .blank-space {
@@ -1411,10 +1525,11 @@ function cleanup() {
 
     border: 1px dashed #BBB;
     border-width: 0px 1px 0px;
-
+    /*
     th {
       background-color: white;
     }
+    */
   }
 }
 
@@ -1431,8 +1546,8 @@ function cleanup() {
   height:100%;
 }
 .center-column {
-  width: 8.6em;
-  font-size: 1.5em;
+  width: 10rem;
+  font-size: 1.5rem;
 }
 @media screen and (max-width: 580px) {
 	.left-column {

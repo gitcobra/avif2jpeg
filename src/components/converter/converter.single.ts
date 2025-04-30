@@ -2,10 +2,10 @@
 
 import type { FileWithId } from '../file-selector.vue';
 import AnZip from '@gitcobra/anzip-es6';
-import { SplitZipsIndexer } from './util';
+import { SplitZipsIndexer } from '../util';
 
 import type Converter from './converter.vue';
-import type ConversionStatus from './status.vue';
+import type ConversionStatus from './status/status.vue';
 import { ConverterResult } from './converter.vue';
 
 
@@ -90,7 +90,7 @@ export async function convertImagesInSingleThread(list: FileWithId[], completedF
     };
     
     // started count
-    ConvStats.index = index;
+    ConvStats.startedCount = index;
 
     ConvStats.logs.push(item);
     let curLogItemIdx = ConvStats.logs.length - 1;

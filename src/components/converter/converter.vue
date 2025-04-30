@@ -15,7 +15,7 @@ import { convertImagesInSingleThread, getAsPromise, demandImage as demandImageSi
 import { DocumentOutline } from '@vicons/ionicons5';
 
 // sub components
-import ConversionStatus from './status.vue';
+import ConversionStatus from './status/status.vue';
 import SwitchLanguage from '../header/switch-lang.vue';
 import { GlobalValsKey } from '@/Avif2Jpeg.vue';
 import { UserSettings, MaxThreads } from '@/user-settings';
@@ -28,7 +28,7 @@ const INJ = inject(GlobalValsKey);
 const { t } = useI18n();
 const dialog = useDialog();
 const message = useMessage();
-const notification = useNotification();
+//const notification = useNotification();
 
 
 
@@ -168,7 +168,7 @@ async function onBeforeProcessingDialogClose() {
   }
 
   //stat.value.cleanup();
-  notification.destroyAll();
+  //notification.destroyAll();
   message.destroyAll();
   conversionModalActive.value = false;
   showNote.value = false;
@@ -212,7 +212,7 @@ function initConvStatPropObj(obj?: ConversionStatusType): ConversionStatusType {
     logs: [],
     ziplogs: [],
     
-    index: 0,
+    startedCount: 0,
     converted: 0,
     success: 0,
     failure: 0,
@@ -345,7 +345,7 @@ async function startConvert(input: FileWithId[]) {
   if( !disableMultiThreading && props.threads! >= 2 ) {
     demandImage = demandImageMulti;
     //deleteImage = deleteImage;
-    result = await convertTargetFilesInMultithread({files:fileList, completedFileIdSet, ConvStats, canceled, props, imageType:format, quality, outputExt, format, message, notification});
+    result = await convertTargetFilesInMultithread({files:fileList, completedFileIdSet, ConvStats, canceled, props, imageType:format, quality, outputExt, format, message});
   }
   // single-threading
   else {
@@ -574,8 +574,8 @@ function checkAvailableFeatures() {
     :close-on-esc="false"
     preset="dialog"
     
-    @click="notification.destroyAll(); message.destroyAll();"
-    @mask-click="notification.destroyAll(); message.destroyAll();"
+    @click="/*notification.destroyAll();*/ message.destroyAll();"
+    @mask-click="/*notification.destroyAll();*/ message.destroyAll();"
     @close="onBeforeProcessingDialogClose"
     @esc="onESCPress"
     :title="processingMessage"
