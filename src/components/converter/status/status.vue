@@ -442,8 +442,11 @@ watch(() => outputImg.index, async () => {
 
   // recalculate current table view if selected item was out of the view
   let redrawnView = false;
-  if( logStartIndex.value > opindexInLog || logStartIndex.value + logDisplayQuantity.value < opindexInLog ) {
-    scrollref.value?.scrollTo({behavior: 'instant', top: opindexInLog * logItemHeight});
+  const overTopOfView = opindexInLog < logStartIndex.value;
+  const overBottomOfView = opindexInLog > logStartIndex.value + logDisplayQuantity.value;
+  if( overTopOfView || overBottomOfView ) {
+    const scrollAmount = opindexInLog * logItemHeight - (overBottomOfView ? logMaxHeightPX.value : 0);
+    scrollref.value?.scrollTo({behavior: 'instant', top: scrollAmount});
     await nextTick();
     calculateLogTableViewRange(true);
     await nextTick();
@@ -465,7 +468,8 @@ watch(() => outputImg.index, async () => {
       }
     }
 
-    node?.scrollIntoView?.({behavior: 'instant', block: redrawnView ? prevOpindexInLog > opindexInLog ? 'start' : 'end' : 'nearest'});
+    //node?.scrollIntoView?.({behavior: 'instant', block: redrawnView ? prevOpindexInLog > opindexInLog ? 'start' : 'end' : 'nearest'});
+    node?.scrollIntoView?.({behavior: 'instant', block: 'nearest'});
 
     if( !causedChangeSelectByKeyboard ) {
       if( isExpanded('preview') ) {
@@ -839,6 +843,7 @@ let logItemHeight = 15;
 let realLogHeight = 0;
 let _tidLogItem = 0;
 let lastTimeLogViewUpdated = 0;
+let lastScrollTopWhenRangeUpdated = -999;
 function calculateLogTableViewRange(force?: any/*ev: Event*/) {
   const now = Date.now();
   if( force !== true ) {
@@ -864,6 +869,11 @@ function calculateLogTableViewRange(force?: any/*ev: Event*/) {
   const scrollEl = scrollref.value.scrollbarInstRef.containerRef; // *HACK: get container element
   //const bottomScrollVal = scrollEl.scrollHeight - scrollEl.clientHeight - 1;
   const scrtop = scrollEl.scrollTop;
+  // ignore too small scroll amount
+  if( Math.abs(scrtop - lastScrollTopWhenRangeUpdated) < logItemHeight*0.5 && !force )
+    return;
+  lastScrollTopWhenRangeUpdated = scrtop;
+
   const loglen = filteredLogList.value.length;//workingLogs.value.length;
 
   const viewStartIndex = Math.max(0, (scrtop / logItemHeight | 0) - LOG_INVISIBLE_ITEM_MARGIN);
