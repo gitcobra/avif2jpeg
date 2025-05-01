@@ -10,7 +10,7 @@
         <Licenses/>
         
         <n-flex style="font-size:small">
-          <a href="/" v-if="route.path !== '/'">HOME</a>
+          <router-link v-if="route.path !== '/'" to="/">HOME</router-link>
         </n-flex>
 
       </n-flex>

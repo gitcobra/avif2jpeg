@@ -1,12 +1,12 @@
-/*
+
 import { readFile, writeFile } from 'fs/promises';
 
 // update version
 let path = 'src/version.json';
 let txt = await readFile(path);
 const Ver = JSON.parse(txt);
-//Ver.build++;
-//await writeFile( path, JSON.stringify(Ver, null, '  ') );
+Ver.build++;
+await writeFile( path, JSON.stringify(Ver, null, '  ') );
 
 // edit package.json
 path = './package.json';
@@ -16,5 +16,9 @@ const Package = JSON.parse(txt);
 Package.version = `${Ver.major}.${Ver.minor}.${Ver.build}${Ver.tag}`;
 await writeFile( path, JSON.stringify(Package, null, '  ') );
 
+// place version file in ./public
+await writeFile('./public/version', Package.version );
+
+
 //console.log(Ver);
-*/
+

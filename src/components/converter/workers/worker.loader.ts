@@ -109,8 +109,21 @@ async function loadImageList(files: FileWithId[], outputType: string, outputQual
   const chunkSizeCallback = (workerId: number) => {
     totalChunkSize -= chunksEachWorkerPossessed.get(workerId) || 0;
     chunksEachWorkerPossessed.delete(workerId);
+    //console.log('totalChunkSize', totalChunkSize, workerId);
   };
   const canvasListener = createCanvasWorkerListener(retryFileCallback, chunkSizeCallback);
+
+  const waitTotalCunkDissolves = async () => {
+    // wait until active worker is released if totalChunkSize reaches the limit
+    for( let counter = 1; !canceled && totalChunkSize > TOTAL_CHUNK_SIZE_LIMIT; counter++ ) {
+      console.log("overloaded ", "index:", index, " totalChunkSize:", totalChunkSize, " counter:", counter);
+      if( counter > 9999 ) {
+        throw new Error(`totalChunkSize is deadlocking :${totalChunkSize}`);
+      }
+      await WorkerManager.waitNextRelease();
+    }
+  };
+
 
   createCanvasWorkers(canvasWorkerCount, workerCountForHugeImages, canvasListener);
 
@@ -131,19 +144,21 @@ async function loadImageList(files: FileWithId[], outputType: string, outputQual
 
   while( index < files.length ) {    
     // create message list
-    
+
     const messages: MessageToCanvasWorker = [];
     const trnsBitmaps: ImageBitmap[] = [];
     let isLastItem = false;
     const rest = files.length - index;
-    const len = Math.min( index + Math.max(Math.min(LIST_MAX_LEN, rest / threads |0), 1), files.length);
+    const sublistLen = Math.min( index + Math.max(Math.min(LIST_MAX_LEN, rest / threads |0), 1), files.length);
+    
     let chunkSize = 0;
-
     let includesRetryingFile = false;
-    for( ;index < len; index++ ) {
-      if( chunkSize > LIST_CHUNK_SIZE_LIMIT || totalChunkSize > TOTAL_CHUNK_SIZE_LIMIT ) {
-        if( !canceled )
+    for( ;index < sublistLen; index++ ) {
+      if( chunkSize > LIST_CHUNK_SIZE_LIMIT /*|| totalChunkSize > TOTAL_CHUNK_SIZE_LIMIT*/ ) {
+        if( !canceled ) {
+          await waitTotalCunkDissolves();
           break;
+        }
       }
     
       const file = files[index];
@@ -162,7 +177,6 @@ async function loadImageList(files: FileWithId[], outputType: string, outputQual
         lastRetriedTime = Date.now();
       }
       
-      chunkSize += file.size;
       isLastItem = index === files.length - 1;
       
       // create an info item to start
@@ -192,17 +206,12 @@ async function loadImageList(files: FileWithId[], outputType: string, outputQual
         continue;
       }
 
-      // wait until active worker is released if totalChunkSize reaches the limit
-      while( !canceled && totalChunkSize > TOTAL_CHUNK_SIZE_LIMIT ) {
-        console.log(index, "overloaded", totalChunkSize);
-        await WorkerManager.waitNextRelease();
-      }
+      // check totalChunkSize
+      await waitTotalCunkDissolves();
       if( canceled ) {
         postCanceled(index, path, fileId);
         continue;
       }
-
-
 
       trnsBitmaps.push(bitmap);
       const bitmapSize = bitmap.width * bitmap.height * 4;
@@ -252,16 +261,8 @@ async function loadImageList(files: FileWithId[], outputType: string, outputQual
       
       // store chunk size
       chunksEachWorkerPossessed.set(worker.id, chunkSize);
-    }
-    /*
-    // otherwise release the worker
-    else
-      WorkerManager.releaseWorker(worker);
-    */
 
-
-    // post the bitmap to canvasworker
-    if( worker ) {
+      // post the bitmap to canvasworker
       worker.postMessage( messages, trnsBitmaps );
       
       //trnsBitmaps.forEach(item => item.close());
@@ -277,6 +278,7 @@ async function loadImageList(files: FileWithId[], outputType: string, outputQual
     }
   }
   console.log('end file loop', files.length);
+  console.log('end of totalChunkSize: ', totalChunkSize);
 
   // wait until all workers are resolved
   await WorkerManager.waitAllWorkers();

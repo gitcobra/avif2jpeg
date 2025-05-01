@@ -39,3 +39,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
           destination_dir: ./dist
+          commit_message: ${{ github.event.head_commit.message }}
+
+
