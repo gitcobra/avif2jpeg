@@ -41,7 +41,7 @@ FileInfo & (
     inputsize: number
     outputsize: number
   } | {
-    action: 'file-error' | 'file-canceled' | 'file-retry'
+    action: 'file-error' | 'file-canceled'
   } | {
     action: 'file-completed'
     inputsize: number

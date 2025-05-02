@@ -14,7 +14,7 @@ import { MaxThreads, UserSettings } from '@/user-settings';
 import { MessageApiInjection } from 'naive-ui/es/message/src/MessageProvider';
 //import { NotificationApiInjection } from 'naive-ui/es/notification/src/NotificationProvider';
 import { ConverterResult } from './converter.vue';
-import { LoaderMessageType } from './workers/worker.loader';
+import { LoaderMessageType, MessageFromLoader } from './workers/worker.loader';
 import { sleep } from "@/components/util";
 
 
@@ -235,6 +235,7 @@ export async function convertTargetFilesInMultithread(param: ConverterParameter)
     WorkerManager.init();
     zipWorker.onmessage = null;
     zipWorker.terminate();
+    imgloadWorker.onmessage = null;
     imgloadWorker.terminate();
     clearModuleVariables();
   };
@@ -274,16 +275,27 @@ async function setupWorkers(): Promise<[Worker, Worker]> {
       imgloadWorker.removeEventListener('message', listener);
       clearTimeout(tid);
       
-      flag ? resolve(flag) : reject(flag);
+      if( flag ) {
+        console.log('workers are avialble');
+        resolve(flag);
+      }
+      else {
+        console.error(`couldn't get responses from workers`);
+        reject(flag);
+      }
     };
     
     let recievedZipWorker = false;
     let recievedLoadWorker = false;
     const listener = (ev: MessageEvent) => {
-      if( ev.target === zipWorker )
+      if( ev.target === zipWorker ) {
+        console.log('got a message from zip worker');
         recievedZipWorker = true;
-      if( ev.target === imgloadWorker )
+      }
+      if( ev.target === imgloadWorker ) {
+        console.log('got a message from loader worker');
         recievedLoadWorker = true;
+      }
       
       if( recievedZipWorker && recievedLoadWorker )
         determinator(true);
@@ -306,7 +318,7 @@ async function setupWorkers(): Promise<[Worker, Worker]> {
 
   
   // wait 
-  console.log('wait for first worker\'s responses');
+  console.log('test workers\' availability');
   await promiseToWaitForResponseFromWorkers;
 
 
@@ -444,7 +456,7 @@ const zipWorkerListener = ( params: MessageEvent<MessageToMainFromZipWorker> ) =
 
 // listener for canvas worker
 // all canvas workers share the single listener
-type MessageTypeCanvasWorkerListener = MessageEvent<MessageFromCanvasWorker>;
+type MessageTypeCanvasWorkerListener = MessageEvent<MessageFromLoader>;
 const ImgLoaderListener = (params: MessageTypeCanvasWorkerListener) => {
   const worker = params.target as Worker;
   

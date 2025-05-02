@@ -1,7 +1,8 @@
 import * as WorkerManager from './worker-manager';
 import type { MessageToCanvasWorker, MessageFromCanvasWorker } from './worker.canvas';
 import type { FileWithId } from '../../file-selector.vue'
-
+import { sleep } from '../../util';
+import { start } from 'repl';
 
 // message types
 
@@ -16,6 +17,13 @@ export type LoaderMessageType = {
   threads: number;
 } | {
   action: 'cancel-convert';
+};
+
+export type MessageFromLoader = MessageFromCanvasWorker | {
+  action: 'file-retry'
+  index: number
+  path: string
+  fileId: number
 };
 
 
@@ -43,16 +51,20 @@ const THUMB_DEMAND_INTERVAL = 100; // (msec)
 
 
 
-// module scope variables
-let canceled = false;
+// initialize module scope variables
 let zipWorkerPort: MessagePort;
+let files: FileWithId[]; // it is got in arguments of loadImageList
+const chunksEachWorkerPossessed = new Map<number, number>;
+const failedFileCountMap = new Map<number, number>(); // <fileId, count>
+const retriedFileTime = new Map<number, number>; // <fileId, time>
+
+let totalChunkSize = 0;
+let canceled = false;
+let startedCount = 0;
+let resolvedCount = 0;
 
 
-
-
-
-
-
+// recieve messages from main thread
 self.onmessage = async (params: MessageEvent<LoaderMessageType>) => {
   const { data, ports } = params;
   const { action } = data;
@@ -75,60 +87,27 @@ self.onmessage = async (params: MessageEvent<LoaderMessageType>) => {
   }
 };
 
-async function loadImageList(files: FileWithId[], outputType: string, outputQuality: number, threads: number) {
-  let totalChunkSize = 0;
-  const chunksEachWorkerPossessed = new Map<number, number>;
-  const failedFileCountMap = new Map<number, number>(); // <fileId, count>
-  const retriedFileTime = new Map<number, number>; // <fileId, time>
+// main
+async function loadImageList(filelist: FileWithId[], outputType: string, outputQuality: number, threads: number) {
+  files = filelist;
   
   // initialize canvas workers
   const canvasWorkerCount = Math.max(1, Math.min(threads - 3, files.length)); // preserve +3 for main, worker.loader, worker.zip
   const workerCountForHugeImages = Math.min(MAX_HEAVY_LOADING_THREADS, canvasWorkerCount);
-  
-  // when any error occured in a file, this callback is executed to determin whether to retry
-  const retryFileCallback = (index:number, path:string, fileId:number) => {
-    const file = files[index];
-    if( !file )
-      throw new Error(`the file doesn't exist. "${index}":"${path}"`);
-    
-    const failedCount = failedFileCountMap.get(file._id) || 0;
-    if( failedCount < MAX_RETRY_COUNT ) {
-      failedFileCountMap.set(file._id, failedCount + 1);
-      
-      // append the failed file to the conversion list to retry
-      files.push(file);
-      retriedFileTime.set(fileId, Date.now());
-      postFileRetry(index, path, fileId);
-    }
-    else {
-      console.error(`failed to load "${path}" after ${MAX_RETRY_COUNT} retries. the image may be corrupted or cannot be read by some reason.`);
-      postFileError(index, path, fileId);
-    }
-  };
-  // subtract worker possesed chunk size from totalChunkSize when recieved "list-end" action
-  const chunkSizeCallback = (workerId: number) => {
-    totalChunkSize -= chunksEachWorkerPossessed.get(workerId) || 0;
-    chunksEachWorkerPossessed.delete(workerId);
-    //console.log('totalChunkSize', totalChunkSize, workerId);
-  };
-  const canvasListener = createCanvasWorkerListener(retryFileCallback, chunkSizeCallback);
+  createCanvasWorkers(canvasWorkerCount, workerCountForHugeImages);
 
   const waitTotalCunkDissolves = async () => {
     // wait until active worker is released if totalChunkSize reaches the limit
     for( let counter = 1; !canceled && totalChunkSize > TOTAL_CHUNK_SIZE_LIMIT; counter++ ) {
       console.log("overloaded ", "index:", index, " totalChunkSize:", totalChunkSize, " counter:", counter);
       if( counter > 9999 ) {
-        throw new Error(`totalChunkSize is deadlocking :${totalChunkSize}`);
+        throw new Error(`maybe totalChunkSize is deadlocked :${totalChunkSize}`);
       }
       await WorkerManager.waitNextRelease();
     }
   };
 
-
-  createCanvasWorkers(canvasWorkerCount, workerCountForHugeImages, canvasListener);
-
-  
-  
+ 
   // post all image files to canvas workers
   
   const fileCount = files.length;
@@ -138,9 +117,6 @@ async function loadImageList(files: FileWithId[], outputType: string, outputQual
   let index = 0;
   let lastRetriedTime = 0;
   
-  // reset totalChunkSize
-  totalChunkSize = 0;
-  chunksEachWorkerPossessed.clear();
 
   while( index < files.length ) {    
     // create message list
@@ -179,18 +155,13 @@ async function loadImageList(files: FileWithId[], outputType: string, outputQual
       
       isLastItem = index === files.length - 1;
       
-      // create an info item to start
-      const startMsg: MessageFromCanvasWorker = {
-        action: 'file-start',
-        index,
-        path,
-        fileId,
-      };
-      self.postMessage(startMsg);
+      // post message of start
+      startedCount++;
+      passMessageToMain('file-start', index, path, fileId);
 
       // cancel remaining processes here if canceled flag is true
       if( canceled ) {
-        postCanceled(index, path, fileId);
+        passMessageToMain('file-canceled', index, path, fileId);
         continue;
       }
 
@@ -209,7 +180,7 @@ async function loadImageList(files: FileWithId[], outputType: string, outputQual
       // check totalChunkSize
       await waitTotalCunkDissolves();
       if( canceled ) {
-        postCanceled(index, path, fileId);
+        passMessageToMain('file-canceled', index, path, fileId);
         continue;
       }
 
@@ -288,15 +259,24 @@ async function loadImageList(files: FileWithId[], outputType: string, outputQual
   self.postMessage({
     action: 'end-convert'
   });
+  
+  // wait until resolvedCount is equil to startedCount
+  for( let i = 0; startedCount !== resolvedCount; i++ ) {
+    if( i > 50 ) {
+      console.error(`resolvedCount is unequal to startedCount. resolvedCount:${resolvedCount} startedCount:${startedCount}`);
+      break;
+    }
+    await sleep(100);
+  }
 
   // close by itself
-  //self.close();
+  self.close();
 }
 
 
-function createCanvasWorkers(canvasWorkerCount: number, workerCountForHugeImages: number, canvasListener: MessageEventTarget<Worker>["onmessage"]) {
+// create canvas Workers to convert each image
+function createCanvasWorkers(canvasWorkerCount: number, workerCountForHugeImages: number) {
   WorkerManager.init();
-  // create canvas Workers to convert each image
   for( let i = 0; i < canvasWorkerCount; i++ ) {
     const cworker = WorkerManager.createWorker(workerCountForHugeImages > i);
     
@@ -304,86 +284,99 @@ function createCanvasWorkers(canvasWorkerCount: number, workerCountForHugeImages
     cworker.onmessage = canvasListener;
 
     // Open ports between "worker.zip" and each "worker.canvas" so that converted data are directly sent to "worker.zip".
-    // NOTE: I'm not sure if it would improve perfomance.
     const {port1, port2} = new MessageChannel();
     zipWorkerPort.postMessage({action: 'set-port-canvas'}, [port1]);
     cworker.postMessage({}, [port2]);
   }
 }
 
+const canvasListener = (params: MessageEvent<MessageFromCanvasWorker>) => {
+  const worker = params.target as WorkerManager.WorkerWithId;
+  
+  const { data } = params;
+  const { action } = data;
 
-function createCanvasWorkerListener(retryFileCallback: (index:number, path:string, fileId:number) => any, chunkSizeCallback: (workerId: number) => any) {
-  return (
-  (params: MessageEvent<MessageFromCanvasWorker>) => {
-    const worker = params.target as WorkerManager.WorkerWithId;
-    
-    const { data } = params;
-    const { action } = data;
-
-    switch(action) {
-      case 'list-start':
-        break;
-      
-      case 'file-load':
-        data.workerId = worker.id;
-      case 'file-converted':
-      case 'file-completed':
-      case 'file-canceled':
-        self.postMessage(data);
-        break;
-      
-      case 'file-error': {
-        // need to handle retry 
-        const { index, path, fileId } = data;
-        retryFileCallback(index, path, fileId);
-
-        break;
-      }
-      case 'list-end': {
-        // release the worker
-        WorkerManager.releaseWorker(worker);
-
-        chunkSizeCallback(worker.id);
-        break;
-      }
-
-      case 'respond-to-first-message':
-        break;
-
-      default:
-        throw new Error(`unexptected action "${action}"`);
+  switch(action) {
+    // pass through the message to main
+    case 'file-load':
+      data.workerId = worker.id;
+    case 'file-converted':
+    case 'file-completed':
+    case 'file-canceled': {
+      self.postMessage(data);
+      break;
     }
+    
+    // need to handle retry 
+    case 'file-error': {
+      const { index, path, fileId } = data;
+      retryFileCallback(index, path, fileId);
+      break;
+    }
+    
+    // release the worker
+    case 'list-end': {        
+      WorkerManager.releaseWorker(worker);
+      // subtract worker possesed chunk size from totalChunkSize when recieved "list-end" action
+      totalChunkSize -= chunksEachWorkerPossessed.get(worker.id) || 0;
+      chunksEachWorkerPossessed.delete(worker.id);
+      break;
+    }
+
+    case 'list-start':
+    case 'respond-to-first-message':
+      break;
+
+    default:
+      console.error(`unexptected action "${action}"`);
   }
-  );
-}
 
-function postCanceled(index:number, path:string, fileId:number) {
-  const cancelMsg: MessageFromCanvasWorker = {
-    action: 'file-canceled',
-    index,
-    path,
-    fileId,
-  };
-  self.postMessage(cancelMsg);
-}
+  checkIfFileIsDone(action);
+};
 
-function postFileRetry(index: number, path: string, fileId: number) {
-  const errorMsg: MessageFromCanvasWorker = {
-    action: 'file-retry',
+function passMessageToMain(action: 'file-start'|'file-retry'|'file-canceled'|'file-error', index: number, path: string, fileId: number) {
+  const errorMsg: MessageFromLoader = {
+    action,
     index,
     path,
     fileId,
   };
   self.postMessage(errorMsg);
+
+  checkIfFileIsDone(action as MessageFromCanvasWorker['action']);
 }
 
-function postFileError(index: number, path: string, fileId: number) {
-  const errorMsg: MessageFromCanvasWorker = {
-    action: 'file-error',
-    index,
-    path,
-    fileId,
-  };
-  self.postMessage(errorMsg);
-}
+function checkIfFileIsDone(action: MessageFromCanvasWorker['action']) {
+  switch( action ) {
+    case 'file-completed':
+    case 'file-canceled':
+    case 'file-error':
+      resolvedCount++;
+      break;
+  }
+};
+
+// when any error occured in a file, this callback is executed to determin whether to retry
+function retryFileCallback(index:number, path:string, fileId:number) {
+  const file = files[index];
+  if( !file )
+    throw new Error(`the file doesn't exist. "${index}":"${path}"`);
+  
+  const failedCount = failedFileCountMap.get(file._id) || 0;
+  if( failedCount < MAX_RETRY_COUNT ) {
+    failedFileCountMap.set(file._id, failedCount + 1);
+    
+    // append the failed file to the conversion list to retry
+    files.push(file);
+    retriedFileTime.set(fileId, Date.now());
+    passMessageToMain('file-retry', index, path, fileId);
+  }
+  else {
+    console.error(`failed to load "${path}" after ${MAX_RETRY_COUNT} retries. the image may be corrupted or cannot be read by some reason.`);
+    passMessageToMain('file-error', index, path, fileId);
+  }
+};
+
+
+
 

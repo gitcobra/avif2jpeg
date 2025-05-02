@@ -456,6 +456,8 @@ watch(() => outputImg.index, async () => {
   
   nextTick( () => {
     let node = currentSelectedLogNode.value;
+    if( !node )
+      return;
     
     // *sticky "<th>"s may hide the selected target node if the node is aligned to the top of the visible area of the scrollable ancestor.
     //  hence when scrolling up, focus previous sibling of the target instead of the target itself for that reason.
@@ -553,17 +555,12 @@ function update() {
   if( logOpened.value || !props.processing ) {
     const recievedlog = stat.logs;//stat.logs.slice(-LOG_SIZE_LIMIT);
     workingLogs.value.push(...recievedlog);
-    /*
-    const excess = workingLogs.value.length - LOG_SIZE_LIMIT;
-    if( excess > 0 )
-      workingLogs.value.splice(0, excess);
-    */
     
     if( recievedlog.length ) {
+      nextTick( calculateLogTableViewRange );
       if( autoScrollLog.value ) {
         scrollLogViewToBottom();
       }
-      nextTick( calculateLogTableViewRange );
     }
   }
   stat.logs.length = 0; // clear the log;
@@ -645,8 +642,8 @@ async function changeViewerIndexBySelectedLogItem(completed: boolean, path:strin
   if( index === -1 )
     return;
   
-  console.log(path, fileId, zippedIndex);
-  console.log(index, props.status.ziplogs[index]);
+  //console.log(path, fileId, zippedIndex);
+  //console.log(index, props.status.ziplogs[index]);
 
   if( !isExpanded('preview') ) {
     setExpanded('preview');
@@ -827,12 +824,6 @@ async function onSaveButtonClick() {
 }
 
 
-function preventOutputCollapsing({name, expanded, event}) {
-  console.log(expandedNames)
-  if( name === 'output' && !expanded ) {
-    setExpanded('output');
-  }
-}
 
 
 const logTopMarginStyle = ref<CSSProperties>({height: '0px'});
@@ -844,6 +835,7 @@ let realLogHeight = 0;
 let _tidLogItem = 0;
 let lastTimeLogViewUpdated = 0;
 let lastScrollTopWhenRangeUpdated = -999;
+let lastLogLengthWhenRangeUpdated = -1;
 function calculateLogTableViewRange(force?: any/*ev: Event*/) {
   const now = Date.now();
   if( force !== true ) {
@@ -865,21 +857,28 @@ function calculateLogTableViewRange(force?: any/*ev: Event*/) {
     logItemHeight = realLogHeight;
   }
 
+  const loglen = filteredLogList.value.length;//workingLogs.value.length;
   //const scrollEl = ev.target! as HTMLElement;
   const scrollEl = scrollref.value.scrollbarInstRef.containerRef; // *HACK: get container element
   //const bottomScrollVal = scrollEl.scrollHeight - scrollEl.clientHeight - 1;
   const scrtop = scrollEl.scrollTop;
   // ignore too small scroll amount
-  if( Math.abs(scrtop - lastScrollTopWhenRangeUpdated) < logItemHeight*0.5 && !force )
-    return;
+  if( !force ) {
+    if( loglen === lastLogLengthWhenRangeUpdated ) {
+      if( Math.abs(scrtop - lastScrollTopWhenRangeUpdated) < logItemHeight*0.5 ) {
+        return;
+      }
+    }
+  }
   lastScrollTopWhenRangeUpdated = scrtop;
-
-  const loglen = filteredLogList.value.length;//workingLogs.value.length;
+  lastLogLengthWhenRangeUpdated = loglen;
 
   const viewStartIndex = Math.max(0, (scrtop / logItemHeight | 0) - LOG_INVISIBLE_ITEM_MARGIN);
   logStartIndex.value = viewStartIndex;
   logTopMarginStyle.value.height = (viewStartIndex * logItemHeight) + 'px';
   logBottomMarginStyle.value.height = Math.max(0, loglen - (viewStartIndex + logDisplayQuantity.value)) * logItemHeight + 'px';
+
+  //console.log("updated", logTopMarginStyle.value, logBottomMarginStyle.value);
 }
 
 function resetLogTableViewRange() {
@@ -977,7 +976,6 @@ function cleanup() {
       :trigger-areas="['arrow', 'main']"
       v-model:expanded-names="expandedNames"
       :theme-overrides="collapseThemeOverrides"
-      _item-header-click="preventOutputCollapsing"
     >
     <n-collapse-item name="progress" style="white-space:nowrap;">
       <template #header="{collapsed}">

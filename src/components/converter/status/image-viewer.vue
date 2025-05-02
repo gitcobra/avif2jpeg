@@ -76,7 +76,8 @@ const initializing = ref(true);
 const index = ref(Math.max(props.index, 0) + 1);
 const width = ref(1);
 const height = ref(1);
-const src = ref('');
+const convertedSrc = ref('');
+const originalSrc = ref('');
 
 const orgwidth = ref(1);
 const orgheight = ref(1);
@@ -85,7 +86,7 @@ const demandingImage = ref(false);
 const thumbloaded = ref(false);
 const thumbOrgloaded = ref(false);
 const isPreviewing = computed<boolean>(() => nImageGroupRef.value?.previewInstRef?.displayed);
-const isPreviewingConvertedImg = computed<boolean>(() => nImageGroupRef?.value?.previewInstRef?.previewSrc === src.value);
+const isPreviewingConvertedImg = computed<boolean>(() => nImageGroupRef?.value?.previewInstRef?.previewSrc === convertedSrc.value);
 
 const allowNext = computed<boolean>(() => index.value < props.length);
 const allowPrev = computed<boolean>(() => index.value > 1);
@@ -145,7 +146,11 @@ watch(index, (val, prev) => {
     if( props.index === index.value - 1 )
       return;
 
-    viewTransKey.value = initializing.value ? viewTransKey.value : ~viewTransKey.value;    
+    viewTransKey.value = initializing.value ? viewTransKey.value : ~viewTransKey.value;
+    convertedSrc.value = undefined;
+    originalSrc.value = undefined;
+    
+    
     /*
     const { clientWidth: w, clientHeight: h } = viewerItemContainer.value.$el;
     vItemContainerStyle.value = { width: w + 'px', height: h + 'px' };
@@ -215,7 +220,8 @@ watch(() => props.url, () => {
     }
 
     // update src
-    src.value = newsrc;
+    convertedSrc.value = newsrc;
+    originalSrc.value = props.originalUrl;
   }
 }, {immediate:true});
 
@@ -594,7 +600,7 @@ function cleanup() {
 
                     <Thumbnail
                       :ref="(el: any) => {if( el?.active ) thumbOrgRef = el}"
-                      :src="originalUrl"
+                      :src="originalSrc"
                       :width="1"
                       :max-width="1"
                       :max-height="1"
@@ -636,7 +642,7 @@ function cleanup() {
                 </n-flex>
                 
                 <!-- CONVERTED -->
-                <a :href="src" @click.prevent="openPreview()" :download="props.name" :title="props.name" class="imglink">
+                <a :href="convertedSrc" @click.prevent="openPreview()" :download="props.name" :title="props.name" class="imglink">
                 <n-flex vertical align="center" justify="center">
                   <n-flex class="imglink-label">{{t('status.Converted')}}</n-flex>
                   
@@ -679,7 +685,7 @@ function cleanup() {
 
               <Thumbnail
                 :ref="(el: any) => {if( el?.active ) thumbConvRef = el}"
-                :src="src"
+                :src="convertedSrc"
                 :width="142"
                 :max-width="140"
                 :max-height="100"

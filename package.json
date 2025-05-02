@@ -1,6 +1,6 @@
 {
   "name": "avif2jpeg",
-  "version": "1.10.4",
+  "version": "1.10.5",
   "private": true,
   "type": "module",
   "scripts": {
@@ -12,7 +12,7 @@
     "preview:test": "vite preview --mode test",
     "build:ver": "vite-ssg build --mode ver",
     "preview:ver": "vite preview --mode ver",
-    "version-up": "node ./src/version.js",
+    "ver-up": "node ./src/version.js",
     "test": "jest"
   },
   "devDependencies": {
