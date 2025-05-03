@@ -42,6 +42,7 @@ const emit = defineEmits<{
 
 
 // constants
+const TRANSTIME = 200;
 
 // detect smartphone
 const IS_SP = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile Safari/.test(navigator.userAgent);
@@ -57,7 +58,8 @@ const LANDSCAPE = ref(true);
 const processing = ref(false);
 const mounted = ref(false);
 
-const contentVisible = ref(true);
+const contentVisible = ref(false);
+const firstPageView = ref(true);
 
 // for SSG
 if( import.meta.env.SSR ) {
@@ -111,21 +113,21 @@ onUnmounted(() => {
 
 // functions
 
-const TRANSTIME = 200;
 let transStartTime = 0;
-let firstTime = true;
 function onLangChange() {
   if( import.meta.env.SSR )
     return;
-  
   contentVisible.value = false;
   transStartTime = Date.now();
+  //alert("onLangChange")
 }
 function onLangReady() {
-  const dif = firstTime ? 0 : Math.max(0, TRANSTIME - (Date.now() - transStartTime));
-  firstTime = false;
-  setTimeout(() => contentVisible.value = true, dif);
-  emit('ready');
+  const dif = firstPageView.value ? 0 : Math.max(0, TRANSTIME - (Date.now() - transStartTime));
+  firstPageView.value = false;
+  nextTick(() => {
+    setTimeout(() => contentVisible.value = true, dif);
+  });
+  //emit('ready');
 }
 
 async function switchToolTipVisibility() {
@@ -146,7 +148,6 @@ function onInputFile(list: File[]) {
   inputConversionFiles.value = list;
 }
 
-let tidShowNote = 0;
 function onInputClick(flag: boolean) {
   showNote.value = flag;
 }
@@ -169,6 +170,7 @@ function onInputClick(flag: boolean) {
           <SwitchLanguages
             @lang-change="onLangChange"
             @lang-ready="onLangReady"
+            :delay="firstPageView ? 0 : TRANSTIME"
           />
         </Suspense>
       </template>
@@ -207,9 +209,11 @@ function onInputClick(flag: boolean) {
           _:multi-thread-count="val => availableThreadCount = val"
         >
           <template #lang-switch>
+            <!--
             <Suspense>
-              <SwitchLanguages/>
+              <SwitchLanguages :delay="firstPageView ? 0 : TRANSTIME"/>
             </Suspense>
+            -->
           </template>
         </Converter>
 
@@ -249,6 +253,7 @@ function onInputClick(flag: boolean) {
       </n-flex> 
       
     </n-flex>
+
     </transition>
 
     <!-- <LangFlag/> -->

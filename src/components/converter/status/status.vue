@@ -644,7 +644,7 @@ async function changeViewerIndexBySelectedLogItem(completed: boolean, path:strin
     return;
   */
   const index = zippedIndex;
-  
+
   console.log(path, fileId, zippedIndex);
   console.log(index, props.status.ziplogs[index]);
 
@@ -732,15 +732,15 @@ function onKeyPressInLogTable(ev: KeyboardEvent) {
 }
 
 // filter for log
-const FilterOptions: {label:string, readonly value: 'success'|'error'|''}[] = [
+const FilterOptions: {label:() => any, readonly value: 'success'|'error'|''}[] = [
   {
-    label: t('status.showAll'),
+    label: () => t('status.showAll'),
     value: '',
   }, {
-    label: t('status.showOnlySuccess'),
+    label: () => t('status.showOnlySuccess'),
     value: 'success',
   }, {
-    label: t('status.showOnlyError'),
+    label: () => t('status.showOnlyError'),
     value: 'error',
   },
 ];

@@ -22,6 +22,7 @@ import { UserSettings, MaxThreads } from '@/user-settings';
 export type ConversionStatusType = InstanceType<typeof ConversionStatus>['$props']['status'];
 
 import type { FileWithId } from '../file-selector.vue';
+import { VNode } from 'vue';
 
 // common
 const INJ = inject(GlobalValsKey);
@@ -81,7 +82,7 @@ const conversionModalActive = ref(false);
 const dispConvStatusComponent = ref(false); // conversion status
 
 // informations
-const processingMessage = ref('initializing');
+const processingMessage = ref<() => any>(() => 'initializing');
 const processingType = ref<NotificationType>('info');
 
 // an object for ConversionStatus["status"] property
@@ -315,7 +316,7 @@ async function startConvert(input: FileWithId[]) {
 
   // set dialog condition
   processingType.value = 'info';
-  processingMessage.value = t('processing');
+  processingMessage.value = () => t('processing');
 
   
   // prepare for converter
@@ -391,11 +392,11 @@ async function startConvert(input: FileWithId[]) {
   // update condition by the result
   if( ConvStats.success === ConvStats.length ) {
     processingType.value = 'success';
-    processingMessage.value = t('completed');
+    processingMessage.value = () => t('completed');
   }
   else {
     processingType.value = 'error';
-    processingMessage.value = canceled.value? t('aborted') : t('incomplete');
+    processingMessage.value = () => canceled.value? t('aborted') : t('incomplete');
   }
   
   // when error files exist
@@ -574,8 +575,8 @@ function checkAvailableFeatures() {
     :close-on-esc="false"
     preset="dialog"
     
-    @click="/*notification.destroyAll();*/ message.destroyAll();"
-    @mask-click="/*notification.destroyAll();*/ message.destroyAll();"
+    @click="message.destroyAll();"
+    @mask-click="message.destroyAll();"
     @close="onBeforeProcessingDialogClose"
     @esc="onESCPress"
     :title="processingMessage"
@@ -604,11 +605,11 @@ function checkAvailableFeatures() {
 
         <!-- control buttons -->
         <n-flex justify="end" align="center" :wrap="false">
-          <!--
+          
           <n-flex justify="start" align="center">
             <slot name="lang-switch"></slot>
           </n-flex>
-          -->
+          
           <!-- cancel button -->
           <n-button v-if="processing" :disabled="canceled" ref="cancelbutton" round size="large" @click="canceled = true">
             <!-- spinner waiting for complete -->

@@ -4,6 +4,7 @@ import { GlobeOutline } from '@vicons/ionicons5';
 import { useI18n } from "vue-i18n";
 import { LANG_ID_LIST, LANG_NAMES, loadLocaleMessages, I18n } from '@/i18n';
 import { GlobalValsKey } from "../../Avif2Jpeg.vue";
+import { sleep } from '../util';
 
 
 
@@ -17,6 +18,13 @@ const INJ = inject(GlobalValsKey);
 const router = useRouter();
 const { locale, t } = useI18n();
 
+
+
+// properties
+const props = defineProps<{
+  // delay before applying a changed language
+  delay: number
+}>();
 
 // emits
 const emit = defineEmits<{
@@ -92,7 +100,7 @@ if( import.meta.env.SSR ) {
 async function setLocaleMessages(lang: string) {
   if( lang !== locale.value || I18n.global.availableLocales.indexOf(lang as any) === -1 ) {
     emit('lang-change', lang);
-
+    await sleep( props.delay );
     await loadLocaleMessages(lang);
     locale.value = lang;
 
@@ -165,7 +173,7 @@ function changeRoute(val: string) {
       <n-select
         ref="langselect"
         size="tiny"
-        style="width: 100%;"
+        style="width: auto;"
         :consistent-menu-width="false"
         
         :options="langOptions"
