@@ -638,12 +638,15 @@ async function changeViewerIndexBySelectedLogItem(completed: boolean, path:strin
   if( !completed )
     return;
 
+  /*
   const index = props.status.ziplogs.findIndex(item => item.fileId === fileId);
   if( index === -1 )
     return;
+  */
+  const index = zippedIndex;
   
-  //console.log(path, fileId, zippedIndex);
-  //console.log(index, props.status.ziplogs[index]);
+  console.log(path, fileId, zippedIndex);
+  console.log(index, props.status.ziplogs[index]);
 
   if( !isExpanded('preview') ) {
     setExpanded('preview');

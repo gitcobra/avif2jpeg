@@ -529,10 +529,10 @@ const ImgLoaderListener = (params: MessageTypeCanvasWorkerListener) => {
       
 
       item.zippedIndex = entireIndex;
-      ConvStats.ziplogs.push({
+      ConvStats.ziplogs[entireIndex] = {
         fileId,
         storedPath,
-      });
+      };
 
       break;
     }
