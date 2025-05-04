@@ -39,10 +39,11 @@ let zipWorkerModuleScope: Worker;
 const processingLogItems = new Map<number, LogType>;//ref(new Map<number, LogType>).value;
 const fileMapById = new Map<number, FileWithId>;
 const failedFileCountMap = new Map<number, number>;
+/*
 const variousFileInfo = new Map<number, {
   shrinked?: boolean;
 }>();
-
+*/
 
 
 // parameters from parent module
@@ -82,11 +83,11 @@ function clearModuleVariables(param?: ConverterParameter) {
   processingLogItems.clear();
   fileMapById.clear();
   failedFileCountMap.clear();
-  variousFileInfo.clear();
+  //variousFileInfo.clear();
 
   fileMapById.clear();
   failedFileCountMap.clear();
-  variousFileInfo.clear();
+  //variousFileInfo.clear();
 
   // clear param object
   if( param ) {
@@ -196,6 +197,7 @@ export async function convertTargetFilesInMultithread(param: ConverterParameter)
     outputQuality: quality,
     outputType: format,
     threads: props.threads,
+    maxSize: UserSettings.shrinkImage ? {width: UserSettings.maxWidth, height: UserSettings.maxHeight} : null,
   };
   imgloadWorker.postMessage(msgToLoader);
   
@@ -378,6 +380,7 @@ const zipWorkerListener = ( params: MessageEvent<MessageToMainFromZipWorker> ) =
       
       // create an object url of the original image
       let orgUrl = '', orgSize = 0, orgName = '';
+      const item = processingLogItems.get(fileId);
       if( fileId >= 0 ) {
         const file = fileMapById.get(fileId);
         orgUrl = URL.createObjectURL(file);
@@ -387,7 +390,7 @@ const zipWorkerListener = ( params: MessageEvent<MessageToMainFromZipWorker> ) =
       ConvStats.convertedImageOrgUrl = orgUrl;
       ConvStats.convertedImageOrgSize = orgSize;
       ConvStats.convertedImageOrgName = orgName;
-      ConvStats.convertedImageShrinked = variousFileInfo.get(fileId)?.shrinked;
+      ConvStats.convertedImageShrinked = item?.shrinked; //variousFileInfo.get(fileId)?.shrinked;
       
       return;
     }
@@ -477,30 +480,38 @@ const ImgLoaderListener = (params: MessageTypeCanvasWorkerListener) => {
       break;
     }
     case 'file-load': {
-      const { thumbnail, width, height, fileId, shrinked, workerId } = data;
+      const { thumbnail, width, height, fileId, workerId, inputsize } = data;
       const item = processingLogItems.get(fileId)!;
       item.core = workerId;//worker.id;
       item.command = `🖼️loaded`;
+      item.width = width;
+      item.height = height;
+      item.size = inputsize;
 
       if( thumbnail ) {
         ConvStats.thumbnail = thumbnail;
       }
       
+      /*
       let dat = variousFileInfo.get(fileId);
       
       if( !dat ) {
         dat = {};
         variousFileInfo.set(fileId, dat);
       }
-      dat.shrinked ??= shrinked;
+      */
       //console.log(fileId, dat, "load")
       break;
     }
     case 'file-converted': {
-      const { index, path, fileId } = data;
+      const { index, path, fileId, shrinked, outputWidth, outputHeight: outputHeihgt, outputsize } = data;
 
       const item = processingLogItems.get(fileId)!;
       item.command = `🔃converted`;
+      item.shrinked ??= shrinked;
+      item.outputWidth = outputWidth;
+      item.outputHeight = outputHeihgt;
+      item.outputSize = outputsize;
       //processingCoreLogItems.delete(worker.id);
       //completedItemsLog.set(fileId, item);
       ConvStats.converted++;
@@ -508,7 +519,7 @@ const ImgLoaderListener = (params: MessageTypeCanvasWorkerListener) => {
       break;
     }
 
-    // otherwese 'file-completed' action is caused by worker.zip
+    // 'file-completed' action is caused by worker.zip
     case 'file-completed': {
       const { inputsize, outputsize, fileId, entireIndex, storedPath } = data;
  

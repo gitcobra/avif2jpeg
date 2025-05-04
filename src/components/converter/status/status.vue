@@ -61,6 +61,10 @@ const props = defineProps<{
       size?: number
       width?: number
       height?: number
+      outputWidth?: number
+      outputHeight?: number
+      outputSize?: number
+      shrinked?: boolean
     }[]
     ziplogs: {
       fileId: number
@@ -1165,7 +1169,7 @@ function cleanup() {
           <tbody ref="tbody">
           <tr :style="logTopMarginStyle"></tr>
           <tr
-            v-for="({index, key, command, path, core, zippedIndex, completed, fileId}, i) in filteredLogList.slice(logStartIndex, logStartIndex + logDisplayQuantity)"
+            v-for="({index, key, command, path, core, zippedIndex, completed, fileId, shrinked, width, height, outputWidth, outputHeight, size, outputSize}, i) in filteredLogList.slice(logStartIndex, logStartIndex + logDisplayQuantity)"
             :key="key"
             :class="{'log-tr':1, completed, selected:outputImg.index === zippedIndex}"
             :ref="(el: any) => {if( outputImg.index === zippedIndex ) currentSelectedLogNode = el}"
@@ -1175,7 +1179,19 @@ function cleanup() {
             <td class="log-td">{{ (core >= 0 ? core+1 : '-') }}</td>
             <td class="log-td">{{ index+1 }}</td>
             <td class="log-td">{{ command }}</td>
-            <td class="log-td">{{path}}</td>
+            <td class="log-td">{{ path }}</td>
+            <td class="log-td log-extra" v-if="width" style="padding-left:0.5em;">
+              {{ `[${width}×${height}] (${getUnitSize(size, 0)})`}}
+              <span v-if="outputWidth">
+                →
+                <span>
+                  ({{ (getUnitSize(outputSize, 0)) }})
+                </span>
+              </span>
+              <span v-if="shrinked" style="color:blue">
+                {{ ` [${outputWidth}×${outputHeight}]`}}
+              </span>
+            </td>
           </tr>
           <tr :style="logBottomMarginStyle"></tr>
           </tbody>
@@ -1488,6 +1504,7 @@ function cleanup() {
   .log-table {
     z-index: 1;
     position:relative;
+    width: 100%;
     font-size: 0.7rem;
     line-height: 0.7rem;
     white-space: nowrap;
@@ -1529,6 +1546,9 @@ function cleanup() {
       &:first-child {
         border-left: none;
       }
+    }
+    .log-extra {
+      font-size: smaller;
     }
   }
 

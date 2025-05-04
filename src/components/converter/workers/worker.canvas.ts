@@ -30,15 +30,15 @@ FileInfo & (
     thumbnail?: ImageBitmap
     width: number
     height: number
-    shrinked: boolean
     workerId?: number
+    inputsize: number
   } | {
     action: 'file-converted'
     image?: Blob
     //blobUrl?: string
-    width: number
-    height: number
-    inputsize: number
+    shrinked: boolean
+    outputWidth: number
+    outputHeight: number
     outputsize: number
   } | {
     action: 'file-error' | 'file-canceled'
@@ -62,7 +62,7 @@ export type MessageToCanvasWorker = {
   type: string
   demandThumbnail: boolean
   isSingleImage: boolean
-  maxSize: { width:number, height:number } | null
+  maxSize?: { width:number, height:number }
   retriedTime: number
 }[];
 
@@ -116,7 +116,6 @@ export type MessageToZipFromCanvasType = {
 };
 async function convertRecievedData(data: MessageToCanvasWorker[number]) {
   const { index, file, bitmap, fileId, type, quality, demandThumbnail, isSingleImage, webkitRelativePath, maxSize } = data;
-  const { retriedTime } = data;
 
   const path = webkitRelativePath || file.webkitRelativePath || file.name;
   const inputsize = file.size;
@@ -124,31 +123,18 @@ async function convertRecievedData(data: MessageToCanvasWorker[number]) {
   // start
   let messageToMain: MessageFromCanvasWorker;
 
-  /*
-  messageToMain = {
-    action: 'file-start', 
-    path, 
-    fileId, 
-    index,
-  };
-  self.postMessage( messageToMain );
-  */
-
+  let sourceWidth = 0, sourceHeight = 0;
   let sourceBitmap: ImageBitmap;
   let width: number, height: number;
+  let outputWidth: number, outputHeight: number;
   let shrinked = false;
 
-  /*  
-  // wait a second for retrying
-  const retryingDelay = retriedTime ? Math.max(0, 5000 - (Date.now() - retriedTime)) : 0;
-  if( retryingDelay )
-    await new Promise(r => setTimeout(r, retryingDelay));
-  */
-  
   try {
     sourceBitmap = bitmap; //await createImageBitmap(file);
     
     ({width, height} = sourceBitmap);
+    sourceWidth = outputWidth = width;
+    sourceHeight = outputHeight = height;
     // resize the source bitmap
     if( maxSize ) {
       const whrate = width / height;
@@ -168,6 +154,8 @@ async function convertRecievedData(data: MessageToCanvasWorker[number]) {
       shrinked = !!resize;
       
       sourceBitmap = await createImageBitmap(sourceBitmap, {resizeQuality:'high', ...(resize||{})});
+      outputWidth = sourceBitmap.width;
+      outputHeight = sourceBitmap.height;
       bitmap.close();
     }
   } catch(e) {
@@ -190,9 +178,6 @@ async function convertRecievedData(data: MessageToCanvasWorker[number]) {
     dbitmap = await createImageBitmap(sourceBitmap, {...resize, resizeQuality: 'pixelated'});
   }
 
-  //await new Promise(r => setTimeout(r, 3000));
-  //const canvas = new OffscreenCanvas(100, 100);
-  //const bmctx = canvas.getContext('bitmaprenderer');
 
   // transfer the bitmap to the canvas
   bmctx!.transferFromImageBitmap(sourceBitmap);
@@ -204,9 +189,9 @@ async function convertRecievedData(data: MessageToCanvasWorker[number]) {
     path, 
     index, 
     thumbnail: dbitmap, 
-    width, 
-    height,
-    shrinked,
+    width: sourceWidth,
+    height: sourceHeight,
+    inputsize,
   };
   self.postMessage( messageToMain );
   
@@ -245,11 +230,14 @@ async function convertRecievedData(data: MessageToCanvasWorker[number]) {
     fileId,
     index,
     outputsize,
-    inputsize,
+    //inputsize,
     //image: imageBlob,
     //blobUrl,
-    width,
-    height
+    //width,
+    //height
+    outputWidth,
+    outputHeight,
+    shrinked,
   };
   self.postMessage( messageToMain );
   

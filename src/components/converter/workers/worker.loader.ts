@@ -15,6 +15,10 @@ export type LoaderMessageType = {
   outputType: string;
   outputQuality: number;
   threads: number;
+  maxSize?: {
+    width: number;
+    height: number;
+  }
 } | {
   action: 'cancel-convert';
 };
@@ -76,9 +80,9 @@ self.onmessage = async (params: MessageEvent<LoaderMessageType>) => {
       break;
     }
     case 'start-convert': {
-      const {list, fileIdList, outputType, outputQuality, threads} = data;
+      const {list, fileIdList, outputType, outputQuality, threads, maxSize} = data;
       list.forEach((val, i) => val._id = fileIdList[i]);
-      loadImageList(list, outputType, outputQuality, threads);
+      loadImageList(list, outputType, outputQuality, threads, maxSize);
       break;
     }
     case 'cancel-convert':
@@ -88,7 +92,7 @@ self.onmessage = async (params: MessageEvent<LoaderMessageType>) => {
 };
 
 // main
-async function loadImageList(filelist: FileWithId[], outputType: string, outputQuality: number, threads: number) {
+async function loadImageList(filelist: FileWithId[], outputType: string, outputQuality: number, threads: number, maxSize?: {width: number, height:number}) {
   files = filelist;
   
   // initialize canvas workers
@@ -96,8 +100,8 @@ async function loadImageList(filelist: FileWithId[], outputType: string, outputQ
   const workerCountForHugeImages = Math.min(MAX_HEAVY_LOADING_THREADS, canvasWorkerCount);
   createCanvasWorkers(canvasWorkerCount, workerCountForHugeImages);
 
+  // wait until active worker is released if totalChunkSize reaches the limit
   const waitTotalCunkDissolves = async () => {
-    // wait until active worker is released if totalChunkSize reaches the limit
     for( let counter = 1; !canceled && totalChunkSize > TOTAL_CHUNK_SIZE_LIMIT; counter++ ) {
       console.log("overloaded ", "index:", index, " totalChunkSize:", totalChunkSize, " counter:", counter);
       if( counter > 9999 ) {
@@ -208,7 +212,7 @@ async function loadImageList(filelist: FileWithId[], outputType: string, outputQ
         quality: outputQuality / 100,
         demandThumbnail: demandThumbnail || isLastItem,
         isSingleImage: isSingleImageFile,
-        maxSize: null,//UserSettings.shrinkImage ? {width: UserSettings.maxWidth, height: UserSettings.maxHeight} : null,
+        maxSize,
         retriedTime: retriedFileTime.get(fileId) || 0,
         
         // chrome (currently v126.0.6478.127) cannot seem to read a property of a File that defined by Object.defineProperty from a Worker,
