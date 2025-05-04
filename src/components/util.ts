@@ -34,7 +34,7 @@ export function getThumbnailedSize(image: {width:number, height:number}, maxSize
   return {width, height};
 }
 
-// get a split zips index and a file index from an entire index
+// get a index of the split zips and the overall index of the stored files
 export class SplitZipsIndexer {
   private _currentFileCount = 0;
   private _currentZipIndex = 0;
@@ -88,9 +88,10 @@ export function sleep(msec: number) {
   return new Promise(res => setTimeout(res, msec));
 }
 
-// this is needed for some naive-ui components such as n-tooltip, n-popover
-// that are triggered by "show" property.
-export function useTimeoutRef<T>(val?: T, ms: number = 100) {
+// This is for the naive-ui components that is triggered by the "show" property, such as n-tooltip, n-popover or any related components
+// when you want to manually display it once with :show="true" but do not want to keep it visible permanently.
+// It receives a value, waits for the screen to update, and then resets the value to "undefined", so that the element's hiding follows settings like "duration".
+export function useTimeoutRef<T>(val?: T, ms: number = 0) {
   const tflag = ref(val);
   watch(tflag, (val) => {
     if( val === undefined )

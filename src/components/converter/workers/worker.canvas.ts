@@ -65,7 +65,8 @@ export type MessageToCanvasWorker = {
   maxSize: { width:number, height:number } | null
   retriedTime: number
 }[];
-// message from main thread
+
+// listen messages from main thread
 self.onmessage = async (params: MessageEvent<MessageToCanvasWorker | null>) => {
   // set an output port for zip
   const { ports } = params;
@@ -81,7 +82,6 @@ self.onmessage = async (params: MessageEvent<MessageToCanvasWorker | null>) => {
     return;
   }
 
-  
   // start
   /*
   self.postMessage({

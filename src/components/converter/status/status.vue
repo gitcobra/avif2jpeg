@@ -1133,11 +1133,11 @@ function cleanup() {
       
       <n-flex :wrap="false" align="stretch"
         :class="{'log-container':1, 'expand-log': expandLog}"
-        :style="expandLog ? {maxHeight: logMaxHeightPX + 'px'} : {height: '110px'}"
+        :style="expandLog ? {height: logMaxHeightPX + 'px'} : {height: '110px'}"
         @keydown="onKeyPressInLogTable"
         tabindex="-1"
       >
-        <!-- filename table -->
+        <!-- filelist table -->
         <n-scrollbar
           ref="scrollref"
           :distance="10"
@@ -1474,6 +1474,7 @@ function cleanup() {
   position: relative;
   overflow: hidden;
   font-size: 1rem;
+  height: 110px;
 
   transition: all .2s ease;
   margin-top: -1em;

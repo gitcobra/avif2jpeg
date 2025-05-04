@@ -384,11 +384,6 @@ async function startConvert(input: FileWithId[]) {
   
   // end converting
   
-  // output single image 
-  if( ConvStats.length === 1 ) {
-    //await outputSingleImageData(outputExt, SingleImageData);
-  }
-  
   // update condition by the result
   if( ConvStats.success === ConvStats.length ) {
     processingType.value = 'success';
@@ -474,30 +469,6 @@ function makeCurrentOutputName(format: string, quality: number, firstFilePath?: 
 
   return currentOutputFileName;
 }
-
-/*
-function getOutputFullPath(path: string, ext: string, keepPrevExt: boolean, nameStore: { has(path: string): boolean }) {
-  path = path.replace(/^\//, '');
-  
-  // remove extension
-  if( !keepPrevExt )
-    path = path.replace(/\.(jpe?g|jfif|pjpeg|pjp|gif|png|avif|webp|bmp|apng|ico)$/i, '');
-  
-  // add a number to the filename if the name already exists
-  let outputPath = path + '.' + ext;
-  for( let dupCounter = 1; dupCounter < 0x7FFFFFFF; dupCounter++ ) {
-    
-    // return when success
-    if( !nameStore.has(outputPath) )
-      return outputPath;
-    
-    // generate path
-    outputPath = path + '_' + dupCounter + '.' + ext;
-  }
-  
-  throw new Error(`failed to create valid output path. ${outputPath}`);
-}
-*/
 
 async function checkAvifSupport() {
   const TestAVIFData = 'data:image/avif;base64,AAAAHGZ0eXBtaWYxAAAAAG1pZjFhdmlmbWlhZgAAAPJtZXRhAAAAAAAAACFoZGxyAAAAAAAAAABwaWN0AAAAAAAAAAAAAAAAAAAAAA5waXRtAAAAAAABAAAAHmlsb2MAAAAABEAAAQABAAAAAAEWAAEAAAAgAAAAKGlpbmYAAAAAAAEAAAAaaW5mZQIAAAAAAQAAYXYwMUltYWdlAAAAAHFpcHJwAAAAUmlwY28AAAAUaXNwZQAAAAAAAAAIAAAACAAAABBwYXNwAAAAAQAAAAEAAAAWYXYxQ4EgAAAKCDgIv2kBDQAgAAAAEHBpeGkAAAAAAwgICAAAABdpcG1hAAAAAAAAAAEAAQQBAoOEAAAAKG1kYXQKCDgIv2kBDQAgMhQWQAAASAAADAZuZXHwA9LzjNWygA==';

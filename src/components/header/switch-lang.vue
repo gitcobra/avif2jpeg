@@ -60,9 +60,6 @@ onMounted(() => {
 });
 
 
-onBeforeMount(async () => {
-
-});
 
 
 // set language for SSG

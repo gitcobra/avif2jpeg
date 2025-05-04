@@ -270,6 +270,7 @@ async function loadImageList(filelist: FileWithId[], outputType: string, outputQ
   }
 
   // close by itself
+  console.log('successfully close worker.loader.');
   self.close();
 }
 
@@ -346,11 +347,13 @@ function passMessageToMain(action: 'file-start'|'file-retry'|'file-canceled'|'fi
   checkIfFileIsDone(action as MessageFromCanvasWorker['action']);
 }
 
-function checkIfFileIsDone(action: MessageFromCanvasWorker['action']) {
+function checkIfFileIsDone(action: MessageFromLoader['action']) {
   switch( action ) {
     case 'file-completed':
     case 'file-canceled':
     case 'file-error':
+    
+    case 'file-retry':
       resolvedCount++;
       break;
   }
