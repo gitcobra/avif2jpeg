@@ -10,7 +10,7 @@ const { t } = useI18n();
 // constants
 const LOG_INVISIBLE_ITEM_MARGIN = 3;
 const THUMB_SIZE = {W:160, H:80};
-
+const SORT_LIST_INTERVAL_MSEC = 3000;
 
 
 // props
@@ -114,7 +114,7 @@ const SortOptionGroup = ref([{
 //const sortValue = ref<typeof SortOptions[number]['value']>(SortOptions[0].value);
 const sortValue = defineModel<typeof SortOptions[number]['value']>('order', {required: false, default:'processed'});
 
-watch(sortValue, onChangeSortOption);
+watch(sortValue, sortListBySortOptions);
 
 
 // filter options
@@ -207,7 +207,7 @@ watch(() => props.imageIndex, async () => {
   const overBottomOfView = opindexInLog > logStartIndex.value + logDisplayQuantity.value;
   if( overTopOfView || overBottomOfView ) {
     const scrollAmount = opindexInLog * logItemHeight - (overBottomOfView ? logMaxHeightPX.value : 0);
-    scrollref.value?.scrollTo({behavior: 'instant', top: scrollAmount});
+    scrollref.value?.scrollTo({behavior: 'instant', top: scrollAmount, left:storedLogTableScrollLeft});
     await nextTick();
     calculateLogTableViewRange(true);
     await nextTick();
@@ -226,7 +226,7 @@ watch(() => props.imageIndex, async () => {
       node = <HTMLTableRowElement>node.previousSibling || node;
       
       if( !(node instanceof HTMLElement) ) {
-        scrollref.value?.scrollTo(0, 0);
+        scrollref.value?.scrollTo(storedLogTableScrollLeft, 0);
         node = null;
       }
     }
@@ -287,7 +287,7 @@ function scrollLogViewToBottom(instant = false) {
   nextTick(() => {
     if( !instant && !autoScrollLog.value )
       return;
-    scrollref.value.scrollTo({behavior: 'instant', top: props.logs.length * 50});
+    scrollref.value.scrollTo({behavior: 'instant', top: props.logs.length * 50, left:storedLogTableScrollLeft});
 
     scrollTimeoutId = window.setTimeout(() => {
       scrollTimeoutId = 0;
@@ -370,6 +370,8 @@ watch(() => props.logs, () => {
   if( autoScrollLog.value ) {
     scrollLogViewToBottom();
   }
+
+  sortListPeriodically();
 });
 watch(() => props.opened, (val) => {
   if( val ) {
@@ -379,10 +381,27 @@ watch(() => props.opened, (val) => {
 
 
 
+let _tid_sort = 0;
+let prevSortTime = 0;
+function sortListPeriodically() {
+  if( sortValue.value === 'processed' || !sortValue.value )
+    return;
+  
+  const now = Date.now();
+  if( now - prevSortTime < SORT_LIST_INTERVAL_MSEC ) {
+    if( _tid_sort )
+      return;
+    _tid_sort = window.setTimeout( sortListPeriodically, SORT_LIST_INTERVAL_MSEC - (now - prevSortTime) );
+    return;
+  }
 
+  _tid_sort = 0;
+  prevSortTime = now;
+  sortListBySortOptions();
+}
 
-
-function onChangeSortOption() {
+function sortListBySortOptions() {
+  console.log('sortList', sortValue.value);
   switch( sortValue.value ) {
     case 'zipped':
       props.logs.sort((a, b) => a.zippedIndex - b.zippedIndex);
@@ -481,6 +500,47 @@ function onKeyPressInLogTable(ev: KeyboardEvent) {
 }
 
 
+let prevScrollLeft = -1;
+let prevScrollTop = -1;
+let storedLogTableScrollLeft = 0;
+let ignoreScrollLeftChangeFlag = false;
+function onLogTableScroll(ev) {
+  calculateLogTableViewRange();
+  
+  
+  // if only scrollLeft is changed(by user), store and then restore the position after updating the table.
+  
+  // ignore a change by this function
+  if( ignoreScrollLeftChangeFlag ) {
+    ignoreScrollLeftChangeFlag = false;
+    return;
+  }
+
+  const {scrollLeft=0, scrollTop=0} = scrollref.value?.scrollbarInstRef?.containerRef;
+  if( scrollLeft !== prevScrollLeft || prevScrollLeft < 0 ) {
+    if( scrollTop === prevScrollTop || prevScrollTop < 0 ) {
+      storedLogTableScrollLeft = scrollLeft;
+      console.log(storedLogTableScrollLeft, "storedLogTableScrollLeft");
+    }
+  }
+  prevScrollLeft = scrollLeft;
+  prevScrollTop = scrollTop;
+
+  // restore scrollLeft
+  nextTick(() => {
+    ignoreScrollLeftChangeFlag = true;
+    const el = scrollref.value?.scrollbarInstRef?.containerRef;
+    if( el )
+      el.scrollLeft = storedLogTableScrollLeft;
+  });
+}
+
+function onMouseDownScrollbar(ev: MouseEvent) {
+  autoScrollLog.value = false;
+}
+
+
+
 
 
 </script>
@@ -497,7 +557,7 @@ function onKeyPressInLogTable(ev: KeyboardEvent) {
         <n-select
           v-model:value="sortValue"
           :options="SortOptionGroup"
-          @update:value="onChangeSortOption"
+          @update:value="sortListBySortOptions"
 
           style="width:auto; font-size: smaller;" :consistent-menu-width="false" :show-on-focus="false" size="tiny"
         >
@@ -574,9 +634,9 @@ function onKeyPressInLogTable(ev: KeyboardEvent) {
         ref="scrollref"
         :distance="10"
         :x-scrollable="true"
-        @mousedown.capture="autoScrollLog=false"
+        @mousedown.capture="onMouseDownScrollbar"
         @wheel="autoScrollLog=false"
-        @scroll="calculateLogTableViewRange"
+        @scroll="onLogTableScroll"
         load="handleLogLoad"
         trigger="none"
         style="z-index:2; padding-right:10px; height:100%;"

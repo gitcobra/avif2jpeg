@@ -107,7 +107,7 @@
     "sort": "リストを並べ替え",
     "sortByName": "名前順",
     "sortBySize": "サイズ順",
-    "sortByOutputSize": "サイズ(変換後)",
+    "sortByOutputSize": "サイズ順(変換後)",
     "sortByStart": "開始順",
     "sortByCompletion": "出力順"
   },
