@@ -96,7 +96,13 @@
     "log": "Aanroepen",
     "Output": "Uitgangsresultaten",
     "expandLog": "Breid de loggrootte uit",
-    "autoScroll": "automatisch schelden"
+    "autoScroll": "automatisch schelden",
+    "sortByStatus": "status",
+    "sortByName": "naam",
+    "sortBySize": "maat",
+    "sortByOutputSize": "Grootte (uitvoer)",
+    "sortByStart": "startorder",
+    "sortByCompletion": "Outputorder"
   },
   "disabled": "Gehandicapt",
   "threads": "draad | \ndraden",

@@ -57,6 +57,7 @@ declare module 'vue' {
     SettingsOutput: typeof import('./src/components/settings-output.vue')['default']
     Status: typeof import('./src/components/converter/status/status.vue')['default']
     'Status.centerColumn': typeof import('./src/components/converter/status/status.center-column.vue')['default']
+    'Status.log': typeof import('./src/components/converter/status/status.log.vue')['default']
     SwitchLang: typeof import('./src/components/header/switch-lang.vue')['default']
     Thumbnail: typeof import('./src/components/converter/status/thumbnail.vue')['default']
     Title: typeof import('./src/components/title.vue')['default']

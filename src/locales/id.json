@@ -96,7 +96,13 @@
     "log": "Log",
     "Output": "Hasil output",
     "expandLog": "Perluas ukuran log",
-    "autoScroll": "gulir otomatis"
+    "autoScroll": "gulir otomatis",
+    "sortByStatus": "status",
+    "sortByName": "nama",
+    "sortBySize": "ukuran",
+    "sortByOutputSize": "ukuran (output)",
+    "sortByStart": "pesanan awal",
+    "sortByCompletion": "pesanan output"
   },
   "disabled": "Dengan disabilitas",
   "threads": "benang | \nbenang",

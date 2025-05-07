@@ -96,7 +96,13 @@
     "log": "Kayıt",
     "Output": "Çıktı sonuçları",
     "expandLog": "Günlük boyutunu genişletin",
-    "autoScroll": "otomatik kaydırma"
+    "autoScroll": "otomatik kaydırma",
+    "sortByStatus": "durum",
+    "sortByName": "isim",
+    "sortBySize": "boyut",
+    "sortByOutputSize": "Boyut (Çıktı)",
+    "sortByStart": "başlangıç ​​siparişi",
+    "sortByCompletion": "Çıktı Siparişi"
   },
   "disabled": "Engelli",
   "threads": "konu | \nKonular",

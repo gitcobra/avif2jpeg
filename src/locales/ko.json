@@ -96,7 +96,13 @@
     "log": "통나무",
     "Output": "출력 결과",
     "expandLog": "로그 크기를 확장합니다",
-    "autoScroll": "자동 스크롤"
+    "autoScroll": "자동 스크롤",
+    "sortByStatus": "상태",
+    "sortByName": "이름",
+    "sortBySize": "크기",
+    "sortByOutputSize": "크기 (출력)",
+    "sortByStart": "시작 순서",
+    "sortByCompletion": "출력 순서"
   },
   "disabled": "장애가 있는",
   "threads": "스레드 | \n스레드",

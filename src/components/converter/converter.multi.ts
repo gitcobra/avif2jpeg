@@ -161,6 +161,7 @@ export async function convertTargetFilesInMultithread(param: ConverterParameter)
     imgloadWorker.onmessage = (params) => {
       const {data: {action}} = params;
       if( action === 'end-convert' ) {
+      //if( action === 'close-loader' ) {
         resolve();
       }
     };
@@ -544,6 +545,7 @@ const ImgLoaderListener = (params: MessageTypeCanvasWorkerListener) => {
         fileId,
         storedPath,
       };
+      //console.log(action, fileId, entireIndex, "action, fileId, entireIndex");
 
       break;
     }

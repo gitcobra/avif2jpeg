@@ -96,7 +96,13 @@
     "log": "Dziennik",
     "Output": "Wyniki wyjściowe",
     "expandLog": "rozmiar dziennika",
-    "autoScroll": "Auto-Scroll"
+    "autoScroll": "Auto-Scroll",
+    "sortByStatus": "status",
+    "sortByName": "nazwa",
+    "sortBySize": "rozmiar",
+    "sortByOutputSize": "rozmiar (wyjście)",
+    "sortByStart": "zamówienie początkowe",
+    "sortByCompletion": "kolejność wyjściowa"
   },
   "disabled": "Wyłączony",
   "threads": "wątek | \nwątki",

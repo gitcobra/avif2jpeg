@@ -96,7 +96,13 @@
     "log": "Бревно",
     "Output": "Выходные результаты",
     "expandLog": "Расширить размер журнала",
-    "autoScroll": "Авторолль"
+    "autoScroll": "Авторолль",
+    "sortByStatus": "статус",
+    "sortByName": "имя",
+    "sortBySize": "размер",
+    "sortByOutputSize": "размер (выход)",
+    "sortByStart": "начальный заказ",
+    "sortByCompletion": "Порядок вывода"
   },
   "disabled": "Неполноценный",
   "threads": "нить | \nнити",

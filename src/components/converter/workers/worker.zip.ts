@@ -1,6 +1,6 @@
 import type { MessageToZipFromCanvasType } from "./worker.canvas";
 import AnZip from "@gitcobra/anzip-es6";
-import {SplitZipsIndexer} from "@/components/util";
+import {sleep, SplitZipsIndexer} from "@/components/util";
 
 console.log('converter.worker.zip started');
 
@@ -173,8 +173,6 @@ self.onmessage = async (params: ZipMessageType) => {
         size: blob.size,
       };
 
-      //await new Promise(r => setTimeout(r, 3000)); // delay for debug
-
       self.postMessage( message );
       break;
     }
@@ -220,6 +218,7 @@ const onmessageFromCanvasWorkers = (params: MessageFromCanvasWorker, portToCanva
   let { data: { /*data,*/ blob, path, fileId, crc } } = params;
   
   if( terminated ) {
+    console.log('canceled zipping the file. process was terminated.', fileId, path);
     portToCanvas.postMessage({fileId, canceled: true});
     return;
   }
@@ -257,34 +256,29 @@ const onmessageFromCanvasWorkers = (params: MessageFromCanvasWorker, portToCanva
   //azip.add(outputPath, abuffer);
   bytesSum += bufferSize;
   count++;
-  fileIdByIndex.set(entireIndex++, fileId);
+  const eindex = entireIndex++
+  fileIdByIndex.set(eindex, fileId);
   zipIndexer.increase();
   //await azip.add(outputPath, blob);
   azip.add(outputPath, blob, undefined/*, crc*/);
   
-  // inform main thread that adding the file to the zip is completed
+  // inform main that the image has been addded to the zip
   let message: AddingZipMessageToMain = {
     action: 'add-zip-completed',
     fileId,
-    entireIndex: entireIndex - 1,
+    entireIndex: eindex,
     storedPath: outputPath,
   };
   self.postMessage( message );
   
-  // inform canvas.worker that adding the file to the zip is completed
-  /*
-  if( terminated ) {
-    port.postMessage({fileId, canceled: true});
-    return;
-  }
-  */
+  // inform canvas.worker too 
   portToCanvas.postMessage({
     canceled: false, //canceled: terminated,
     fileId, 
     renamed: dupCounter >= 2,
     outputPath,
     storedPath: outputPath,
-    entireIndex: entireIndex - 1,
+    entireIndex: eindex,
   });
   
 };
@@ -318,31 +312,22 @@ function outputZipUrl(action: ZippingMessageToMain['action']) {
     const azip2 = azip;
     const count2 = count;
     const size2 = bytesSum;
-    azip2.zip(true).then(() => azip2.url()).then(url => {
-      message = {url, action, size: size2, count: count2};
-      if( action === 'push-zip' || action === 'squeeze-zip') {
-        //zipList.push(azip2);
-      }
-      else {
-        //errorZipList.push(azip2);
-      }
-
+    azip2.zip(true).then(() => azip2.url()).then(async (url) => {
       // NOTE:
-      // it needs to inform 'add-zip-completed' action to main in advance of 'squeeze-zip', so insert a sleep.
-      return new Promise(r => setTimeout(r, 0));
-    }).then(() => {
+      // 'add-zip-completed' needs to be notified to main before 'squeeze-zip', so insert a sleep.
+      await sleep(0);
+
+      message = {url, action, size: size2, count: count2};
       self.postMessage( message );
-    }).catch((e) => {
-      console.log(e);
     });
   } catch(e: any) {
-    console.warn(e.message, action);
+    console.error(e.message, action);
+    console.error('count:', count);
     message = {
       action: action === 'squeeze-zip' ? 'zip-squeeze-error' : 'zip-error',
       size:bytesSum,
       count,
     };
-    console.log('count:', count);
     self.postMessage( message );
   }
   

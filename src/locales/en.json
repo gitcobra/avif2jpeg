@@ -103,7 +103,14 @@
     "log": "Log",
     "Output": "Output Results",
     "expandLog": "expand log size",
-    "autoScroll": "auto-scroll"
+    "autoScroll": "auto-scroll",
+    "sortByStatus": "status",
+    "sort": "Sort list by",
+    "sortByName": "name",
+    "sortBySize": "size",
+    "sortByOutputSize": "size(output)",
+    "sortByStart": "starting order",
+    "sortByCompletion": "output order"
   },
   "settings": {
     "maxZipFileSize": "Max zip file size",

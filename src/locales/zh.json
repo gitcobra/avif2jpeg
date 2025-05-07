@@ -96,7 +96,13 @@
     "log": "日志",
     "Output": "输出结果",
     "expandLog": "扩展日志大小",
-    "autoScroll": "自动滚动"
+    "autoScroll": "自动滚动",
+    "sortByStatus": "地位",
+    "sortByName": "姓名",
+    "sortBySize": "尺寸",
+    "sortByOutputSize": "尺寸（输出）",
+    "sortByStart": "开始顺序",
+    "sortByCompletion": "输出顺序"
   },
   "disabled": "残疾人",
   "threads": "thread | threads",

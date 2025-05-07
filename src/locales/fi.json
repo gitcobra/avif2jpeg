@@ -134,7 +134,13 @@
     "log": "Loki",
     "Output": "Lähtötulokset",
     "expandLog": "Laajenna lokikoko",
-    "autoScroll": "automaattinen rulla"
+    "autoScroll": "automaattinen rulla",
+    "sortByStatus": "status",
+    "sortByName": "nimi",
+    "sortBySize": "koko",
+    "sortByOutputSize": "Koko (lähtö)",
+    "sortByStart": "aloitustilaus",
+    "sortByCompletion": "lähtöjärjestys"
   },
   "success": "Menestys",
   "threads": "lanka | \nlangat",

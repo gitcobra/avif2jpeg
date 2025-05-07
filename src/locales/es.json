@@ -96,7 +96,13 @@
     "log": "Registro",
     "Output": "Resultados de salida",
     "expandLog": "expandir el tamaño del registro",
-    "autoScroll": "desplazamiento automático"
+    "autoScroll": "desplazamiento automático",
+    "sortByStatus": "estado",
+    "sortByName": "nombre",
+    "sortBySize": "tamaño",
+    "sortByOutputSize": "Tamaño (salida)",
+    "sortByStart": "orden de salida",
+    "sortByCompletion": "orden de salida"
   },
   "disabled": "Desactivado",
   "threads": "hilo | \ntrapos",

@@ -154,7 +154,7 @@ export default defineConfig(({mode}) => {
     },
 
     // remove console.log
-    esbuild: process.env.NODE_ENV !== 'development' && mode !== 'test' ? { drop: ['console', 'debugger'] } : {},
+    //esbuild: process.env.NODE_ENV !== 'development' && mode !== 'test' ? { drop: ['console', 'debugger'] } : {},
 
 
     // Build error when using vite-ssg/使用vite-ssg进行构建时出错 #4225 

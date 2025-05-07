@@ -102,7 +102,14 @@
     "Progress": "進行状況",
     "Output": "出力結果",
     "expandLog": "ログサイズを拡張",
-    "autoScroll": "自動スクロール"
+    "autoScroll": "自動スクロール",
+    "sortByStatus": "ステータス",
+    "sort": "リストを並べ替え",
+    "sortByName": "名前順",
+    "sortBySize": "サイズ順",
+    "sortByOutputSize": "サイズ(変換後)",
+    "sortByStart": "開始順",
+    "sortByCompletion": "出力順"
   },
   "disabled": "無効",
   "threads": "スレッド | スレッド",

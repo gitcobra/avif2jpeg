@@ -96,7 +96,13 @@
     "log": "Журнал",
     "Output": "Результати результатів",
     "expandLog": "Розширити розмір журналу",
-    "autoScroll": "автоматичний прокресл"
+    "autoScroll": "автоматичний прокресл",
+    "sortByStatus": "статус",
+    "sortByName": "назва",
+    "sortBySize": "розмір",
+    "sortByOutputSize": "розмір (вихід)",
+    "sortByStart": "стартовий порядок",
+    "sortByCompletion": "порядок виходу"
   },
   "disabled": "Вимкнено",
   "threads": "нитка | \nнитки",

@@ -96,7 +96,13 @@
     "log": "Protokoll",
     "Output": "Ausgangsergebnisse",
     "expandLog": "Protokollgröße erweitern",
-    "autoScroll": "Auto-Scroll"
+    "autoScroll": "Auto-Scroll",
+    "sortByStatus": "Status",
+    "sortByName": "Name",
+    "sortBySize": "Größe",
+    "sortByOutputSize": "Größe (Ausgabe)",
+    "sortByStart": "Startreihenfolge",
+    "sortByCompletion": "Ausgangsreihenfolge"
   },
   "disabled": "Deaktiviert",
   "threads": "Thread | \nThreads",

@@ -64,7 +64,8 @@ export type MessageToCanvasWorker = {
   isSingleImage: boolean
   maxSize?: { width:number, height:number }
   retriedTime: number
-}[];
+//}[];
+};
 
 // listen messages from main thread
 self.onmessage = async (params: MessageEvent<MessageToCanvasWorker | null>) => {
@@ -89,11 +90,14 @@ self.onmessage = async (params: MessageEvent<MessageToCanvasWorker | null>) => {
   } as MessageFromCanvasWorker);
   */
 
+  /*
   // process file list
   const dataList = params.data!;
   for( const data of dataList ) {
     await convertRecievedData( data );
   }
+  */
+  await convertRecievedData( params.data );
   
   // end
   self.postMessage({
@@ -114,7 +118,8 @@ export type MessageToZipFromCanvasType = {
   outputPath?: string
   fileId: number
 };
-async function convertRecievedData(data: MessageToCanvasWorker[number]) {
+//async function convertRecievedData(data: MessageToCanvasWorker[number]) {
+async function convertRecievedData(data: MessageToCanvasWorker) {
   const { index, file, bitmap, fileId, type, quality, demandThumbnail, isSingleImage, webkitRelativePath, maxSize } = data;
 
   const path = webkitRelativePath || file.webkitRelativePath || file.name;
@@ -178,9 +183,10 @@ async function convertRecievedData(data: MessageToCanvasWorker[number]) {
     dbitmap = await createImageBitmap(sourceBitmap, {...resize, resizeQuality: 'pixelated'});
   }
 
-
   // transfer the bitmap to the canvas
   bmctx!.transferFromImageBitmap(sourceBitmap);
+  sourceBitmap.close();
+
   
   // file loaded
   messageToMain = {
@@ -194,7 +200,9 @@ async function convertRecievedData(data: MessageToCanvasWorker[number]) {
     inputsize,
   };
   self.postMessage( messageToMain );
-  
+
+
+  // convert  
   let blob: Blob;
   try {
     blob = await canvas.convertToBlob({type, quality});
@@ -210,20 +218,11 @@ async function convertRecievedData(data: MessageToCanvasWorker[number]) {
     return;
   }
   const outputsize = blob.size;
-
   
-  //const crc = await AnZip.getCRC32(blob);
-  
-  // output to worker.zip
-  const dataToZip: MessageToZipFromCanvasType = {
-    //data: abuffer, 
-    blob,
-    path, 
-    fileId
-  };
-  dataOutputPort.postMessage(dataToZip);
+  // clear canvas
+  canvas.width = 1;
+  canvas.height = 1;
 
-  // send "file-end" message to the main thread
   messageToMain = {
     action: 'file-converted',
     path,
@@ -242,6 +241,17 @@ async function convertRecievedData(data: MessageToCanvasWorker[number]) {
   self.postMessage( messageToMain );
   
   fileStat.set(fileId, {outputsize, inputsize, path, index});
+  
+
+  // output to worker.zip
+  //const crc = await AnZip.getCRC32(blob);  
+  const dataToZip: MessageToZipFromCanvasType = {
+    //data: abuffer, 
+    blob,
+    path, 
+    fileId
+  };
+  dataOutputPort.postMessage(dataToZip);
 }
 
 const listenerForZipWorker = (params) => {

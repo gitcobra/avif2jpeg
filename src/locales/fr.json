@@ -96,7 +96,13 @@
     "log": "Enregistrer",
     "Output": "Résultats de sortie",
     "expandLog": "Développer la taille du journal",
-    "autoScroll": "scintiller automatiquement"
+    "autoScroll": "scintiller automatiquement",
+    "sortByStatus": "statut",
+    "sortByName": "nom",
+    "sortBySize": "taille",
+    "sortByOutputSize": "taille (sortie)",
+    "sortByStart": "Commande de départ",
+    "sortByCompletion": "commande de sortie"
   },
   "disabled": "Désactivé",
   "threads": "fil | \nfils de discussion",

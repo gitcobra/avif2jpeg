@@ -96,7 +96,13 @@
     "log": "سجل",
     "Output": "نتائج الإخراج",
     "expandLog": "توسيع حجم السجل",
-    "autoScroll": "SCROLL"
+    "autoScroll": "SCROLL",
+    "sortByStatus": "حالة",
+    "sortByName": "اسم",
+    "sortBySize": "مقاس",
+    "sortByOutputSize": "الحجم (الإخراج)",
+    "sortByStart": "أمر بدء",
+    "sortByCompletion": "أمر الإخراج"
   },
   "disabled": "عاجز",
   "threads": "خيط | \nالمواضيع",

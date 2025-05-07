@@ -97,7 +97,13 @@
     "log": "紀錄",
     "Output": "輸出結果",
     "expandLog": "擴展日誌大小",
-    "autoScroll": "自動滾動"
+    "autoScroll": "自動滾動",
+    "sortByStatus": "地位",
+    "sortByName": "姓名",
+    "sortBySize": "尺寸",
+    "sortByOutputSize": "尺寸（輸出）",
+    "sortByStart": "開始順序",
+    "sortByCompletion": "輸出順序"
   },
   "disabled": "殘障人士",
   "threads": "thread | threads",

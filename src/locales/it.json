@@ -96,7 +96,13 @@
     "log": "Tronco d'albero",
     "Output": "Risultati di output",
     "expandLog": "espandere la dimensione del registro",
-    "autoScroll": "scrollo automatico"
+    "autoScroll": "scrollo automatico",
+    "sortByStatus": "stato",
+    "sortByName": "nome",
+    "sortBySize": "misurare",
+    "sortByOutputSize": "dimensione (output)",
+    "sortByStart": "Ordine di partenza",
+    "sortByCompletion": "ordine di output"
   },
   "disabled": "Disabilitato",
   "threads": "discussione | discussioni",

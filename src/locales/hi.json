@@ -96,7 +96,13 @@
     "log": "लकड़ी का लट्ठा",
     "Output": "आउटपुट परिणाम",
     "expandLog": "लॉग आकार का विस्तार करें",
-    "autoScroll": "स्वतः स्क्रॉल"
+    "autoScroll": "स्वतः स्क्रॉल",
+    "sortByStatus": "स्थिति",
+    "sortByName": "नाम",
+    "sortBySize": "आकार",
+    "sortByOutputSize": "आकार (आउटपुट)",
+    "sortByStart": "प्रारंभिक आदेश",
+    "sortByCompletion": "आउटपुट ऑर्डर"
   },
   "disabled": "अक्षम",
   "threads": "धागा | \nधागे",

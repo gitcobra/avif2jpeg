@@ -118,14 +118,12 @@ async function loadImageList(filelist: FileWithId[], outputType: string, outputQ
   const isSingleImageFile = ( fileCount === 1 ); // avoid zipping
   let prevThumbDemandedTime = 0;
   let outputPath = '';
-  let index = 0;
   let lastRetriedTime = 0;
   
+  let index = 0
+  for( ; index < files.length; index++ ) {    
 
-  while( index < files.length ) {    
-    // create message list
-
-    const messages: MessageToCanvasWorker = [];
+    //const messages: MessageToCanvasWorker = [];
     const trnsBitmaps: ImageBitmap[] = [];
     let isLastItem = false;
     const rest = files.length - index;
@@ -133,123 +131,109 @@ async function loadImageList(filelist: FileWithId[], outputType: string, outputQ
     
     let chunkSize = 0;
     let includesRetryingFile = false;
-    for( ;index < sublistLen; index++ ) {
-      if( chunkSize > LIST_CHUNK_SIZE_LIMIT /*|| totalChunkSize > TOTAL_CHUNK_SIZE_LIMIT*/ ) {
-        if( !canceled ) {
-          await waitTotalCunkDissolves();
-          break;
-        }
-      }
-    
-      const file = files[index];
-      const fileId = file._id;
-      const path = file.webkitRelativePath || file.name;
+   
+    const file = files[index];
+    const fileId = file._id;
+    const path = file.webkitRelativePath || file.name;
 
-      // wait a second for retrying
-      const retriedTime = retriedFileTime.get(fileId);
-      includesRetryingFile = includesRetryingFile || !!retriedTime;
-      const retryingDelay = 0;//retriedTime ? Math.max(0, 100 - (Date.now() - (lastRetriedTime || retriedTime))) : 0;
-      if( !canceled && retryingDelay ) {
-        console.log('retrying', "retryingDelay", retryingDelay);
-        await new Promise(r => setTimeout(r, retryingDelay));
-      }
-      if( includesRetryingFile ) {
-        lastRetriedTime = Date.now();
-      }
-      
-      isLastItem = index === files.length - 1;
-      
-      // post message of start
-      startedCount++;
-      passMessageToMain('file-start', index, path, fileId);
-
-      // cancel remaining processes here if canceled flag is true
-      if( canceled ) {
-        passMessageToMain('file-canceled', index, path, fileId);
-        continue;
-      }
-
-      // try to parse the file as an image
-      let bitmap: ImageBitmap;
-      try {
-        bitmap = await createImageBitmap(file);
-      } catch(e) {
-        // error
-        console.error('error occurred while creating a bitmap', fileId, path);
-        //postFileError(index, path, fileId);
-        retryFileCallback(index, path, fileId);
-        continue;
-      }
-
-      // check totalChunkSize
-      await waitTotalCunkDissolves();
-      if( canceled ) {
-        passMessageToMain('file-canceled', index, path, fileId);
-        continue;
-      }
-
-      trnsBitmaps.push(bitmap);
-      const bitmapSize = bitmap.width * bitmap.height * 4;
-      chunkSize += bitmapSize + file.size;
-      totalChunkSize += bitmapSize + file.size;
-
-      // demand a ImageBitmap for a thumbnail
-      let demandThumbnail = false;
-      const now = Date.now();
-      if( now - prevThumbDemandedTime > THUMB_DEMAND_INTERVAL ) {
-        prevThumbDemandedTime = now;
-        demandThumbnail = true;
-      }
-
-      // create a message
-      messages.push({
-        index,
-        bitmap,
-        file,
-        fileId,
-        outputPath,
-        type: outputType,
-        quality: outputQuality / 100,
-        demandThumbnail: demandThumbnail || isLastItem,
-        isSingleImage: isSingleImageFile,
-        maxSize,
-        retriedTime: retriedFileTime.get(fileId) || 0,
-        
-        // chrome (currently v126.0.6478.127) cannot seem to read a property of a File that defined by Object.defineProperty from a Worker,
-        // (Firefox can) so send the property directly.
-        webkitRelativePath: file.webkitRelativePath,
-      });
-
-      demandThumbnail = false;
-      
+    // wait a second for retrying
+    const retriedTime = retriedFileTime.get(fileId);
+    includesRetryingFile = includesRetryingFile || !!retriedTime;
+    const retryingDelay = 0;//retriedTime ? Math.max(0, 100 - (Date.now() - (lastRetriedTime || retriedTime))) : 0;
+    if( !canceled && retryingDelay ) {
+      console.log('retrying', "retryingDelay", retryingDelay);
+      await new Promise(r => setTimeout(r, retryingDelay));
     }
+    if( includesRetryingFile ) {
+      lastRetriedTime = Date.now();
+    }
+    
+    isLastItem = index === files.length - 1;
+    
+    // post message of start
+    startedCount++;
+    passMessageToMain('file-start', index, path, fileId);
+
+    // cancel remaining processes here if canceled flag is true
+    if( canceled ) {
+      passMessageToMain('file-canceled', index, path, fileId);
+      continue;
+    }
+
+    // try to parse the file as an image
+    let bitmap: ImageBitmap;
+    try {
+      bitmap = await createImageBitmap(file);
+    } catch(e) {
+      // error
+      console.error('error occurred while creating a bitmap', fileId, path);
+      //postFileError(index, path, fileId);
+      retryFileCallback(index, path, fileId);
+      continue;
+    }
+
+    // check totalChunkSize
+    await waitTotalCunkDissolves();
+    if( canceled ) {
+      passMessageToMain('file-canceled', index, path, fileId);
+      continue;
+    }
+
+    trnsBitmaps.push(bitmap);
+    const bitmapSize = bitmap.width * bitmap.height * 4;
+    chunkSize += bitmapSize + file.size;
+    totalChunkSize += bitmapSize + file.size;
+
+    // demand a ImageBitmap for a thumbnail
+    let demandThumbnail = false;
+    const now = Date.now();
+    if( now - prevThumbDemandedTime > THUMB_DEMAND_INTERVAL ) {
+      prevThumbDemandedTime = now;
+      demandThumbnail = true;
+    }
+
+    // create a message
+    const message: MessageToCanvasWorker = {
+      index,
+      bitmap,
+      file,
+      fileId,
+      outputPath,
+      type: outputType,
+      quality: outputQuality / 100,
+      demandThumbnail: demandThumbnail || isLastItem,
+      isSingleImage: isSingleImageFile,
+      maxSize,
+      retriedTime: retriedFileTime.get(fileId) || 0,
+      
+      // chrome (currently v126.0.6478.127) cannot seem to read a property of a File that defined by Object.defineProperty from a Worker,
+      // (Firefox can) so send the property directly.
+      webkitRelativePath: file.webkitRelativePath,
+    };
+
+    demandThumbnail = false;
+    
 
     // post the messages to canvas worker if messages exist
     let worker: WorkerManager.WorkerWithId;
-    if( messages.length ) {
-      // wait to get an available worker
-      const heavyImage = chunkSize > IMG_OVER_LOADING_SIZE;
-      //console.log(workerCountForHugeImages > 0 && (includesRetryingFile ? 1 : heavyImage), 'getworker');
-      worker = await WorkerManager.getWorker(workerCountForHugeImages > 0 && (includesRetryingFile ? 1 : heavyImage));
-      
-      //worker.postMessage( messages, trnsBitmaps );
-      
-      // store chunk size
-      chunksEachWorkerPossessed.set(worker.id, chunkSize);
 
-      // post the bitmap to canvasworker
-      worker.postMessage( messages, trnsBitmaps );
-      
-      //trnsBitmaps.forEach(item => item.close());
-      trnsBitmaps.length = 0;
-    }
+    // wait to get an available worker
+    const heavyImage = chunkSize > IMG_OVER_LOADING_SIZE;
+    //console.log(workerCountForHugeImages > 0 && (includesRetryingFile ? 1 : heavyImage), 'getworker');
+    worker = await WorkerManager.getWorker(workerCountForHugeImages > 0 && (includesRetryingFile ? 1 : heavyImage));
+    
+    // store chunk size
+    chunksEachWorkerPossessed.set(worker.id, chunkSize);
+
+    // post the bitmap to canvasworker
+    worker.postMessage( message, trnsBitmaps );
+    
+    //trnsBitmaps.forEach(item => item.close());
+    trnsBitmaps.length = 0;
     
     // when it is a last file, wait until all workers are done because the file list could expand when retrying.
     if( isLastItem ) {
       await WorkerManager.waitAllWorkers();
-      
-      if( canceled )
-        break;
     }
   }
   console.log('end file loop', files.length);
@@ -272,6 +256,11 @@ async function loadImageList(filelist: FileWithId[], outputType: string, outputQ
     }
     await sleep(100);
   }
+
+  // notify the end of the process to main
+  self.postMessage({
+    action: 'close-loader'
+  });
 
   // close by itself
   console.log('successfully close worker.loader.');
@@ -306,11 +295,26 @@ const canvasListener = (params: MessageEvent<MessageFromCanvasWorker>) => {
     case 'file-load':
       data.workerId = worker.id;
     case 'file-converted':
-    case 'file-completed':
+    // NOTE: file-completed is posted after zipping is completed or failed
+    //case 'file-completed':
     case 'file-canceled': {
       self.postMessage(data);
       break;
     }
+  
+    //case 'file-converted': {
+    case 'file-completed': {
+      // release the worker
+      WorkerManager.releaseWorker(worker);
+      
+      // subtract worker possesed chunk size from totalChunkSize when recieved "list-end" action
+      totalChunkSize -= chunksEachWorkerPossessed.get(worker.id) || 0;
+      chunksEachWorkerPossessed.delete(worker.id);
+
+      self.postMessage(data);
+      break;
+    }
+
     
     // need to handle retry 
     case 'file-error': {
@@ -318,17 +322,10 @@ const canvasListener = (params: MessageEvent<MessageFromCanvasWorker>) => {
       retryFileCallback(index, path, fileId);
       break;
     }
-    
-    // release the worker
-    case 'list-end': {        
-      WorkerManager.releaseWorker(worker);
-      // subtract worker possesed chunk size from totalChunkSize when recieved "list-end" action
-      totalChunkSize -= chunksEachWorkerPossessed.get(worker.id) || 0;
-      chunksEachWorkerPossessed.delete(worker.id);
-      break;
-    }
 
     case 'list-start':
+    // NOTE: list-end may be posted before file-completed
+    case 'list-end':
     case 'respond-to-first-message':
       break;
 
