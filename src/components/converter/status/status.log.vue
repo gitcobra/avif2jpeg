@@ -162,7 +162,7 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-  prevThumbBitmap.close();
+  prevThumbBitmap?.close();
   clearTimeout(_tid);
   clearTimeout(_tidLogItem);
   clearTimeout(scrollTimeoutId);
@@ -449,6 +449,7 @@ function onKeyPressInLogTable(ev: KeyboardEvent) {
       break;
     
     case 'Enter':
+    case 'NumpadEnter':
       if( currentSelectedIndex >= 0 ) {
         if( props.previewCollapsed ) {
           //nextTick(() => imageViewer.value?.openPreview());
@@ -671,7 +672,7 @@ function onMouseDownScrollbar(ev: MouseEvent) {
           <td class="log-td">{{ path }}</td>
           <td class="log-td log-extra" v-if="width" style="padding-left:0.5em;">
             {{ `[${width}×${height}] (${getUnitSize(size, 0)})`}}
-            <span v-if="outputWidth">
+            <span v-if="outputSize">
               →
               <span>
                 ({{ (getUnitSize(outputSize, 0)) }})
@@ -681,6 +682,7 @@ function onMouseDownScrollbar(ev: MouseEvent) {
               {{ ` [${outputWidth}×${outputHeight}]`}}
             </span>
           </td>
+          <td v-else></td>
         </tr>
         <tr :style="logBottomMarginStyle"></tr>
         </tbody>
@@ -751,16 +753,24 @@ function onMouseDownScrollbar(ev: MouseEvent) {
     .blank-space {
       height: 1em;
     }
-    .td {
+    td:nth-of-type(n+1) {
       width: 1em;
+      border-right: 1px dashed #CCC;
+      border-bottom: 1px dashed #CCC;
+    }
+    td:last-of-type {
+      border-right: 0px;
+    }
+    tr:nth-last-of-type(2) td {
+      border-bottom: 0px;
     }
     .log-td {
       border-left: 1px dotted #CCC;
-      &:first-child, &:nth-of-type(2) {
+      &:first-of-type, &:nth-of-type(2) {
         text-align: right;
         font-family: v-mono;
       }
-      &:first-child {
+      &:first-of-type {
         border-left: none;
       }
       &:nth-of-type(4) {
@@ -775,8 +785,10 @@ function onMouseDownScrollbar(ev: MouseEvent) {
   &.expand-log {
     /* change max-height by logMaxHeight */
 
+    /*
     border: 1px dashed #BBB;
     border-width: 0px 1px 0px;
+    */
     /*
     th {
       background-color: white;

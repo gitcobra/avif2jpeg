@@ -130,6 +130,9 @@ export async function convertImagesInSingleThread(list: FileWithId[], completedF
     lastImageHeight = h;
     ctx.drawImage(img, 0, 0, w, h, 0, 0, w, h);
     item.command = `🖼️imgload`;
+    item.width = w;
+    item.height = h;
+    item.size = file.size;
     ConvStats.thumbnail = img;
 
     // get the converted image as an ArrayBuffer
@@ -163,6 +166,7 @@ export async function convertImagesInSingleThread(list: FileWithId[], completedF
 
     outputSize = blob.size;//abuffer.byteLength;
     ConvStats.converted++;
+    item.outputSize = outputSize;
     
     // emit a zip when the current total size exceeds maxZipSize
     let zipUrl = '';
@@ -231,6 +235,7 @@ export async function convertImagesInSingleThread(list: FileWithId[], completedF
     item.command = `✅completed`;
     item.completed = true;
     item.fileId = file._id;
+
     completedFileIdSet.add(file._id);
   }
   

@@ -48,7 +48,7 @@ const props = defineProps<{
     zippedTotalSize: number
     zippingErrorCount: number
 
-    logs: typeof LogTable['logs']
+    logs: InstanceType<typeof LogTable>['logs'];
     ziplogs: {
       fileId: number
       storedPath: string

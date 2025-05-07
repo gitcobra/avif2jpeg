@@ -147,15 +147,8 @@ watch(index, (val, prev) => {
       return;
 
     viewTransKey.value = initializing.value ? viewTransKey.value : ~viewTransKey.value;
-    convertedSrc.value = undefined;
-    originalSrc.value = undefined;
-    
-    
-    /*
-    const { clientWidth: w, clientHeight: h } = viewerItemContainer.value.$el;
-    vItemContainerStyle.value = { width: w + 'px', height: h + 'px' };
-    nextTick(() => viewerItemVisibility.value = false);
-    */
+    //convertedSrc.value = undefined;
+    //originalSrc.value = undefined;
     
     viewerItemVisibility.value = false
     demandImage(index.value - 1);
@@ -186,43 +179,43 @@ watch(() => props.url, () => {
     URL.revokeObjectURL(props.originalUrl);
   }
 
-    const purl = prevUrl;
-    const porgurl = prevOrgUrl;
-    //setTimeout(() => {
-      URL.revokeObjectURL(purl);
-      URL.revokeObjectURL(porgurl);
-    //}, 0);
-    prevUrl = props.url;
-    prevOrgUrl = props.originalUrl;
+  const purl = prevUrl;
+  const porgurl = prevOrgUrl;
+  //setTimeout(() => {
+    URL.revokeObjectURL(purl);
+    URL.revokeObjectURL(porgurl);
+  //}, 0);
+  prevUrl = props.url;
+  prevOrgUrl = props.originalUrl;
 
-  if( newsrc ) {
-    // change previewed image
-    // HACK: these properties are not documented in naive-ui manual.
-    // manually set preview src.
-    try {
-      if( nImageGroupRef.value?.previewInstRef?.displayed ) {
-        if( isPreviewingConvertedImg.value )
-          nImageGroupRef.value.previewInstRef.setPreviewSrc(newsrc);
-        else
-          nImageGroupRef.value.previewInstRef.setPreviewSrc(props.originalUrl);
-        
-        // reset rotate value
-        try {
-          // HACK: to reset "rotate" variable inside ImagePreview
-          const disp = nImageGroupRef.value.previewInstRef.displayed;
-          nImageGroupRef.value.previewInstRef.handleAfterLeave();
-          nImageGroupRef.value.previewInstRef.displayed = disp;
-        } catch(e) {
-          console.error(e);
-        }
+if( newsrc ) {
+  // change previewed image
+  // HACK: these properties are not documented in naive-ui manual.
+  // manually set preview src.
+  try {
+    if( nImageGroupRef.value?.previewInstRef?.displayed ) {
+      if( isPreviewingConvertedImg.value )
+        nImageGroupRef.value.previewInstRef.setPreviewSrc(newsrc);
+      else
+        nImageGroupRef.value.previewInstRef.setPreviewSrc(props.originalUrl);
+      
+      // reset rotate value
+      try {
+        // HACK: to reset "rotate" variable inside ImagePreview
+        const disp = nImageGroupRef.value.previewInstRef.displayed;
+        nImageGroupRef.value.previewInstRef.handleAfterLeave();
+        nImageGroupRef.value.previewInstRef.displayed = disp;
+      } catch(e) {
+        console.error(e);
       }
-    } catch(e) {
     }
-
-    // update src
-    convertedSrc.value = newsrc;
-    originalSrc.value = props.originalUrl;
+  } catch(e) {
   }
+
+  // update src
+  convertedSrc.value = newsrc;
+  originalSrc.value = props.originalUrl;
+}
 }, {immediate:true});
 
 
@@ -345,6 +338,7 @@ function bindKeys(ev: KeyboardEvent) {
     
     case 'Space':
     case 'Enter':
+    case 'NumpadEnter':
       if( !isPreviewing.value ) {
         return;
       }
@@ -454,11 +448,9 @@ const switchImage = () => {
   preservedTransform = window.getComputedStyle(nImageGroupRef?.value?.previewInstRef?.previewRef)?.transform;
   
   const prev = isPreviewingConvertedImg.value;
-  //nImageGroupRef?.value?.previewInstRef?.handleSwitchNext?.();
   nImageGroupRef?.value?.next();
   nextTick(() => {
     if( isPreviewingConvertedImg.value === prev )
-      //nImageGroupRef?.value?.previewInstRef?.handleSwitchNext?.();
       nImageGroupRef?.value?.next();
   });
 };

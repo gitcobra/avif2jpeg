@@ -183,7 +183,7 @@ function onInputClick(flag: boolean) {
         <Title/>
         <n-flex justify="center">
           <FileSelector
-            _v-model:expanded="UserSettings.expandExtButtons"
+            _v-model_expanded="UserSettings.expandExtButtons"
             v-model:target="UserSettings.acceptTypeValue"
             v-model:userExtensions="UserSettings.editedAcceptTypes"
             v-model:disable-notifying-folder-select="UserSettings.disableNotifyingFolderSelect"
@@ -206,7 +206,6 @@ function onInputClick(flag: boolean) {
           
           @start="processing=true"
           @end="processing=false"
-          _:multi-thread-count="val => availableThreadCount = val"
         >
           <template #lang-switch>
             <!--
