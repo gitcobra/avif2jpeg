@@ -160,8 +160,8 @@ export async function convertTargetFilesInMultithread(param: ConverterParameter)
   const promiseWaitLoaderEnd = new Promise<void>((resolve) => {
     imgloadWorker.onmessage = (params) => {
       const {data: {action}} = params;
-      if( action === 'end-convert' ) {
-      //if( action === 'close-loader' ) {
+      //if( action === 'end-convert' ) {
+      if( action === 'close-loader' ) {
         resolve();
       }
     };

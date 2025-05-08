@@ -21,7 +21,7 @@ const props = defineProps<{
 
 const c = useThemeVars();
 const mainColor = ref(c.value.successColor);
-const completedAll = ref(false)
+const completedAll = ref(false);
 
 // end of process
 watch(() => props.processing, (val) => {

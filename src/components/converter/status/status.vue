@@ -134,6 +134,7 @@ type ZipList = {
 const zipList = ref<ZipList>([]);
 const failedZipList = ref<ZipList>([]);
 
+const statusProcessing = ref(false);
 const successPercentage = ref([0, 0]); // [to, from] for n-number-animation
 const startedCount = ref([0, 0]); 
 const success = ref([0, 0]);
@@ -231,31 +232,29 @@ onMounted(() => {
       elapsedTime.value = `${String(etime / 3600 |0).padStart(2, '0')}:${String(etime / 60 % 60 |0).padStart(2, '0')}:${String(etime % 60 |0).padStart(2, '0')}`;
     }, 300);
   };
+  
   startTimer();
+  statusProcessing.value = true;
 
-  // watch processing flag
   watch(() => props.processing, (newv, oldv) => {
-    // start timer
+    // on finished
+    if( !newv ) {
+      onFinished();
+    }
+
+    // at the start, some reactive values need to clean up if this component is applied v-show instead of v-if
     if( newv ) {
       startTimer();
-      
-      // some reactive values need to clean up
       //workingLogs.value = [];
       workingLogs.value.length = 0;
       zippingFlag.value = false;
       demandedFailedZips.value = false;
       zipList.value = [];
       failedZipList.value = [];
-
     }
     else {
       clearInterval(_intvId);
       _intvId = 0;
-    }
-
-    // on finished
-    if( !props.processing ) {
-      onFinished();
     }
   });
 
@@ -426,6 +425,9 @@ function update() {
   if( props.processing ) {
     statusColor.value = failure.value[0] ? c.value.errorColor : retried.value ? c.value.warningColor : c.value.infoColor;
   }
+  else {
+    statusProcessing.value = false;
+  }
 
   // update output image
   if( stat.convertedImageUrl !== outputImg.url ) {
@@ -548,7 +550,7 @@ function download(item: typeof zipList.value[number], create = false) {
     item.clicked = true;
 
     // check if all zips are clicked
-    if( !props.processing ) {
+    if( !statusProcessing.value ) {
       if( zipList.value.every(val => val.clicked) )
         emit('all-zips-clicked');
     }
@@ -694,7 +696,7 @@ function cleanup() {
           :success-perc-from="successPercentage[1]"
           :retried="retried"
           
-          :processing="processing"
+          :processing="statusProcessing"
           :interval="UPDATE_INTERVAL_MSEC"
           :status-color="statusColor"
 
@@ -725,7 +727,7 @@ function cleanup() {
 
     <!-- log view *aliased to n-collapse-item-->
     <log-table
-      :processing="processing"
+      :processing="statusProcessing"
       :image-index="outputImg.index"
       :thumbnail="processingBitmap"
       :opened="logOpened"
@@ -794,7 +796,7 @@ function cleanup() {
                 color="lime"
                 rail-color="rgba(99, 255, 99, 0.5)"
                 :indicator-text-color="zipped[0] === length ? 'white' : 'green'"
-                :processing="processing"
+                :processing="statusProcessing"
                 :percentage="zipped[0] / length * 100 |0"
                 style="width:300px; font-weight: bold; font-family: v-mono;"
               >
@@ -806,7 +808,7 @@ function cleanup() {
 
           <!-- converted zips -->
           <transition name="zipcontainer">
-          <template v-if="zipList.length >= 1 || props.processing">
+          <template v-if="zipList.length >= 1 || statusProcessing">
             <transition-group name="zips" class="zip-buttons-parent" tag="n-flex">
               <span v-for="(item, index) in zipList" :key="index">
                 <n-popover trigger="hover" :duration="0" :delay="0">
@@ -847,7 +849,7 @@ function cleanup() {
 
       <!-- result -->
       <Transition>
-      <n-flex v-show="!props.processing" justify="center" align="center" v-if="!cleaningUp">
+      <n-flex v-show="!statusProcessing" justify="center" align="center" v-if="!cleaningUp">
 
         <!-- save button -->
         <n-popover trigger="hover" :duration="0" :delay="0" placement="left" :style="{color:'white', backgroundColor:c.successColor}" :arrow-style="{backgroundColor:c.successColor}">
@@ -888,7 +890,7 @@ function cleanup() {
 
         <!-- failed button -->
         <n-dropdown
-          _v-if="!processing && !(status.success === length)"
+          v-if="!statusProcessing && !(status.success === length)"
           :options="PopSelectErrorItems"
           @select="(k, opt) => PopSelectErrorItems.find(({key}) => k === key)?.onSelect()"
           :show-arrow="true"

@@ -151,12 +151,12 @@ onMounted(() => {
   inst = getCurrentInstance();
   changeLogMaxHeight();
   
-  window.addEventListener('resize', changeLogMaxHeight);
-  const observer = new ResizeObserver(changeLogMaxHeight);
+  window.addEventListener('resize', () => changeLogMaxHeight());
+  const observer = new ResizeObserver(() => changeLogMaxHeight());
   observer.observe( inst.parent.parent.vnode.el as HTMLElement );
   
   onBeforeUnmount(() => {
-    window.removeEventListener('resize', changeLogMaxHeight);
+    window.removeEventListener('resize', () => changeLogMaxHeight());
     observer.disconnect();
   });
 });
@@ -254,23 +254,32 @@ watch(() => props.imageIndex, async () => {
 let _tid;
 let inst: ComponentInternalInstance;
 const availDocumentHeight = ref(document.documentElement.clientHeight);
-const availDialogHeight = ref(10);
-const changeLogMaxHeight = () => {
+const availDialogHeight = ref(100);
+const changeLogMaxHeight = (applyMaxAvailHeight?: boolean) => {
   clearTimeout(_tid);
   _tid = setTimeout(() => {
     const logHeight = scrollref.value.$parent.$el.offsetHeight;
     const modalMargin = window.innerHeight - inst.parent.parent.vnode.el.offsetHeight - 8;
-    const availModalHeight = Math.max(100, logHeight + modalMargin);
+    const availModalHeight = Math.max(200, logHeight + modalMargin);
     
     availDocumentHeight.value = document.documentElement.clientHeight;
-    availDialogHeight.value = availModalHeight;
+    availDialogHeight.value = Math.max(100, availModalHeight);
 
-    if( !props.opened || !expanded.value /*|| _unmounted*/ )
+    if( !props.opened || !expanded.value )
       return;
-    
     logMaxHeightPX.value = Math.max(availModalHeight, expandedLogMinHeight.value);
   }, 100);
 };
+
+function onExpandClick(flag: boolean) {
+  if( flag ) {
+    scrollLogViewToBottom(true);
+    changeLogMaxHeight(true);
+    logSizeSliderShow.value = true;
+  }
+}
+
+
 
 
 // auto scroll
@@ -588,7 +597,7 @@ function onMouseDownScrollbar(ev: MouseEvent) {
                 <n-checkbox
                   size="small"
                   v-model:checked="expanded"
-                  @update:checked="flag => { if( flag ) {scrollLogViewToBottom(true);changeLogMaxHeight();logSizeSliderShow=true;} }"
+                  @update:checked="onExpandClick"
                   style="font-size:smaller;"
                 >
                   {{ $t('status.expandLog') }}
@@ -604,7 +613,7 @@ function onMouseDownScrollbar(ev: MouseEvent) {
           <n-flex :wrap="false" align="center" style="font-size: 0.8rem">
             <n-slider
               v-model:value="expandedLogMinHeight"
-              @update-value="changeLogMaxHeight"
+              @update-value="changeLogMaxHeight()"
               :disabled="!expanded"
               :format-tooltip="value => `Log size: ${value}`"
               :tooltip="true"
