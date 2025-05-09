@@ -153,5 +153,6 @@
   "Next": "Sonraki",
   "Prev": "Öncesi",
   "or": "veya",
-  "TargetFileTypeExt": "Hedef dosya uzantısı"
+  "TargetFileTypeExt": "Hedef dosya uzantısı",
+  "changelog": "Değişim yeri"
 }

@@ -587,7 +587,7 @@ function checkAvailableFeatures() {
             <n-spin :show="canceled && !processCompleted" size="small">{{t('cancel')}}</n-spin>
           </n-button>
           <!-- close button -->
-          <n-button v-else-if="processCompleted" @click="onBeforeProcessingDialogClose" round size="large" style="font-size: small; margin-top:1em;">{{t('close')}}</n-button>
+          <n-button v-else-if="processCompleted" @click="onBeforeProcessingDialogClose" round size="large" style="margin-top:1em;">{{t('close')}}</n-button>
         </n-flex>
 
       </n-flex>
@@ -598,7 +598,12 @@ function checkAvailableFeatures() {
 
 <style lang="scss">
 .processing-dialog {
-  min-width: 640px;
+  min-width: 900px;
+}
+@media screen and (max-width: 900px) {
+  .processing-dialog {
+    min-width: 90%;
+  }
 }
 
 @media screen and (max-width: 580px) {

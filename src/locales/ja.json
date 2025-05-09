@@ -155,5 +155,6 @@
   "Next": "次",
   "Prev": "前",
   "or": "又は",
-  "TargetFileTypeExt": "変換対象ファイルの拡張子"
+  "TargetFileTypeExt": "変換対象ファイルの拡張子",
+  "changelog": "更新履歴"
 }

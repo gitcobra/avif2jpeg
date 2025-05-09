@@ -155,5 +155,6 @@
   "Next": "Next",
   "Prev": "Previous",
   "or": "or",
-  "TargetFileTypeExt": "Target File Extensions"
+  "TargetFileTypeExt": "Target File Extensions",
+  "changelog": "Changelog"
 }

@@ -32,6 +32,9 @@ jobs:
       - run: npm ci
       - run: npm run build:ga
 
+      - name: Get latest 5 commits
+        run: git log -5 --date=iso --pretty=format:'%ad%n%s%n%b' > ./dist/commits.txt
+
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
         if: github.ref == 'refs/heads/main'

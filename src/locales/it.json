@@ -153,5 +153,6 @@
   "Next": "Prossimo",
   "Prev": "Precedente",
   "or": "O",
-  "TargetFileTypeExt": "Estensione del file di destinazione"
+  "TargetFileTypeExt": "Estensione del file di destinazione",
+  "changelog": "Changelog"
 }

@@ -53,9 +53,10 @@ watch(() => props.processing, (val) => {
       {stroke: mainColor, opacity:0.3},
       //{stroke: statusColor, opacity:0.3},
     ]"
+    style="width: 12em;"
   >
     <!-- content in the center circle -->
-    <n-flex vertical align="center" justify="center" :size="0" style="font-family:v-mono; white-space: nowrap;" :wrap="false" :wrap-item="false">
+    <n-flex vertical align="center" justify="center" :size="0" style="white-space: nowrap;" :wrap="false" :wrap-item="false">
 
       <!-- progress counter -->          
       <table class="status-table">
@@ -105,7 +106,7 @@ watch(() => props.processing, (val) => {
         <!-- percent -->
         <tr>
           <td colspan="2">
-            <n-flex :size="0" align="center" justify="center" :style="{color: processing ? statusColor : mainColor}" :wrap="false" class="perc">
+            <n-flex :size="0" align="center" justify="center" :style="{color: processing ? statusColor : mainColor}" :wrap="false" class="percent">
               <n-icon v-if="completedAll" :component="Checkmark"></n-icon>
               <n-number-animation
                 :duration="interval * 3 | 0"
@@ -162,7 +163,7 @@ watch(() => props.processing, (val) => {
   border-collapse: collapse;
   border-spacing: 0px;
 
-  font-size: x-small;
+  font-size: 1em;
   padding: 0px;
   margin: 0px;
   tr, td {
@@ -172,24 +173,27 @@ watch(() => props.processing, (val) => {
   td * {
     vertical-align: middle;
   }
-  tr >*:first-child {
-    font-size: 0.7em;
+  tr td:nth-of-type(2) {
+    font-family: v-mono;
+  }
+  tr td:first-child {
+    font-size: 0.8em;
     text-align: right;
     padding-right: 0.2em;
   }
   td.mini-counter {
-    font-size: 0.9em;
+    font-size: 0.8em;
     text-align: left;
     line-height: 1em;
   }
-  .perc {
-    font-size: 32px;
-    width: 100%;
+  .percent {
+    font-size: 2.7em;
     height: 100%;
-    line-height:1.2em;
+    line-height:1.1em;
+    font-family: v-mono;
   }
   td.main-counter {
-    font-size: 1.4em;
+    font-size: 1em;
     min-width:2em;
     text-align: left;
     line-height: 1em;

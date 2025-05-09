@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { watch, computed, onMounted } from "vue";
-import { resetUserSettings, MaxThreads } from "@/user-settings";
+import { resetUserSettings, MaxThreads, _deleteLocalStorage } from "@/user-settings";
 import { SettingsOutline, BuildOutline, ArchiveOutline, DocumentTextOutline, HardwareChipOutline, ImagesOutline, FolderOpenOutline } from "@vicons/ionicons5";
 import { NTooltip } from "naive-ui";
+import { GlobalValsKey } from "../Avif2Jpeg.vue";
 
+// injections
+const INJ = inject(GlobalValsKey);
 
 // constants
 const ZIP_MIN_SIZE_MB = 100;
@@ -104,7 +107,11 @@ onMounted(() => {
           </template>
           {{ $t('settings.resetButtonTooltip') }}
         </n-tooltip>
+
+        <button v-if="INJ.IS_DEV" @click="_deleteLocalStorage()">delcfg</button>
       </template>
+
+
       
       <n-collapse-item :title="$t('settings.advancedSettings')" name="collapitem">  
         <n-flex vertical style="padding-left: 2em;">

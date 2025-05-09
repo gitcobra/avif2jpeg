@@ -34,12 +34,16 @@ const DefaultSettings = {
   maxHeight: 4096,
 
   disableNotifyingFolderSelect: false,
-} as const;
+  changeLogCheckedDate: 0,
+};
 
+
+
+
+export const UserSettings = reactive(reset({}));
 export type UserSettingsType = Omit<typeof DefaultSettings, "threadCount"> & {
   threadCount?: number
 };
-export const UserSettings = reactive(reset({}));
 export function resetUserSettings() {
   reset(UserSettings);
 }

@@ -8,8 +8,8 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    Changelog: typeof import('./src/components/header/changelog.vue')['default']
     Converter: typeof import('./src/components/converter/converter.vue')['default']
-    DelLs: typeof import('./src/components/_test/del-ls.vue')['default']
     Descriptions: typeof import('./src/components/descriptions.vue')['default']
     Droptarget: typeof import('./src/components/droptarget.vue')['default']
     FileSelector: typeof import('./src/components/file-selector.vue')['default']
@@ -18,7 +18,6 @@ declare module 'vue' {
     ImageViewer: typeof import('./src/components/converter/status/image-viewer.vue')['default']
     LangFlag: typeof import('./src/components/lang-flag.vue')['default']
     Licenses: typeof import('./src/components/header/licenses.vue')['default']
-    NA: typeof import('naive-ui')['NA']
     NAlert: typeof import('naive-ui')['NAlert']
     NBadge: typeof import('naive-ui')['NBadge']
     NButton: typeof import('naive-ui')['NButton']
@@ -56,8 +55,9 @@ declare module 'vue' {
     SettingsAdv: typeof import('./src/components/settings-adv.vue')['default']
     SettingsOutput: typeof import('./src/components/settings-output.vue')['default']
     Status: typeof import('./src/components/converter/status/status.vue')['default']
-    'Status.centerColumn': typeof import('./src/components/converter/status/status.center-column.vue')['default']
     'Status.log': typeof import('./src/components/converter/status/status.log.vue')['default']
+    'Status.progress': typeof import('./src/components/converter/status/status.progress.vue')['default']
+    'Status.progressCenter': typeof import('./src/components/converter/status/status.progress-center.vue')['default']
     SwitchLang: typeof import('./src/components/header/switch-lang.vue')['default']
     Thumbnail: typeof import('./src/components/converter/status/thumbnail.vue')['default']
     Title: typeof import('./src/components/title.vue')['default']

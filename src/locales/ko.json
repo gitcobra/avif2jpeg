@@ -153,5 +153,6 @@
   "Next": "다음",
   "Prev": "이전의",
   "or": "또는",
-  "TargetFileTypeExt": "대상 파일 확장"
+  "TargetFileTypeExt": "대상 파일 확장",
+  "changelog": "changelog"
 }

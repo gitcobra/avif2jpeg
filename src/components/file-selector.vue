@@ -17,7 +17,7 @@
               size="large"
               @click="onInputButtonClick(fileinput)"
               round
-              style="width:100%; background-color:white; font-size: large;"
+              style="width:100%; background-color:white; font-size: 1.5em;"
             >
               <template #icon>
                 <n-icon size="large" color="gray"><ImageOutline /></n-icon>
@@ -47,7 +47,7 @@
                 size="large"
                 @click="onInputButtonClick(folderinput)"
                 round
-                style="width:100%; background-color:white; font-size: large;"
+                style="width:100%; background-color:white; font-size: 1.5em;"
               >
                 <template #icon>
                   <n-icon size="large" color="gray"><FolderOpenOutline /></n-icon>
@@ -418,7 +418,7 @@ function log(str: any) {
 ul {
   list-style-type: square;
   li {
-    font-size: xx-small;
+    font-size: 0.8em;
   }
 }
 ul, li {

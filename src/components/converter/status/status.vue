@@ -4,7 +4,8 @@ import { dataTableDark, type DropdownOption, NIcon, NScrollbar, NSpin, useThemeV
 import { ImageSharp, Archive, Warning, WarningOutline, DocumentTextOutline, DownloadOutline, Filter } from '@vicons/ionicons5';
 import { useI18n } from 'vue-i18n';
 import ImageViewer from './image-viewer.vue';
-import CenterColumn from './status.center-column.vue';
+import Progress from './status.progress.vue';
+import CenterColumn from './status.progress-center.vue';
 import LogTable from './status.log.vue';
 import { getThumbnailedSize, getUnitSize, sleep, useTimeoutRef } from '../../util';
 
@@ -456,16 +457,16 @@ function onFinished() {
 
   statusColor.value = props.status.success === props.status.length ? c.value.successColor : c.value.errorColor;
 
-  // close log unless it is expanded
-  if( !logExpanded.value ) {
-    removeCollapsed('log');
-    logExpanded.value = true;
-  }
-
   if( logTableOrder.value === 'processed' )
     logTableOrder.value = 'zipped';
   
   if( stat.success > 0 ) {
+    // close log unless it is expanded
+    if( !logExpanded.value ) {
+      removeCollapsed('log');
+      //logExpanded.value = true;
+    }
+    // show preview
     setCollapsed('preview');
   }
 }
@@ -646,43 +647,23 @@ function cleanup() {
       v-model:expanded-names="expandedNames"
       :theme-overrides="collapseThemeOverrides"
     >
-    <n-collapse-item name="progress" style="white-space:nowrap;">
-      <template #header="{collapsed}">
-        <n-flex>
-          {{ $t('status.Progress') }}
-          <template v-if="collapsed">
-            ({{ successPercentage[0] |0 }}%)
-          </template>
-        </n-flex>
-      </template>
-      <n-flex justify="center" align="center" :wrap="false" style="white-space: nowrap; margin-top:-2em">
 
-        <!-- left column -->
-        <n-flex vertical justify="center" class="left-column">
-    
-          <n-statistic tabular-nums :label="$t('status.elapsedTime')">
-            <n-flex>
-              {{ elapsedTime }}
-            </n-flex>
-          </n-statistic>
+    <Progress
+      :elapsed-time="elapsedTime"
+      :success-perc="successPercentage[0]"
+      :input-total-size="inputTotalSize"
+      :output-total-size="outputTotalSize"
+      
+      :file-type="props.status.type"
+      :shrink="props.status.shrink"
+      :threads="props.status.threads"
+      :zip-size="props.status.zipSize"
 
-          <n-statistic tabular-nums :label="$t('status.multiThreading')">
-            <n-flex :style="{color: !props.status.threads ? 'red' : '', fontSize: '0.7rem'}">
-              {{ props.status.threads ? $rt('{n} @:threads', props.status.threads) : $t('disabled') }}
-            </n-flex>
-          </n-statistic>
-
-          <n-statistic tabular-nums :label="$t('status.outputSettings')">
-            <n-flex vertical justify="end" style="font-size: 0.6rem; line-height:0.6rem;">
-              <div>{{$t('settings.imageType')}}: {{ props.status.type }}</div>
-              <div v-if="status.shrink">{{$t('status.Shrinking')}}: <span style="">{{status.shrink[0]}}×{{status.shrink[1]}}</span></div>
-              <div>Zip: {{ props.status.zipSize }}MB</div>
-            </n-flex>
-          </n-statistic>
-
-        </n-flex>
-
-
+      :rate-color="rateColor"
+      :dif-color="difColor"
+      :total-size-dif-str="totalSizeDifStr"
+    >
+      <template #center>
         <!-- center column - progress circle -->
         <center-column
           v-if="!cleaningUp"
@@ -702,28 +683,8 @@ function cleanup() {
 
           class="center-column"
         />
-
-        <!-- right column -->
-        <n-flex vertical style="height:100%;" justify="center">
-          <n-statistic tabular-nums :label="$t('status.inputSize')">
-            <n-flex justify="end" :wrap="false" style="font-family:v-mono;">{{(inputTotalSize / 1024 | 0).toLocaleString('en-us')}} KB</n-flex>
-          </n-statistic>
-
-          <n-statistic tabular-nums :label="$t('status.outputSize')">
-            <n-flex justify="end" :wrap="false" style="font-family:v-mono;">{{(outputTotalSize / 1024 | 0).toLocaleString('en-us')}} KB</n-flex>
-          </n-statistic>
-
-          <n-statistic tabular-nums :label="$t('status.outInRate')">
-            <n-flex vertical align="end" justify="start" style="font-size: smaller; font-family:v-mono; line-height:50%;">
-              <span :style="{color:rateColor, fontSize:'larger'}">× {{ (outputTotalSize / inputTotalSize || 1).toFixed(2) }}</span>
-              <span :style="{color:difColor}">({{ totalSizeDifStr }})</span>
-              
-            </n-flex>
-          </n-statistic>
-        </n-flex>
-
-      </n-flex>
-    </n-collapse-item>
+      </template>
+    </Progress>
 
     <!-- log view *aliased to n-collapse-item-->
     <log-table
@@ -744,13 +705,6 @@ function cleanup() {
     <n-collapse-item :title="$t('status.PreviewImage')" name="preview" style="white-space:nowrap;" :disabled="!(success[0] > 0)">
       <!-- image browser -->
       <n-flex justify="center" align="center" vertical>
-          <!--
-          <transition>
-            <n-button v-if="!imageViewerStarted" tertiary type="success" size="small" :disabled="!(status.success > 0)" @click="imageViewerStarted=true">
-              {{$t('status.browseConvertedImages')}}
-            </n-button>
-          -->
-          
         <ImageViewer
           _v-else-if="imageViewerStarted && status.success > 0 /*&& (props.status.threads || !zippingFlag)*/ && !cleaningUp"
           ref="imageViewer"
@@ -989,7 +943,7 @@ function cleanup() {
 
 <style lang="scss" scoped>
 .body {
-  font-size: 1rem;
+  font-size: 1em;
 }
 
 .zip-buttons-parent {
@@ -1012,32 +966,6 @@ function cleanup() {
   color: white;
   display: flex;
 }
-
-
-
-.left-column {
-  height:100%;
-}
-.center-column {
-  width: 10rem;
-  font-size: 1.5rem;
-}
-@media screen and (max-width: 580px) {
-	.left-column {
-    > * {
-      display: none;
-    }
-  }
-  .center-column {
-  }
-  .hide-mobile {
-    display: none;
-  }
-}
-
-
-
-
 
 
 /* transitions */

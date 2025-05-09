@@ -150,5 +150,6 @@
   "Next": "Seuraava",
   "Prev": "Edellinen",
   "or": "tai",
-  "TargetFileTypeExt": "Kohdetiedoston laajennus"
+  "TargetFileTypeExt": "Kohdetiedoston laajennus",
+  "changelog": "Muutos"
 }

@@ -7,6 +7,7 @@ export const GlobalValsKey: InjectionKey<{
   LANDSCAPE: Ref<boolean>
   showTooltipsBeforeMounted: Ref<boolean>
   IS_SP: boolean
+  IS_DEV: boolean
   switchToolTipVisibility: Function
   SSR: boolean
 }> = Symbol('global variables');
@@ -17,7 +18,15 @@ import { UserSettings } from './user-settings';
 import { useI18n } from 'vue-i18n'
 import { useHead } from "@vueuse/head";
 
-import 'vfonts/RobotoSlab.css';
+//import 'vfonts/FiraSans.css';
+//import 'vfonts/IBMPlexSans.css';
+//import 'vfonts/Inter.css';
+//import 'vfonts/Lato.css';
+//import 'vfonts/OpenSans.css';
+import 'vfonts/Roboto.css';
+//import 'vfonts/RobotoSlab.css';
+import 'vfonts/FiraCode.css';
+
 import { ArrowDown } from '@vicons/ionicons5';
 
 
@@ -30,7 +39,7 @@ import AdvancedSettings from './components/settings-adv.vue';
 import Descriptions from './components/descriptions.vue';
 
 //import LangFlag from './components/lang-flag.vue';
-//import DelLocalStorage from './components/_test/del-ls.vue';
+
 
 
 
@@ -46,6 +55,7 @@ const TRANSTIME = 200;
 
 // detect smartphone
 const IS_SP = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile Safari/.test(navigator.userAgent);
+const IS_DEV = process.env.NODE_ENV === 'development';
 
 
 // reactive values
@@ -81,6 +91,7 @@ provide(GlobalValsKey, {
   showTooltipsBeforeMounted,
   LANDSCAPE,
   IS_SP,
+  IS_DEV,
   switchToolTipVisibility,
   SSR: import.meta.env.SSR,
 });
@@ -256,7 +267,6 @@ function onInputClick(flag: boolean) {
     </transition>
 
     <!-- <LangFlag/> -->
-    <!-- <DelLocalStorage/> -->
   
   </n-flex>
 

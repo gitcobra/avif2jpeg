@@ -569,7 +569,7 @@ function onMouseDownScrollbar(ev: MouseEvent) {
           :options="SortOptionGroup"
           @update:value="sortListBySortOptions"
 
-          style="width:auto; font-size: smaller;" :consistent-menu-width="false" :show-on-focus="false" size="tiny"
+          style="width:auto;" :consistent-menu-width="false" :show-on-focus="false" size="tiny"
         >
           <template #arrow><n-icon :component="SwapVertical"/></template>
         </n-select>
@@ -578,13 +578,13 @@ function onMouseDownScrollbar(ev: MouseEvent) {
           v-model:value="filterLogValue"
           :options="FilterOptions"
           @update:value="resetLogTableViewRange()"
-          :placeholder="$t('status.filterLogSelect')" size="tiny" style="width:auto; font-size: smaller;" :consistent-menu-width="false" :show-on-focus="false"
+          :placeholder="$t('status.filterLogSelect')" size="tiny" style="width:auto;" :consistent-menu-width="false" :show-on-focus="false"
         >
           <template #arrow><n-icon :component="Filter"/></template>
         </n-select>
         
         <!-- auto scroll -->
-        <n-checkbox key="b" v-model:checked="autoScrollLog" @update:checked="flag => flag && scrollLogViewToBottom(true)" size="small" style="font-size: smaller">
+        <n-checkbox key="b" v-model:checked="autoScrollLog" @update:checked="flag => flag && scrollLogViewToBottom(true)" size="small" style="font-size: 0.9em;">
           {{$t('status.autoScroll')}}
         </n-checkbox>
         <!--</transition-group>-->
@@ -598,7 +598,7 @@ function onMouseDownScrollbar(ev: MouseEvent) {
                   size="small"
                   v-model:checked="expanded"
                   @update:checked="onExpandClick"
-                  style="font-size:smaller;"
+                  style="font-size: 0.9em;"
                 >
                   {{ $t('status.expandLog') }}
                 </n-checkbox>
@@ -610,7 +610,7 @@ function onMouseDownScrollbar(ev: MouseEvent) {
             </n-tooltip>
           </template>
 
-          <n-flex :wrap="false" align="center" style="font-size: 0.8rem">
+          <n-flex :wrap="false" align="center" style="font-size: 0.8em">
             <n-slider
               v-model:value="expandedLogMinHeight"
               @update-value="changeLogMaxHeight()"
@@ -721,8 +721,7 @@ function onMouseDownScrollbar(ev: MouseEvent) {
   height: 110px;
 
   transition: all .2s ease;
-  margin-top: -1em;
-  margin-left: 1em;
+  margin: -1em -1em 4px 0px;
   /*height: 7em;*/
 
   &:focus {
@@ -787,7 +786,7 @@ function onMouseDownScrollbar(ev: MouseEvent) {
       }
     }
     .log-extra {
-      font-size: smaller;
+      
     }
   }
 

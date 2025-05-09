@@ -555,7 +555,7 @@ function cleanup() {
 </script>
 
 <template>
-  <n-flex justify="center" align="center" vertical :style="{visibility: initializing ? 'hidden' : 'visible'}" class="body" ref="body">
+  <n-flex justify="center" align="stretch" vertical :style="{visibility: initializing ? 'hidden' : 'visible'}" class="body" ref="body"  style="overflow:visible;">
   <n-image-group
     ref="nImageGroupRef"
     show-toolbar-tooltip
@@ -564,9 +564,9 @@ function cleanup() {
   >
   
 
-    <n-flex :wrap="false" align="center" justify="center">
+    <n-flex :wrap="false" align="center" justify="space-between" style="overflow:visible;">
       <!-- left button -->
-      <n-button @click="moveIndex(-1)" :disabled="!allowPrev" block :class="{'thumb-arrow':true, pale: !allowPrev}" :title="$t('Prev')">
+      <n-button @click="moveIndex(-1)" :bordered="false" :disabled="!allowPrev" :class="{'thumb-arrow':true, pale: !allowPrev}" :title="$t('Prev')">
         <template #icon><n-icon size="30"><ChevronBack/></n-icon></template>
       </n-button>
 
@@ -610,7 +610,7 @@ function cleanup() {
                       <n-flex class="imglink-label">{{ t('status.Original') }}</n-flex>
 
                       <!-- image dimension -->
-                      <n-flex justify="center" class="img-size" :wrap="false">
+                      <n-flex justify="center" class="img-size" :wrap="false" :size="2">
                         <span class="left-num">{{ !thumbOrgloaded ? '?' : orgwidth }}</span>
                         ×
                         <span class="right-num">{{ !thumbOrgloaded ? '?' : orgheight }}</span>
@@ -629,7 +629,7 @@ function cleanup() {
                 </n-flex>
 
 
-                <n-flex vertical align="center" style="margin:1em;" class="original-thumb">
+                <n-flex vertical align="center" class="original-thumb">
                   <n-icon size="20" color="silver" :component="ArrowForward"/>
                 </n-flex>
                 
@@ -641,10 +641,10 @@ function cleanup() {
                   <!-- image dimension -->
                   <n-flex vertical align="center" justify="center" :size="0">
                     <n-flex justify="center">
-                      <n-flex :wrap="false" :style="props.variousInfo?.shrinked ? {color:'blue'} : {}" class="img-size">
-                      <span class="left-num">{{ !thumbloaded ? '?' : width }}</span>
-                      ×
-                      <span class="right-num">{{ !thumbloaded ? '?' : height }}</span>
+                      <n-flex :wrap="false" :style="props.variousInfo?.shrinked ? {color:'blue'} : {}" class="img-size" :size="2">
+                        <span class="left-num">{{ !thumbloaded ? '?' : width }}</span>
+                        ×
+                        <span class="right-num">{{ !thumbloaded ? '?' : height }}</span>
                       </n-flex>
                     </n-flex>
                     <!--
@@ -664,7 +664,7 @@ function cleanup() {
               </n-flex>
 
               <!-- file name -->
-              <n-flex ref="fileNameContainer" justify="center" align="center" class="pathbox" :title="props.name">
+              <n-flex ref="fileNameContainer" justify="center" align="center" class="pathbox" :title="props.name" style="overflow: hidden; flex-grow:0;">
                 <n-scrollbar :x-scrollable="true" trigger="hover" style="text-align: center; font-size:smaller; overflow:hidden; white-space:nowrap; text-overflow: ellipsis;">
                   {{ !thumbloaded ? '?' : props.name }}
                 </n-scrollbar>
@@ -689,12 +689,12 @@ function cleanup() {
                 @next="moveIndex(1)"
                 @prev="moveIndex(-1)"
               />
-              <n-flex justify="center" :wrap="true">
+              <n-flex justify="center" align="center" :wrap="false">
                 
                 <!-- save blobURL -->
                 <n-popover display-directive="show" trigger="hover" :duration="0" :delay="0">
                   <template #trigger>
-                  <a :href="props.url" ref="saveImg" target="_blank" :download="props.name">
+                  <a :href="props.url" ref="saveImg" target="_blank" :download="props.name" style="line-height:1em;">
                     <n-button :disabled="!thumbloaded" round size="tiny">{{$t('save')}}</n-button>
                   </a>
                   </template>
@@ -721,7 +721,7 @@ function cleanup() {
       </n-flex>
 
       <!-- right button -->
-      <n-button @click="moveIndex(1)" :disabled="!allowNext" block :class="{'thumb-arrow':true, next:true, pale: !allowNext}" :title="$t('Next')">
+      <n-button :bordered="false" @click="moveIndex(1)" :disabled="!allowNext" :class="{'thumb-arrow':true, next:true, pale: !allowNext}" :title="$t('Next')">
         <template #icon><n-icon size="30"><ChevronForward/></n-icon></template>
       </n-button>
     </n-flex>
@@ -754,29 +754,38 @@ function cleanup() {
 
 <style lang="scss" scoped>
 .body {
-  font-size: 0.8rem;
+  width: 100%;
+  font-size: 0.8em;
   
   position: relative;
+  margin-bottom: 3px;
+
+  overflow: hidden;
+  div {
+    overflow: hidden;
+  }
 }
+
 a {
   color: black;
 }
 .pathbox {
-  max-width: 280px;
-  font-size: 0.7em;
+  flex-grow: 0;
+  font-size: 0.9em;
   overflow:hidden;
   white-space:nowrap;
   text-overflow: ellipsis;
 }
 
 .thumb-arrow {
+  width: 10%;
   color: gray;
-  max-width: 1.5em; height:9em;
+  height:9em;
   z-index: 999;
 }
 
 .imglink {
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   &:hover, &:hover .imglink-label {
     color: blue;
   }
@@ -798,15 +807,15 @@ a {
 }
 .index {
   white-space: nowrap;
-  font-family: v-mono;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   .counter {
+    font-family: v-mono;
     min-width:2.5em;
   }
 }
 
 .img-size {
-  font-size: 0.7rem;
+  font-size: 0.9rem;
   white-space:nowrap;
   font-family:v-mono;
   .left-num {
@@ -871,12 +880,12 @@ a {
 .viewer-item-next-enter-from,
 .viewer-item-prev-leave-to {
   opacity: 0;
-  transform: translateX(400px);
+  transform: translateX(600px);
 }
 .viewer-item-next-leave-to,
 .viewer-item-prev-enter-from {
   opacity: 0;
-  transform: translateX(-400px);
+  transform: translateX(-600px);
 }
 
 .viewer-item-next-leave-active,
