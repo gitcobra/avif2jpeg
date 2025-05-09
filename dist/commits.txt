@@ -1,0 +1,6 @@
+2025-05-09 21:02:14 +0900
+Add/Refactor: add changelog, split status.vue and modify some styles.
+-Implement changelog.vue.
+-Split the part of the progress status in status.vue into a subcomponent.
+-Modify font size.
+-Import vfonts for v-mono.
