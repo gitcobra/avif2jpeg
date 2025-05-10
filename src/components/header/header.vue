@@ -12,8 +12,8 @@
         <Licenses/>
         -->
         
-        <n-flex style="font-size: 1em; color:black;">
-          <router-link v-if="route.path !== '/'" to="/">HOME</router-link>
+        <n-flex style="font-size: 1em;">
+          <router-link v-if="route.path !== '/'" to="/" style="color:black;">HOME</router-link>
         </n-flex>
 
       </n-flex>

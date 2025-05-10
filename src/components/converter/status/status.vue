@@ -704,7 +704,7 @@ function cleanup() {
     
     <n-collapse-item :title="$t('status.PreviewImage')" name="preview" style="white-space:nowrap;" :disabled="!(success[0] > 0)">
       <!-- image browser -->
-      <n-flex justify="center" align="center" vertical>
+      <n-flex justify="center" align="center" vertical style="margin-top:-1em">
         <ImageViewer
           _v-else-if="imageViewerStarted && status.success > 0 /*&& (props.status.threads || !zippingFlag)*/ && !cleaningUp"
           ref="imageViewer"

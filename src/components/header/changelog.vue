@@ -74,10 +74,10 @@ function onClickChangelog() {
 </script>
 
 <template>
-<n-popover trigger="click" placement="bottom-start" @update:show="onClickChangelog">
+<n-popover trigger="click" placement="bottom" arrow-point-to-center @update:show="onClickChangelog" style="margin-left:-1em; max-width:80%; white-space:initial;">
   <template #trigger>
     <n-flex align="center" :size="1" style="cursor:pointer;">
-      <n-icon :component="NotificationsCircleOutline" size="1.5em" :color="updated ? 'blue' : 'silver'"></n-icon>
+      <n-icon :component="NotificationsCircleOutline" size="1.5em" :color="updated ? 'blue' : 'silver'" style="transition: color 0.5s;"></n-icon>
       {{ $t('changelog') }}
     </n-flex>
   </template>
@@ -104,8 +104,9 @@ function onClickChangelog() {
 
 <style lang="scss">
 .commits {
-  max-width: 90%;
+  white-space: pre-wrap;
   line-height: 0.9em;
+
 }
 ul {
   margin: 0px;

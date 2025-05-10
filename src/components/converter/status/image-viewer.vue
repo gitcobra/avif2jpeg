@@ -570,10 +570,10 @@ function cleanup() {
         <template #icon><n-icon size="30"><ChevronBack/></n-icon></template>
       </n-button>
 
-      <n-flex justify="center" ref="viewerItemContainer" class="viewer-item-container">
+      <n-flex justify="center" ref="viewerItemContainer" class="viewer-item-container" style="width:100%;">
         <transition :name="viewerTransitionName">
         
-        <n-flex vertical :key="viewTransKey" _v-show="viewerItemVisibility">
+        <n-flex vertical :key="viewTransKey">
           <n-flex align="center" :wrap="false">
             
             <!-- left column (org => conv) -->
@@ -664,7 +664,7 @@ function cleanup() {
               </n-flex>
 
               <!-- file name -->
-              <n-flex ref="fileNameContainer" justify="center" align="center" class="pathbox" :title="props.name" style="overflow: hidden; flex-grow:0;">
+              <n-flex ref="fileNameContainer" justify="center" align="center" class="pathbox" :title="props.name" style="overflow: hidden;">
                 <n-scrollbar :x-scrollable="true" trigger="hover" style="text-align: center; font-size:smaller; overflow:hidden; white-space:nowrap; text-overflow: ellipsis;">
                   {{ !thumbloaded ? '?' : props.name }}
                 </n-scrollbar>
@@ -673,8 +673,8 @@ function cleanup() {
             </n-flex>
 
             <!-- right column (thumb) -->
-            <n-flex vertical>
-
+            <n-flex vertical style="overflow: visible;">
+  
               <Thumbnail
                 :ref="(el: any) => {if( el?.active ) thumbConvRef = el}"
                 :src="convertedSrc"
@@ -727,9 +727,9 @@ function cleanup() {
     </n-flex>
 
         
-    <n-flex v-show="!isSingle" style="width:100%;" :wrap="false">
+    <n-flex v-if="!isSingle" justify="center" align="center" :wrap="false" :size="4">
       <!-- slider for index -->
-      <n-slider v-model:value="index" :tooltip="false" :step="1" :min="1" :max="props.length" :keyboard="false" class="index-slider" />
+      <n-slider v-model:value="index" :tooltip="false" :step="1" :min="1" :max="props.length" :keyboard="false" class="index-slider"/>
       
       <!-- index -->
       <n-flex class="index" align="center" justify="center" :wrap="false" :size="3">
@@ -761,7 +761,7 @@ function cleanup() {
   margin-bottom: 3px;
 
   overflow: hidden;
-  div {
+  .n-flex {
     overflow: hidden;
   }
 }
@@ -778,7 +778,7 @@ a {
 }
 
 .thumb-arrow {
-  width: 10%;
+  min-width: 10%;
   color: gray;
   height:9em;
   z-index: 999;
@@ -794,20 +794,21 @@ a {
     color:gray;
   }
 }
-
+/*
 .close-button {
   z-index: 999;
   position: absolute;
   right:-16px; top:-26px;
   opacity: 0.7;
 }
+*/
 
 .index-slider {
-  margin: 0px 0em 0px 1em;
 }
 .index {
   white-space: nowrap;
   font-size: 0.8rem;
+  min-width: 10em;
   .counter {
     font-family: v-mono;
     min-width:2.5em;

@@ -169,8 +169,8 @@ function openPreview() {
   <n-tooltip>
     <template #trigger>
     <n-spin :show="imgloading || props.loading">
-      <n-flex justify="center" align="center" :style="spincss">      
-      <a _v-show="!(imgloading || props.loading)" :href="imgsrc" @click.left.prevent="" target="_blank" :download="props.fileName" :title="props.fileName" style="line-height:0px;">
+      <n-flex justify="center" align="center" :style="spincss" style="line-height:0px;">
+      <a :href="imgsrc" @click.left.prevent="" target="_blank" :download="props.fileName" :title="props.fileName">
         <Transition mode="in-out">
         <n-image
           ref="nImageRef"
@@ -180,7 +180,7 @@ function openPreview() {
           :src="imgsrc"
           v-show="disp"
           :width="twidth" :height="theight"
-          style="border:1px solid silver"
+          style="border:1px solid silver;"
         />
         </Transition>
       </a>
@@ -196,7 +196,6 @@ function openPreview() {
 
 
 <style lang="scss" scoped>
-
 .v-enter-active,
 .v-leave-active {
   transition: all .2s ease;
