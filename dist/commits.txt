@@ -1,6 +1,22 @@
+2025-05-11 08:41:29 +0900
+chore: Increase the changelog items to five / small CSS changes
+
 2025-05-09 21:02:14 +0900
 Add/Refactor: add changelog, split status.vue and modify some styles.
 -Implement changelog.vue.
 -Split the part of the progress status in status.vue into a subcomponent.
 -Modify font size.
 -Import vfonts for v-mono.
+
+2025-05-08 11:10:13 +0900
+small fixes
+- fixed a bug where the failure button was unintentionally displayed.
+- fixed incorrect progress percentage color when finished.
+
+2025-05-07 22:33:26 +0900
+some fixes for single thread
+
+2025-05-07 16:51:13 +0900
+some changes for the log table.
+preserve scrollLeft of the log table.
+automatically sort the log table at regular intervals.
