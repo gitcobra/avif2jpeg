@@ -171,6 +171,7 @@ const removeCollapsed = (name: string) => {
 const logOpened = computed(() => expandedNames.value.includes('log'));
 // for log-table property
 const logExpanded = ref(false);
+const logAutoScroll = ref(true);
 const logTableOrder = ref<InstanceType<typeof LogTable>['order']>('processed');
 
 //const imageViewerStarted = ref(false);
@@ -462,7 +463,8 @@ function onFinished() {
   
   if( stat.success > 0 ) {
     // close log unless it is expanded
-    if( !logExpanded.value ) {
+    //if( !logExpanded.value ) {
+    if( logAutoScroll.value ) {
       removeCollapsed('log');
       //logExpanded.value = true;
     }
@@ -695,6 +697,7 @@ function cleanup() {
       :preview-collapsed="isCollapsed('preview')"
       :logs="workingLogs"
       :expanded="logExpanded"
+      :auto-scroll="logAutoScroll"
       :order="logTableOrder"
       @change-index="changeImgViewerIndexBySelectedLogItem"
       @open-preview="imageViewer?.openPreview()"

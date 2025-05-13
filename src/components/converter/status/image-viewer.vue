@@ -782,6 +782,9 @@ a {
   color: gray;
   height:9em;
   z-index: 999;
+  &:hover {
+    border: 1px solid;
+  }
 }
 
 .imglink {
@@ -881,12 +884,12 @@ a {
 .viewer-item-next-enter-from,
 .viewer-item-prev-leave-to {
   opacity: 0;
-  transform: translateX(600px);
+  transform: translateX(800px);
 }
 .viewer-item-next-leave-to,
 .viewer-item-prev-enter-from {
   opacity: 0;
-  transform: translateX(-600px);
+  transform: translateX(-800px);
 }
 
 .viewer-item-next-leave-active,

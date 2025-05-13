@@ -83,6 +83,7 @@ const saveSettings = () => {
     dat[p] = (UserSettings as any)[p];
   }
   localStorage.setItem(storeName, JSON.stringify(dat));
+  console.log(UserSettings.changeLogCheckedDate);
 };
 window.addEventListener('beforeunload', saveSettings);
 

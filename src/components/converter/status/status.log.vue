@@ -42,6 +42,7 @@ const props = defineProps<{
 
 // v-model
 const expanded = defineModel<boolean>('expanded', {required: false});
+const autoScrollLog = defineModel<boolean>('auto-scroll', {required: false});
 //const sortValue *this v-model variable is described with SortObtions below
 
 
@@ -63,7 +64,7 @@ const thumbcanvas = ref<HTMLCanvasElement>(null);
 
 // reactive values
 //const expandLog = ref(false);
-const autoScrollLog = ref(true);
+//const autoScrollLog = ref(true);
 
 const logMaxHeightPX = ref(80);
 const expandedLogMinHeight = ref(200);
@@ -259,7 +260,7 @@ const changeLogMaxHeight = (applyMaxAvailHeight?: boolean) => {
   clearTimeout(_tid);
   _tid = setTimeout(() => {
     const logHeight = scrollref.value.$parent.$el.offsetHeight;
-    const modalMargin = window.innerHeight - inst.parent.parent.vnode.el.offsetHeight - 8;
+    const modalMargin = window.innerHeight - inst.parent.parent.parent.parent.vnode.el.offsetHeight - 8;
     const availModalHeight = Math.max(200, logHeight + modalMargin);
     
     availDocumentHeight.value = document.documentElement.clientHeight;
@@ -590,7 +591,7 @@ function onMouseDownScrollbar(ev: MouseEvent) {
         <!--</transition-group>-->
 
         <!-- expand log -->
-        <n-popover trigger="hover" :show="logSizeSliderShow" :disabled="!expanded" placement="top" :delay="0">
+        <n-popover trigger="hover" :show="logSizeSliderShow" :disabled="!expanded" placement="top" :delay="0" :duration="1000">
           <template #trigger>
             <n-tooltip style="max-width:30em;" :disabled="true">
               <template #trigger>

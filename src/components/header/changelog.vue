@@ -55,18 +55,26 @@ async function getChangeLog(url: string /*owner: string, repo: string*/) {
   }));
   */
 
-  const date = txt.match(/^\d{4}.+/)?.[0];
-  if( !date )
-    return;
-  changeLogLatestTime = new Date(date).getTime();
-  if( changeLogLatestTime > UserSettings.changeLogCheckedDate ) {
-    updated.value = true;
-  }
-  logs.value = txt.replace(/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2}) \+\d+$/mg, (m) => new Date(m).toLocaleString());
+  // change the date to local time and highlight if updated  
+  logs.value = txt.replace(/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2}) \+\d+$/mg, (m, $1) => {
+    const commitDate = new Date(m);
+    const commitTime = commitDate.getTime();
+    const locTimeStr = commitDate.toLocaleString();
+    let update = '';
+    if( commitTime > UserSettings.changeLogCheckedDate ) {
+      updated.value = true;
+      if( commitTime > changeLogLatestTime )
+        changeLogLatestTime = commitTime;
+      update = 'update';
+    }
+    return `<span class="date ${update}">${locTimeStr}</span>`;
+  });
 }
 
 function onClickChangelog() {
-  UserSettings.changeLogCheckedDate = changeLogLatestTime;
+  if( changeLogLatestTime > UserSettings.changeLogCheckedDate ) {
+    UserSettings.changeLogCheckedDate = changeLogLatestTime;
+  }
   updated.value = false;
 }
 
@@ -106,7 +114,16 @@ function onClickChangelog() {
 .commits {
   white-space: pre-wrap;
   line-height: 0.9em;
-
+  margin-left: 1em;
+  .date {
+    color: gray;
+    margin-left: -1em;
+    margin-bottom: 0px;
+    line-height: 1em;
+    &.update {
+      color: blue;
+    }
+  }
 }
 ul {
   margin: 0px;
