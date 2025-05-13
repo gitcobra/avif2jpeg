@@ -1,4 +1,4 @@
-2025-05-13 17:52:51 +0900
+2025-05-13 18:18:48 +0900
 fix/feat: some minor changes for the log table and the changelog.
 - modify the size adjustment when expanding the log size.
 - highlight the newer dates in the changelog.
