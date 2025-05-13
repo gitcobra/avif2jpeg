@@ -1,5 +1,7 @@
-2025-05-13 17:47:13 +0900
-fix/feat: some minor changes for the log table and the changelog. - modify the size adjustment when expanding the log size. - highlight the newer dates in the changelog.
+2025-05-13 17:52:51 +0900
+fix/feat: some minor changes for the log table and the changelog.
+- modify the size adjustment when expanding the log size.
+- highlight the newer dates in the changelog.
 
 2025-05-11 08:41:29 +0900
 chore: Increase the changelog items to five / small CSS changes
