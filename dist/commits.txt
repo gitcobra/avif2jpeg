@@ -1,3 +1,6 @@
+2025-05-13 17:47:13 +0900
+fix/feat: some minor changes for the log table and the changelog. - modify the size adjustment when expanding the log size. - highlight the newer dates in the changelog.
+
 2025-05-11 08:41:29 +0900
 chore: Increase the changelog items to five / small CSS changes
 
@@ -15,8 +18,3 @@ small fixes
 
 2025-05-07 22:33:26 +0900
 some fixes for single thread
-
-2025-05-07 16:51:13 +0900
-some changes for the log table.
-preserve scrollLeft of the log table.
-automatically sort the log table at regular intervals.
