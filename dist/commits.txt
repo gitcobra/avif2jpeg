@@ -1,3 +1,16 @@
+2025-05-21 01:16:56 +0900
+v1.10.22
+
+2025-05-21 01:15:36 +0900
+chore: modify workflow
+
+2025-05-20 23:26:43 +0900
+refactor/chore: split status.vue again.
+- split the result part in status.vue into a subcomponent.
+- striped log table.
+- modified version.js script.
+- modified deployment workflow trigger.
+
 2025-05-13 18:18:48 +0900
 fix/feat: some minor changes for the log table and the changelog.
 - modify the size adjustment when expanding the log size.
@@ -5,18 +18,3 @@ fix/feat: some minor changes for the log table and the changelog.
 
 2025-05-11 08:41:29 +0900
 chore: Increase the changelog items to five / small CSS changes
-
-2025-05-09 21:02:14 +0900
-Add/Refactor: add changelog, split status.vue and modify some styles.
--Implement changelog.vue.
--Split the part of the progress status in status.vue into a subcomponent.
--Modify font size.
--Import vfonts for v-mono.
-
-2025-05-08 11:10:13 +0900
-small fixes
-- fixed a bug where the failure button was unintentionally displayed.
-- fixed incorrect progress percentage color when finished.
-
-2025-05-07 22:33:26 +0900
-some fixes for single thread
