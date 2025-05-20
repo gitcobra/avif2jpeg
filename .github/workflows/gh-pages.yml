@@ -2,9 +2,8 @@ name: GitHub Pages
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
+    tags:
+      - "v*.*.*"
 
 jobs:
   deploy:
@@ -44,6 +43,8 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
           destination_dir: ./dist
-          commit_message: ${{ github.event.head_commit.message }}
+          #commit_message: ${{ github.event.head_commit.message }}
+          commit_message: ${{ github.ref_name }}
+
 
 

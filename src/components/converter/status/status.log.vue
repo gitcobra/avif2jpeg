@@ -195,9 +195,11 @@ watch(() => [props.thumbnail, props.opened], () => {
 // focus current selected log item
 let causedChangeSelectByKeyboard = false;
 let prevOpindexInLog = 0;
-watch(() => props.imageIndex, async () => {
+watch(() => props.imageIndex, val => focusCurrentSelectedLogItem(val));
+
+async function focusCurrentSelectedLogItem(imgIndex?: number) {
   // calculate the index in the log item list
-  const opindex = props.imageIndex;
+  const opindex = imgIndex || props.imageIndex;
   let opindexInLog = filteredLogList.value.findIndex(item => item.zippedIndex === opindex);
   if( opindexInLog === -1 )
     opindexInLog = opindex;
@@ -216,7 +218,7 @@ watch(() => props.imageIndex, async () => {
     redrawnView = true;
   }
   
-  nextTick( () => {
+  nextTick(() => {
     let node = currentSelectedLogNode.value;
     if( !node )
       return;
@@ -246,6 +248,16 @@ watch(() => props.imageIndex, async () => {
     prevOpindexInLog = opindexInLog;
     causedChangeSelectByKeyboard = false;
   });
+}
+
+watch(() => props.opened, (val) => {
+  nextTick(() => {
+    if( !val )
+      return;
+    
+    focusCurrentSelectedLogItem();
+    calculateLogTableViewRange();
+  });
 });
 
 
@@ -256,9 +268,12 @@ let _tid;
 let inst: ComponentInternalInstance;
 const availDocumentHeight = ref(document.documentElement.clientHeight);
 const availDialogHeight = ref(100);
-const changeLogMaxHeight = (applyMaxAvailHeight?: boolean) => {
+function changeLogMaxHeight(applyMaxAvailHeight?: boolean) {
   clearTimeout(_tid);
   _tid = setTimeout(() => {
+    if( !props.opened )
+      return;
+    
     const logHeight = scrollref.value.$parent.$el.offsetHeight;
     const modalMargin = window.innerHeight - inst.parent.parent.parent.parent.vnode.el.offsetHeight - 8;
     const availModalHeight = Math.max(200, logHeight + modalMargin);
@@ -270,7 +285,7 @@ const changeLogMaxHeight = (applyMaxAvailHeight?: boolean) => {
       return;
     logMaxHeightPX.value = Math.max(availModalHeight, expandedLogMinHeight.value);
   }, 100);
-};
+}
 
 function onExpandClick(flag: boolean) {
   if( flag ) {
@@ -515,7 +530,8 @@ let prevScrollLeft = -1;
 let prevScrollTop = -1;
 let storedLogTableScrollLeft = 0;
 let ignoreScrollLeftChangeFlag = false;
-function onLogTableScroll(ev) {
+function onLogTableScroll(ev: Event) {
+  console.log('onLogTableScroll', (ev.target as HTMLElement)?.scrollLeft, (ev.target as HTMLElement)?.scrollTop);
   calculateLogTableViewRange();
   
   
@@ -671,7 +687,7 @@ function onMouseDownScrollbar(ev: MouseEvent) {
         <tr
           v-for="({index, key, command, path, core, zippedIndex, completed, fileId, shrinked, width, height, outputWidth, outputHeight, size, outputSize}, i) in filteredLogList.slice(logStartIndex, logStartIndex + logDisplayQuantity)"
           :key="key"
-          :class="{'log-tr':1, completed, selected:imageIndex === zippedIndex}"
+          :class="{'log-tr':1, completed, selected:imageIndex === zippedIndex, stripe:i % 2}"
           :ref="(el: any) => {if( imageIndex === zippedIndex ) currentSelectedLogNode = el}"
           @click="emit('change-index', completed, path, fileId, zippedIndex)"
           @dblclick="() => {if( imageIndex === zippedIndex ) emit('open-preview')}"
@@ -740,6 +756,9 @@ function onMouseDownScrollbar(ev: MouseEvent) {
     
     .completed {
       cursor: pointer;
+    }
+    .stripe {
+      background-color: #CCCCCC55;
     }
     .selected {
       background-color: #29a36155;

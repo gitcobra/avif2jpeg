@@ -7,6 +7,7 @@ import ImageViewer from './image-viewer.vue';
 import Progress from './status.progress.vue';
 import CenterColumn from './status.progress-center.vue';
 import LogTable from './status.log.vue';
+import ConversionResult from './status.result.vue';
 import { getThumbnailedSize, getUnitSize, sleep, useTimeoutRef } from '../../util';
 
 import type { CollapseProps } from 'naive-ui';
@@ -56,7 +57,7 @@ const props = defineProps<{
     }[]
     
     baseZipName: string
-    zips: { url:string, size:number, count:number }[] // count: file count
+    zips: InstanceType<typeof ConversionResult>['zips'];
 
     unconvertedListText: string
     unconvertedFileCount: number
@@ -123,17 +124,7 @@ const zippingFlag = ref(false);
 const workingLogs = ref<typeof props["status"]["logs"]>([]);
 const demandedFailedZips = ref(false);
 
-type ZipList = {
-  url: string
-  size: number
-  sizeByUnit: string
-  name: string
-  number: number
-  count: number
-  clicked: boolean
-}[];
-const zipList = ref<ZipList>([]);
-const failedZipList = ref<ZipList>([]);
+
 
 const statusProcessing = ref(false);
 const successPercentage = ref([0, 0]); // [to, from] for n-number-animation
@@ -145,6 +136,7 @@ const converted = ref([0, 0]);
 const retried = ref(0);
 const length = ref(0);
 const zipped = ref([0, 0]);
+const failedFilesZippedCount = ref(0);
 const statusColor = ref(c.value.infoColor);
 const rateColor = ref('#000000');
 const difColor = ref('#000000');
@@ -154,7 +146,7 @@ const outputTotalSize = ref(0);
 const totalSizeDifStr = ref('');
 const elapsedTime = ref('00:00:00');
 
-const autoPopoverErrorButtonFlag = ref(undefined);
+
 
 const processingBitmap = ref<ImageBitmap | HTMLImageElement | null>(null);
 
@@ -251,8 +243,8 @@ onMounted(() => {
       workingLogs.value.length = 0;
       zippingFlag.value = false;
       demandedFailedZips.value = false;
-      zipList.value = [];
-      failedZipList.value = [];
+      //zipList.value = [];
+      //failedZipList.value = [];
     }
     else {
       clearInterval(_intvId);
@@ -293,54 +285,7 @@ onUnmounted(() => {
 });
 
 
-watch([() => props.status.zips.length, () => props.status.failedZips.length], () => {
-  const stat = props.status;
-  
-  // update zip list
-  {
-    if( zipList.value.length > stat.zips.length )
-      zipList.value.length = 0;//s.zips.length;
-    
-    let size = 0;
-    const singlar = stat.zips.length === 1 && stat.zippedTotalCount === stat.length;
-    for( let i = zipList.value.length; i < stat.zips.length; i++ ) {
-      const item = stat.zips[i];
-      const name = stat.baseZipName + ( singlar ? '' : '-' + String(i + 1).padStart(2, '0') ) + '.zip';
-      size += item.size;
-      zipList.value[i] = {
-        url: item.url,
-        size: item.size,
-        number: singlar ? 0 : i + 1,
-        sizeByUnit: getUnitSize(item.size),
-        name,
-        count: item.count,
-        clicked: false,
-      };
-    }
-  }
 
-  // failed zip list
-  {
-    if( failedZipList.value.length > stat.failedZips.length )
-      failedZipList.value.length = 0;
-    let size = 0;
-    const singlar = stat.failedZipDone && stat.failedZips.length === 1;
-    for( let i = failedZipList.value.length; i < stat.failedZips.length; i++ ) {
-      const item = stat.failedZips[i];
-      const name = stat.baseZipName + '-error' + ( singlar ? '' : '-' + String(i + 1).padStart(2, '0') ) + '.zip';
-      size += item.size;
-      failedZipList.value[i] = {
-        url: item.url,
-        size: item.size,
-        number: singlar ? 0 : i + 1,
-        sizeByUnit: getUnitSize(item.size),
-        name,
-        count: item.count,
-        clicked: false,
-      };
-    }
-  }
-});
 
 
 
@@ -392,6 +337,8 @@ function update() {
   zipped.value[0] = stat.zippedTotalCount;
   inputTotalSize.value = stat.inputTotalSize;
   outputTotalSize.value = stat.outputTotalSize;
+
+  failedFilesZippedCount.value = stat.failedFileZippedCount;
   
   
   // conversion size rate
@@ -464,7 +411,7 @@ function onFinished() {
   if( stat.success > 0 ) {
     // close log unless it is expanded
     //if( !logExpanded.value ) {
-    if( logAutoScroll.value ) {
+    if( !logAutoScroll.value ) {
       removeCollapsed('log');
       //logExpanded.value = true;
     }
@@ -509,101 +456,6 @@ async function changeImgViewerIndexBySelectedLogItem(completed: boolean, path:st
 
 
 
-// PopSelects for errors 
-const PopSelectErrorItems = computed<{key: string, label:any, icon:any, onSelect: Function}[]>(() => [
-  {
-    key: 'open',
-    label: t('status.openFailedList'),
-    icon: () => h(NIcon, () => h(DocumentTextOutline)),
-    onSelect() {
-      createFailedFileLink();
-    }
-  }, {
-    key: 'download',
-    label: t('status.saveFailedList'),
-    icon: () => h(NIcon, () => h(DownloadOutline)),
-    onSelect() {
-      createFailedFileLink(true);
-    }
-  }, {
-    key: 'zip',
-    label: `${t('status.zipFailedList')}` + (props.status.failedZipDone ? `(✔${t('status.done')})` : ``),
-    icon: () =>  h(NSpin, {show: demandedFailedZips.value && !props.status.failedZipDone, size:'small'}, () => h(NIcon, () => h(Archive))),
-    disabled: demandedFailedZips.value,
-    onSelect(ev) {
-      demandedFailedZips.value = true;
-      emit('demand-zip-errors');
-      return false;
-    }
-  }
-]);
-
-
-
-function download(item: typeof zipList.value[number], create = false) {
-  const {url, name: fileName} = item;
-  if( create ) {
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = fileName;
-    a.click();
-  }
-  
-  if( !item.clicked ) {
-    item.clicked = true;
-
-    // check if all zips are clicked
-    if( !statusProcessing.value ) {
-      if( zipList.value.every(val => val.clicked) )
-        emit('all-zips-clicked');
-    }
-  }
-}
-
-async function onSaveButtonClick() {
-  if( zippingFlag.value ) {
-    if( zipList.value.length >= 2 ) {
-      const flag = await new Promise((resolve, reject) => dialog.warning({
-        title: t('Download'),
-        content: t('status.confirmDownloadMessage', [zipList.value.length]),
-        positiveText: 'OK',
-        negativeText: t('cancel'),
-        onPositiveClick: () => resolve(true),
-        onNegativeClick: () => reject(),
-      }));
-
-      if( !flag )
-        return;
-    }
-
-    const zips = zipList.value;
-    for( const item of zips ) {
-      download(item, true);
-    }
-  }
-  else {
-    imageViewer.value.download();
-  }
-}
-
-
-
-
-
-
-
-function createFailedFileLink(download = false) {
-  const blob = new Blob([props.status.unconvertedListText], {type: 'text/plain;charset=utf8'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.target = '_blank';
-  if( download )
-    a.download = props.status.baseZipName + '-error.txt';
-  a.click();
-}
-
-
 
 
 
@@ -622,8 +474,8 @@ function cleanup() {
   
   props.status.logs.length = 0;
   workingLogs.value.length = 0;
-  failedZipList.value.length = 0;
-  zipList.value.length = 0;
+  //failedZipList.value.length = 0;
+  //zipList.value.length = 0;
   //body.value.$el.innerHTML = '';
 
   //getCurrentInstance()?.update();
@@ -641,14 +493,14 @@ function cleanup() {
 
 
 <template>
-  <n-flex ref="body" vertical justify="center">
-    
-    <n-collapse
-      display-directive="show"
-      :trigger-areas="['arrow', 'main']"
-      v-model:expanded-names="expandedNames"
-      :theme-overrides="collapseThemeOverrides"
-    >
+<n-flex ref="body" vertical justify="center">
+  
+  <n-collapse
+    display-directive="show"
+    :trigger-areas="['arrow', 'main']"
+    v-model:expanded-names="expandedNames"
+    :theme-overrides="collapseThemeOverrides"
+  >
 
     <Progress
       :elapsed-time="elapsedTime"
@@ -731,302 +583,48 @@ function cleanup() {
       </n-flex>
     </n-collapse-item>
       
-    
+    <conversion-result
+      :processing="statusProcessing"
+      :list-length="length"
+      :zippingFlag="zippingFlag"
 
-    <n-collapse-item name="output" style="white-space:nowrap;" disabled>
-      <template #header>
-        <span style="color:black;" v-html="$t('status.Output')" />
-      </template>
-      <!-- output files -->
-      <n-flex :wrap="false" vertical style="margin-top: -1.3em">
-      <n-flex justify="center" v-if="!cleaningUp">
-        
-        <!-- zip list -->
-        <n-flex v-show="zippingFlag" vertical align="center">
-          
-          <!-- zipping progress -->
-          <n-popover placement="left">
-            <template #trigger>
-              <n-progress
-                type="line"
-                indicator-placement="inside"
-                color="lime"
-                rail-color="rgba(99, 255, 99, 0.5)"
-                :indicator-text-color="zipped[0] === length ? 'white' : 'green'"
-                :processing="statusProcessing"
-                :percentage="zipped[0] / length * 100 |0"
-                style="width:300px; font-weight: bold; font-family: v-mono;"
-              >
-                <span style="margin:1px;">{{zipped[0]/length*100|0}}% {{$t('status.zipped')}} ({{ zipped[0] }}/{{ converted[0] }})</span>
-              </n-progress>
-            </template>
-            {{$t('status.zippingProgress')}} ({{ zipped[0]/length*100|0 }}%)
-          </n-popover>
+      :zips="props.status.zips"
+      :img-url="outputImg.url"
+      :img-name="outputImg.name"
+      :success="success[0]"
+      :failure="failure[0]"
+      :done="done[0]"
+      :converted="converted[0]"
+      :retried="retried"
+      :zipped-total-count="zipped[0]"
+      :zipped-total-size="props.status.zippedTotalSize"
 
-          <!-- converted zips -->
-          <transition name="zipcontainer">
-          <template v-if="zipList.length >= 1 || statusProcessing">
-            <transition-group name="zips" class="zip-buttons-parent" tag="n-flex">
-              <span v-for="(item, index) in zipList" :key="index">
-                <n-popover trigger="hover" :duration="0" :delay="0">
-                  <template #trigger>
-                    
-                    <a :href="item.url" :download="item.name" class="in-button-anchor" @click="download(item)">
-                    <n-button
-                      class="zip-button"
-                      size="tiny"
-                      :color="item.clicked? '#050' : 'lime'"
-                      :text-color="item.clicked? 'gray' : 'white'"
-                      @click.stop="download(item)"
-                      round
-                    >
-                      <n-icon size="tiny"><Archive /></n-icon>ZIP{{ item.number || '' }}
-                    </n-button>
-                    </a>
+      :base-zip-name="props.status.baseZipName"
+      :failed-file-zipped-count="failedFilesZippedCount"
+      :failed-to-create-failed-zip="props.status.failedToCreateFailedZip"
+      :failed-zip-done="props.status.failedZipDone"
+      :failed-zips="props.status.failedZips"
 
-                  </template>
+      :unconverted-file-count="props.status.unconvertedFileCount"
+      :unconverted-list-text="props.status.unconvertedListText"
+      :unconverted-total-size="props.status.unconvertedTotalSize"
 
-                  <div :style="{color:c.successColor}">
-                  <div>ZIP {{ item.number || '' }} ({{ $t('success') }})</div>
-                  <div>{{item.name}}</div>
-                  <div>{{ item.sizeByUnit }}</div>
-                  <div>{{ $rt(`{n} @:files`, item.count) }}</div>
-                  </div>
+      :type="props.status.type"
 
-                </n-popover>
-              </span>
-            </transition-group>
-          </template>
-          </transition>
-
-        </n-flex>
+      @all-zips-clicked="emit('all-zips-clicked')"
+      @demand-zip-errors="emit('demand-zip-errors')"
+    />
 
 
-      </n-flex>
+  </n-collapse>
 
-      <!-- result -->
-      <Transition>
-      <n-flex v-show="!statusProcessing" justify="center" align="center" v-if="!cleaningUp">
-
-        <!-- save button -->
-        <n-popover trigger="hover" :duration="0" :delay="0" placement="left" :style="{color:'white', backgroundColor:c.successColor}" :arrow-style="{backgroundColor:c.successColor}">
-          <template #trigger>
-            <Transition name="save">
-            <span v-if="success[0] > 0" style="position:relative;">
-              <n-badge :value="zippingFlag ? zipped[0].toLocaleString('en-us') : props.status.type.replace(/\(.+\)/, '')" :color="c.successColorHover" :offset="[-20,-3]">
-              <n-button size="medium" @click="onSaveButtonClick" :color="c.successColor" round>
-                <template v-if="zippingFlag">
-                  <a v-if="zipList.length" :href="zipList[0].url" :download="zipList[0].name" class="in-button-anchor" @click.prevent>
-                    <Zipicon/> × {{ zipList.length }}
-                    {{$t('status.saveAll')}}
-                  </a>
-                </template>
-                <template v-else>
-                  <a :href="outputImg.url" :download="outputImg.name" class="in-button-anchor" @click.prevent>
-                    <n-icon size="tiny"><ImageSharp/></n-icon>
-                    {{$t('save')}}
-                  </a>
-                </template>
-              </n-button>
-              </n-badge>
-            </span>
-            </Transition>
-          </template>
-          <template #default>
-            <template v-if="status.length >= 2">
-              <div>{{t('success')}}: {{zipped[0].toLocaleString()}}</div>
-              <div>{{t('status.totalSize')}}: {{getUnitSize(status.zippedTotalSize)}}</div>
-              <div>ZIP × {{zipList.length}}</div>
-              <div>{{t('status.saveAllZipsTooltip')}}</div>
-            </template>
-            <template v-else>
-              {{ $t(`status.downloadConvertedImage`, zipList.length) }}
-            </template>
-          </template>
-        </n-popover>
-
-        <!-- failed button -->
-        <n-dropdown
-          v-if="!statusProcessing && !(status.success === length)"
-          :options="PopSelectErrorItems"
-          @select="(k, opt) => PopSelectErrorItems.find(({key}) => k === key)?.onSelect()"
-          :show-arrow="true"
-          trigger="click"
-          size="small"
-          placement="bottom-start"
-        >
-          <n-popover :show="autoPopoverErrorButtonFlag" :duration="0" :delay="0" placement="right" :style="{color:'white', backgroundColor:c.errorColor}" :arrow-style="{backgroundColor:c.errorColor}">
-            <template #trigger>
-              <n-badge :value="status.unconvertedFileCount.toLocaleString()" :color="c.errorColorHover" :offset="[-0,-3]">
-              <n-button size="small" :color="c.errorColor">
-                <n-icon size="medium" style="vertical-align: middle;"><WarningOutline/></n-icon>
-              </n-button>
-              </n-badge>
-            </template>
-            <div>
-              <div>{{t('failed')}}: {{status.unconvertedFileCount.toLocaleString()}}</div>
-              <div>{{t('status.totalSize')}}: {{getUnitSize(status.unconvertedTotalSize)}}</div>
-            </div>
-          </n-popover>
-        </n-dropdown>
-        
-      </n-flex>
-      </Transition>
-
-      
-      <!-- zipping progress for failed files -->
-      <transition name="zipcontainer">
-      <n-flex v-show="demandedFailedZips" vertical align="center" v-if="!cleaningUp">
-        
-        <n-popover placement="left">
-          <template #trigger>
-            <n-progress
-              type="line"
-              indicator-placement="inside"
-              color="red"
-              rail-color="rgba(255, 0, 0, 0.5)"
-              :indicator-text-color="status.failedFileZippedCount === status.unconvertedFileCount ? 'white' : '#500'"
-              :processing="demandedFailedZips && !status.failedZipDone && !status.failedToCreateFailedZip"
-              :percentage="status.failedFileZippedCount / status.unconvertedFileCount * 100 |0"
-              style="width:300px; font-weight: bold; font-family: v-mono;"
-            >
-              <span v-if="!status.failedToCreateFailedZip" style="margin:1px;">{{status.failedFileZippedCount/status.unconvertedFileCount*100|0}}% {{$t('status.zipped')}} ({{ status.failedFileZippedCount }}/{{ status.unconvertedFileCount }})</span>
-              <div v-else :style="{color: c.errorColor}">{{ $t('status.failureZippingFailedFiles') }}</div>
-            </n-progress>
-          </template>
-          {{$t('status.zippingProgress')}} ({{ status.failedFileZippedCount/status.unconvertedFileCount*100|0 }}%)
-        </n-popover>
-
-        <!-- failed zips -->
-        <transition-group name="zips" class="zip-buttons-parent" tag="n-flex">
-          <span v-for="(item, index) in failedZipList" :key="index">
-            <n-popover trigger="hover" :duration="0" :delay="0">
-              <template #trigger>
-                
-                <a :href="item.url" :download="item.name" class="in-button-anchor" @click="download(item)">
-                <n-button
-                  class="zip-button"
-                  size="tiny"
-                  :color="item.clicked? '#551122': '#F00'"
-                  :text-color="item.clicked? 'gray' : 'white'"
-                  @click.stop="download(item)"
-                  round
-                >
-                  <n-icon size="tiny"><Warning /></n-icon>ZIP{{item.number || ''}}
-                </n-button>
-                </a>
-
-              </template>
-
-              <div :style="{color:c.errorColor}">
-              <div>ZIP {{ item.number || '' }} ({{ $t('failed') }})</div>
-              <div>{{ item.name }}</div>
-              <div>{{ item.sizeByUnit }}</div>
-              <div>{{ $rt(`{n} @:files`, item.count) }}</div>
-              </div>
-
-            </n-popover>
-          </span>
-        </transition-group>
-
-      </n-flex>
-      </transition>
-
-    </n-flex>
-    </n-collapse-item>
-    </n-collapse>
-
-  </n-flex>
+</n-flex>
 </template>
 
-
-
-
-
-
-<style lang="scss" scoped>
+<style lang="css" scoped>
 .body {
   font-size: 1em;
 }
-
-.zip-buttons-parent {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-
-  .zip-button {
-    box-shadow: 0px 0px 1px black;
-    margin: 0.2em;
-    margin-left: -0.5rem;
-    font-size: 0.5rem;
-  }
-}
-
-
-
-
-.in-button-anchor {
-  color: white;
-  display: flex;
-}
-
-
-/* transitions */
-.v-move,
-.v-enter-active,
-.v-leave-active {
-  transition: all .2s ease;
-}
-.v-leave-active {
-  position: absolute;
-}
-.v-enter-from, .v-leave-to {
-  opacity: 0;
-  transform: scaleY(0%);
-}
-
-
-.zips-move, 
-.zips-enter-active,
-.zips-leave-active {
-  transition: all .5s ease;
-}
-
-.zipcontainer-enter-from {
-  opacity: 0;
-  transform: scale(0%);
-}
-.zipcontainer-leave-to {
-  opacity: 0;
-  transform: scale(0%);
-}
-.zipcontainer-enter-active,
-.zipcontainer-leave-active {
-  transition: all .3s ease;
-}
-
-.zips-enter-from {
-  opacity: 0;
-  transform: translateX(300px) scale(1);
-}
-
-.zips-leave-active {
-  position: absolute;
-}
-
-
-
-.save-enter-from {
-  opacity: 0;
-  transform: scaleY(0%);
-}
-.save-move,
-.save-enter-active {
-  transition: all .5s ease;
-}
-
-.singleimage {
-  transition: all .5s ease;
-}
-
 </style>
+
+

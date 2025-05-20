@@ -1,6 +1,5 @@
 {
   "name": "avif2jpeg",
-  "version": "1.10.17",
   "private": true,
   "type": "module",
   "scripts": {
@@ -12,7 +11,7 @@
     "preview:test": "vite preview --mode test",
     "build:ver": "vite-ssg build --mode ver",
     "preview:ver": "vite preview --mode ver",
-    "ver-up": "node ./src/version.js",
+    "tag-ver": "node ./src/tag-version.js",
     "test": "jest"
   },
   "devDependencies": {
@@ -28,6 +27,7 @@
     "modern-normalize": "^3.0.1",
     "naive-ui": "^2.41.0",
     "sass": "^1.87.0",
+    "simple-git": "^3.27.0",
     "ts-jest": "^29.3.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3",

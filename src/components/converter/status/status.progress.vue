@@ -5,7 +5,7 @@ const props = defineProps<{
   
   threads: number;
   fileType: string;
-  shrink: [number, number] | null;
+  shrink?: [number, number] | null;
   zipSize: number;
 
   inputTotalSize: number;

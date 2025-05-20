@@ -58,6 +58,7 @@ declare module 'vue' {
     'Status.log': typeof import('./src/components/converter/status/status.log.vue')['default']
     'Status.progress': typeof import('./src/components/converter/status/status.progress.vue')['default']
     'Status.progressCenter': typeof import('./src/components/converter/status/status.progress-center.vue')['default']
+    'Status.result': typeof import('./src/components/converter/status/status.result.vue')['default']
     SwitchLang: typeof import('./src/components/header/switch-lang.vue')['default']
     Thumbnail: typeof import('./src/components/converter/status/thumbnail.vue')['default']
     Title: typeof import('./src/components/title.vue')['default']
