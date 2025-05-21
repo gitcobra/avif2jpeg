@@ -1,20 +1,14 @@
+2025-05-21 20:01:53 +0900
+v1.10.23
+
+2025-05-21 19:58:15 +0900
+chore: move tag-version.js to script folder
+
+2025-05-21 19:50:46 +0900
+refactor: move the processing thumbnail position / modify behavior when expanding the log size
+
 2025-05-21 01:16:56 +0900
 v1.10.22
 
 2025-05-21 01:15:36 +0900
 chore: modify workflow
-
-2025-05-20 23:26:43 +0900
-refactor/chore: split status.vue again.
-- split the result part in status.vue into a subcomponent.
-- striped log table.
-- modified version.js script.
-- modified deployment workflow trigger.
-
-2025-05-13 18:18:48 +0900
-fix/feat: some minor changes for the log table and the changelog.
-- modify the size adjustment when expanding the log size.
-- highlight the newer dates in the changelog.
-
-2025-05-11 08:41:29 +0900
-chore: Increase the changelog items to five / small CSS changes
