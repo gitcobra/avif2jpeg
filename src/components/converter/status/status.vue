@@ -161,6 +161,7 @@ const removeCollapsed = (name: string) => {
 };
 // for collapse
 const logOpened = computed(() => expandedNames.value.includes('log'));
+const progressOpened = computed(() => expandedNames.value.includes('progress'));
 // for log-table property
 const logExpanded = ref(false);
 const logAutoScroll = ref(true);
@@ -411,9 +412,11 @@ function onFinished() {
   if( stat.success > 0 ) {
     // close log unless it is expanded
     //if( !logExpanded.value ) {
-    if( !logAutoScroll.value ) {
+    if( logAutoScroll.value ) {
       removeCollapsed('log');
-      //logExpanded.value = true;
+      if( workingLogs.value.length >= 5 ) {
+        logExpanded.value = true;
+      }
     }
     // show preview
     setCollapsed('preview');
@@ -503,6 +506,8 @@ function cleanup() {
   >
 
     <Progress
+      :processing="statusProcessing"
+
       :elapsed-time="elapsedTime"
       :success-perc="successPercentage[0]"
       :input-total-size="inputTotalSize"
@@ -516,6 +521,9 @@ function cleanup() {
       :rate-color="rateColor"
       :dif-color="difColor"
       :total-size-dif-str="totalSizeDifStr"
+
+      :thumbnail="processingBitmap"
+      :opened="progressOpened"
     >
       <template #center>
         <!-- center column - progress circle -->
@@ -544,12 +552,11 @@ function cleanup() {
     <log-table
       :processing="statusProcessing"
       :image-index="outputImg.index"
-      :thumbnail="processingBitmap"
       :opened="logOpened"
       :preview-collapsed="isCollapsed('preview')"
       :logs="workingLogs"
-      :expanded="logExpanded"
-      :auto-scroll="logAutoScroll"
+      v-model:expanded="logExpanded"
+      v-model:auto-scroll="logAutoScroll"
       :order="logTableOrder"
       @change-index="changeImgViewerIndexBySelectedLogItem"
       @open-preview="imageViewer?.openPreview()"

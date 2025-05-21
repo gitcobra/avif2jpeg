@@ -9,7 +9,6 @@ const { t } = useI18n();
 
 // constants
 const LOG_INVISIBLE_ITEM_MARGIN = 3;
-const THUMB_SIZE = {W:160, H:80};
 const SORT_LIST_INTERVAL_MSEC = 3000;
 
 
@@ -37,7 +36,7 @@ const props = defineProps<{
     shrinked?: boolean
   }[];
   imageIndex: number;
-  thumbnail: ImageBitmap | HTMLImageElement | null;
+  //thumbnail: ImageBitmap | HTMLImageElement | null;
 }>();
 
 // v-model
@@ -59,15 +58,16 @@ const logtable = useTemplateRef('table');
 const logtbody = useTemplateRef<HTMLTableSectionElement>('tbody');
 const scrollref = ref<InstanceType<typeof NScrollbar>>();
 const currentSelectedLogNode = ref<HTMLTableRowElement>(null);
-const thumbcanvas = ref<HTMLCanvasElement>(null);
+//const thumbcanvas = ref<HTMLCanvasElement>(null);
 
 
 // reactive values
 //const expandLog = ref(false);
 //const autoScrollLog = ref(true);
 
-const logMaxHeightPX = ref(80);
-const expandedLogMinHeight = ref(200);
+const logMaxHeightPX = ref(40);
+const logDefHeight = 80;
+const expandedLogMinHeight = ref(logDefHeight);
 const filteredLogList = computed(() => {
   let list = props.logs;
   switch( filterLogValue.value ) {
@@ -163,34 +163,13 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-  prevThumbBitmap?.close();
+  //prevThumbBitmap?.close();
   clearTimeout(_tid);
   clearTimeout(_tidLogItem);
   clearTimeout(scrollTimeoutId);
 });
 
-// update processing image
-let prevThumbBitmap;
-watch(() => [props.thumbnail, props.opened], () => {
-  if( !props.thumbnail || !props.opened || props.thumbnail === prevThumbBitmap )
-    return;
-  const {width, height} = getThumbnailedSize(props.thumbnail, {width:THUMB_SIZE.W, height:THUMB_SIZE.H});
-  thumbcanvas.value.width = width;
-  thumbcanvas.value.height = height;
-  thumbcanvas.value.style.width = width + 'px';
-  thumbcanvas.value.style.height = height + 'px';
-  
-  if( props.thumbnail instanceof HTMLImageElement ) {
-    const ctxThumb = thumbcanvas.value.getContext('2d');
-    ctxThumb.drawImage(props.thumbnail, 0, 0, width, height);
-  }
-  else {
-    const ctxThumb = thumbcanvas.value.getContext('bitmaprenderer');
-    ctxThumb.transferFromImageBitmap(props.thumbnail);
-    prevThumbBitmap = props.thumbnail;
-    props.thumbnail.close();
-  }
-});
+
 
 // focus current selected log item
 let causedChangeSelectByKeyboard = false;
@@ -276,10 +255,10 @@ function changeLogMaxHeight(applyMaxAvailHeight?: boolean) {
     
     const logHeight = scrollref.value.$parent.$el.offsetHeight;
     const modalMargin = window.innerHeight - inst.parent.parent.parent.parent.vnode.el.offsetHeight - 8;
-    const availModalHeight = Math.max(200, logHeight + modalMargin);
+    const availModalHeight = Math.min(logItemHeight * Math.max(5, props.logs.length), Math.max(200, logHeight + modalMargin));
     
     availDocumentHeight.value = document.documentElement.clientHeight;
-    availDialogHeight.value = Math.max(100, availModalHeight);
+    availDialogHeight.value = Math.min(logItemHeight * Math.max(5, props.logs.length), Math.max(logDefHeight, availModalHeight));
 
     if( !props.opened || !expanded.value )
       return;
@@ -576,7 +555,10 @@ function onMouseDownScrollbar(ev: MouseEvent) {
 
   <n-collapse-item name="log" style="white-space:nowrap;">
     <template #header>
-      <n-flex align="center" :wrap="false">{{$t('status.Log')}}<n-spin :size="16" v-show="processing && !props.opened"> </n-spin></n-flex>
+      <n-flex align="center" :wrap="false">
+        {{$t('status.Log')}}
+        <!-- <n-spin :size="16" v-show="processing && !props.opened"> </n-spin> -->
+      </n-flex>
     </template>
     <template #header-extra>
       <n-flex v-show="props.opened" align="center" justify="end" :wrap="true" style="margin-top:0.2em; margin-left:0.5em;">
@@ -652,7 +634,7 @@ function onMouseDownScrollbar(ev: MouseEvent) {
     
     <n-flex :wrap="false" align="stretch"
       :class="{'log-container':1, 'expand-log': expanded}"
-      :style="expanded ? {height: logMaxHeightPX + 'px'} : {height: '110px'}"
+      :style="expanded ? {height: logMaxHeightPX + 'px'} : {height: logDefHeight + 'px'}"
       @keydown="onKeyPressInLogTable"
       tabindex="-1"
     >
@@ -716,13 +698,6 @@ function onMouseDownScrollbar(ev: MouseEvent) {
         <div style="height:1em"></div>
       </n-scrollbar>
 
-      <!-- processing image -->
-      <n-flex style="align-self:center; position:absolute; z-index:0; margin-top:10px; right:0.1em; line-height:0px;" :style="{width:THUMB_SIZE.W+'px', height:THUMB_SIZE.H+'px'}" justify="center" align="center">
-        <n-spin size="small" :show="processing">
-          <n-empty v-if="props.thumbnail===undefined" description="EMPTY" />
-          <canvas v-show="props.thumbnail!==undefined" ref="thumbcanvas" width="106" height="80" :style="{border:'1px solid gray', filter: processing? '' : 'opacity(0.35)'}"/>
-        </n-spin>
-      </n-flex>
 
     </n-flex>
   </n-collapse-item>

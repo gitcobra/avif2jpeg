@@ -180,7 +180,7 @@ async function convertRecievedData(data: MessageToCanvasWorker) {
   if( demandThumbnail ) {
     //dbitmap = await createImageBitmap(sourceBitmap, {resizeHeight:80, resizeQuality: 'low'});
     const resize = width > height ? {resizeWidth: 110} : {resizeHeight:80};
-    dbitmap = await createImageBitmap(sourceBitmap, {...resize, resizeQuality: 'pixelated'});
+    dbitmap = await createImageBitmap(sourceBitmap, {...resize, resizeQuality: 'low'});
   }
 
   // transfer the bitmap to the canvas
