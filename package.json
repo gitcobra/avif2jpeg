@@ -11,7 +11,7 @@
     "preview:test": "vite preview --mode test",
     "build:ver": "vite-ssg build --mode ver",
     "preview:ver": "vite preview --mode ver",
-    "tag-ver": "node ./src/tag-version.js",
+    "tag-ver": "node ./script/tag-version.js",
     "test": "jest"
   },
   "devDependencies": {

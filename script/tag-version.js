@@ -5,7 +5,7 @@ const args = process.argv.slice(2);
 const git = simpleGit();
 
 // update version
-const path = 'src/version.json';
+const path = './src/version.json';
 const publicPath = './public/version.txt';
 let txt = await readFile(path);
 const Ver = JSON.parse(txt);
