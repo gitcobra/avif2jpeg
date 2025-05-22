@@ -250,7 +250,7 @@ const availDialogHeight = ref(100);
 function changeLogMaxHeight(applyMaxAvailHeight?: boolean) {
   clearTimeout(_tid);
   _tid = setTimeout(() => {
-    if( !props.opened )
+    if( !props.opened || !scrollref.value )
       return;
     
     const logHeight = scrollref.value.$parent.$el.offsetHeight;
@@ -510,7 +510,7 @@ let prevScrollTop = -1;
 let storedLogTableScrollLeft = 0;
 let ignoreScrollLeftChangeFlag = false;
 function onLogTableScroll(ev: Event) {
-  console.log('onLogTableScroll', (ev.target as HTMLElement)?.scrollLeft, (ev.target as HTMLElement)?.scrollTop);
+  //console.log('onLogTableScroll', (ev.target as HTMLElement)?.scrollLeft, (ev.target as HTMLElement)?.scrollTop);
   calculateLogTableViewRange();
   
   

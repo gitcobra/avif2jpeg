@@ -162,6 +162,7 @@ function openPreview() {
 }
 
 
+
 </script>
 
 <template>
@@ -170,7 +171,12 @@ function openPreview() {
     <template #trigger>
     <n-spin :show="imgloading || props.loading">
       <n-flex justify="center" align="center" :style="spincss" style="line-height:0px;">
-      <a :href="imgsrc" @click.left.prevent="" target="_blank" :download="props.fileName" :title="props.fileName">
+      <a
+        :href="imgsrc"
+        @click.left.prevent
+        target="_blank" :download="props.fileName" :title="props.fileName"
+        v-show="!(imgloading || props.loading)"
+      >
         <Transition mode="in-out">
         <n-image
           ref="nImageRef"
@@ -184,7 +190,7 @@ function openPreview() {
         />
         </Transition>
       </a>
-      <n-empty v-if="imgloading || props.loading" />
+      <n-empty v-show="imgloading || props.loading"/>
       </n-flex>
     </n-spin>
     </template>

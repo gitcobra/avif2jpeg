@@ -31,7 +31,7 @@ const THUMB_SIZE = {W:110, H:80};
 // update processing image
 let prevThumbBitmap;
 watch(() => [props.thumbnail, props.opened], () => {
-  if( !props.thumbnail || !props.opened || props.thumbnail === prevThumbBitmap )
+  if( !props.thumbnail || !props.opened || props.thumbnail === prevThumbBitmap || !thumbcanvas.value )
     return;
   const {width, height} = getThumbnailedSize(props.thumbnail, {width:THUMB_SIZE.W, height:THUMB_SIZE.H});
   thumbcanvas.value.width = width;
@@ -126,8 +126,9 @@ watch(() => [props.thumbnail, props.opened], () => {
         <n-flex justify="center" align="center" class="grow thumbnail" :style="{width:THUMB_SIZE.W+'px', height:THUMB_SIZE.H+'px'}">
         <!--<n-spin size="small" :show="processing">-->
           <!-- <n-empty v-if="props.thumbnail===undefined || !processing" description="EMPTY" /> -->
-          <transition name="fade">
-          <canvas v-if="processing" ref="thumbcanvas" width="106" height="80" class="thumb-canvas"/>
+          <transition name="fade" mode="out-in">
+            <canvas v-if="processing" ref="thumbcanvas" width="106" height="80" class="thumb-canvas"/>
+            <div v-else style="width:106px; height:80px; opacity:0.15; border: 1px solid gray;"/>
           </transition>
         <!--</n-spin>-->
         </n-flex>

@@ -257,40 +257,36 @@ function createFailedFileLink(download = false) {
       </n-popover>
 
       <!-- converted zips -->
-      <transition name="zipcontainer">
-      <template v-if="zipList.length >= 2 || props.processing">
-        <transition-group name="zips" class="zip-buttons-parent" tag="n-flex">
-          <span v-for="(item, index) in zipList" :key="index">
-            <n-popover trigger="hover" :duration="0" :delay="0">
-              <template #trigger>
-                
-                <a :href="item.url" :download="item.name" class="in-button-anchor" @click="download(item)">
-                <n-button
-                  class="zip-button"
-                  size="tiny"
-                  :color="item.clicked? '#050' : 'lime'"
-                  :text-color="item.clicked? 'gray' : 'white'"
-                  @click.stop="download(item)"
-                  round
-                >
-                  <n-icon size="tiny"><Archive /></n-icon>ZIP{{ item.number || '' }}
-                </n-button>
-                </a>
+      <transition-group name="zips" v-if="zipList.length >= 2 || props.processing" class="zip-buttons-parent" tag="div">
+        <span v-for="(item, index) in zipList" :key="index">
+          <n-popover trigger="hover" :duration="0" :delay="0">
+            <template #trigger>
+              
+              <a :href="item.url" :download="item.name" class="in-button-anchor" @click="download(item)">
+              <n-button
+                class="zip-button"
+                size="tiny"
+                :color="item.clicked? '#050' : 'lime'"
+                :text-color="item.clicked? 'gray' : 'white'"
+                @click.stop="download(item)"
+                round
+              >
+                <n-icon size="tiny"><Archive /></n-icon>ZIP{{ item.number || '' }}
+              </n-button>
+              </a>
 
-              </template>
+            </template>
 
-              <div :style="{color:c.successColor}">
-              <div>ZIP {{ item.number || '' }} ({{ $t('success') }})</div>
-              <div>{{item.name}}</div>
-              <div>{{ item.sizeByUnit }}</div>
-              <div>{{ $rt(`{n} @:files`, item.count) }}</div>
-              </div>
+            <div :style="{color:c.successColor}">
+            <div>ZIP {{ item.number || '' }} ({{ $t('success') }})</div>
+            <div>{{item.name}}</div>
+            <div>{{ item.sizeByUnit }}</div>
+            <div>{{ $rt(`{n} @:files`, item.count) }}</div>
+            </div>
 
-            </n-popover>
-          </span>
-        </transition-group>
-      </template>
-      </transition>
+          </n-popover>
+        </span>
+      </transition-group>
 
     </n-flex>
 
