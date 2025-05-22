@@ -1,3 +1,9 @@
+2025-05-22 19:49:38 +0900
+v1.10.24
+
+2025-05-22 19:28:07 +0900
+style: minor CSS changes for status components
+
 2025-05-21 20:01:53 +0900
 v1.10.23
 
@@ -6,9 +12,3 @@ chore: move tag-version.js to script folder
 
 2025-05-21 19:50:46 +0900
 refactor: move the processing thumbnail position / modify behavior when expanding the log size
-
-2025-05-21 01:16:56 +0900
-v1.10.22
-
-2025-05-21 01:15:36 +0900
-chore: modify workflow
