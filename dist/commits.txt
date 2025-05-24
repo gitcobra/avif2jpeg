@@ -1,3 +1,9 @@
+2025-05-24 21:24:26 +0900
+v1.10.27
+
+2025-05-24 21:23:59 +0900
+fix: issue where scroll position resets to top when selecting log text
+
 2025-05-24 15:24:45 +0900
 v1.10.26
 
@@ -6,9 +12,3 @@ refactor: delegate click events to parent element in status.log.vue
 
 2025-05-24 14:13:22 +0900
 v1.10.25
-
-2025-05-24 14:12:05 +0900
-fix: adjust scrolling distance when pressing PageUp/PageDown keys
-
-2025-05-22 19:49:38 +0900
-v1.10.24
