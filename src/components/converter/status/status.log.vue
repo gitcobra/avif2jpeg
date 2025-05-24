@@ -8,7 +8,7 @@ import { Filter, SwapVertical } from '@vicons/ionicons5';
 const { t } = useI18n();
 
 // constants
-const LOG_INVISIBLE_ITEM_MARGIN = 3;
+const LOG_INVISIBLE_ITEM_MARGIN = 2;
 const SORT_LIST_INTERVAL_MSEC = 3000;
 
 
@@ -67,6 +67,7 @@ const currentSelectedLogNode = ref<HTMLTableRowElement>(null);
 
 const logMaxHeightPX = ref(40);
 const logDefHeight = 80;
+const logTableViewHeight = computed(() => expanded.value? logMaxHeightPX.value : logDefHeight);
 const expandedLogMinHeight = ref(logDefHeight);
 const filteredLogList = computed(() => {
   let list = props.logs;
@@ -115,7 +116,10 @@ const SortOptionGroup = ref([{
 //const sortValue = ref<typeof SortOptions[number]['value']>(SortOptions[0].value);
 const sortValue = defineModel<typeof SortOptions[number]['value']>('order', {required: false, default:'processed'});
 
-watch(sortValue, sortListBySortOptions);
+watch(sortValue, () => {
+  console.log('sortValue changed');
+  sortListBySortOptions();
+});
 
 
 // filter options
@@ -178,17 +182,21 @@ watch(() => props.imageIndex, val => focusCurrentSelectedLogItem(val));
 
 async function focusCurrentSelectedLogItem(imgIndex?: number) {
   // calculate the index in the log item list
-  const opindex = imgIndex || props.imageIndex;
-  let opindexInLog = filteredLogList.value.findIndex(item => item.zippedIndex === opindex);
-  if( opindexInLog === -1 )
-    opindexInLog = opindex;
+  const targIndex = imgIndex || props.imageIndex;
+  let targIndexInLog = filteredLogList.value.findIndex(item => item.zippedIndex === targIndex);
+  if( targIndexInLog === -1 )
+    targIndexInLog = targIndex;
+
+  //console.log("targIndex", targIndex, "targIndexInLog", targIndexInLog);
+  //console.log("logStartIndex.value", logStartIndex.value, "logDisplayQuantity.value", logDisplayQuantity.value);
 
   // recalculate current table view if selected item was out of the view
   let redrawnView = false;
-  const overTopOfView = opindexInLog < logStartIndex.value;
-  const overBottomOfView = opindexInLog > logStartIndex.value + logDisplayQuantity.value;
+  const overTopOfView = targIndexInLog <= logStartIndex.value;
+  const overBottomOfView = targIndexInLog > logStartIndex.value + logDisplayQuantity.value;
   if( overTopOfView || overBottomOfView ) {
-    const scrollAmount = opindexInLog * logItemHeight - (overBottomOfView ? logMaxHeightPX.value : 0);
+    //console.log('overOfTheView');
+    const scrollAmount = targIndexInLog * logItemHeight.value - (overBottomOfView ? logTableViewHeight.value : 0);
     scrollref.value?.scrollTo({behavior: 'instant', top: scrollAmount, left:storedLogTableScrollLeft});
     await nextTick();
     calculateLogTableViewRange(true);
@@ -204,10 +212,10 @@ async function focusCurrentSelectedLogItem(imgIndex?: number) {
     
     // *sticky "<th>"s may hide the selected target node if the node is aligned to the top of the visible area of the scrollable ancestor.
     //  hence when scrolling up, focus previous sibling of the target instead of the target itself for that reason.
-    if( prevOpindexInLog > opindexInLog ) {
+    if( prevOpindexInLog > targIndexInLog ) {
       node = <HTMLTableRowElement>node.previousSibling || node;
       
-      if( !(node instanceof HTMLElement) ) {
+      if( !(node instanceof HTMLElement) ) {        
         scrollref.value?.scrollTo(storedLogTableScrollLeft, 0);
         node = null;
       }
@@ -224,7 +232,7 @@ async function focusCurrentSelectedLogItem(imgIndex?: number) {
     }
     */
 
-    prevOpindexInLog = opindexInLog;
+    prevOpindexInLog = targIndexInLog;
     causedChangeSelectByKeyboard = false;
   });
 }
@@ -247,7 +255,7 @@ let _tid;
 let inst: ComponentInternalInstance;
 const availDocumentHeight = ref(document.documentElement.clientHeight);
 const availDialogHeight = ref(100);
-function changeLogMaxHeight(applyMaxAvailHeight?: boolean) {
+function changeLogMaxHeight() {
   clearTimeout(_tid);
   _tid = setTimeout(() => {
     if( !props.opened || !scrollref.value )
@@ -255,23 +263,21 @@ function changeLogMaxHeight(applyMaxAvailHeight?: boolean) {
     
     const logHeight = scrollref.value.$parent.$el.offsetHeight;
     const modalMargin = window.innerHeight - inst.parent.parent.parent.parent.vnode.el.offsetHeight - 8;
-    const availModalHeight = Math.min(logItemHeight * Math.max(5, props.logs.length), Math.max(200, logHeight + modalMargin));
+    const availModalHeight = Math.min(logItemHeight.value * Math.max(5, props.logs.length), Math.max(200, logHeight + modalMargin));
     
     availDocumentHeight.value = document.documentElement.clientHeight;
-    availDialogHeight.value = Math.min(logItemHeight * Math.max(5, props.logs.length), Math.max(logDefHeight, availModalHeight));
+    availDialogHeight.value = Math.min(logItemHeight.value * Math.max(5, props.logs.length), Math.max(logDefHeight, availModalHeight));
 
-    if( !props.opened || !expanded.value )
+    if( !props.opened /*|| !expanded.value*/ )
       return;
     logMaxHeightPX.value = Math.max(availModalHeight, expandedLogMinHeight.value);
   }, 100);
 }
 
-function onExpandClick(flag: boolean) {
-  if( flag ) {
-    scrollLogViewToBottom(true);
-    changeLogMaxHeight(true);
-    logSizeSliderShow.value = true;
-  }
+function onExpandClick() {
+  scrollLogViewToBottom(true);
+  changeLogMaxHeight();
+  logSizeSliderShow.value = true;
 }
 
 
@@ -309,8 +315,8 @@ function scrollLogViewToBottom(instant = false) {
 const logTopMarginStyle = ref<CSSProperties>({height: '0px'});
 const logBottomMarginStyle = ref<CSSProperties>({height: '0px'});
 const logStartIndex = ref(0);
-const logDisplayQuantity = computed(() => logMaxHeightPX.value / logItemHeight + LOG_INVISIBLE_ITEM_MARGIN*2 |0);
-let logItemHeight = 15;
+const logDisplayQuantity = computed(() => logTableViewHeight.value / logItemHeight.value + LOG_INVISIBLE_ITEM_MARGIN*2 |0);
+const logItemHeight = ref(15);
 let realLogHeight = 0;
 let _tidLogItem = 0;
 let lastTimeLogViewUpdated = 0;
@@ -334,7 +340,7 @@ function calculateLogTableViewRange(force?: any/*ev: Event*/) {
   
   if( !realLogHeight ) {
     realLogHeight = logtbody.value.rows[1].offsetHeight;
-    logItemHeight = realLogHeight;
+    logItemHeight.value = realLogHeight;
   }
 
   const loglen = filteredLogList.value.length;
@@ -345,7 +351,7 @@ function calculateLogTableViewRange(force?: any/*ev: Event*/) {
   // ignore too small scroll amount
   if( !force ) {
     if( loglen === lastLogLengthWhenRangeUpdated ) {
-      if( Math.abs(scrtop - lastScrollTopWhenRangeUpdated) < logItemHeight*0.5 ) {
+      if( Math.abs(scrtop - lastScrollTopWhenRangeUpdated) < logItemHeight.value*0.5 ) {
         return;
       }
     }
@@ -353,12 +359,12 @@ function calculateLogTableViewRange(force?: any/*ev: Event*/) {
   lastScrollTopWhenRangeUpdated = scrtop;
   lastLogLengthWhenRangeUpdated = loglen;
 
-  const viewStartIndex = Math.max(0, (scrtop / logItemHeight | 0) - LOG_INVISIBLE_ITEM_MARGIN);
+  const viewStartIndex = Math.max(0, (scrtop / logItemHeight.value | 0) - LOG_INVISIBLE_ITEM_MARGIN);
   logStartIndex.value = viewStartIndex;
-  logTopMarginStyle.value.height = (viewStartIndex * logItemHeight) + 'px';
-  logBottomMarginStyle.value.height = Math.max(0, loglen - (viewStartIndex + logDisplayQuantity.value)) * logItemHeight + 'px';
+  logTopMarginStyle.value.height = (viewStartIndex * logItemHeight.value) + 'px';
+  logBottomMarginStyle.value.height = Math.max(0, loglen - (viewStartIndex + logDisplayQuantity.value)) * logItemHeight.value + 'px';
 
-  //console.log("updated", logTopMarginStyle.value, logBottomMarginStyle.value);
+  //console.log("updated", "logDisplayQuantity", logDisplayQuantity.value, "topmargin", logTopMarginStyle.value, "bottommargin", logBottomMarginStyle.value);
 }
 
 function resetLogTableViewRange() {
@@ -375,6 +381,7 @@ watch(() => props.logs, () => {
     scrollLogViewToBottom();
   }
 
+  //console.log('updated props.logs');
   sortListPeriodically();
 });
 watch(() => props.opened, (val) => {
@@ -445,11 +452,11 @@ function onKeyPressInLogTable(ev: KeyboardEvent) {
       break;
     case 'PageUp':
       sign = -1;
-      count = logMaxHeightPX.value / logItemHeight |0;
+      count = logTableViewHeight.value / logItemHeight.value - 1 |0;
       break;
     case 'PageDown':
       sign = 1;
-      count = logMaxHeightPX.value / logItemHeight |0;
+      count = logTableViewHeight.value / logItemHeight.value - 1 |0;
       break;
     
     case 'Enter':
@@ -474,12 +481,6 @@ function onKeyPressInLogTable(ev: KeyboardEvent) {
   const len = logs.length;
   do {
     i += sign;
-    /*
-    if( i < 0 )
-      i = len - 1;
-    else if( i > len -1 )
-      i = 0;
-    */
     if( i < 0 || i > len - 1 )
       break;
     
@@ -493,6 +494,8 @@ function onKeyPressInLogTable(ev: KeyboardEvent) {
       break;
     }
   } while( true )
+
+  console.log("lastTargetedIndex", lastTargetedIndex);
 
   if( lastTargetedIndex >= 0 ) {
     //imageViewer.value?.changeIndex(logs[lastTargetedIndex].zippedIndex + 1);
@@ -634,7 +637,7 @@ function onMouseDownScrollbar(ev: MouseEvent) {
     
     <n-flex :wrap="false" align="stretch"
       :class="{'log-container':1, 'expand-log': expanded}"
-      :style="expanded ? {height: logMaxHeightPX + 'px'} : {height: logDefHeight + 'px'}"
+      :style="{height:logTableViewHeight + 'px'}"
       @keydown="onKeyPressInLogTable"
       tabindex="-1"
     >
@@ -650,7 +653,7 @@ function onMouseDownScrollbar(ev: MouseEvent) {
         trigger="none"
         style="z-index:2; padding-right:10px; height:100%;"
         :size="50"
-        :style="expanded ? {height: logMaxHeightPX + 'px'} : {}"
+        :style="{height:logTableViewHeight + 'px'}"
       >
         <table v-if="props.opened" class="log-table" ref="table">
         <thead>
@@ -669,7 +672,7 @@ function onMouseDownScrollbar(ev: MouseEvent) {
         <tr
           v-for="({index, key, command, path, core, zippedIndex, completed, fileId, shrinked, width, height, outputWidth, outputHeight, size, outputSize}, i) in filteredLogList.slice(logStartIndex, logStartIndex + logDisplayQuantity)"
           :key="key"
-          :class="{'log-tr':1, completed, selected:imageIndex === zippedIndex, stripe:i % 2}"
+          :class="{'log-tr':1, completed, selected:imageIndex === zippedIndex, stripe:(logStartIndex + i) % 2}"
           :ref="(el: any) => {if( imageIndex === zippedIndex ) currentSelectedLogNode = el}"
           @click="emit('change-index', completed, path, fileId, zippedIndex)"
           @dblclick="() => {if( imageIndex === zippedIndex ) emit('open-preview')}"
