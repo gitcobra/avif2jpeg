@@ -551,7 +551,10 @@ function onMouseDownScrollbar(ev: MouseEvent) {
 
 function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
   const target = ev.target as HTMLElement;
-  const logidx = target.closest('tr')?.dataset?.indexLoglist || 0;
+  const logidx = target.closest('tr')?.dataset?.indexLoglist;
+  if( !/^\d+$/.test(logidx) )
+    return;
+
   const {completed, path, fileId, zippedIndex} = filteredLogList.value[logidx];
 
   if( completed ) {
