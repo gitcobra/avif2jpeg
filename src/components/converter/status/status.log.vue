@@ -549,7 +549,19 @@ function onMouseDownScrollbar(ev: MouseEvent) {
 }
 
 
+function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
+  const target = ev.target as HTMLElement;
+  const logidx = target.closest('tr')?.dataset?.indexLoglist || 0;
+  const {completed, path, fileId, zippedIndex} = filteredLogList.value[logidx];
 
+  if( completed ) {
+    if( props.imageIndex !== zippedIndex )
+      emit('change-index', completed, path, fileId, zippedIndex);
+
+    if( dbl )
+      emit('open-preview');
+  }
+}
 
 
 </script>
@@ -667,15 +679,17 @@ function onMouseDownScrollbar(ev: MouseEvent) {
         </thead>
         
         <!-- converting items -->
-        <tbody ref="tbody">
+        <tbody ref="tbody"
+          @click="onLogTableClick"
+          @dblclick="ev => onLogTableClick(ev, true)"
+        >
         <tr :style="logTopMarginStyle"></tr>
         <tr
           v-for="({index, key, command, path, core, zippedIndex, completed, fileId, shrinked, width, height, outputWidth, outputHeight, size, outputSize}, i) in filteredLogList.slice(logStartIndex, logStartIndex + logDisplayQuantity)"
           :key="key"
           :class="{'log-tr':1, completed, selected:imageIndex === zippedIndex, stripe:(logStartIndex + i) % 2}"
           :ref="(el: any) => {if( imageIndex === zippedIndex ) currentSelectedLogNode = el}"
-          @click="emit('change-index', completed, path, fileId, zippedIndex)"
-          @dblclick="() => {if( imageIndex === zippedIndex ) emit('open-preview')}"
+          :data-index-loglist="logStartIndex + i"
         >
           <td class="log-td">{{ (core >= 0 ? core+1 : '-') }}</td>
           <td class="log-td">{{ index+1 }}</td>

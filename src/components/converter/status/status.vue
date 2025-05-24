@@ -440,8 +440,8 @@ async function changeImgViewerIndexBySelectedLogItem(completed: boolean, path:st
 
   const index = zippedIndex;
 
-  console.log(completed, path, fileId, zippedIndex, "completed, path, fileId, zippedIndex");
-  console.log(index, props.status.ziplogs[index]);
+  //console.log(completed, path, fileId, zippedIndex, "completed, path, fileId, zippedIndex");
+  //console.log(index, props.status.ziplogs[index]);
 
   if( !isCollapsed('preview') ) {
     setCollapsed('preview');
