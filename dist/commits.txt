@@ -1,3 +1,9 @@
+2025-05-24 14:13:22 +0900
+v1.10.25
+
+2025-05-24 14:12:05 +0900
+fix: adjust scrolling distance when pressing PageUp/PageDown keys
+
 2025-05-22 19:49:38 +0900
 v1.10.24
 
@@ -6,9 +12,3 @@ style: minor CSS changes for status components
 
 2025-05-21 20:01:53 +0900
 v1.10.23
-
-2025-05-21 19:58:15 +0900
-chore: move tag-version.js to script folder
-
-2025-05-21 19:50:46 +0900
-refactor: move the processing thumbnail position / modify behavior when expanding the log size
