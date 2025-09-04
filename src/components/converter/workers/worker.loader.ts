@@ -11,7 +11,7 @@ export type LoaderMessageType = {
 } | {
   action: 'start-convert';
   list: FileWithId[];
-  fileIdList: number[];
+  extraPropsForList: [number, string][];
   outputType: string;
   outputQuality: number;
   threads: number;
@@ -80,8 +80,15 @@ self.onmessage = async (params: MessageEvent<LoaderMessageType>) => {
       break;
     }
     case 'start-convert': {
-      const {list, fileIdList, outputType, outputQuality, threads, maxSize} = data;
-      list.forEach((val, i) => val._id = fileIdList[i]);
+      const {list, extraPropsForList, outputType, outputQuality, threads, maxSize} = data;
+      
+      // add extra properties
+      list.forEach((val, i) => {
+        val._id = extraPropsForList[i][0];
+        if( !val.webkitRelativePath )
+          Object.defineProperty(val, 'webkitRelativePath', {value: extraPropsForList[i][1]});
+      });
+
       loadImageList(list, outputType, outputQuality, threads, maxSize);
       break;
     }

@@ -172,8 +172,8 @@ export async function convertTargetFilesInMultithread(param: ConverterParameter)
   
   // start to convert
 
-  // NOTE: *fileIdList is needed because chrome cannot read FileWithId._id property on a Worker
-  const fileIdList = files.map(val => val._id);
+  // NOTE: *it is needed because chrome cannot read user-defined properties on a Worker
+  const extraPropsForFiles = files.map(val => [val._id, val.webkitRelativePath]) as [number, string][];
 
   // create a file list by id
   files.forEach(v => fileMapById.set(v._id, v));
@@ -194,7 +194,7 @@ export async function convertTargetFilesInMultithread(param: ConverterParameter)
   const msgToLoader: LoaderMessageType = {
     action: 'start-convert',
     list: files,
-    fileIdList,
+    extraPropsForList: extraPropsForFiles,
     outputQuality: quality,
     outputType: format,
     threads: props.threads,
