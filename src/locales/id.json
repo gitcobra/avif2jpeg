@@ -3,7 +3,6 @@
   "flags": "🇮🇩",
   "title": "Konversi Batch Offline dari AVIF ke JPEG",
   "metaDescription": "Ini adalah aplikasi web gratis untuk mengonversi gambar AVIF atau WebP ke format gambar umum lainnya seperti JPEG atau PNG tanpa komunikasi server.",
-  "droptarget": "Drag & Drop Avif gambar untuk dikonversi",
   "descriptions": [
     "Ini adalah aplikasi web gratis untuk mengonversi batch convert avif (atau webp, dll) gambar ke format gambar umum seperti jpeg, png.",
     "Ini menggunakan fungsi bawaan browser untuk konversi, jadi <strong>tidak ada data yang dikirim ke server mana pun</strong> dan oleh karena itu cepat dan aman.",
@@ -154,5 +153,11 @@
   "Prev": "Sebelumnya",
   "or": "atau",
   "TargetFileTypeExt": "Ekstensi file target",
-  "changelog": "Changelog"
+  "changelog": "Changelog",
+  "TargetFileTypeExtTooltip": "Pilih ekstensi file dari gambar sumber",
+  "droptargetTooltip": "Drag & Drop Avif gambar untuk dikonversi",
+  "droptargetLabel": "Atau seret",
+  "installAsApp": "Instal sebagai aplikasi",
+  "PWAUpdateMessage": "Versi baru dari halaman ini tersedia. \nKlik tombol Reload untuk memperbarui.",
+  "PWAinstallAsAppTooltip": "Menginstal memungkinkan Anda untuk meluncurkan aplikasi web ini langsung dari ikon desktop atau pintasan lainnya. \nTingkat keamanan sama dengan halaman web biasa, sehingga tetap aman. \nUntuk detail lebih lanjut, silakan lihat <a href = \"https://support.google.com/chrome/answer/9658361\"> halaman dukungan Google </a>."
 }

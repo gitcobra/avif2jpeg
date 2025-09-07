@@ -3,7 +3,6 @@
   "flags": "🇹🇷",
   "title": "AVIF'ten JPEG'e \"Çevrimdışı\" Toplu Dönüştürücü",
   "metaDescription": "AVIF veya WebP görüntülerini sunucu iletişimi olmadan JPEG veya PNG gibi diğer yaygın görüntü formatlarına dönüştürmek için ücretsiz bir web uygulamasıdır.",
-  "droptarget": "AVIF Görüntülerini Sürükle ve Bırak Dönüştür",
   "descriptions": [
     "Bu, AVIF (veya WebP, vb.) görüntülerini JPEG, PNG gibi yaygın görüntü formatlarına toplu olarak dönüştürmek için ücretsiz bir web uygulamasıdır.",
     "Dönüşümler için tarayıcının yerleşik işlevini kullanır, böylece <strong>hiçbir sunucuya veri gönderilmez</strong> ve bu nedenle hızlı ve güvenlidir",
@@ -154,5 +153,11 @@
   "Prev": "Öncesi",
   "or": "veya",
   "TargetFileTypeExt": "Hedef dosya uzantısı",
-  "changelog": "Değişim yeri"
+  "changelog": "Değişim yeri",
+  "TargetFileTypeExtTooltip": "Kaynak resmin dosya uzantısını seçin",
+  "droptargetTooltip": "AVIF Görüntülerini Sürükle ve Bırak Dönüştür",
+  "droptargetLabel": "Veya sürükle",
+  "installAsApp": "Uygulama olarak yükleyin",
+  "PWAUpdateMessage": "Sayfanın yeni bir sürümü mevcuttur. \nGüncellemek için Yeniden Yükle düğmesini tıklayın.",
+  "PWAinstallAsAppTooltip": "Yükleme, bu web uygulamasını doğrudan masaüstü simgelerinden veya diğer kısayollardan başlatmanızı sağlar. \nGüvenlik seviyesi normal bir web sayfası ile aynıdır, bu nedenle güvenli kalır. \nDaha fazla ayrıntı için lütfen bkz."
 }

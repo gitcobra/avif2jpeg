@@ -7,6 +7,7 @@
         <n-a :href="href" @click="navigate" style="color:black; word-break: keep-all; overflow-wrap: break-word;">{{$t('title')}}</n-a>
       </router-link>
       -->
+      <img src="/pwa-64x64.png" style="height: 1em; vertical-align: middle;">
       {{$t('title')}}
     </h1>
   </n-flex>

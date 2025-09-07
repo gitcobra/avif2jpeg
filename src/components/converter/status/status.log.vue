@@ -150,7 +150,7 @@ const filterLogValue = ref<typeof FilterOptions[number]['value']>(FilterOptions[
 
 
 
-
+let inst: ComponentInternalInstance;
 onMounted(() => {
   // FIXME: change max-height of the log-container when the window is resized
   inst = getCurrentInstance();
@@ -252,7 +252,6 @@ watch(() => props.opened, (val) => {
 
 // FIXME: change max-height of the log-container when the window is resized
 let _tid;
-let inst: ComponentInternalInstance;
 const availDocumentHeight = ref(document.documentElement.clientHeight);
 const availDialogHeight = ref(100);
 function changeLogMaxHeight() {
@@ -262,8 +261,8 @@ function changeLogMaxHeight() {
       return;
     
     const logHeight = scrollref.value.$parent.$el.offsetHeight;
-    const modalMargin = window.innerHeight - inst.parent.parent.parent.parent.vnode.el.offsetHeight - 8;
-    const availModalHeight = Math.min(logItemHeight.value * Math.max(5, props.logs.length), Math.max(200, logHeight + modalMargin));
+    const modalMargin = window.innerHeight - inst.parent.parent.parent.parent.parent.vnode.el.offsetHeight - 8;
+    const availModalHeight = Math.min(logItemHeight.value * Math.max(5, props.logs.length + 2), Math.max(200, logHeight + modalMargin));
     
     availDocumentHeight.value = document.documentElement.clientHeight;
     availDialogHeight.value = Math.min(logItemHeight.value * Math.max(5, props.logs.length), Math.max(logDefHeight, availModalHeight));

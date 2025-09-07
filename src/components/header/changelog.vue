@@ -41,7 +41,7 @@ async function getChangeLog(url: string /*owner: string, repo: string*/) {
   if( !txt )
     return;
 
-  console.log(txt);
+  //console.log(txt);
 
   /*
   updated.value = txt[0]?.commit.author.date > UserSettings.changeLogCheckedDate;

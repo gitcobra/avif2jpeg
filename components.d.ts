@@ -50,6 +50,7 @@ declare module 'vue' {
     NStatistic: typeof import('naive-ui')['NStatistic']
     NSwitch: typeof import('naive-ui')['NSwitch']
     NTooltip: typeof import('naive-ui')['NTooltip']
+    PWAPrompt: typeof import('./src/components/pwa/PWAPrompt.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SettingsAdv: typeof import('./src/components/settings-adv.vue')['default']

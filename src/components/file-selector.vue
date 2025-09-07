@@ -29,11 +29,6 @@
         </n-tooltip>
 
         <template v-if="!INJ.IS_SP && folderInputSupport || INJ.SSR">
-          <n-flex align="center" justify="center" style="color:gray; margin:0em;">
-            <!-- <n-icon color="gray"><ArrowUp /></n-icon> -->
-            {{$t('or')}}
-            <!-- <n-icon color="gray"><ArrowDown /></n-icon> -->
-          </n-flex>
 
           <!-- folder select -->
           <n-tooltip :to="false" display-directive="show" trigger="hover"
@@ -57,24 +52,36 @@
             </template>
             <div v-html="$t('loadfoldertooltip')"></div>
           </n-tooltip>
+
+          <!-- drop target -->
+          <DropTarget
+            v-if="!INJ.IS_SP"
+            @drop="emitInputs"
+            :forbidden="!isAllowedInputs"
+            _class="drop-target"
+          />
         </template>
       </n-flex>
-
-      <!-- drop target -->
-      <DropTarget
-        v-if="!INJ.IS_SP"
-        @drop="emitInputs"
-        :forbidden="!isAllowedInputs"
-        class="drop-target"
-      />
     </n-flex>
 
     <!-- target file type menu -->
     <n-flex vertical>
       <n-flex :wrap="INJ.IS_SP" align="center" justify="stretch">
-        <span style="white-space: nowrap">
-          {{ $t('TargetFileTypeExt') }}:
-        </span>
+        <n-tooltip :to="false" display-directive="show" trigger="hover"
+          :keep-alive-on-hover="false" style="max-width: 40vw;"
+          :duration="0" :delay="0" :z-index="10"
+          :show="INJ.showTooltipsBeforeMounted.value"
+        >
+          <template #trigger>
+            <span style="white-space: nowrap">
+              {{ $t('TargetFileTypeExt') }}:
+            </span>
+          </template>
+          <template #default>
+            {{ $t('TargetFileTypeExtTooltip') }}
+          </template>
+        </n-tooltip>
+
         <n-tooltip :keep-alive-on-hover="false" placement="right" style="max-width:200px;" :duration="0" :delay="0">
         <template #trigger>
           <n-select
@@ -349,7 +356,7 @@ function getAcceptStringByTargetType(target: TargetTypes ) {
     case 'avif_only':
       return '.avif, .webp';
     case 'all_images':
-      return ".jpg, .jpeg, .jfif, .pjpeg, .pjp, .gif, .png, .webp, .avif, .bmp, .apng, .ico";
+      return ".jpg, .jpeg, .jfif, .pjpeg, .pjp, .gif, .png, .webp, .avif, .bmp, .apng, .ico, .svg";
     case 'edit_type':
       return customExtensions.value;
     

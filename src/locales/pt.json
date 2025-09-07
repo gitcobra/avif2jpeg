@@ -3,7 +3,6 @@
   "flags": "🇵🇹",
   "title": "Conversor em lote de AVIF para JPEG \"Offline\"",
   "metaDescription": "É uma aplicação Web gratuita para converter imagens AVIF ou WebP noutros formatos de imagem comuns, como JPEG ou PNG, sem comunicação com o servidor.",
-  "droptarget": "Arrastar e largar imagens AVIF para converter",
   "descriptions": [
     "Esta é uma aplicação Web gratuita para converter em lote imagens AVIF (ou WebP, etc.) para formatos de imagem comuns, como JPEG, PNG.",
     "Utiliza a função incorporada do browser para as conversões, pelo que <strong>nenhum dado é enviado para qualquer servidor</strong> e, por conseguinte, é rápido e seguro",
@@ -154,5 +153,11 @@
   "Prev": "Anterior",
   "or": "ou",
   "TargetFileTypeExt": "Extensão do arquivo de destino",
-  "changelog": "Changelog"
+  "changelog": "Changelog",
+  "TargetFileTypeExtTooltip": "Selecione a extensão do arquivo da imagem de origem",
+  "droptargetTooltip": "Arrastar e largar imagens AVIF para converter",
+  "droptargetLabel": "Ou arraste",
+  "installAsApp": "Instale como aplicativo",
+  "PWAUpdateMessage": "Uma nova versão da página está disponível. \nClique no botão Recarregar para atualizar.",
+  "PWAinstallAsAppTooltip": "A instalação permite iniciar este aplicativo da Web diretamente a partir de ícones de desktop ou outros atalhos. \nO nível de segurança é o mesmo que uma página da web regular, por isso permanece segura. \nPara mais detalhes, consulte <a href = \"https://support.google.com/chrome/answer/9658361\"> página de suporte do Google </a>."
 }

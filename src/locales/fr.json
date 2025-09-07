@@ -3,7 +3,6 @@
   "flags": "🇫🇷",
   "title": "Convertisseur AVIF à JPEG \"Hors Ligne\" Par Lots",
   "metaDescription": "Il s'agit d'une application Web gratuite permettant de convertir des images AVIF ou WebP en d'autres formats d'image courants tels que JPEG ou PNG sans communication avec le serveur",
-  "droptarget": "Glisser-déposer des images AVIF pour les convertir",
   "descriptions": [
     "Il s'agit d'une application web gratuite permettant de convertir par lots des images AVIF (ou WebP, etc.) vers des formats d'image courants tels que JPEG, PNG",
     "Il utilise la fonction intégrée du navigateur pour les conversions, de sorte qu'aucune donnée n'est envoyée à un serveur et qu'il est donc rapide et sûr",
@@ -154,5 +153,11 @@
   "Prev": "Précédent",
   "or": "ou",
   "TargetFileTypeExt": "Extension de fichier cible",
-  "changelog": "Changelog"
+  "changelog": "Changelog",
+  "TargetFileTypeExtTooltip": "Sélectionnez l'extension de fichier de l'image source",
+  "droptargetTooltip": "Glisser-déposer des images AVIF pour les convertir",
+  "droptargetLabel": "Ou traîner",
+  "installAsApp": "Installer en tant qu'application",
+  "PWAUpdateMessage": "Une nouvelle version de la page est disponible. \nCliquez sur le bouton Recharger pour mettre à jour.",
+  "PWAinstallAsAppTooltip": "L'installation vous permet de lancer cette application Web directement à partir des icônes de bureau ou d'autres raccourcis. \nLe niveau de sécurité est le même qu'une page Web ordinaire, il reste donc sûr. \nPour plus de détails, veuillez consulter <a href = \"https://support.google.com/chrome/answer/9658361\"> La page d'assistance de Google </a>."
 }

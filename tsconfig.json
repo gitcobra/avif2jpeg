@@ -22,7 +22,7 @@
     "paths": {
       "@/*": ["./src/*"],
     },
-    "types": ["vite-ssg", "vite/client", "vite", "jest"]
+    "types": ["vite-ssg", "vite/client", "vite", "jest", "vite-plugin-pwa/vue"]
   },
   "include": [
     "src/**/*.ts",
@@ -30,7 +30,7 @@
     "src/**/*.tsx",
     "src/**/*.vue",
     "test/**/*.ts",
-    "./**.d.ts"
+    "./*.d.ts"
   ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

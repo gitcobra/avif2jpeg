@@ -8,8 +8,6 @@ import { sleep } from '../util';
 
 
 
-
-
 // injections
 const INJ = inject(GlobalValsKey);
 
@@ -17,7 +15,7 @@ const INJ = inject(GlobalValsKey);
 // common
 const router = useRouter();
 const { locale, t } = useI18n();
-
+const dialog = useDialog();
 
 
 // properties
@@ -66,6 +64,27 @@ onMounted(() => {
 await setLocaleByCurrentPath();
 
 if( import.meta.env.SSR ) {
+  
+  // create <link rel="alternate" hreflang="...">
+  const basepath = import.meta.env.BASE_URL;
+  const linkset = [];
+  for(const lang of LANG_ID_LIST) {
+    if( router.currentRoute.value.path.includes(lang) )
+      continue;
+    
+    const linkobj = {
+      rel: 'alternate',
+      hreflang: lang,
+      href: basepath + lang,
+    };
+    linkset.push(linkobj);
+  }
+  linkset.push({
+    rel: 'alternate',
+    hreflang: 'x-default',
+    href: basepath,
+  });
+
   // insert appropriate language title (for SSG)
   useHead({
     title: t('title'),
@@ -78,10 +97,13 @@ if( import.meta.env.SSR ) {
       {
         property: `og:description`,
         content: t('metaDescription'),
-      }
+      },
     ],
+
+    link: [...linkset]
   });
 }
+
 
 
 
@@ -98,11 +120,25 @@ async function setLocaleMessages(lang: string) {
   if( lang !== locale.value || I18n.global.availableLocales.indexOf(lang as any) === -1 ) {
     emit('lang-change', lang);
     await sleep( props.delay );
-    await loadLocaleMessages(lang);
+
+    const success = await loadLocaleMessages(lang);
+    if( !success ) {
+      dialog.error({
+        title: t('Failed to get language file'),
+        positiveText: 'OK',
+        content: () => h('div', [`lang: ${lang}`]),
+      });
+      //changeRoute('');
+      emit('lang-ready', '');
+      return;
+    }
     locale.value = lang;
 
     // change page title
     document.title = t('title');
+
+    // change lang attribute of <html>
+    document.documentElement.lang = lang;
 
     await nextTick();
   }
@@ -156,7 +192,8 @@ function getBrowserLanguage(): string {
 
 function changeRoute(val: string) {
   console.log(`changeRoute: ${router.currentRoute.value.fullPath} => ${val}`);
-  router.push('/' + val + '/');
+  const path = val ? val + '/' : '';
+  router.push('/' + path);
 }
 
 </script>

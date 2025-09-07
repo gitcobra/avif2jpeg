@@ -3,7 +3,6 @@
   "flags": "🇮🇹",
   "title": "Convertitore batch da AVIF a JPEG \"Offline\"",
   "metaDescription": "È un'applicazione web gratuita per convertire le immagini AVIF o WebP in altri formati di immagine comuni come JPEG o PNG senza comunicazione con il server",
-  "droptarget": "Trascinare e rilasciare le immagini AVIF da convertire",
   "descriptions": [
     "Si tratta di un'applicazione web gratuita per convertire in batch le immagini AVIF (o WebP, ecc.) in formati immagine comuni come JPEG, PNG",
     "Utilizza la funzione integrata del browser per le conversioni, quindi <strong>non vengono inviati dati a nessun server</strong> e quindi è veloce e sicuro",
@@ -154,5 +153,11 @@
   "Prev": "Precedente",
   "or": "O",
   "TargetFileTypeExt": "Estensione del file di destinazione",
-  "changelog": "Changelog"
+  "changelog": "Changelog",
+  "TargetFileTypeExtTooltip": "Seleziona l'estensione del file dell'immagine di origine",
+  "droptargetTooltip": "Trascinare e rilasciare le immagini AVIF da convertire",
+  "droptargetLabel": "O trascina",
+  "installAsApp": "Installa come app",
+  "PWAUpdateMessage": "È disponibile una nuova versione della pagina. \nFai clic sul pulsante Ricarica per aggiornare.",
+  "PWAinstallAsAppTooltip": "L'installazione consente di avviare questa app Web direttamente dalle icone desktop o da altre scorciatoie. \nIl livello di sicurezza è lo stesso di una normale pagina Web, quindi rimane sicuro. \nPer maggiori dettagli, consultare <a href = \"https://support.google.com/chrome/answer/9658361\"> Pagina di supporto di Google </a>."
 }

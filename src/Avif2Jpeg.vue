@@ -37,9 +37,9 @@ import FileSelector from './components/file-selector.vue'
 import OutputSettings from './components/settings-output.vue';
 import AdvancedSettings from './components/settings-adv.vue';
 import Descriptions from './components/descriptions.vue';
+import PWAPrompt from './components/pwa/PWAPrompt.vue';
 
 //import LangFlag from './components/lang-flag.vue';
-
 
 
 
@@ -187,6 +187,9 @@ function onInputClick(flag: boolean) {
       </template>
     </Header>
 
+     <ClientOnly>
+      <PWAPrompt/>
+     </ClientOnly>
     
     <transition name="fade">
     <n-flex v-show="contentVisible" vertical align="stretch" justify="space-between" style="height:100%;">
@@ -194,7 +197,6 @@ function onInputClick(flag: boolean) {
         <Title/>
         <n-flex justify="center">
           <FileSelector
-            _v-model_expanded="UserSettings.expandExtButtons"
             v-model:target="UserSettings.acceptTypeValue"
             v-model:userExtensions="UserSettings.editedAcceptTypes"
             v-model:disable-notifying-folder-select="UserSettings.disableNotifyingFolderSelect"
@@ -246,10 +248,8 @@ function onInputClick(flag: boolean) {
             v-model:retain-ext="UserSettings.retainExtension"
             v-model:use-folder-name-for-zip="UserSettings.useFolderNameForZip"
             v-model:max-zip-size="UserSettings.maxZipSizeMB"
-            _v-model:expanded="UserSettings.expandAdvSettings"
             v-model:multithread="UserSettings.multithread"
             v-model:thread-count="UserSettings.threadCount"
-            _:thread-max="availableThreadCount"
             
             v-model:shrink-image="UserSettings.shrinkImage"
             v-model:max-width="UserSettings.maxWidth"

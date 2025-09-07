@@ -3,12 +3,12 @@
   "flags": "🇬🇧",
   "title": "AVIF to JPEG \"Offline\" Batch Converter",
   "metaDescription": "It is a free web application to convert AVIF or WebP images to other common image formats such as JPEG or PNG without server communication.",
-  "droptarget": "Drag & Drop AVIF Images to Convert",
   "descriptions": [
     "This is a free web application to batch convert AVIF(or WebP, etc) images to common image formats such as JPEG, PNG.",
     "It uses a browser's built-in function for the conversions, so <strong>no data is sent to any server</strong>.",
     "The converted images will be output as <strong>a zip file</strong> when multiple images are loaded.",
-    "Requires <a href=\"https://caniuse.com/avif\" target=\"_self\" style=\"color:red\">latest</a> version of Firefox or Chrome to load AVIF images."
+    "Requires <a href=\"https://caniuse.com/avif\" target=\"_self\" style=\"color:red\">latest</a> version of Firefox or Chrome to load AVIF images.",
+    "Use this app at your own risk."
   ],
   "selectLanguage": "Select your language",
   "fileTypeRadioTitle": "Choose Target File Extentions",
@@ -155,6 +155,12 @@
   "Next": "Next",
   "Prev": "Previous",
   "or": "or",
-  "TargetFileTypeExt": "Target File Extensions",
-  "changelog": "Changelog"
+  "TargetFileTypeExt": "Source Image Extensions",
+  "changelog": "Changelog",
+  "TargetFileTypeExtTooltip": "Choose source image extensions",
+  "droptargetTooltip": "Drag & Drop AVIF Images to Convert",
+  "droptargetLabel": "Or just drag & drop",
+  "installAsApp": "Install as App",
+  "PWAUpdateMessage": "A new version of the page is available. Click the reload button to update.",
+  "PWAinstallAsAppTooltip": "Installing allows you to launch this web app directly from desktop icons or other shortcuts. The security level is the same as a regular web page, so it remains safe. For more details, please see <a href=\"https://support.google.com/chrome/answer/9658361\">Google’s support page</a>."
 }

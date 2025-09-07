@@ -16,6 +16,8 @@ export const LANG_ID_LIST: string[] = [] as const;
 const messages = { en };
 const localeImports: Record<string, () => Promise<DefaultLocaleMessageSchema>> = {};
 const messageImports = import.meta.glob('./locales/*.json');
+//const localeUrls = import.meta.glob<string>('./locales/*.json', {query:'?url', import:'default'});
+const messageGlobbedPath = {};
 for(const path in messageImports) {
   const lang = ( path.match(/\/([a-z]{2}(?:-[a-z]+)?)\.json$/i) )?.[1];
   if( !lang )
@@ -28,6 +30,7 @@ for(const path in messageImports) {
 
   // locale promises
   localeImports[lang] = messageImports[path] as any;
+  messageGlobbedPath[lang] = path;
 }
 
 // preload all languages when generating static htmls
@@ -77,15 +80,31 @@ export const I18n = createI18n({
 
 export async function loadLocaleMessages(locale) {
   if( I18n.global.availableLocales.indexOf(locale) >= 0 )
-    return;
+    return true;
 
   // load locale messages with dynamic import
-  const message = await localeImports[locale]();
+  console.log(localeImports[locale], messageGlobbedPath[locale]);
+  /*
+  console.log(messageGlobbedPath[locale], localeUrls[messageGlobbedPath[locale]], localeUrls);
+  const url: string = await localeUrls[messageGlobbedPath[locale]]();
+  console.log(url);
+  fetch(url).then(response => response.text()).then(txt => {
+    console.log(txt);
+  }).catch(err => {
+    console.error(messageGlobbedPath[locale], err);
+  });
+  */
+  const message = await localeImports[locale]().catch(err => console.error(err));
+  if( !message ) {
+    return false;
+  }
 
   // set locale and locale message
   I18n.global.setLocaleMessage(locale, message);
 
   await nextTick();
+
+  return true;
 }
 
 function getCurrentLangPath() {

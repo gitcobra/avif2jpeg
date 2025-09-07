@@ -21,7 +21,6 @@ const collapseThemeOverrides: CollapseThemeOverrides = {
 
 
 // common components
-const dialog = useDialog();
 const { t } = useI18n();
 const c = useThemeVars();
 
@@ -414,9 +413,9 @@ function onFinished() {
     //if( !logExpanded.value ) {
     if( logAutoScroll.value ) {
       removeCollapsed('log');
-      if( workingLogs.value.length >= 5 ) {
+      //if( workingLogs.value.length >= 5 ) {
         logExpanded.value = true;
-      }
+      //}
     }
     // show preview
     setCollapsed('preview');

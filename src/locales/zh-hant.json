@@ -3,7 +3,6 @@
   "flags": "🇹🇼🇭🇰",
   "title": "AVIF到JPEG“離線”批處理轉換器",
   "metaDescription": "它是一個免費的Web應用程序，可將AVIF或WebP圖像轉換為其他常見的圖像格式，例如JPEG或PNG，而無需服務器通信。",
-  "droptarget": "拖動avif圖像轉換",
   "descriptions": [
     "這是一個免費的Web應用程序，可將AVIF（或WebP等）批量轉換為常見圖像格式，例如JPEG，PNG。",
     "它對轉換使用瀏覽器的內置功能，因此<strong>沒有將數據發送到任何服務器</strong>，因此它是快速且安全的。",
@@ -154,5 +153,11 @@
   "Prev": "以前的",
   "or": "或者",
   "TargetFileTypeExt": "目標文件擴展",
-  "changelog": "ChangElog"
+  "changelog": "ChangElog",
+  "TargetFileTypeExtTooltip": "選擇源圖像的文件擴展",
+  "droptargetTooltip": "拖動avif圖像轉換",
+  "droptargetLabel": "或拖動",
+  "installAsApp": "作為應用程序安裝",
+  "PWAUpdateMessage": "該頁面的新版本可用。單擊“重新加載”按鈕進行更新。",
+  "PWAinstallAsAppTooltip": "安裝使您可以直接從桌面圖標或其他快捷方式啟動此Web應用程序。安全級別與常規網頁相同，因此它仍然安全。有關更多詳細信息，請參見<a href =“ https://support.google.com/chrome/answer/9658361”> Google的支持頁</a>。"
 }

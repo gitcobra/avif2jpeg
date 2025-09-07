@@ -3,7 +3,6 @@
   "flags": "🇨🇳",
   "title": "AVIF 转 JPEG \"离线\" 批量转换器",
   "metaDescription": "这是一款免费的网络应用程序，可将 AVIF 或 WebP 图像转换为 JPEG 或 PNG 等其他常见图像格式，而无需进行服务器通信",
-  "droptarget": "拖放 AVIF 图像进行转换",
   "descriptions": [
     "这是一款免费的网络应用程序，可将 AVIF（或 WebP 等）图像批量转换为 JPEG、PNG 等常见图像格式",
     "它使用浏览器的内置功能进行转换，因此<strong>不会向任何服务器发送数据</strong>，既快速又安全",
@@ -154,5 +153,11 @@
   "Prev": "以前的",
   "or": "或者",
   "TargetFileTypeExt": "目标文件扩展",
-  "changelog": "ChangElog"
+  "changelog": "ChangElog",
+  "TargetFileTypeExtTooltip": "选择源图像的文件扩展",
+  "droptargetTooltip": "拖放 AVIF 图像进行转换",
+  "droptargetLabel": "或拖动",
+  "installAsApp": "作为应用程序安装",
+  "PWAUpdateMessage": "该页面的新版本可用。\n单击“重新加载”按钮进行更新。",
+  "PWAinstallAsAppTooltip": "安装使您可以直接从桌面图标或其他快捷方式启动此Web应用程序。\n安全级别与常规网页相同，因此它仍然安全。\n有关更多详细信息，请参见<a href =“ https://support.google.com/chrome/answer/9658361”> Google的支持页</a>。"
 }

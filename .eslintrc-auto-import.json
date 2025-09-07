@@ -13,6 +13,8 @@
     "MaybeRefOrGetter": true,
     "PropType": true,
     "Ref": true,
+    "Slot": true,
+    "Slots": true,
     "VNode": true,
     "WritableComputedRef": true,
     "computed": true,
@@ -65,10 +67,12 @@
     "useCssModule": true,
     "useCssVars": true,
     "useDialog": true,
+    "useI18n": true,
     "useId": true,
     "useLink": true,
     "useLoadingBar": true,
     "useMessage": true,
+    "useModal": true,
     "useModel": true,
     "useRoute": true,
     "useRouter": true,
@@ -77,11 +81,6 @@
     "watch": true,
     "watchEffect": true,
     "watchPostEffect": true,
-    "watchSyncEffect": true,
-    "useModal": true,
-    "useI18n": true,
-    "Slot": true,
-    "Slots": true,
-    "useNotification": true
+    "watchSyncEffect": true
   }
 }

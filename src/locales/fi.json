@@ -24,7 +24,6 @@
   "descriptions[2]": "Muunnetut kuvat tulostetaan <strong>zip-tiedostona</strong>, kun useita kuvia ladataan.",
   "descriptions[3]": "Edellyttää <a href=\"https://caniuse.com/avif\" target=\"_self\" style=\"color:red\">uusinta</a> Firefox- tai Chrome-versiota AVIF-kuvien lataamiseen.",
   "disabled": "Pois käytöstä",
-  "droptarget": "Vetää",
   "editAcceptTypes": "Syötä luettelo ladattavista pilkuilla erotetuista tiedostojen laajennuksista.<br>esim.) .jpg,.gif,.png",
   "errMsgWorkerLoadError": "Tämä sivu saattaa olla vanhentunut versio. \nLataa sivu uudelleen.",
   "failed": "Epäonnistui",
@@ -151,5 +150,11 @@
   "Prev": "Edellinen",
   "or": "tai",
   "TargetFileTypeExt": "Kohdetiedoston laajennus",
-  "changelog": "Muutos"
+  "changelog": "Muutos",
+  "TargetFileTypeExtTooltip": "Valitse lähdekuvan tiedostolaajennus",
+  "droptargetTooltip": "Vetää",
+  "droptargetLabel": "Tai vetää",
+  "installAsApp": "Asenna sovellukseksi",
+  "PWAUpdateMessage": "Sivun uusi versio on saatavana. \nPäivitä napsauttamalla uudelleenlatausta -painiketta.",
+  "PWAinstallAsAppTooltip": "Asennus antaa sinun käynnistää tämän verkkosovelluksen suoraan työpöytäkuvakkeista tai muista pikakuvakkeista. \nTurvataso on sama kuin tavallinen verkkosivu, joten se pysyy turvassa. \nLisätietoja on <a href = \"https://support.google.com/chrome/answer/9658361\"> Googlen tukisivu </a>."
 }

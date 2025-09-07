@@ -4,13 +4,9 @@
   <div class="container-1">
     <n-tooltip :to="false" display-directive="show" trigger="hover" :duration="0" :delay="0" placement="bottom-end">
       <template #trigger>
+        <!--
         <n-flex vertical class="container-2">
           <n-flex align="center" :wrap="false" class="container-3">
-            <!--
-            <n-flex align="center">
-              <n-icon size="32" color="silver"><ArrowRedoSharp /></n-icon>
-            </n-flex>
-            -->
             <n-flex vertical align="center" :wrap="false" style="font-weight:bold; font-size:1em; line-height: 90%; white-space: nowrap;">
               <span>Drag & Drop</span>
               <span style="position:relative">
@@ -34,8 +30,12 @@
             </n-flex>
           </n-flex>
         </n-flex>
+        -->
+        <div style="color:gray; padding: 0.2em; font-size: smaller; text-align:center">
+          ({{$t('droptargetLabel')}})
+        </div>
       </template>
-      <h3 v-html="$t('droptarget')" style="max-width:200px; text-align: center; word-break: keep-all; overflow-wrap: break-word; "></h3>
+      <h3 v-html="$t('droptargetTooltip')" style="max-width:200px; text-align: center; word-break: keep-all; overflow-wrap: break-word; "></h3>
     </n-tooltip>
   
 

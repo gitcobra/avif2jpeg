@@ -3,7 +3,6 @@
   "flags": "🇵🇱",
   "title": "Konwerter wsadowy AVIF do JPEG \"Offline\"",
   "metaDescription": "Jest to bezpłatna aplikacja internetowa służąca do konwersji obrazów AVIF lub WebP do innych popularnych formatów obrazów, takich jak JPEG lub PNG, bez komunikacji z serwerem.",
-  "droptarget": "Przeciągnij i upuść obrazy AVIF, aby je przekonwertować",
   "descriptions": [
     "To bezpłatna aplikacja internetowa służąca do zbiorczego konwertowania obrazów AVIF (lub WebP itp.) do popularnych formatów obrazów, takich jak JPEG, PNG.",
     "Do konwersji wykorzystuje wbudowaną funkcję przeglądarki, dzięki czemu <strong>żadne dane nie są wysyłane na żaden serwer</strong>, dzięki czemu jest <strong>szybkie</strong> i <strong>bezpieczne</strong>. ",
@@ -154,5 +153,11 @@
   "Prev": "Poprzedni",
   "or": "Lub",
   "TargetFileTypeExt": "Rozszerzenie pliku docelowego",
-  "changelog": "Changelog"
+  "changelog": "Changelog",
+  "TargetFileTypeExtTooltip": "Wybierz rozszerzenie pliku obrazu źródłowego",
+  "droptargetTooltip": "Przeciągnij i upuść obrazy AVIF, aby je przekonwertować",
+  "droptargetLabel": "Lub przeciągnąć",
+  "installAsApp": "Zainstaluj aplikację",
+  "PWAUpdateMessage": "Dostępna jest nowa wersja strony. \nKliknij przycisk RELOOD, aby zaktualizować.",
+  "PWAinstallAsAppTooltip": "Instalowanie umożliwia uruchomienie tej aplikacji internetowej bezpośrednio z ikon stacjonarnych lub innych skrótów. \nPoziom bezpieczeństwa jest taki sam jak zwykła strona internetowa, więc pozostaje bezpieczna. \nAby uzyskać więcej informacji, zobacz <a href = \"https://support.google.com/chrome/answer/9658361\"> Strona wsparcia Google </a>."
 }
