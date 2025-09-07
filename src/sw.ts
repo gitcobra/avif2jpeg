@@ -16,7 +16,8 @@ const CACHE_NAME = 'pwa-cache';
 //const pcacheCtrl = new PrecacheController();
 
 const __WB_MANIFEST = self.__WB_MANIFEST;
-const cacheFilesWhenPWAInstall = import.meta.env.__DIST_FILES__;
+// @ts-ignore
+const cacheFilesWhenPWAInstall = self.__DIST_FILES__ || [];//import.meta.env.__DIST_FILES__;
 const ver = import.meta.env.__APP_VERSION__;
 console.log("__WB_MANIFEST", __WB_MANIFEST);
 console.log("cacheFilesPWAInstall", cacheFilesWhenPWAInstall);

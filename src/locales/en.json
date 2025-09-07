@@ -162,5 +162,6 @@
   "droptargetLabel": "Or just drag & drop",
   "installAsApp": "Install as App",
   "PWAUpdateMessage": "A new version of the page is available. Click the reload button to update.",
-  "PWAinstallAsAppTooltip": "Installing allows you to launch this web app directly from desktop icons or other shortcuts. The security level is the same as a regular web page, so it remains safe. For more details, please see <a href=\"https://support.google.com/chrome/answer/9658361\">Google’s support page</a>."
+  "PWAinstallAsAppTooltip": "Installing allows you to launch this web app directly from desktop icons or other shortcuts. The security level is the same as a regular web page, so it remains safe. For more details, please see <a href=\"https://support.google.com/chrome/answer/9658361\">Google’s support page</a>.",
+  "selectLangCloseTooltip": "Use the browser’s language setting"
 }

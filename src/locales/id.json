@@ -159,5 +159,6 @@
   "droptargetLabel": "Atau seret",
   "installAsApp": "Instal sebagai aplikasi",
   "PWAUpdateMessage": "Versi baru dari halaman ini tersedia. \nKlik tombol Reload untuk memperbarui.",
-  "PWAinstallAsAppTooltip": "Menginstal memungkinkan Anda untuk meluncurkan aplikasi web ini langsung dari ikon desktop atau pintasan lainnya. \nTingkat keamanan sama dengan halaman web biasa, sehingga tetap aman. \nUntuk detail lebih lanjut, silakan lihat <a href = \"https://support.google.com/chrome/answer/9658361\"> halaman dukungan Google </a>."
+  "PWAinstallAsAppTooltip": "Menginstal memungkinkan Anda untuk meluncurkan aplikasi web ini langsung dari ikon desktop atau pintasan lainnya. \nTingkat keamanan sama dengan halaman web biasa, sehingga tetap aman. \nUntuk detail lebih lanjut, silakan lihat <a href = \"https://support.google.com/chrome/answer/9658361\"> halaman dukungan Google </a>.",
+  "selectLangCloseTooltip": "Gunakan pengaturan bahasa browser"
 }

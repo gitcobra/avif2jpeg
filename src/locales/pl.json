@@ -159,5 +159,6 @@
   "droptargetLabel": "Lub przeciągnąć",
   "installAsApp": "Zainstaluj aplikację",
   "PWAUpdateMessage": "Dostępna jest nowa wersja strony. \nKliknij przycisk RELOOD, aby zaktualizować.",
-  "PWAinstallAsAppTooltip": "Instalowanie umożliwia uruchomienie tej aplikacji internetowej bezpośrednio z ikon stacjonarnych lub innych skrótów. \nPoziom bezpieczeństwa jest taki sam jak zwykła strona internetowa, więc pozostaje bezpieczna. \nAby uzyskać więcej informacji, zobacz <a href = \"https://support.google.com/chrome/answer/9658361\"> Strona wsparcia Google </a>."
+  "PWAinstallAsAppTooltip": "Instalowanie umożliwia uruchomienie tej aplikacji internetowej bezpośrednio z ikon stacjonarnych lub innych skrótów. \nPoziom bezpieczeństwa jest taki sam jak zwykła strona internetowa, więc pozostaje bezpieczna. \nAby uzyskać więcej informacji, zobacz <a href = \"https://support.google.com/chrome/answer/9658361\"> Strona wsparcia Google </a>.",
+  "selectLangCloseTooltip": "Użyj ustawienia języka przeglądarki"
 }

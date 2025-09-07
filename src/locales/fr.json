@@ -159,5 +159,6 @@
   "droptargetLabel": "Ou traîner",
   "installAsApp": "Installer en tant qu'application",
   "PWAUpdateMessage": "Une nouvelle version de la page est disponible. \nCliquez sur le bouton Recharger pour mettre à jour.",
-  "PWAinstallAsAppTooltip": "L'installation vous permet de lancer cette application Web directement à partir des icônes de bureau ou d'autres raccourcis. \nLe niveau de sécurité est le même qu'une page Web ordinaire, il reste donc sûr. \nPour plus de détails, veuillez consulter <a href = \"https://support.google.com/chrome/answer/9658361\"> La page d'assistance de Google </a>."
+  "PWAinstallAsAppTooltip": "L'installation vous permet de lancer cette application Web directement à partir des icônes de bureau ou d'autres raccourcis. \nLe niveau de sécurité est le même qu'une page Web ordinaire, il reste donc sûr. \nPour plus de détails, veuillez consulter <a href = \"https://support.google.com/chrome/answer/9658361\"> La page d'assistance de Google </a>.",
+  "selectLangCloseTooltip": "Utilisez le paramètre de langue du navigateur"
 }

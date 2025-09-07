@@ -1,3 +1,4 @@
+import path from 'path';
 import { readFileSync, globSync } from 'fs';
 import { ViteSSG } from 'vite-ssg';
 import { defineConfig, loadEnv, PluginOption } from 'vite'
@@ -45,9 +46,17 @@ export default defineConfig(({mode}) => {
 
   console.log(`basePath`, basePath);
   console.log('outDir', outDir);
-  
 
   const PWA_TEST = env.VITE_PWA_TEST;
+
+  // create a strip plugin to erase console.log
+  const stripPlugin = strip(process.env.NODE_ENV !== 'development' && !PWA_TEST && mode !== 'test' ? {
+    include: ['**/*.{ts,js,mjs}'],
+    functions: ['console.*'],
+    debugger: true,
+  } : {});
+
+  // define precache glob pattern for workbox (for self.__WB_MANIFEST)
   const precacheGlob = [
     'index.html',
     'unsupported.js',
@@ -59,10 +68,11 @@ export default defineConfig(({mode}) => {
     'pwa-64x64.png'
   ];
 
-  // create cache target list for PWA App installation
-  const plugin_cacheListForPWA: PluginOption = {
+  // define a plugin to create a cache target list for PWA App installation (for self.__DIST_FILES__),
+  // and replace "self.__DIST_FILES__" with the array manually.
+  const plugin_injectCacheListForPWA: PluginOption = {
     name: 'cacheListForPWA',
-    config() {
+    generateBundle(options, bundle) {
       const files = globSync(
         [
           '**/*.{js,ttf,woff2,png}'
@@ -74,13 +84,13 @@ export default defineConfig(({mode}) => {
           ])
         }
       ).map(path => basePath + path.replace(/\\/g, '/'));
-      //console.log(files);
-
-      return {
-        define: {
-          'import.meta.env.__DIST_FILES__': JSON.stringify(files),
-        },
-      };
+      
+      for( const [fileName, file] of Object.entries(bundle) ) {
+        if( file.type === 'chunk' && /^sw\.m?js$/.test(file.fileName) ) {
+          file.code = file.code.replace( /self\.__DIST_FILES__/g, JSON.stringify(files) );
+          break;
+        }
+      }
     },
   };
 
@@ -90,10 +100,17 @@ export default defineConfig(({mode}) => {
     filename: 'sw.ts',
     registerType: 'prompt',
     
+    
     injectManifest: {
       globPatterns: precacheGlob,
       minify: !PWA_TEST,
       enableWorkboxModulesLogs: PWA_TEST ? true : undefined,
+      buildPlugins: {
+        vite: [
+          plugin_injectCacheListForPWA,
+          stripPlugin,
+        ]
+      }
     },
     
     //pwaAssets,
@@ -131,10 +148,7 @@ export default defineConfig(({mode}) => {
       outDir,
       rollupOptions: {
         plugins: [
-          strip(process.env.NODE_ENV !== 'development' && !PWA_TEST && mode !== 'test' ? {
-            include: ['**/*.js'],
-            functions: ['console.*'],
-          } : {}),
+          stripPlugin
         ]
       }
     },
@@ -195,7 +209,7 @@ export default defineConfig(({mode}) => {
         ],
       }),
 
-      plugin_cacheListForPWA,
+      //plugin_cacheListForPWA,
 
       //vueDevTools(),
     ],
@@ -224,7 +238,7 @@ export default defineConfig(({mode}) => {
     },
 
     // remove console.log
-    esbuild: process.env.NODE_ENV !== 'development' && mode !== 'test' ? { drop: ['console', 'debugger'] } : {},
+    //esbuild: process.env.NODE_ENV !== 'development' && mode !== 'test' ? { drop: ['console', 'debugger'] } : {},
 
     // Build error when using vite-ssg/使用vite-ssg进行构建时出错 #4225 
     // https://github.com/tusen-ai/naive-ui/issues/4225#issuecomment-2072791151

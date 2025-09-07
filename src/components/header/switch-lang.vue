@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { useHead } from '@unhead/vue';
-import { GlobeOutline } from '@vicons/ionicons5';
+import { GlobeOutline, Close } from '@vicons/ionicons5';
 import { useI18n } from "vue-i18n";
 import { LANG_ID_LIST, LANG_NAMES, loadLocaleMessages, I18n } from '@/i18n';
 import { GlobalValsKey } from "../../Avif2Jpeg.vue";
 import { sleep } from '../util';
+import { SelectMixedOption } from 'naive-ui/es/select/src/interface';
 
 
 
@@ -26,15 +27,17 @@ const props = defineProps<{
 
 // emits
 const emit = defineEmits<{
+  'ready': []
   'lang-ready': [string]
   'lang-change': [string]
+  'lang-path-change': [string]
 }>();
 
 
 // constants
 
 // create language list
-const langOptions = Object.entries( LANG_NAMES ).map( ([key, val]) => ({ label:val, value:key }) );
+const langOptions: SelectMixedOption[] = Object.entries( LANG_NAMES ).map( ([key, val]) => ({ label:val, value:key }) );
 langOptions.sort((a, b) => {
   const c = a.label;
   const d = b.label;
@@ -59,12 +62,15 @@ onMounted(() => {
 
 
 
-
-// set language for SSG
+// change locale by current path
 await setLocaleByCurrentPath();
+insertHeadForSSG();
 
-if( import.meta.env.SSR ) {
-  
+emit('ready');
+
+
+
+function insertHeadForSSG() {
   // create <link rel="alternate" hreflang="...">
   const basepath = import.meta.env.BASE_URL;
   const linkset = [];
@@ -112,8 +118,6 @@ if( import.meta.env.SSR ) {
 
 
 
-
-
 // general functions
 
 async function setLocaleMessages(lang: string) {
@@ -130,8 +134,9 @@ async function setLocaleMessages(lang: string) {
       });
       //changeRoute('');
       emit('lang-ready', '');
-      return;
+      return false;
     }
+    
     locale.value = lang;
 
     // change page title
@@ -144,19 +149,24 @@ async function setLocaleMessages(lang: string) {
   }
 
   emit('lang-ready', lang);
+  return true;
 }
 
 async function setLocaleByCurrentPath() {
   const currentPath = router.currentRoute.value.path || '';
-  const lang = String(currentPath.match(/(?<=^\/)[^/]+/) || '');
+  const lang = currentPath.match(/([^/]+)\/?$/)?.[1] || '';
+  //alert(lang)
 
   if( import.meta.env.SSR )
     locale.value = lang;
 
   // change locale by the page path
   if( lang && LANG_ID_LIST.includes(lang) ) {
-    await setLocaleMessages(lang);
-    locale.value = lang;
+    const success = await setLocaleMessages(lang);
+    if( success ) {
+      //locale.value = lang;
+      emit('lang-path-change', lang);
+    }
   }
   else {
     await setLocaleByBrowserLanguage();
@@ -202,25 +212,45 @@ function changeRoute(val: string) {
 
 
 <template>
-  <n-tooltip :to="false" display-directive="show" :show="INJ.showTooltipsBeforeMounted.value" trigger="hover" :keep-alive-on-hover="false" :placement="INJ.LANDSCAPE.value ? 'left' : 'bottom'" :duration="0" :delay="50">
-    <template #trigger>
-      <n-select
-        ref="langselect"
-        size="tiny"
-        style="width: auto;"
-        :consistent-menu-width="false"
-        
-        :options="langOptions"
-        _v-model:value="locale"
-        :value="locale"
-        @update:value="changeRoute"
-      >
-        <template #arrow>
-          <n-icon><GlobeOutline /></n-icon>
-        </template>
-      </n-select>
-    </template>
-    <div v-html="$t('selectLanguage')"></div>
-  </n-tooltip>
+  <n-flex align="center" :size="2">
+    <n-tooltip
+      v-if="router.currentRoute.value.path !== '/'"
+      trigger="hover" :keep-alive-on-hover="false" placement="left" :duration="0" :delay="50"
+    >
+      <template #trigger>
+        <router-link
+          to="/"
+          @click="emit('lang-path-change', '')"
+          style="color: gray; line-height: 0px; font-size:1.2em;"
+        >
+          <n-icon :component="Close"/>
+        </router-link>
+      </template>
+      <template #default>
+        {{t('selectLangCloseTooltip')}}
+      </template>
+    </n-tooltip>
+
+    <n-tooltip :to="false" trigger="hover" :keep-alive-on-hover="false" :placement="INJ.LANDSCAPE.value ? 'left' : 'bottom'" :duration="0" :delay="50">
+      <template #trigger>
+        <n-select
+          ref="langselect"
+          size="tiny"
+          style="width: auto;"
+          :consistent-menu-width="false"
+          
+          :options="langOptions"
+          _v-model:value="locale"
+          :value="locale"
+          @update:value="changeRoute"
+        >
+          <template #arrow>
+            <n-icon><GlobeOutline /></n-icon>
+          </template>
+        </n-select>
+      </template>
+      <div v-html="$t('selectLanguage')"></div>
+    </n-tooltip>
+  </n-flex>
 </template>
 

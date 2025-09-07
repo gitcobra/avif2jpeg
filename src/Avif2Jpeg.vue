@@ -2,6 +2,7 @@
 import SwitchLanguages from './components/header/switch-lang.vue';
 // for provide
 import { type InjectionKey, type Ref } from 'vue';
+import { LANG_ID_LIST } from './i18n';
 
 export const GlobalValsKey: InjectionKey<{
   LANDSCAPE: Ref<boolean>
@@ -27,7 +28,7 @@ import 'vfonts/Roboto.css';
 //import 'vfonts/RobotoSlab.css';
 import 'vfonts/FiraCode.css';
 
-import { ArrowDown } from '@vicons/ionicons5';
+import { ArrowDown, Settings } from '@vicons/ionicons5';
 
 
 import Header from './components/header/header.vue';
@@ -70,6 +71,7 @@ const mounted = ref(false);
 
 const contentVisible = ref(false);
 const firstPageView = ref(true);
+const langSwitchMounted = ref(false);
 
 // for SSG
 if( import.meta.env.SSR ) {
@@ -107,7 +109,6 @@ onMounted(() => {
   // remove style for svg size fix
   //document.querySelector('head').removeChild(document.getElementById('svgfix'));
   
-  
   checkLandScape();
   window.addEventListener('resize', checkLandScape);
 
@@ -121,8 +122,18 @@ onUnmounted(() => {
 
 
 
-
 // functions
+function onLangSwitchReady() {
+  // check language
+  const route = useRoute();
+  const pathlang = route.path.match(/[^/]+(?=\/?$)/)?.[0];
+  // set language by settings
+  if( !pathlang && UserSettings.lang ) {
+    const router = useRouter();
+    console.log('change lang by root', UserSettings.lang);
+    router.push('/' + UserSettings.lang);
+  }
+}
 
 let transStartTime = 0;
 function onLangChange() {
@@ -131,6 +142,11 @@ function onLangChange() {
   contentVisible.value = false;
   transStartTime = Date.now();
   //alert("onLangChange")
+}
+function onLangChangeByPath(lang) {
+  if( import.meta.env.SSR )
+    return;
+  UserSettings.lang = lang;
 }
 function onLangReady() {
   const dif = firstPageView.value ? 0 : Math.max(0, TRANSTIME - (Date.now() - transStartTime));
@@ -177,10 +193,12 @@ function onInputClick(flag: boolean) {
   <n-flex vertical align="stretch" class="avif2jpeg">
     <Header>
       <template #lang-switch>
-        <Suspense>
+        <Suspense><!-- it needs Suspense to wait for lang file to load -->
           <SwitchLanguages
             @lang-change="onLangChange"
             @lang-ready="onLangReady"
+            @lang-path-change="onLangChangeByPath"
+            @ready="onLangSwitchReady"
             :delay="firstPageView ? 0 : TRANSTIME"
           />
         </Suspense>
@@ -188,7 +206,7 @@ function onInputClick(flag: boolean) {
     </Header>
 
      <ClientOnly>
-      <PWAPrompt/>
+       <PWAPrompt/>
      </ClientOnly>
     
     <transition name="fade">

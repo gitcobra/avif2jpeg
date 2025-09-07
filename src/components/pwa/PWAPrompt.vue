@@ -131,7 +131,7 @@ async function updateSW() {
 
   <!-- refresh button -->
   <div
-    v-if="offlineReady || needRefresh"
+    v-if="/*offlineReady ||*/ needRefresh"
     class="pwa-toast"
     role="alert"
   >

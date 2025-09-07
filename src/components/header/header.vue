@@ -40,12 +40,13 @@ import { useI18n } from 'vue-i18n'
 import { LANG_ID_LIST } from '@/i18n';
 
 
-// FIXME: Without this, i18n of components before switch-lang.vue will not take effect.
 const route = useRoute();
+// FIXME: Without this, i18n of components before switch-lang.vue will not take effect during SSG.
 const { locale } = useI18n();
 if( import.meta.env.SSR ) {
   const pathlang = route.path.match(/[^/]+(?=\/?$)/)?.[0];
   locale.value = LANG_ID_LIST.includes(pathlang) ? pathlang : 'en';
 }
+
 
 </script>

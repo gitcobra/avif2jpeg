@@ -35,6 +35,8 @@ const DefaultSettings = {
 
   disableNotifyingFolderSelect: false,
   changeLogCheckedDate: 0,
+
+  lang: '',
 };
 
 

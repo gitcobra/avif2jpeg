@@ -159,5 +159,6 @@
   "droptargetLabel": "或拖動",
   "installAsApp": "作為應用程序安裝",
   "PWAUpdateMessage": "該頁面的新版本可用。單擊“重新加載”按鈕進行更新。",
-  "PWAinstallAsAppTooltip": "安裝使您可以直接從桌面圖標或其他快捷方式啟動此Web應用程序。安全級別與常規網頁相同，因此它仍然安全。有關更多詳細信息，請參見<a href =“ https://support.google.com/chrome/answer/9658361”> Google的支持頁</a>。"
+  "PWAinstallAsAppTooltip": "安裝使您可以直接從桌面圖標或其他快捷方式啟動此Web應用程序。安全級別與常規網頁相同，因此它仍然安全。有關更多詳細信息，請參見<a href =“ https://support.google.com/chrome/answer/9658361”> Google的支持頁</a>。",
+  "selectLangCloseTooltip": "使用瀏覽器的語言設置"
 }

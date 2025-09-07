@@ -10,6 +10,10 @@
   </n-message-provider>
   </n-loading-bar-provider>
   </n-config-provider>
+
+  <div v-if="hide" style="text-align: center;">
+    Rendering the page… please wait.
+  </div>
 </template>
 
 <script setup lang="ts">

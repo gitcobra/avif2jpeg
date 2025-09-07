@@ -159,5 +159,6 @@
   "droptargetLabel": "Of slepen",
   "installAsApp": "Installeer als app",
   "PWAUpdateMessage": "Een nieuwe versie van de pagina is beschikbaar. \nKlik op de knop Herladen om bij te werken.",
-  "PWAinstallAsAppTooltip": "Met installatie kunt u deze web -app rechtstreeks vanuit desktoppictogrammen of andere snelkoppelingen starten. \nHet beveiligingsniveau is hetzelfde als een gewone webpagina, dus het blijft veilig. \nZie <a href = \"https://support.google.com/chrome/answer/9658361\"> Google's Support -pagina </a> voor meer informatie."
+  "PWAinstallAsAppTooltip": "Met installatie kunt u deze web -app rechtstreeks vanuit desktoppictogrammen of andere snelkoppelingen starten. \nHet beveiligingsniveau is hetzelfde als een gewone webpagina, dus het blijft veilig. \nZie <a href = \"https://support.google.com/chrome/answer/9658361\"> Google's Support -pagina </a> voor meer informatie.",
+  "selectLangCloseTooltip": "Gebruik de taalinstelling van de browser"
 }
