@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://gitcobra.github.io/sitemap.xml
+Sitemap: https://gitcobra.github.io/avif2jpeg/dist/sitemap.xml

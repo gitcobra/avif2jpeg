@@ -1,14 +1,14 @@
+2025-09-07 15:10:55 +0900
+v1.11.1
+
+2025-09-07 15:06:19 +0900
+add: PWA support
+
+2025-09-05 02:27:53 +0900
+fix: relative paths not applied on drag-and-drop
+
 2025-05-24 21:24:26 +0900
 v1.10.27
 
 2025-05-24 21:23:59 +0900
 fix: issue where scroll position resets to top when selecting log text
-
-2025-05-24 15:24:45 +0900
-v1.10.26
-
-2025-05-24 15:23:51 +0900
-refactor: delegate click events to parent element in status.log.vue
-
-2025-05-24 14:13:22 +0900
-v1.10.25
