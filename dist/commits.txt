@@ -1,3 +1,9 @@
+2025-09-09 07:57:24 +0900
+v1.11.4
+
+2025-09-09 06:48:12 +0900
+chore: slight update to PWA
+
 2025-09-08 04:06:53 +0900
 v1.11.3
 
@@ -6,9 +12,3 @@ fix: Service Worker cache was not working add: save the user’s selected langua
 
 2025-09-07 15:10:55 +0900
 v1.11.1
-
-2025-09-07 15:06:19 +0900
-add: PWA support
-
-2025-09-05 02:27:53 +0900
-fix: relative paths not applied on drag-and-drop
