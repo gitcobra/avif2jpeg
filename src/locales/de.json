@@ -160,5 +160,6 @@
   "installAsApp": "Als App installieren",
   "PWAUpdateMessage": "Eine neue Version der Seite ist verfügbar. \nKlicken Sie auf die Schaltfläche REGOAD, um zu aktualisieren.",
   "PWAinstallAsAppTooltip": "Mit der Installation können Sie diese Web -App direkt über Desktop -Symbole oder andere Verknüpfungen starten. \nDie Sicherheitsstufe entspricht einer regulären Webseite, daher bleibt sie sicher. \nWeitere Informationen finden Sie unter <a href = \"https://support.google.com/chrome/answer/9658361\"> Googles Support -Seite </a>.",
-  "selectLangCloseTooltip": "Verwenden Sie die Spracheinstellung des Browsers"
+  "selectLangCloseTooltip": "Verwenden Sie die Spracheinstellung des Browsers",
+  "PWAInstalledTooltip": "Als App installiert"
 }

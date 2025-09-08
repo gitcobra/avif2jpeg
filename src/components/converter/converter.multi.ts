@@ -458,8 +458,8 @@ const zipWorkerListener = ( params: MessageEvent<MessageToMainFromZipWorker> ) =
 };
 
 
-// listener for canvas worker
-// all canvas workers share the single listener
+
+// listener for loader worker
 type MessageTypeCanvasWorkerListener = MessageEvent<MessageFromLoader>;
 const ImgLoaderListener = (params: MessageTypeCanvasWorkerListener) => {
   const worker = params.target as Worker;

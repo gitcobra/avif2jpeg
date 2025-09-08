@@ -2,7 +2,7 @@
 <template>
 
   <div class="container-1">
-    <n-tooltip :to="false" display-directive="show" trigger="hover" :duration="0" :delay="0" placement="bottom-end">
+    <n-tooltip :to="false" display-directive="show" trigger="hover" :duration="0" :delay="0" placement="right">
       <template #trigger>
         <!--
         <n-flex vertical class="container-2">
@@ -37,8 +37,6 @@
       </template>
       <h3 v-html="$t('droptargetTooltip')" style="max-width:200px; text-align: center; word-break: keep-all; overflow-wrap: break-word; "></h3>
     </n-tooltip>
-  
-
 
     <n-modal v-model:show="loading" :closable="true" preset="dialog" title="Parsing dropped items." type="info" :mask-closable="false" :negative-text="$t('cancel')">
       <template #default>

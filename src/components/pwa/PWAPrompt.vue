@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { useRegisterSW } from 'virtual:pwa-register/vue';
 import { ref, onMounted } from 'vue';
+import { AppsSharp } from '@vicons/ionicons5';
 
-
-
-
-const deferredPrompt = ref(null)
+const deferredPrompt = ref(null);
 const newVersion = ref('unknown');
 
 const isPWAInstalled = ref();
@@ -101,85 +99,86 @@ async function installApp() {
 }
 
 async function close() {
-  offlineReady.value = false
-  needRefresh.value = false
+  offlineReady.value = false;
+  needRefresh.value = false;
+  deferredPrompt.value = null;
 }
 
 async function updateSW() {
+  close();
   await updateServiceWorker();
 }
+
+//needRefresh.value = true;
 
 </script>
 
 <template>
+  <div style="line-height: 0px;">
+  
+  <!-- installed label -->
+  <n-tooltip v-if="isPWAInstalled" placement="bottom">
+    <template #trigger>
+      <n-flex id="app-installed" align="center" :size="1">
+        <n-icon :component="AppsSharp"/>PWA
+      </n-flex>
+    </template>
+    <template #default>
+      {{$t('PWAInstalledTooltip')}}
+    </template>
+  </n-tooltip>
   <!-- install button -->
-  <n-flex justify="start">
-    <div v-if="!!deferredPrompt">
-      <n-tooltip :to="false" display-directive="show" trigger="hover"
-        placement="bottom" :keep-alive-on-hover="true" style="max-width: 40vw;"
-        :delay="300" :duration="150" :z-index="10"
-      >
-        <template #trigger>
-          <n-button @click="installApp" size="tiny">{{$t('installAsApp')}}</n-button>
+  <n-tooltip v-else-if="!!deferredPrompt && !needRefresh"
+    placement="bottom" :keep-alive-on-hover="true" style="max-width: 40vw;"
+    :delay="300" :duration="150" :z-index="10"
+  >
+    <template #trigger>
+      <n-button @click="installApp" size="tiny">
+        <template #icon>
+          <n-icon :component="AppsSharp"/>
         </template>
-        <template #default>
-          <div class="pwa-tooltip" v-html="$t('PWAinstallAsAppTooltip')"/>
-        </template>
-      </n-tooltip>
-    </div>
-  </n-flex>
+        {{$t('installAsApp')}}
+      </n-button>
+    </template>
+    <template #default>
+      <div id="pwa-tooltip" v-html="$t('PWAinstallAsAppTooltip')"/>
+    </template>
+  </n-tooltip>
 
   <!-- refresh button -->
-  <div
-    v-if="/*offlineReady ||*/ needRefresh"
-    class="pwa-toast"
-    role="alert"
-  >
-    <div class="message">
-      <!--
-      <span v-if="offlineReady">
-        App ready to work offline
+  <transition>
+  <n-alert v-if="needRefresh" :title="newVersion" type="info" closable class="pwa-toast">
+    <p class="message">
+      {{$t('PWAUpdateMessage')}}
+      <span v-if="needRefresh">        
       </span>
-      -->
-      <span v-if="needRefresh">
-        {{$t('PWAUpdateMessage')}}
-        <p>{{ newVersion }}</p>
-      </span>
-    </div>
-    <n-button v-if="needRefresh" @click="updateSW">
-      {{$t('Reload')}}
-    </n-button>
-    <n-button @click="close">
-      {{$t('close')}}
-    </n-button>
+    </p>
+
+    <n-flex :size="8">
+      <n-button v-if="needRefresh" @click="updateSW" round type="primary" size="small">
+        {{$t('Reload')}}
+      </n-button>
+      <n-button @click="close" round size="small">
+        {{$t('close')}}
+      </n-button>
+    </n-flex>
+  </n-alert>
+  </transition>
+  
   </div>
 </template>
 
-<style>
-.pwa-toast {
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  margin: 16px;
-  padding: 12px;
-  border: 1px solid #8885;
-  border-radius: 4px;
-  z-index: 1;
-  text-align: left;
-  box-shadow: 3px 4px 5px 0 #8885;
-  background-color: white;
+<style lang="scss">
+#pwa-tooltip {
+  a {
+    color: red;
+  }
 }
-.pwa-toast .message {
-  margin-bottom: 8px;
-}
-.pwa-toast button {
-  border: 1px solid #8885;
-  outline: none;
-  margin-right: 5px;
-  border-radius: 2px;
-  padding: 3px 10px;
-}
-.pwa-tooltip a {
-  color: red;
+#app-installed {
+  width: max-content;
+  font-weight: bolder;
+  font-size: 0.8em;
+  opacity: 0.5;
+  user-select: none;
 }
 </style>

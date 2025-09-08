@@ -161,7 +161,8 @@
   "droptargetTooltip": "変換したいAVIF画像を ドラッグ&ドロップ して下さい",
   "droptargetLabel": "又は直接ドラッグ&ドロップ",
   "installAsApp": "アプリとしてインストール",
-  "PWAUpdateMessage": "新しいバージョンのページが存在します。更新のためにリロードボタンを押して下さい。",
+  "PWAUpdateMessage": "新しいバージョンが存在します。更新のためにリロードボタンを押して下さい。",
   "PWAinstallAsAppTooltip": "インストールを行うとデスクトップアイコンなどから直接このウェブアプリを起動できるようになります。※アプリに与えられる権限は通常のウェブページと変わらず安全です。詳しくは<a href=\"https://support.google.com/chrome/answer/9658361\">Googleのヘルプページ</a>をご覧ください。",
-  "selectLangCloseTooltip": "ブラウザ設定の言語を使用する"
+  "selectLangCloseTooltip": "ブラウザ設定の言語を使用する",
+  "PWAInstalledTooltip": "アプリとしてインストールされています"
 }

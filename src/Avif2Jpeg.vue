@@ -344,4 +344,17 @@ a {
   opacity: 0;
 }
 
+/* default transition */
+.v-enter-active, .v-leave-active {
+  transition: all 0.3s ease;
+}
+.v-enter-from, .v-leave-to {
+  opacity: 0;
+  max-height: 0px;
+}
+.v-enter-to, .v-leave-from {
+  max-height: 500px;
+  opacity: 1;
+}
+
 </style>

@@ -160,5 +160,6 @@
   "installAsApp": "Installa come app",
   "PWAUpdateMessage": "È disponibile una nuova versione della pagina. \nFai clic sul pulsante Ricarica per aggiornare.",
   "PWAinstallAsAppTooltip": "L'installazione consente di avviare questa app Web direttamente dalle icone desktop o da altre scorciatoie. \nIl livello di sicurezza è lo stesso di una normale pagina Web, quindi rimane sicuro. \nPer maggiori dettagli, consultare <a href = \"https://support.google.com/chrome/answer/9658361\"> Pagina di supporto di Google </a>.",
-  "selectLangCloseTooltip": "Usa l'impostazione della lingua del browser"
+  "selectLangCloseTooltip": "Usa l'impostazione della lingua del browser",
+  "PWAInstalledTooltip": "Installato come app"
 }

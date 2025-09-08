@@ -160,5 +160,6 @@
   "installAsApp": "Uygulama olarak yükleyin",
   "PWAUpdateMessage": "Sayfanın yeni bir sürümü mevcuttur. \nGüncellemek için Yeniden Yükle düğmesini tıklayın.",
   "PWAinstallAsAppTooltip": "Yükleme, bu web uygulamasını doğrudan masaüstü simgelerinden veya diğer kısayollardan başlatmanızı sağlar. \nGüvenlik seviyesi normal bir web sayfası ile aynıdır, bu nedenle güvenli kalır. \nDaha fazla ayrıntı için lütfen bkz.",
-  "selectLangCloseTooltip": "Tarayıcının dil ayarını kullanın"
+  "selectLangCloseTooltip": "Tarayıcının dil ayarını kullanın",
+  "PWAInstalledTooltip": "Uygulama olarak yüklendi"
 }

@@ -157,5 +157,6 @@
   "installAsApp": "Asenna sovellukseksi",
   "PWAUpdateMessage": "Sivun uusi versio on saatavana. \nPäivitä napsauttamalla uudelleenlatausta -painiketta.",
   "PWAinstallAsAppTooltip": "Asennus antaa sinun käynnistää tämän verkkosovelluksen suoraan työpöytäkuvakkeista tai muista pikakuvakkeista. \nTurvataso on sama kuin tavallinen verkkosivu, joten se pysyy turvassa. \nLisätietoja on <a href = \"https://support.google.com/chrome/answer/9658361\"> Googlen tukisivu </a>.",
-  "selectLangCloseTooltip": "Käytä selaimen kieliasetusta"
+  "selectLangCloseTooltip": "Käytä selaimen kieliasetusta",
+  "PWAInstalledTooltip": "Asennettu sovellukseksi"
 }

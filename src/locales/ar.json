@@ -160,5 +160,6 @@
   "installAsApp": "تثبيت ك APP",
   "PWAUpdateMessage": "يتوفر إصدار جديد من الصفحة. \nانقر فوق زر إعادة التحميل للتحديث.",
   "PWAinstallAsAppTooltip": "يتيح لك التثبيت تشغيل تطبيق الويب هذا مباشرة من أيقونات سطح المكتب أو اختصارات أخرى. \nمستوى الأمان هو نفس صفحة الويب العادية ، لذلك يظل آمنًا. \nلمزيد من التفاصيل ، يرجى الاطلاع على <a href = \"https://support.google.com/chrome/answer/9658361\"> صفحة دعم Google </a>.",
-  "selectLangCloseTooltip": "استخدم إعداد لغة المتصفح"
+  "selectLangCloseTooltip": "استخدم إعداد لغة المتصفح",
+  "PWAInstalledTooltip": "تم تثبيته كتطبيق"
 }

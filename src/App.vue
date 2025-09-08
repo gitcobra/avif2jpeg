@@ -1,4 +1,7 @@
 <template>
+  <div v-if="hide" style="text-align: center;">
+    Rendering the page… please wait.
+  </div>
   <n-config-provider :theme-overrides="themeOverrides" style="width:100%; height:100%;">
   <n-loading-bar-provider>
   <n-message-provider placement="top-left" :closable="true" :max="50">
@@ -10,10 +13,6 @@
   </n-message-provider>
   </n-loading-bar-provider>
   </n-config-provider>
-
-  <div v-if="hide" style="text-align: center;">
-    Rendering the page… please wait.
-  </div>
 </template>
 
 <script setup lang="ts">

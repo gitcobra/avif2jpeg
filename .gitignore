@@ -2,6 +2,7 @@ node_modules
 .vscode/*
 .vite-ssg-temp/*
 dist/*
+dev-dist/*
 old/*
 test/
 *.sh
