@@ -1,3 +1,9 @@
+2025-09-19 18:15:49 +0900
+v1.12.1
+
+2025-09-19 18:12:52 +0900
+feat: support writing via File System API
+
 2025-09-09 07:57:24 +0900
 v1.11.4
 
@@ -6,9 +12,3 @@ chore: slight update to PWA
 
 2025-09-08 04:06:53 +0900
 v1.11.3
-
-2025-09-08 04:06:03 +0900
-fix: Service Worker cache was not working add: save the user’s selected language
-
-2025-09-07 15:10:55 +0900
-v1.11.1
