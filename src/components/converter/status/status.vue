@@ -34,61 +34,63 @@ const c = useThemeVars();
 // props
 // FIXME: too messy
 const props = defineProps<{
-  processing: boolean
+  processing: boolean;
   status: {
-    processing: boolean
-    length: number
+    processing: boolean;
+    length: number;
     
-    startedCount: number
-    converted: number
-    success: number
-    failure: number
-    retried: number
-    done: number
-    zippedTotalCount: number
-    zippedTotalSize: number
-    zippingErrorCount: number
+    startedCount: number;
+    converted: number;
+    success: number;
+    failure: number;
+    retried: number;
+    done: number;
+    zippedTotalCount: number;
+    zippedTotalSize: number;
+    zippingErrorCount: number;
 
     logs: InstanceType<typeof LogTable>['logs'];
     ziplogs: {
-      fileId: number
-      storedPath: string
-    }[]
+      fileId: number;
+      storedPath: string;
+    }[];
     
-    baseZipName: string
+    baseZipName: string;
     zips: InstanceType<typeof ConversionResult>['zips'];
 
-    unconvertedListText: string
-    unconvertedFileCount: number
-    unconvertedTotalSize: number
-    failedZips: { url:string, size:number, count:number }[]
-    failedZipDone: boolean
-    failedToCreateFailedZip: boolean
-    failedFileZippedCount: number
+    unconvertedListText: string;
+    unconvertedFileCount: number;
+    unconvertedTotalSize: number;
+    failedZips: { url:string, size:number, count:number }[];
+    failedZipDone: boolean;
+    failedToCreateFailedZip: boolean;
+    failedFileZippedCount: number;
     
-    inputTotalSize: number
-    outputTotalSize: number
+    inputTotalSize: number;
+    outputTotalSize: number;
 
-    thumbnail: ImageBitmap | HTMLImageElement | null
-    startedTime: number
+    thumbnail: ImageBitmap | HTMLImageElement | null;
+    startedTime: number;
 
-    convertedImageName?: string
-    convertedImageUrl?: string
-    convertedImageOrgUrl?: string
-    convertedImageDataUrl?: string
-    convertedImageWidth?: number
-    convertedImageHeight?: number
-    convertedImageSize?: number
-    convertedImageOrgSize?: number
-    convertedImageOrgName?: string
-    convertedImageIndex?: number
-    convertedImageShrinked?: boolean
-    
+    convertedImageName?: string;
+    convertedImageUrl?: string;
+    convertedImageOrgUrl?: string;
+    convertedImageDataUrl?: string;
+    convertedImageWidth?: number;
+    convertedImageHeight?: number;
+    convertedImageSize?: number;
+    convertedImageOrgSize?: number;
+    convertedImageOrgName?: string;
+    convertedImageIndex?: number;
+    convertedImageShrinked?: boolean;
 
-    type: string
-    threads?: number
-    zipSize: number
-    shrink?: [number, number]
+    type: string;
+    threads?: number;
+    zipSize: number;
+    shrink?: [number, number];
+
+    outputToDir: boolean;
+    outputDirName?: string;
   }
   interval?: number
 }>();
@@ -97,10 +99,10 @@ const props = defineProps<{
 
 // emits
 const emit = defineEmits<{
-  'all-zips-clicked': []
-  'demand-zip-errors': []
-  'demand-image': [index: number]
-  'delete-image': [index: number]
+  'all-zips-clicked': [];
+  'demand-zip-errors': [];
+  'demand-image': [index: number];
+  'delete-image': [index: number];
 }>();
 
 // exposes
@@ -516,6 +518,7 @@ function cleanup() {
       :shrink="props.status.shrink"
       :threads="props.status.threads"
       :zip-size="props.status.zipSize"
+      :output-to-dir="props.status.outputToDir"
 
       :rate-color="rateColor"
       :dif-color="difColor"
@@ -614,6 +617,8 @@ function cleanup() {
       :unconverted-file-count="props.status.unconvertedFileCount"
       :unconverted-list-text="props.status.unconvertedListText"
       :unconverted-total-size="props.status.unconvertedTotalSize"
+      :output-to-dir="status.outputToDir"
+      :output-dir-name="status.outputDirName"
 
       :type="props.status.type"
 

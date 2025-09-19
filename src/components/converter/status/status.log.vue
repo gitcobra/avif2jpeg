@@ -337,7 +337,7 @@ function calculateLogTableViewRange(force?: any/*ev: Event*/) {
   }
   lastTimeLogViewUpdated = now;
   
-  if( !realLogHeight ) {
+  if( !realLogHeight && props.logs.length ) {
     realLogHeight = logtbody.value.rows[1].offsetHeight;
     logItemHeight.value = realLogHeight;
   }
@@ -383,11 +383,7 @@ watch(() => props.logs, () => {
   //console.log('updated props.logs');
   sortListPeriodically();
 });
-watch(() => props.opened, (val) => {
-  if( val ) {
-    calculateLogTableViewRange();
-  }
-});
+
 
 
 
@@ -569,7 +565,6 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
 </script>
 
 <template>
-
   <n-collapse-item name="log" style="white-space:nowrap;">
     <template #header>
       <n-flex align="center" :wrap="false">
@@ -578,7 +573,7 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
       </n-flex>
     </template>
     <template #header-extra>
-      <n-flex v-show="props.opened" align="center" justify="end" :wrap="true" style="margin-top:0.2em; margin-left:0.5em;">
+      <n-flex v-if="props.opened" align="center" justify="end" :wrap="true" style="margin-top:0.2em; margin-left:0.5em;">
         
         <n-select
           v-model:value="sortValue"

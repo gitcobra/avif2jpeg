@@ -1,108 +1,169 @@
+import { OutputFileType } from "typescript";
+import { buildDirsAndWriteFile } from "../../filesystem-api";
+import { addSelfAndAncestorPathToSet, setFileNameAndExtension } from "../../util";
+
 console.log('running converter.worker.canvas');
 
 const canvas = new OffscreenCanvas(100, 100);
 const bmctx = canvas.getContext('bitmaprenderer');
 let dataOutputPort: MessagePort;
+let fileSysDirHandler: FileSystemDirectoryHandle;
+let existingFolderSet: Set<string>;
+let keepPrevExt: string;
+let outputExt: string;
 
 const fileStat = new Map<number/*fileId*/, {
-  outputsize: number
-  inputsize: number
-  path: string
-  index: number
+  outputsize: number;
+  inputsize: number;
+  path: string;
+  index: number;
 }>;
+
+const overwriteAllowList = new Set<string>();
+const overwriteDenyList = new Set<string>();
+const overwriteDialogResolvers = new Map<
+  string,
+  (commands: OverwriteCommand) => void
+>();
+
+let overwriteDecision: boolean | undefined = undefined;
 
 
 
 type FileInfo = {
-  fileId: number
-  index: number
-  path: string
+  fileId: number;
+  index: number;
+  path: string;
 };
 
 export type MessageFromCanvasWorker = {
-  action: 'list-start' | 'list-end' | 'respond-to-first-message'
+  action: 'list-start' | 'list-end' | 'respond-to-first-message';
 } |
-FileInfo & (
+FileInfo & ({
+    action: 'file-start';
+  } |
   {
-    action: 'file-start'
-  } | {
-    action: 'file-load'
-    thumbnail?: ImageBitmap
-    width: number
-    height: number
-    workerId?: number
-    inputsize: number
-  } | {
+    action: 'file-load';
+    thumbnail?: ImageBitmap;
+    width: number;
+    height: number;
+    workerId?: number;
+    inputsize: number;
+  } |
+  {
     action: 'file-converted'
-    image?: Blob
+    convertedImageBlob?: Blob;
     //blobUrl?: string
-    shrinked: boolean
-    outputWidth: number
-    outputHeight: number
-    outputsize: number
-  } | {
-    action: 'file-error' | 'file-canceled'
-  } | {
-    action: 'file-completed'
-    inputsize: number
-    outputsize: number
-    entireIndex: number
-    storedPath: string
+    shrinked: boolean;
+    outputWidth: number;
+    outputHeight: number;
+    outputsize: number;
+  } |
+  {
+    action: 'file-error' | 'file-canceled' | 'file-skip';
+  } |
+  {
+    action: 'file-completed' | 'file-sys-completed';
+    inputsize: number;
+    outputsize: number;
+    entireIndex: number;
+    storedPath: string;
   }
 );
 
 export type MessageToCanvasWorker = {
-  index: number
-  file: File
-  bitmap: ImageBitmap
-  fileId: number
-  outputPath: string
-  webkitRelativePath: string,
-  quality: number
-  type: string
-  demandThumbnail: boolean
-  isSingleImage: boolean
-  maxSize?: { width:number, height:number }
-  retriedTime: number
-//}[];
+  index: number;
+  file: File;
+  bitmap: ImageBitmap;
+  fileId: number;
+  outputPath: string;
+  webkitRelativePath: string;
+  quality: number;
+  type: string;
+  keepPrevExt: boolean;
+  outputExt: string;
+  
+  demandThumbnail: boolean;
+  isSingleImage: boolean;
+  maxSize?: { width:number, height:number };
+  retriedTime: number;
+
+  //outputToMain: boolean
 };
 
+export type MessageToCanvasWorkerPort = {
+  port: 'zip' | 'main';
+  fsysDirHandler?: FileSystemDirectoryHandle;
+  existingFolders?: Set<string>;
+};
+
+export type RequestOverwrite = FileInfo & {
+  action: 'confirm-overwrite';
+  type: 'file' | 'folder';
+  target: string;
+};
+export type OverwriteResponse = {
+  action: 'respond-overwrite';
+  command: OverwriteCommand;
+  target: string;
+  fileId: number;
+  path: string;
+};
+export type OverwriteCommand = 'skip' | 'skip-all' | 'overwrite' | 'overwrite-all' | 'close';
+
 // listen messages from main thread
-self.onmessage = async (params: MessageEvent<MessageToCanvasWorker | null>) => {
+self.onmessage = async (
+  params: MessageEvent<MessageToCanvasWorker | OverwriteResponse | MessageToCanvasWorkerPort>
+) => {
+  const data = params.data;
+  
   // set an output port for zip
-  const { ports } = params;
-  if( ports[0] ) {
-    // zip.worker
-    dataOutputPort = ports[0];
-    
-    // set a listener that get messages from zip.worker
-    dataOutputPort.onmessage = listenerForZipWorker;
+  if( 'port' in data ) {
+    const { ports } = params;
+    if( ports[0] ) {
+      const {port: type, fsysDirHandler, existingFolders} = data;
+      fileSysDirHandler = fileSysDirHandler || fsysDirHandler;
+      existingFolderSet = existingFolders;
 
-    self.postMessage({action: 'respond-to-first-message'});
+      switch( type ) {
+        case 'zip':
+          // zip.worker
+          dataOutputPort = ports[0];
+          
+          // set a listener that get messages from zip.worker
+          dataOutputPort.onmessage = listenerForZipWorker;
 
+          self.postMessage({action: 'respond-to-first-message'});
+          overwriteDecision = undefined;
+          break;
+        default:
+          throw new Error(`unexptected port type ${type}`);
+      }
+    }
     return;
   }
 
-  // start
-  /*
-  self.postMessage({
-    action: 'list-start'
-  } as MessageFromCanvasWorker);
-  */
-
-  /*
-  // process file list
-  const dataList = params.data!;
-  for( const data of dataList ) {
-    await convertRecievedData( data );
+  if( 'action' in data ) {
+    const { action, command, fileId, path, target } = data;
+    switch( action ) {
+      case 'respond-overwrite':
+        const callback = overwriteDialogResolvers.get(path);
+        if( !callback )
+          throw new Error(`no resolver exists for overwrite confirmation "${path}"`);
+        
+        overwriteDialogResolvers.delete(path);
+        callback(command);
+        break;
+    }
+    return;
   }
-  */
-  await convertRecievedData( params.data );
+
+  await convertRecievedData( data );
   
   // end
   self.postMessage({
     action: 'list-end',
-  } as MessageFromCanvasWorker);
+  } satisfies MessageFromCanvasWorker);
 
   canvas.width = 1;
   canvas.height = 1;
@@ -120,7 +181,11 @@ export type MessageToZipFromCanvasType = {
 };
 //async function convertRecievedData(data: MessageToCanvasWorker[number]) {
 async function convertRecievedData(data: MessageToCanvasWorker) {
-  const { index, file, bitmap, fileId, type, quality, demandThumbnail, isSingleImage, webkitRelativePath, maxSize } = data;
+  const {
+    index, file, bitmap, fileId, type, quality, demandThumbnail, isSingleImage,
+    webkitRelativePath, maxSize, keepPrevExt, outputExt, 
+    //outputToMain,
+  } = data;
 
   const path = webkitRelativePath || file.webkitRelativePath || file.name;
   const inputsize = file.size;
@@ -165,13 +230,12 @@ async function convertRecievedData(data: MessageToCanvasWorker) {
     }
   } catch(e) {
     console.error('error occurred on canvas worker', fileId, path, e);
-    messageToMain = {
+    self.postMessage({
       action: 'file-error', 
       path, 
       fileId, 
       index,
-    };
-    self.postMessage( messageToMain );
+    } satisfies MessageFromCanvasWorker);
     return;
   }
   
@@ -189,7 +253,7 @@ async function convertRecievedData(data: MessageToCanvasWorker) {
 
   
   // file loaded
-  messageToMain = {
+  self.postMessage({
     action: 'file-load', 
     fileId, 
     path, 
@@ -198,8 +262,7 @@ async function convertRecievedData(data: MessageToCanvasWorker) {
     width: sourceWidth,
     height: sourceHeight,
     inputsize,
-  };
-  self.postMessage( messageToMain );
+  } satisfies MessageFromCanvasWorker);
 
 
   // convert  
@@ -208,13 +271,12 @@ async function convertRecievedData(data: MessageToCanvasWorker) {
     blob = await canvas.convertToBlob({type, quality});
   } catch(e) {
     console.error('error occurred while converting', fileId, path, e);
-    messageToMain = {
+    self.postMessage({
       action: 'file-error', 
       path, 
       fileId, 
       index,
-    };
-    self.postMessage( messageToMain );
+    } satisfies MessageFromCanvasWorker)
     return;
   }
   const outputsize = blob.size;
@@ -223,44 +285,89 @@ async function convertRecievedData(data: MessageToCanvasWorker) {
   canvas.width = 1;
   canvas.height = 1;
 
-  messageToMain = {
+  // send message to loader
+  self.postMessage({
     action: 'file-converted',
     path,
     fileId,
     index,
     outputsize,
     //inputsize,
-    //image: imageBlob,
+    //convertedImageBlob: messageToMain ? blob : null,
     //blobUrl,
     //width,
     //height
     outputWidth,
     outputHeight,
     shrinked,
-  };
-  self.postMessage( messageToMain );
+  } satisfies MessageFromCanvasWorker)
   
   fileStat.set(fileId, {outputsize, inputsize, path, index});
   
+  
+  // wrtie via File System API
+  if( fileSysDirHandler ) {
+    const outputPath = setFileNameAndExtension(path, outputExt, keepPrevExt)
+    const overwrite = typeof overwriteDecision === 'boolean' ?
+      overwriteDecision : createOverwriteDialog(outputPath, fileId, index);
+    
+    try {
+      if( await buildDirsAndWriteFile(fileSysDirHandler, outputPath, blob, overwrite) ) {
+        addSelfAndAncestorPathToSet(overwriteAllowList, outputPath);
 
+        // post to loader
+        self.postMessage({
+          action: 'file-sys-completed',
+          fileId,
+          path,
+          index,
+          inputsize, 
+          outputsize, 
+          
+          entireIndex: index,
+          storedPath: outputPath,
+          //renamed,
+        } satisfies MessageFromCanvasWorker);
+      }
+      else {
+        //throw new Error(`failed to write file "${path}"`);
+        self.postMessage({
+          action: 'file-skip',
+          fileId,
+          path,
+          index,
+        } satisfies MessageFromCanvasWorker);
+      }
+    } catch(e: any) {
+      // post to loader
+      console.error(e.message);
+      self.postMessage({
+        action: 'file-error',
+        fileId,
+        path,
+        index,
+      } satisfies MessageFromCanvasWorker);
+    }
+  }  
   // output to worker.zip
   //const crc = await AnZip.getCRC32(blob);  
-  const dataToZip: MessageToZipFromCanvasType = {
-    //data: abuffer, 
-    blob,
-    path, 
-    fileId
-  };
-  dataOutputPort.postMessage(dataToZip);
+  else {
+    dataOutputPort.postMessage({
+      //data: abuffer, 
+      blob,
+      path, 
+      fileId
+    } satisfies MessageToZipFromCanvasType);
+  }
 }
 
 const listenerForZipWorker = (params) => {
   // informed that the file was zipped
   const {fileId, renamed, outputPath, canceled, entireIndex, storedPath} = params.data;
   
-  // post to main thread
+  // post to loader
   const {inputsize, outputsize, path, index} = fileStat.get(fileId)!;
-  const messageToMain: MessageFromCanvasWorker = {
+  self.postMessage({
     action: canceled ? 'file-canceled' : 'file-completed',
     /*path: response,*/ 
     fileId,
@@ -272,6 +379,61 @@ const listenerForZipWorker = (params) => {
     entireIndex,
     storedPath,
     //renamed,
-  };
-  self.postMessage( messageToMain );
+  } satisfies MessageFromCanvasWorker);
 };
+
+
+function createOverwriteDialog(path: string, fileId: number, index: number) {
+  // create callback for overwrite confirmation
+  return async (handle: FileSystemHandle, fname: string, parentPath: string): Promise<boolean> => {
+    const isFile = handle instanceof FileSystemFileHandle;
+    
+    const targetPath = parentPath + fname;
+    if( !isFile && !existingFolderSet.has(targetPath) ) {
+      console.log('not existing', targetPath);
+      return true;
+    }
+
+    const command = await new Promise<OverwriteCommand>((resolve) => {
+      console.log(`request overwrite confirmation to main`);
+
+      // send message to main
+      self.postMessage({
+        action: 'confirm-overwrite',
+        type: isFile ? 'file' : 'folder',
+        target: parentPath + fname,
+        
+        path,
+        fileId,
+        index,
+      } satisfies RequestOverwrite);
+
+      // hook callback into message listerner
+      // *path must be unique in the file list
+      overwriteDialogResolvers.set(path, (command: OverwriteCommand) => {
+        console.log(`resolved confirmation "${command}"`);
+        resolve(command);
+      });
+    });
+
+    console.log(command)
+
+    switch(command) {
+      case 'overwrite-all':
+        overwriteDecision = true;
+      case 'overwrite':
+        //addSelfAndAncestorPathToSet(overwriteAllowList, parentPath + fname);
+        return true;
+      
+      case 'skip-all':
+        overwriteDecision = false;
+      case 'close':
+      case 'skip':
+        overwriteDenyList.add(path);
+        return false;
+      
+      default:
+        throw new Error(`unexpected OverwriteCommand ${"command"}`);
+    }
+  };
+}

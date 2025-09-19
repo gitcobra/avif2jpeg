@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { watch, computed, onMounted } from "vue";
-import { resetUserSettings, MaxThreads, _deleteLocalStorage } from "@/user-settings";
-import { SettingsOutline, BuildOutline, ArchiveOutline, DocumentTextOutline, HardwareChipOutline, ImagesOutline, FolderOpenOutline } from "@vicons/ionicons5";
+import { resetUserSettings, MaxThreads, _deleteLocalStorage, UserSettings } from "@/user-settings";
+import { SettingsOutline, BuildOutline, ArchiveOutline, DocumentTextOutline, HardwareChipOutline,
+  FolderOpen, ImagesOutline, FolderOpenOutline } from "@vicons/ionicons5";
 import { NTooltip } from "naive-ui";
 import { GlobalValsKey } from "../Avif2Jpeg.vue";
 
@@ -68,7 +69,12 @@ watch(threadCount, (val) => {
 });
 */
 
+// confirmation for reset
+const warnResetShow = ref(false);
+let confirmedReset = false;
+let resolveConfirmation: Function = () => {};
 const enableNewFeatures = computed(() => multithread.value && MaxThreads.value > 1);
+
 
 
 
@@ -78,6 +84,18 @@ onMounted(() => {
     //threadCount.value = Math.max(props.threadMax / 2|0, 2);
     threadCount.value = Math.max(MaxThreads.value, 2);
 });
+
+async function onResetClick() {
+  confirmedReset = false;
+  await new Promise(resolve => {
+    warnResetShow.value = true;
+    resolveConfirmation = resolve;
+  });
+
+  if( confirmedReset ) {
+    resetUserSettings();
+  }
+}
 
 </script>
 
@@ -95,15 +113,19 @@ onMounted(() => {
       class="settings-body" :class="expanded ? 'expand-adv-settings':''"
     >
       <template #arrow>
+        <span style="font-size:1.1em;">
         <n-icon :style="expanded && {top:'8px'}"><BuildOutline /></n-icon>
         <n-icon><SettingsOutline /></n-icon>
+        </span>
       </template>
 
       <!-- reset button -->
       <template #header-extra v-if="expanded">
         <n-tooltip :keep-alive-on-hover="false" :duration="0" :delay="0">
           <template #trigger>
-          <n-button @click="resetUserSettings" size="tiny" style="font-size:xx-small">{{$t('reset')}}</n-button>
+          <n-button @click="onResetClick()" size="tiny" style="font-size:xx-small">
+            {{$t('reset')}}
+          </n-button>
           </template>
           {{ $t('settings.resetButtonTooltip') }}
         </n-tooltip>
@@ -113,7 +135,10 @@ onMounted(() => {
 
 
       
-      <n-collapse-item :title="$t('settings.advancedSettings')" name="collapitem">  
+      <n-collapse-item name="collapitem">
+        <template #header>
+          <span style="font-size: 1.1em;">{{$t('settings.advancedSettings')}}</span>
+        </template>
         <n-flex vertical style="padding-left: 2em;">
           
           <!-- multi threading -->
@@ -129,7 +154,7 @@ onMounted(() => {
               </n-flex>
               <n-flex :wrap="false" align="center" style="padding-left: 2em;">
                 <n-slider v-model:value="threadCount" :disabled="!MaxThreads || !multithread" :step="1" :min="2" :max="MaxThreads" style="width:120px;"/>
-                <n-input-number @blur="threadCount??=2" size="tiny" v-model:value="threadCount" :disabled="!MaxThreads || !multithread" :step="1" :min="2" :max="MaxThreads" style="width:10em"><template #suffix>{{ $t('threads', threadCount!)}}</template></n-input-number>
+                <n-input-number @blur="threadCount=threadCount == null ?2:threadCount" size="tiny" v-model:value="threadCount" :disabled="!MaxThreads || !multithread" :step="1" :min="2" :max="MaxThreads" style="width:10em"><template #suffix>{{ $t('threads', threadCount!)}}</template></n-input-number>
               </n-flex>
             </n-flex>
             </template>
@@ -148,7 +173,7 @@ onMounted(() => {
               </n-flex>
               <n-flex :wrap="false" align="center" style="padding-left: 2em;">
                 <n-slider :tooltip="false" v-model:value="maxZipSizeMB" :step="1" :min="ZIP_MIN_SIZE_MB" :max="ZIP_MAX_SIZE_MB" style="width:120px;"/>
-                <n-input-number @blur="maxZipSizeMB??=ZIP_MIN_SIZE_MB" size="tiny" v-model:value="maxZipSizeMB" step="1" :min="ZIP_MIN_SIZE_MB" :max="ZIP_MAX_SIZE_MB" style="width:10em"><template #suffix>(MB)</template></n-input-number>
+                <n-input-number @blur="maxZipSizeMB=maxZipSizeMB==null?ZIP_MIN_SIZE_MB:maxZipSizeMB" size="tiny" v-model:value="maxZipSizeMB" step="1" :min="ZIP_MIN_SIZE_MB" :max="ZIP_MAX_SIZE_MB" style="width:10em"><template #suffix>(MB)</template></n-input-number>
               </n-flex>
             </n-flex>
             </template>
@@ -196,14 +221,14 @@ onMounted(() => {
               </n-flex>
               <n-flex :wrap="false" align="center" style="padding-left: 2em;">
                 <n-slider v-model:value="maxWidth" :disabled="!shrinkImage || !enableNewFeatures" :step="1" :min="MIN_WIDTH" :max="MAX_WIDTH" style="width:120px;"/>
-                <n-input-number size="tiny" @blur="maxWidth??=8" v-model:value="maxWidth" :disabled="!shrinkImage || !enableNewFeatures" :step="1" :min="8" :max="MAX_WIDTH*4" style="max-width:15em; text-align: right;">
+                <n-input-number size="tiny" @blur="maxWidth=maxWidth==null?8:maxWidth" v-model:value="maxWidth" :disabled="!shrinkImage || !enableNewFeatures" :step="1" :min="8" :max="MAX_WIDTH*4" style="max-width:15em; text-align: right;">
                   <template #prefix><span style="width:4em; text-align: left;">{{$t('width')}}</span></template>
                   <template #suffix>px</template>
                 </n-input-number>
               </n-flex>
               <n-flex :wrap="false" align="center" style="padding-left: 2em;">
                 <n-slider v-model:value="maxHeight" :disabled="!shrinkImage || !enableNewFeatures" :step="1" :min="MIN_HEIGHT" :max="MAX_HEIGHT" style="width:120px;"/>
-                <n-input-number size="tiny" @blur="maxHeight??=8" v-model:value="maxHeight" :disabled="!shrinkImage || !enableNewFeatures" :step="1" :min="8" :max="MAX_HEIGHT*4" style="max-width:15em; text-align: right;">
+                <n-input-number size="tiny" @blur="maxHeight=maxHeight==null?8:maxHeight" v-model:value="maxHeight" :disabled="!shrinkImage || !enableNewFeatures" :step="1" :min="8" :max="MAX_HEIGHT*4" style="max-width:15em; text-align: right;">
                   <template #prefix><span style="width:4em; text-align: left;">{{$t('height')}}</span></template>
                   <template #suffix>px</template>
                 </n-input-number>
@@ -213,10 +238,45 @@ onMounted(() => {
             {{ $t('settings.shrinkImageTooltip') }}
           </n-tooltip>
 
+          <!-- use file system api --
+          <n-tooltip v-bind="TooltipDefAttr">
+            <template #trigger>
+              <n-flex :wrap="false" align="center">
+                <n-button text
+                  :disabled="!enableNewFeatures"
+                  :bordered="false" :focusable="false"
+                  @click="UserSettings.useFileSystemAPI = !UserSettings.useFileSystemAPI"
+                >
+                  <template #icon><n-icon :component="FolderOpen"/></template>
+                  {{ $t('settings.useFileSystemAPI') }}
+                </n-button>
+                <n-switch v-model:value="UserSettings.useFileSystemAPI" :disabled="false" size="small" />
+              </n-flex>
+            </template>
+            <template #default>
+              {{ $t('settings.useFileSystemAPITooltip') }}
+            </template>
+          </n-tooltip>
+          -->
+
         </n-flex>
       </n-collapse-item>
     </n-collapse>
   </n-flex>
+
+  <!-- confirmation dialog about reset -->
+  <n-modal
+    preset="confirm"
+    type="info"
+    v-model:show="warnResetShow"
+    :title="$t('reset')"
+    :positive-text="$t('OK')"
+    :negative-text="$t('cancel')"
+    @positive-click="confirmedReset = true"
+    @after-leave="resolveConfirmation()"
+  >
+    {{ $t('warnAboutResetMsg') }}
+  </n-modal>
 </template>
 
 
@@ -227,6 +287,7 @@ onMounted(() => {
   padding: 1em;
 }
 .expand-adv-settings {
+  margin-top: 2em;
   border-radius: 1em;
   border: 1px dashed silver;
 }

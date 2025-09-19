@@ -34,6 +34,9 @@ const props = defineProps<{
   imgUrl: string;
   imgName: string;
   type: string;
+  
+  outputToDir: boolean;
+  outputDirName: string;
 }>();
 
 // emits
@@ -232,7 +235,7 @@ function createFailedFileLink(download = false) {
   </template>
 
   <n-flex :wrap="false" vertical style="margin-top: -1.3em">
-  <n-flex justify="center">
+  <n-flex v-if="!outputToDir" justify="center">
     
     <!-- zip list -->
     <n-flex v-show="zippingFlag" vertical align="center">
@@ -297,14 +300,12 @@ function createFailedFileLink(download = false) {
 
 
 
-
-
   <!-- result -->
   <Transition>
-  <n-flex v-show="!props.processing" justify="center" align="center">
+  <n-flex v-show="!props.processing || outputToDir" justify="center" align="center">
 
     <!-- save button -->
-    <n-popover trigger="hover" :duration="0" :delay="0" placement="left" :style="{color:'white', backgroundColor:c.successColor}" :arrow-style="{backgroundColor:c.successColor}">
+    <n-popover v-if="!outputToDir" trigger="hover" :duration="0" :delay="0" placement="left" :style="{color:'white', backgroundColor:c.successColor}" :arrow-style="{backgroundColor:c.successColor}">
       <template #trigger>
         <Transition name="save">
         <span v-if="success > 0" style="position:relative;">
@@ -337,6 +338,29 @@ function createFailedFileLink(download = false) {
         </template>
       </template>
     </n-popover>
+  <!-- via File System API -->
+  <n-popover v-else trigger="hover" :duration="0" :delay="0" placement="left"
+    :style="{color:'white', backgroundColor:c.successColor}"
+    :arrow-style="{backgroundColor:c.successColor}"
+  >
+    <template #trigger>
+      <n-flex align="center" :size="1"
+        :style="`border: 1px solid ${c.successColor}; border-radius:4px; padding:0.3em;`"
+      >
+        <MdiFolderEditOutline style="vertical-align: middle;"/>
+        <n-ellipsis style="font-size: smaller; max-width: 25em;">
+          {{ outputDirName }}
+        </n-ellipsis>
+        <span style="margin-left:0.5em;">
+          <span :style="{color: c.successColor}">{{ success }}</span>
+          {{ t('files', success) }}
+        </span>
+      </n-flex>
+    </template>
+    <template #default>
+      {{ $t('status.numberOfFilesWrittenToDir') }}
+    </template>
+  </n-popover>
 
     <!-- failed button -->
     <n-dropdown

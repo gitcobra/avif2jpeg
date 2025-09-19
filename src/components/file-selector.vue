@@ -5,10 +5,22 @@
     <n-flex align="center" justify="space-around" class="main-buttons">
       
       <n-flex vertical align="stretch" justify="center">
+        
+        <n-tooltip>
+          <template #trigger>
+            <n-checkbox v-model:checked="autoStartOpt" size="small" style="font-size:smaller;">
+              {{ $t('settings.autoStartConversion') }}
+            </n-checkbox>
+          </template>
+          <template #default>
+            {{ $t('settings.autoStartConversionTooltip') }}
+          </template>
+        </n-tooltip>
+        
         <!-- file select -->
         <n-tooltip :to="false" display-directive="show"
           :show="INJ.showTooltipsBeforeMounted.value" trigger="hover" :keep-alive-on-hover="false"
-          :placement="INJ.LANDSCAPE.value ? 'right' : 'top'"
+          placement="top"
           :duration="0" :delay="0" :z-index="10"
         >
           <template #trigger>
@@ -17,7 +29,7 @@
               size="large"
               @click="onInputButtonClick(fileinput)"
               round
-              style="width:100%; background-color:white; font-size: 1.5em;"
+              style="width:100%; background-color:white; font-size: 1.3em;"
             >
               <template #icon>
                 <n-icon size="large" color="gray"><ImageOutline /></n-icon>
@@ -28,7 +40,7 @@
           <div v-html="$t('loadbuttontooltip')"></div>
         </n-tooltip>
 
-        <template v-if="!INJ.IS_SP && folderInputSupport || INJ.SSR">
+        <template v-if="/*!INJ.IS_SP &&*/ folderInputSupport || INJ.SSR">
 
           <!-- folder select -->
           <n-tooltip :to="false" display-directive="show" trigger="hover"
@@ -42,7 +54,7 @@
                 size="large"
                 @click="onInputButtonClick(folderinput)"
                 round
-                style="width:100%; background-color:white; font-size: 1.5em;"
+                style="width:100%; background-color:white; font-size: 1.3em;"
               >
                 <template #icon>
                   <n-icon size="large" color="gray"><FolderOpenOutline /></n-icon>
@@ -73,7 +85,7 @@
           :show="INJ.showTooltipsBeforeMounted.value"
         >
           <template #trigger>
-            <span style="white-space: nowrap">
+            <span style="white-space: nowrap; font-size: smaller;">
               {{ $t('TargetFileTypeExt') }}:
             </span>
           </template>
@@ -85,7 +97,8 @@
         <n-tooltip :keep-alive-on-hover="false" placement="right" style="max-width:200px;" :duration="0" :delay="0">
         <template #trigger>
           <n-select
-            trigger="click" width="trigger" size="small"
+            trigger="click" width="trigger"
+            size="tiny"
             v-model:value="targetType"
             :options="FileExtOptions"
             :render-option="FileExtRenderOpts"
@@ -192,6 +205,7 @@ const FileExtRenderOpts = ({ node, option }) => {
   });
 };
 
+
 // properties
 const props = defineProps<{
   //expanded?: boolean
@@ -200,6 +214,7 @@ const props = defineProps<{
   forbidden?: boolean
 }>();
 
+const autoStartOpt = defineModel<boolean>('auto-start-opt', {required:true});
 
 
 // emits

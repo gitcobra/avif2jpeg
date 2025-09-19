@@ -115,15 +115,18 @@ registerRoute(
   }
 );
 
+
 // fallback to index.html for all SPA navigation requests
 registerRoute(
-  ({ request }) => request.destination === 'document',
+  ({ request }) => request.mode === 'navigate' &&
+                   request.destination === 'document' &&
+                   request.url.match(/\.html$|\/[^./]+\/?$/),
   async (args) => {
     const { request, event, url } = args;
     
     const pcached = await pcctrl.matchPrecache('index.html');
     if( pcached ) {
-      console.log('precached index.html');
+      console.log('fallback to base index.html');
       return pcctrl.createHandlerBoundToURL('index.html')(args);
     }
     else {
@@ -137,11 +140,13 @@ registerRoute(
   }
 );
 
+
 // handle route for Non-precached files
 registerRoute(
   ({ request, url }) => cacheFilesWhenPWAInstall.includes(url.pathname),
   defaultStrategy
 );
+
 
 // default route
 //setDefaultHandler( defaultStrategy );

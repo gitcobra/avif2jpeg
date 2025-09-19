@@ -12,17 +12,21 @@ export type ConverterResult = {
 import { NButton, type NotificationType } from 'naive-ui';
 import { convertTargetFilesInMultithread, demandImage as demandImageMulti, deleteImage } from './converter.multi';
 import { convertImagesInSingleThread, getAsPromise, demandImage as demandImageSingle } from './converter.single';
-import { DocumentOutline } from '@vicons/ionicons5';
 
 // sub components
 import ConversionStatus from './status/status.vue';
-import SwitchLanguage from '../header/switch-lang.vue';
+//import SwitchLanguage from '../header/switch-lang.vue';
 import { GlobalValsKey } from '@/Avif2Jpeg.vue';
+import PromptDup from '../prompt-on-dup.vue';
+
 import { UserSettings, MaxThreads } from '@/user-settings';
 export type ConversionStatusType = InstanceType<typeof ConversionStatus>['$props']['status'];
 
 import type { FileWithId } from '../file-selector.vue';
 import { VNode } from 'vue';
+
+import { buildDirsAndWriteFile, createExistingFolderSetWithinFileList } from '../filesystem-api';
+import themeLight from 'naive-ui/es/float-button-group/styles/light';
 
 // common
 const INJ = inject(GlobalValsKey);
@@ -34,25 +38,29 @@ const message = useMessage();
 
 
 // constants
-
-
 const ELAPSED_SECONDS_TO_CONFIRM_BEFORE_CLOSING = 10;
 const CoreCount = navigator.hardwareConcurrency;
 const OffscreenCanvas_Available = typeof OffscreenCanvas === 'function';
 const STATUS_UPDATE_INTERVAL = 100;
-const THREADS_MAX_LIMIT = 16;
-
+const buttonList = ref<typeof PromptDup["buttons"]>([
+  [() => t('dupAction_overwrite'), 'overwrite'],
+  [() => t('dupAction_skip'), 'skip'],
+  [() => t('cancel'), 'cancel'],
+]);
 
 // properties
-
 const props = defineProps<{
-  input?: FileWithId[]
-  format: string
-  quality: number
-  retainExtension: boolean
-  maxZipSizeMB: number
+  input: FileWithId[];
+  format: string;
+  quality: number;
+  retainExtension: boolean;
+  maxZipSizeMB: number;
+  autoStart?: boolean;
 
-  threads?: number
+  threads?: number;
+
+  outputToDir: boolean;
+  outputDirHandle: FileSystemDirectoryHandle;
 }>();
 
 const showNote = defineModel<boolean>('showNote');
@@ -66,6 +74,10 @@ const emit = defineEmits<{
   //'multi-thread-count': [number]
 }>();
 
+// methods
+defineExpose({
+  beginConversion,
+});
 
 
 
@@ -91,14 +103,28 @@ const ConvStats: ConversionStatusType = reactive( initConvStatPropObj() );
 const stat = useTemplateRef('stat');
 const convStatKeyToRefresh = ref(0);
 
+const isReadyToConvert = computed(() => props.input?.length);
+
+const promptref = ref<InstanceType<typeof PromptDup>>();
+const confirmationTargetPath = ref('');
+const confirmationApplyAllChecked = ref(false);
+const confirmationTargetIsFolder = ref<boolean>(true);
+
+const warnfsysShow = ref(false);
+let onCloseWarnFsys = () => {};
+const noWarnFilesys = ref(false);
+let warnfsysAccepted = false;
 
 // normal variables
 
 let disableMultiThreading = false;
 
+// Flag indicating whether "Apply to all" was checked in the overwrite dialog
+let appliedOverwriteDecision = undefined;
+
+
 // clean up workes
 let callbackToClearConverter = () => {};
-//
 let demandImage: (index: number) => any | null;
 
 // conversion statuses
@@ -109,12 +135,13 @@ let allZipsClicked = false;
 
 
 // watchers
-
-watch(() => props.input!, (val: FileWithId[]) => {
-  if( val?.length ) {
-    startConvert(val);
+watch(() => props.input.length, (val, oldval) => {
+  if( val >= oldval ) {
+    if( props.autoStart )
+      beginConversion();
   }
 });
+
 
 // hide browser's scrollbar while the processing modal is active
 watch(conversionModalActive, (val) => {
@@ -145,7 +172,7 @@ onMounted(async () => {
 async function onBeforeProcessingDialogClose() {
   let close = true;
   if( elapsedTimeForConversion > ELAPSED_SECONDS_TO_CONFIRM_BEFORE_CLOSING * 1000 ) {
-    if( !allZipsClicked && ConvStats.success > 0 ) {
+    if( !props.outputToDir && !allZipsClicked && ConvStats.success > 0 ) {
       // open up confirmation dialog when unsaved data exist
       close = false;
       await new Promise<void>(resolve => {
@@ -194,8 +221,49 @@ function onESCPress() {
   }
 }
 
-function convertAgain() {
-  startConvert(props.input!);
+async function beginConversion() {
+  if( !props.input?.length || processing.value ) {
+    dialog.error({
+      title: 'error',
+      positiveText: 'OK',
+      content: 'An unexpected error occurred.',
+    });
+    return;
+  }
+
+  if( props.outputToDir && !props.outputDirHandle ) {
+    dialog.error({
+      title: 'error',
+      positiveText: 'OK',
+      content: t('errMsgOutputDirNotFound'),
+    });
+    return;
+  }
+
+  // conversion process is already in progress
+  if( processing.value ) {
+    dialog.error({
+      title: 'Busy',
+      positiveText: 'OK',
+      content: t('interfered'),
+    });
+    return;
+  }
+
+  if( props.outputToDir && !noWarnFilesys.value ) {
+    await new Promise<void>(resolve => {
+      warnfsysShow.value = true;
+      warnfsysAccepted = false;
+      onCloseWarnFsys = resolve;
+    });
+
+    if( !warnfsysAccepted ) {
+      noWarnFilesys.value = false;
+      return;
+    }
+  }
+
+  startConversion(props.input!);
 }
 
 let onDemandZipErrorsFromStatus = ref(() => {});
@@ -243,7 +311,8 @@ function initConvStatPropObj(obj?: ConversionStatusType): ConversionStatusType {
     convertedImageShrinked: false,
     
     zipSize: props.maxZipSizeMB,
-    shrink: UserSettings.multithread && UserSettings.shrinkImage ? [UserSettings.maxWidth, UserSettings.maxHeight] : undefined,
+    shrink: UserSettings.multithread && UserSettings.shrinkImage ?
+      [UserSettings.maxWidth, UserSettings.maxHeight] : undefined,
     unconvertedListText: '',
 
     failedZipDone: false,
@@ -252,6 +321,9 @@ function initConvStatPropObj(obj?: ConversionStatusType): ConversionStatusType {
     unconvertedTotalSize: 0,
     failedFileZippedCount: 0,
     failedToCreateFailedZip: false,
+
+    outputToDir: props.outputToDir,
+    outputDirName: props.outputDirHandle ? props.outputDirHandle.name : '',
   };
   return Object.assign(obj || {}, initBaseObj);
 }
@@ -281,19 +353,17 @@ function cleanUpProcessedData() {
   allZipsClicked = false;
   processCompleted.value = false;
   canceled.value = false;
+
+  // dialog handling
+  isConfirmationQueueActive = false;
+  confirmationQueue.length = 0;
+  appliedOverwriteDecision = undefined;
+  overwriteAllowList.clear();
+  overwriteDenyList.clear();
 }
 
 
-async function startConvert(input: FileWithId[]) {
-  // conversion process is already in progress
-  if( processing.value ) {
-    dialog.error({
-      title: 'Busy',
-      positiveText: 'OK',
-      content: t('interfered'),
-    });
-    return;
-  }
+async function startConversion(input: FileWithId[]) {
 
   // refresh ConversionStatus if it already exists
   if( conversionModalActive.value ) {
@@ -319,17 +389,28 @@ async function startConvert(input: FileWithId[]) {
   processingMessage.value = () => t('processing');
 
   
-  // prepare for converter
+  // --- prepare for converter ---
   const completedFileIdSet = new Set<number>();
+  const completedPathList = [];
   const format = props.format;
   const quality = props.quality;
   const outputExt = [...format.matchAll(/.+\/(.+)/g)][0][1].replace(/jpeg/, 'jpg');
   const baseZipName = makeCurrentOutputName(format, quality, fileList[0].webkitRelativePath);
 
+  // prepare for File System API
+  // NOTE:
+  // create list of existing folders in the output folder for each thread
+  // to check whether a folder is created by another thread.
+  let existingFolders = new Set<string>;
+  if( props.outputDirHandle ) {
+    existingFolders = await createExistingFolderSetWithinFileList(props.outputDirHandle, fileList);
+  }
+
   // set initial Status properties
   ConvStats.length = fileList.length;
   ConvStats.baseZipName = baseZipName;
-  ConvStats.type = format.replace(/image\//, '').toUpperCase() + ( /jpe?g|webp/i.test(format) ? ' (' + quality + ')' : '');
+  ConvStats.type = format.replace(/image\//, '').toUpperCase() +
+    ( /jpe?g|webp/i.test(format) ? ' (' + quality + ')' : '');
   ConvStats.threads = disableMultiThreading ? 0 : props.threads;
   
   
@@ -346,7 +427,26 @@ async function startConvert(input: FileWithId[]) {
   if( !disableMultiThreading && props.threads! >= 2 ) {
     demandImage = demandImageMulti;
     //deleteImage = deleteImage;
-    result = await convertTargetFilesInMultithread({files:fileList, completedFileIdSet, ConvStats, canceled, props, imageType:format, quality, outputExt, format, message});
+    result = await convertTargetFilesInMultithread({
+      files:fileList,
+      completedFileIdSet,
+      completedFileDat: completedPathList,
+      ConvStats, canceled,
+      props,
+      imageType:format,
+      quality,
+      outputExt,
+      format,
+      message,
+      
+      //outputMethod: UserSettings.outputMethod,
+      fsysDirHandler: props.outputDirHandle,
+      //outputToDir: props.outputToDir,
+      writeUsingFileSystem,
+      //openOverwriteConfirmation,
+      enqueueOverwriteConfirmation,
+      existingFolders,
+    });
   }
   // single-threading
   else {
@@ -497,7 +597,80 @@ function checkAvailableFeatures() {
     MaxThreads.value = 0;
 }
 
+async function writeUsingFileSystem(path: string, blob: Blob) {
+  console.log(path, blob);
+  
+  const dirHandle = props.outputDirHandle;
+  if( !dirHandle )
+    throw new Error('Directory Handle is empty');
+  
+  await buildDirsAndWriteFile(dirHandle, path, blob, true);
+}
 
+let isConfirmationQueueActive = false;
+const confirmationQueue: {
+  resolver: Function, target: string, type: 'file' | 'folder', path: string,
+}[] = [];
+
+async function enqueueOverwriteConfirmation(
+  resolver: Function, target: string, type: 'file' | 'folder', path: string,
+) {
+  if( !isConfirmationQueueActive ) {
+    isConfirmationQueueActive = true;
+    openOverwriteConfirmation(resolver, target, type, path);
+  }
+  else
+    confirmationQueue.push({resolver, target, type, path});
+}
+
+const overwriteAllowList = new Set<string>();
+const overwriteDenyList = new Set<string>();
+async function openOverwriteConfirmation(
+  resolver: Function, target: string, type: 'file' | 'folder', path: string
+) {
+  let result = '';
+  
+  if( canceled.value )
+    result = 'cancel';
+  else if( overwriteAllowList.has(target) )
+    result = 'overwrite';
+  else if( overwriteDenyList.has(target) )
+    result = 'skip';
+  else {
+    // set content
+    confirmationTargetPath.value = target;
+    confirmationTargetIsFolder.value = type === 'folder';
+    
+    // show prompt
+    result = appliedOverwriteDecision || await promptref.value.start();
+    
+    if( result.startsWith('cancel') )
+      canceled.value = true;
+    if( result === 'overwrite')
+      overwriteAllowList.add(target);
+    if( result === 'skip')
+      overwriteDenyList.add(target);
+    if( result === 'close' )
+      confirmationApplyAllChecked.value = false;
+
+    await nextTick();
+
+    if( !appliedOverwriteDecision && confirmationApplyAllChecked.value ) {
+      result += '-all';
+      appliedOverwriteDecision = result;
+    }
+    console.log("result", result)
+  }
+
+  resolver(result);
+
+  if( confirmationQueue.length ) {
+    const {resolver, target, type, path} = confirmationQueue.shift();
+    openOverwriteConfirmation(resolver, target, type, path);
+  }
+  else
+    isConfirmationQueueActive = false;
+}
 
 </script>
 
@@ -506,20 +679,30 @@ function checkAvailableFeatures() {
 
 
 <template>
-  <!-- re-convert button -->
-  <n-flex v-if="!processing && props.input?.length" justify="center" align="center" style="margin-top:0.4em">
+  <!-- convert button -->
+  <n-flex v-if="!processing" justify="center" align="center" style="margin-top:0.4em">
     <n-tooltip trigger="hover" placement="top" :keep-alive-on-hover="false" :duration="0" :delay="50">
       <template #trigger>
-        <n-badge :value="input?.length || 0" :offset="[-12, -5]" color="#99999966">
-          <n-button @click="convertAgain" round size="medium">
+        <transition>
+        <!-- <n-badge :value="input?.length || 0" :offset="[-12, -5]" color="#99999966"> -->
+          <n-button
+            :disabled="!isReadyToConvert"
+            @click="beginConversion" round size="large"
+            style="font-size: 1.5em; padding:1em;"
+            :type="isReadyToConvert ? 'success' : undefined"
+            _:class="{'button-ready': isReadyToConvert}"
+          >
             <template #icon>
-              <n-icon size="1.2em" color="#CCCCCC"><DocumentOutline /></n-icon>
+              <n-icon size="1.2em"><SimpleIconsConvertio/></n-icon>
             </template>
-            {{t('convertAgain')}}
+            {{t('StartConversion')}}
           </n-button>
-        </n-badge>
+        <!-- </n-badge> -->
+        </transition>
       </template>
-      <div v-html="t('reconvertTip', props.input?.length)"></div>
+      <template #default>
+        <div v-html="isReadyToConvert? t('convertTooltip') : t('convertUnpreparedTooltip')"></div>
+      </template>
     </n-tooltip>
   </n-flex>
 
@@ -597,11 +780,88 @@ function checkAvailableFeatures() {
     </template>
   </n-modal>
 
+
+  <!-- overwrite confirmation dialog -->
+  <prompt-dup
+    ref="promptref"
+    closable
+    draggable
+    type="warning"
+    close-on-esc
+    :buttons="buttonList"
+    
+    show-apply-all
+    :label-apply-all="$t('confirmApplyAllLabel')"
+    v-model:apply-all-checked="confirmationApplyAllChecked"
+  >
+    <template #header>
+      {{
+        $t('confirmFileOverwriteTitle', {
+          type: confirmationTargetIsFolder ? $t('folder') : $t('file')
+        })
+      }}
+    </template>
+    <template #default>
+      <div>
+        {{
+          $t('confirmFileOverwriteMsg', {
+            type: confirmationTargetIsFolder ? $t('folder') : $t('file')
+          })
+        }}
+      </div>
+      <n-flex class="path" align="center" :size="1" :wrap="false">
+        <MaterialSymbolsFolderOutline v-if="confirmationTargetIsFolder" />
+        <FormkitFileimage v-else />
+        {{ confirmationTargetPath }}
+      </n-flex>
+    </template>
+  </prompt-dup>
+
+  <n-modal
+    preset="dialog"
+    type="warning"
+    v-model:show="warnfsysShow"
+    :title="$t('warnAboutFileSysTitle')"
+    @after-leave="onCloseWarnFsys()"
+    :positive-text="$t('Continue')"
+    :negative-text="$t('cancel')"
+    @positive-click="void(warnfsysAccepted = true)"
+    @negative-click="void(warnfsysAccepted = false)"
+  >
+    <p style="color: red">
+    {{ $t('warnAboutFileSysBeforeConversion1') }}
+    </p>
+    <n-flex class="path" align="center" :size="1" :wrap="false">
+      <MaterialSymbolsFolderOutline/>
+      {{ outputDirHandle.name }}
+    </n-flex>
+    <p>
+    {{ $t('warnAboutFileSysBeforeConversion2') }}
+    </p>
+    <!--
+    <n-flex justify="end" style="padding: 1em; font-size:0.8em;">
+      <n-checkbox v-model:checked="noWarnFilesys">{{$t('checkboxTextDontShowThis')}}</n-checkbox>
+    </n-flex>
+    -->
+  </n-modal>
+
 </template>
 
 <style lang="scss">
 .processing-dialog {
   min-width: 900px;
+}
+.path {
+  padding-left: 1em;
+}
+.button-ready {
+  text-shadow:
+    0 0 0.5em #2F6,
+    0 0 0.3em #FFF,
+    0 0 1em rgba(150, 255, 200, 0.5);
+  box-shadow:
+    0 0 0.5em #3E6,
+    0 0 2px #FFF,
 }
 @media screen and (max-width: 900px) {
   .processing-dialog {

@@ -7,9 +7,11 @@ import vue from '@vitejs/plugin-vue'
 import generateSitemap from 'vite-ssg-sitemap'
 import { htmlInjectionPlugin } from "vite-plugin-html-injection";
 import { fileURLToPath, URL } from "url";
-import AutoImport from 'unplugin-auto-import/vite'
-import Components from 'unplugin-vue-components/vite'
-import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
+import AutoImport from 'unplugin-auto-import/vite';
+import Components from 'unplugin-vue-components/vite';
+import { NaiveUiResolver } from 'unplugin-vue-components/resolvers';
+import Icons from 'unplugin-icons/vite';
+import IconsResolver from 'unplugin-icons/resolver';
 import beautify from 'js-beautify';
 import Ver from './src/version.json';
 import { VitePWA } from 'vite-plugin-pwa';
@@ -189,10 +191,17 @@ export default defineConfig(({mode}) => {
         eslintrc: {
           enabled: true,
         },
-        dts: true, // or a custom path
+        dts: true, // or a custom path,
+        vueTemplate: true,
       }),
       Components({
-        resolvers: [NaiveUiResolver()]
+        resolvers: [
+          NaiveUiResolver(),
+          IconsResolver({ prefix: ''}),
+        ]
+      }),
+      Icons({
+        autoInstall: true,
       }),
 
       splitVendorChunkPlugin(),

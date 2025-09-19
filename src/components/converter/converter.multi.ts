@@ -4,18 +4,21 @@ import * as WorkerManager from './workers/worker-manager';
 import ZipWorker from './workers/worker.zip.ts?worker';
 import ImgLoadWorker from './workers/worker.loader.ts?worker';
 //import ZipWorkerURL from './worker.zip.ts?worker&url';
-import type { MessageToCanvasWorker, MessageFromCanvasWorker } from './workers/worker.canvas';
+import type { MessageToCanvasWorker, MessageFromCanvasWorker, OverwriteResponse, OverwriteCommand } from './workers/worker.canvas';
 
 import type { FileWithId } from '../file-selector.vue'
-import type Converter from './converter.vue';
+import Converter from './converter.vue';
 import ConversionStatus from './status/status.vue';
+import PromptDup from '../prompt-on-dup.vue';
+
 import { MessageToMainFromZipWorker } from './workers/worker.zip';
-import { MaxThreads, UserSettings } from '@/user-settings';
+import { MaxThreads, OutputMethods, UserSettings } from '@/user-settings';
 import { MessageApiInjection } from 'naive-ui/es/message/src/MessageProvider';
 //import { NotificationApiInjection } from 'naive-ui/es/notification/src/NotificationProvider';
 import { ConverterResult } from './converter.vue';
-import { LoaderMessageType, MessageFromLoader } from './workers/worker.loader';
+import { LoaderMessageType, MessageFromLoader, OverwriteResponseToLoader, RequestOverwriteToMain } from './workers/worker.loader';
 import { sleep } from "@/components/util";
+import { getFileHandle } from "../filesystem-api";
 
 
 // types
@@ -26,6 +29,38 @@ type ConversionStatusType = InstanceType<typeof ConversionStatus>;
 type Stat = ConversionStatusType['status'];
 type LogType = Stat['logs'][number];
 
+type ConverterParameter = {
+  files: FileWithId[];
+  completedFileIdSet: Set<number>;
+  // for now, it is used only when fsysDirHandler is enabled
+  completedFileDat: {path:string, id:number}[];
+  
+  ConvStats: Stat;
+  canceled;
+  props: Props;
+  format: string;
+  quality: number;
+  outputExt: string;
+  imageType: string;
+  
+  //outputMethod: OutputMethods;
+  //outputToDir: boolean;
+  fsysDirHandler: FileSystemDirectoryHandle;
+  writeUsingFileSystem: (path:string, blob:Blob) => any;
+  //openOverwriteConfirmation:
+  //  (target: string, type: 'file' | 'folder', path: string) => any;
+  enqueueOverwriteConfirmation: (
+    resolver: Function,
+    target: string,
+    type: 'file' | 'folder',
+    path: string
+  ) => any;
+  existingFolders: Set<string>;
+
+  message: MessageApiInjection;
+  //notification: NotificationApiInjection
+};
+
 
 
 // constants
@@ -35,7 +70,7 @@ const TIMEOUT_WORKER_AVAILABILITY_MSEC = 1000 * 10;
 
 
 // module scope variables
-let zipWorkerModuleScope: Worker;
+let zipWorkerInModuleScope: Worker;
 const processingLogItems = new Map<number, LogType>;//ref(new Map<number, LogType>).value;
 const fileMapById = new Map<number, FileWithId>;
 const failedFileCountMap = new Map<number, number>;
@@ -47,7 +82,8 @@ const variousFileInfo = new Map<number, {
 
 
 // parameters from parent module
-
+let par: ConverterParameter; // the parameter is used throughout the module
+/*
 let completedFileIdSet: Set<number>;
 let ConvStats: Stat;
 let canceled: Ref<boolean, boolean>;
@@ -59,9 +95,11 @@ let outputExt: string;
 let imageType: string;
 let message: MessageApiInjection;
 //let notification: NotificationApiInjection;
+*/
 
 // set or clear the variables
 function clearModuleVariables(param?: ConverterParameter) {
+  /*
   let obj = param || {} as any;
   ({
     files,
@@ -76,9 +114,9 @@ function clearModuleVariables(param?: ConverterParameter) {
     message, 
     //notification,
   } = obj);
+  */
 
-  zipWorkerModuleScope = null;
-  
+  zipWorkerInModuleScope = null;
 
   processingLogItems.clear();
   fileMapById.clear();
@@ -89,39 +127,28 @@ function clearModuleVariables(param?: ConverterParameter) {
   failedFileCountMap.clear();
   //variousFileInfo.clear();
 
+  /*
   // clear param object
   if( param ) {
     for( const p in param ) {
       delete param[p];
     }
   }
+  */
+  par = {...param};
 };
-
-
-
-
 
 
 // main routine
 
-type ConverterParameter = {
-  files: FileWithId[];
-  completedFileIdSet: Set<number>;
-  ConvStats: Stat;
-  canceled;
-  props: Props;
-  format: string;
-  quality: number;
-  outputExt: string;
-  imageType: string;
-  message: MessageApiInjection;
-  //notification: NotificationApiInjection
-};
-export async function convertTargetFilesInMultithread(param: ConverterParameter): Promise<ConverterResult> {
+
+export async function convertTargetFilesInMultithread(
+  param: ConverterParameter
+): Promise<ConverterResult> {
   // init variables
   clearModuleVariables(param);
-  completedFileIdSet.clear();
-  
+  par.completedFileIdSet.clear();
+  par.completedFileDat.length = 0;
   
   // initialize workers
 
@@ -140,7 +167,7 @@ export async function convertTargetFilesInMultithread(param: ConverterParameter)
   }
   
   const [imgloadWorker, zipWorker] = createdWorkers;
-  zipWorkerModuleScope = zipWorker;
+  zipWorkerInModuleScope = zipWorker;
 
   // prepare a promise to detect completion of the last zip creation
   const promiseWaitZipSqueezing = new Promise(resolve => {
@@ -173,13 +200,13 @@ export async function convertTargetFilesInMultithread(param: ConverterParameter)
   // start to convert
 
   // NOTE: *it is needed because chrome cannot read user-defined properties on a Worker
-  const extraPropsForFiles = files.map(val => [val._id, val.webkitRelativePath]) as [number, string][];
+  const extraPropsForFiles = par.files.map(val => [val._id, val.webkitRelativePath]) as [number, string][];
 
   // create a file list by id
-  files.forEach(v => fileMapById.set(v._id, v));
+  par.files.forEach(v => fileMapById.set(v._id, v));
 
   // prepare watcher in case that the conversion process is canceled
-  const unwatchCancelButton = watch(canceled, (val) => {
+  const unwatchCancelButton = watch(par.canceled, (val) => {
     if( !val )
       return;
     
@@ -193,11 +220,18 @@ export async function convertTargetFilesInMultithread(param: ConverterParameter)
   // send message
   const msgToLoader: LoaderMessageType = {
     action: 'start-convert',
-    list: files,
+    list: par.files,
     extraPropsForList: extraPropsForFiles,
-    outputQuality: quality,
-    outputType: format,
-    threads: props.threads,
+    outputQuality: par.quality,
+    outputType: par.format,
+    keepExt: par.props.retainExtension,
+    outputExt: par.outputExt,
+    
+    //outputToFsys: par.outputToDir,
+    fsysDirHandler: par.fsysDirHandler,
+    existingFolders: par.existingFolders,
+
+    threads: par.props.threads,
     maxSize: UserSettings.shrinkImage ? {width: UserSettings.maxWidth, height: UserSettings.maxHeight} : null,
   };
   imgloadWorker.postMessage(msgToLoader);
@@ -247,7 +281,7 @@ export async function convertTargetFilesInMultithread(param: ConverterParameter)
     if( doneCalled )
       return;
     doneCalled = true;
-    await pushErrorZipsInMultithread(list, zipWorker, {}, ConvStats);
+    await pushErrorZipsInMultithread(list, zipWorker, {}, par.ConvStats);
   };
 
   return {
@@ -329,10 +363,10 @@ async function setupWorkers(): Promise<[Worker, Worker]> {
   // set zip.worker configurations
   zipWorker.postMessage({
     action: 'set-config',
-    zipSize: props.maxZipSizeMB * 1024 * 1024,
-    keepExt: props.retainExtension,
-    outputExt,
-    imageType,
+    zipSize: par.props.maxZipSizeMB * 1024 * 1024,
+    keepExt: par.props.retainExtension,
+    outputExt: par.outputExt,
+    imageType: par.imageType,
   });
 
   // set listeners for main process
@@ -374,10 +408,10 @@ const zipWorkerListener = ( params: MessageEvent<MessageToMainFromZipWorker> ) =
     case 'respond-image': {
       const {url, index, path, size, fileId} = data;
       
-      ConvStats.convertedImageUrl = url;
-      ConvStats.convertedImageSize = size;
-      ConvStats.convertedImageIndex = index;
-      ConvStats.convertedImageName = path;
+      par.ConvStats.convertedImageUrl = url;
+      par.ConvStats.convertedImageSize = size;
+      par.ConvStats.convertedImageIndex = index;
+      par.ConvStats.convertedImageName = path;
       
       // create an object url of the original image
       let orgUrl = '', orgSize = 0, orgName = '';
@@ -388,10 +422,10 @@ const zipWorkerListener = ( params: MessageEvent<MessageToMainFromZipWorker> ) =
         orgSize = file.size;
         orgName = file.webkitRelativePath || file.name;
       }
-      ConvStats.convertedImageOrgUrl = orgUrl;
-      ConvStats.convertedImageOrgSize = orgSize;
-      ConvStats.convertedImageOrgName = orgName;
-      ConvStats.convertedImageShrinked = item?.shrinked; //variousFileInfo.get(fileId)?.shrinked;
+      par.ConvStats.convertedImageOrgUrl = orgUrl;
+      par.ConvStats.convertedImageOrgSize = orgSize;
+      par.ConvStats.convertedImageOrgName = orgName;
+      par.ConvStats.convertedImageShrinked = item?.shrinked; //variousFileInfo.get(fileId)?.shrinked;
       
       return;
     }
@@ -408,8 +442,8 @@ const zipWorkerListener = ( params: MessageEvent<MessageToMainFromZipWorker> ) =
   switch( action ) {
     case 'error-push-filelist-zip':
       const {path} = data;
-      ConvStats.failedZipDone = true;
-      message.error(`an error occurred "${path}"`, {duration: 3000});
+      par.ConvStats.failedZipDone = true;
+      par.message.error(`an error occurred "${path}"`, {duration: 3000});
       return;
   }
 
@@ -418,29 +452,29 @@ const zipWorkerListener = ( params: MessageEvent<MessageToMainFromZipWorker> ) =
   
   switch(action) {
     case 'push-zip':
-      ConvStats.zips.push({url, size, count});
-      ConvStats.zippedTotalCount += count;
-      ConvStats.zippedTotalSize += size;
+      par.ConvStats.zips.push({url, size, count});
+      par.ConvStats.zippedTotalCount += count;
+      par.ConvStats.zippedTotalSize += size;
       break;
 
     case 'squeeze-zip':
       if( count > 0 ) {
-        ConvStats.zips.push({url, size, count});
-        ConvStats.zippedTotalCount += count;
-        ConvStats.zippedTotalSize += size;
+        par.ConvStats.zips.push({url, size, count});
+        par.ConvStats.zippedTotalCount += count;
+        par.ConvStats.zippedTotalSize += size;
       }
       //resolve(void 0);
       break;
     
     // zip failed files
     case 'push-filelist':
-      ConvStats.failedFileZippedCount++;
+      par.ConvStats.failedFileZippedCount++;
       break;
     case 'squeeze-filelist-zip':
-      ConvStats.failedZipDone = true;
+      par.ConvStats.failedZipDone = true;
     case 'push-filelist-zip':
       console.log('push-filelist-zip', count)
-      ConvStats.failedZips.push({url, size, count});
+      par.ConvStats.failedZips.push({url, size, count});
       //ConvStats.failedFileZippedCount += count;
       console.log(count);
       break;
@@ -449,7 +483,7 @@ const zipWorkerListener = ( params: MessageEvent<MessageToMainFromZipWorker> ) =
     // error occured during zipping process (untested)
     case 'zip-error':
     case 'zip-squeeze-error':
-      ConvStats.zippingErrorCount += count;
+      par.ConvStats.zippingErrorCount += count;
       if( action === 'zip-squeeze-error' ) {
         //resolve(void 0);
       }
@@ -460,8 +494,8 @@ const zipWorkerListener = ( params: MessageEvent<MessageToMainFromZipWorker> ) =
 
 
 // listener for loader worker
-type MessageTypeCanvasWorkerListener = MessageEvent<MessageFromLoader>;
-const ImgLoaderListener = (params: MessageTypeCanvasWorkerListener) => {
+type MessageTypeCanvasWorkerListener = MessageEvent<MessageFromLoader | RequestOverwriteToMain>;
+const ImgLoaderListener = async (params: MessageTypeCanvasWorkerListener) => {
   const worker = params.target as Worker;
   
   const { data } = params;
@@ -490,7 +524,7 @@ const ImgLoaderListener = (params: MessageTypeCanvasWorkerListener) => {
       item.size = inputsize;
 
       if( thumbnail ) {
-        ConvStats.thumbnail = thumbnail;
+        par.ConvStats.thumbnail = thumbnail;
       }
       
       /*
@@ -505,24 +539,34 @@ const ImgLoaderListener = (params: MessageTypeCanvasWorkerListener) => {
       break;
     }
     case 'file-converted': {
-      const { index, path, fileId, shrinked, outputWidth, outputHeight: outputHeihgt, outputsize } = data;
+      const {
+        index, path, fileId, shrinked, outputWidth, outputHeight: outputHeihgt, outputsize,
+        convertedImageBlob,
+      } = data;
 
       const item = processingLogItems.get(fileId)!;
       item.command = `🔃converted`;
-      item.shrinked ??= shrinked;
+      item.shrinked = item.shrinked == null ? shrinked : item.shrinked;
       item.outputWidth = outputWidth;
       item.outputHeight = outputHeihgt;
       item.outputSize = outputsize;
       //processingCoreLogItems.delete(worker.id);
       //completedItemsLog.set(fileId, item);
-      ConvStats.converted++;
+      par.ConvStats.converted++;
+
+      /*
+      if( convertedImageBlob ) {
+        await par.writeUsingFileSystem(path, convertedImageBlob);
+      }
+      */
 
       break;
     }
 
     // 'file-completed' action is caused by worker.zip
+    case 'file-sys-completed':
     case 'file-completed': {
-      const { inputsize, outputsize, fileId, entireIndex, storedPath } = data;
+      const { inputsize, outputsize, fileId, storedPath } = data;
  
       const item = processingLogItems.get(fileId);//completedItemsLog.get(fileId);
       if( item ) {
@@ -531,21 +575,32 @@ const ImgLoaderListener = (params: MessageTypeCanvasWorkerListener) => {
         item.fileId = fileId;
       }
       
-      ConvStats.inputTotalSize += inputsize;
-      ConvStats.outputTotalSize += outputsize;
+      par.ConvStats.inputTotalSize += inputsize;
+      par.ConvStats.outputTotalSize += outputsize;
 
 
-      ConvStats.done++;
-      ConvStats.success++;
-      completedFileIdSet.add(fileId);
+      par.ConvStats.done++;
+      par.ConvStats.success++;
+      par.completedFileIdSet.add(fileId);
       
+      // for file system
+      //   NOTE: File writing process was handled inside worker.canvas
+      if( action === 'file-sys-completed' ) {
+        // NOTE: it is not really "zippedIndex", but use the property for convinience
+        item.zippedIndex = par.completedFileDat.length;
+        par.completedFileDat.push({path: storedPath, id:fileId});
+      }
+      // for zip
+      if( action === 'file-completed' ) {
+        const { entireIndex } = data;
 
-      item.zippedIndex = entireIndex;
-      ConvStats.ziplogs[entireIndex] = {
-        fileId,
-        storedPath,
-      };
-      //console.log(action, fileId, entireIndex, "action, fileId, entireIndex");
+        item.zippedIndex = entireIndex;
+        par.ConvStats.ziplogs[entireIndex] = {
+          fileId,
+          storedPath,
+        };
+        //console.log(action, fileId, entireIndex, "action, fileId, entireIndex");
+      }
 
       break;
     }
@@ -566,7 +621,35 @@ const ImgLoaderListener = (params: MessageTypeCanvasWorkerListener) => {
       fileCanceled(fileId);
       break;
     }
+    // skipped in confirmation dialog
+    case 'file-skip': {
+      const { fileId, path } = data;
+      fileSkipped(fileId);
+      break;
+    }
     
+    // overwrite confirmation
+    case 'confirm-overwrite': {
+      const { target, type, path, fileId, workerId } = data;
+      //const result = await par.openOverwriteConfirmation(target, type, path);
+      
+      // wait for user's decision in dialog
+      const result = await new Promise<OverwriteCommand>(
+        resolve => par.enqueueOverwriteConfirmation(resolve, target, type, path)
+      );
+      
+      // send the command
+      worker.postMessage({
+        action: 'respond-overwrite',
+        command: result,
+        target,
+        path,
+        fileId,
+        workerId,
+      } satisfies OverwriteResponseToLoader);
+
+      break;
+    }
   }
 };
 
@@ -580,11 +663,11 @@ function fileStart(/*workerId: number,*/ index: number, path: string, fileId: nu
     command: `➡️started`,
   };
   processingLogItems.set(fileId, item);
-  ConvStats.logs.push(item);
+  par.ConvStats.logs.push(item);
   
   if( !failedFileCountMap.has(fileId) ) {   
-    if( !canceled.value ) {
-      ConvStats.startedCount++;
+    if( !par.canceled.value ) {
+      par.ConvStats.startedCount++;
     }
   }
   else {
@@ -594,42 +677,84 @@ function fileStart(/*workerId: number,*/ index: number, path: string, fileId: nu
 
 function fileRetry(index: number, path: string, fileId: number) {
   const item = processingLogItems.get(fileId)!;
-  item.command = `⚠️retrying`;
+  item.command = `⚠️retry`;
   item.error = true;
-    
-  message.warning(`retrying "${path}"`, {
-    duration: 3000,
-  });
 
-  ConvStats.retried++;
+  par.ConvStats.retried++;
   failedFileCountMap.set(fileId, 1);
 }
 function fileError(index: number, path: string, fileId: number) {
   console.error(`failed to load "${path}". the image may be corrupted or cannot be read by some reason.`);
   const item = processingLogItems.get(fileId);
-  ConvStats.done++;
-  ConvStats.failure++;
+  par.ConvStats.done++;
+  par.ConvStats.failure++;
   item.command = `❗failed`;
   item.error = true;
 
-  message.error(`failed to load "${path}"`, {duration: 5000});
+  /*
+  par.message.error(`failed to load "${path}"`, {duration: 5000});
+  */
 }
-
 function fileCanceled(fileId: number) {
   const item = processingLogItems.get(fileId);
-  ConvStats.done++;
-  ConvStats.failure++;
+  par.ConvStats.done++;
+  par.ConvStats.failure++;
   item.command = `❗canceled`;
+  item.error = true;
+}
+function fileSkipped(fileId: number) {
+  const item = processingLogItems.get(fileId);
+  par.ConvStats.done++;
+  par.ConvStats.failure++;
+  item.command = `⚠skipped`;
   item.error = true;
 }
 
 
 
-export function demandImage(index: number) {
-  zipWorkerModuleScope?.postMessage({action: 'request-image', index});
+export async function demandImage(index: number) {
+  // output to local folder
+  if( par.fsysDirHandler ) {
+    const citem = par.completedFileDat[index];
+    if( !citem ) {
+      console.error('item is not in completedFileDat', index);
+      return;
+    }
+    
+    // create an object url of the original image
+    const fileId = citem.id;
+    let orgUrl = '', orgSize = 0, orgName = '';
+    const item = processingLogItems.get(fileId);
+    if( fileId >= 0 ) {
+      const file = fileMapById.get(fileId);
+      orgUrl = URL.createObjectURL(file);
+      orgSize = file.size;
+      orgName = file.webkitRelativePath || file.name;
+    }
+    par.ConvStats.convertedImageOrgUrl = orgUrl;
+    par.ConvStats.convertedImageOrgSize = orgSize;
+    par.ConvStats.convertedImageOrgName = orgName;
+
+    // load an image written to local folder
+    const path = citem.path;
+    const file = await getFileHandle(par.fsysDirHandler, path, true);
+    // Create a Blob URL for the image
+    const url = URL.createObjectURL(file);
+    par.ConvStats.convertedImageUrl = url;
+    par.ConvStats.convertedImageSize = file.size;
+    par.ConvStats.convertedImageIndex = index;
+    par.ConvStats.convertedImageName = citem.path;
+    
+    //par.ConvStats.convertedImageShrinked = item?.shrinked; //variousFileInfo.get(fileId)?.shrinked;
+  }
+  else {
+    // In the case of ZIP output,
+    // the processing is handled by receiving an "respond-image" message from zipWorker.
+    zipWorkerInModuleScope?.postMessage({action: 'request-image', index});
+  }
 }
 export function deleteImage(index: number) {
-  zipWorkerModuleScope?.postMessage({action: 'delete-image', index});
+  zipWorkerInModuleScope?.postMessage({action: 'delete-image', index});
 }
 
 // create zips for failed files
@@ -672,7 +797,7 @@ async function pushErrorZipsInMultithread(list: FileWithId[], zipWorker: Worker,
   }
 
   if( ConvStats.failedZipDone ) {
-    message.error(`Zipping error files was aborted`, {duration: 5000});
+    par.message.error(`Zipping error files was aborted`, {duration: 5000});
     return;
   }
   

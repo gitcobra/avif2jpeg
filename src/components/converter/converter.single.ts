@@ -16,7 +16,14 @@ type Stat = ConversionStatusType['status'];
 
 let demandImageModuleScope: (index: number) => any | null;
 
-export async function convertImagesInSingleThread(list: FileWithId[], completedFileIdSet: Set<number>, props: Props, canceled, ConvStats: Stat ): Promise<ConverterResult> {
+export async function convertImagesInSingleThread(
+  list: FileWithId[],
+  completedFileIdSet: Set<number>,
+  props: Props,
+  canceled,
+  ConvStats: Stat,
+  
+): Promise<ConverterResult> {
   let currentImgBlobUrl = '';
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');

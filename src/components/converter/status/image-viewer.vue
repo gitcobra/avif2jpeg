@@ -806,8 +806,7 @@ a {
 }
 */
 
-.index-slider {
-}
+
 .index {
   white-space: nowrap;
   font-size: 0.8rem;

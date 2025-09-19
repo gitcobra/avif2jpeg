@@ -30,13 +30,13 @@ import 'vfonts/FiraCode.css';
 
 import { ArrowDown, Settings } from '@vicons/ionicons5';
 
-
 import Header from './components/header/header.vue';
 import Title from './components/title.vue';
 import Converter from './components/converter/converter.vue'
-import FileSelector from './components/file-selector.vue'
+import FileSelector, { FileWithId } from './components/file-selector.vue'
 import OutputSettings from './components/settings-output.vue';
 import AdvancedSettings from './components/settings-adv.vue';
+import MethodSettings from './components/settings-method.vue';
 import Descriptions from './components/descriptions.vue';
 import PWAPrompt from './components/pwa/PWAPrompt.vue';
 
@@ -60,8 +60,11 @@ const IS_DEV = process.env.NODE_ENV === 'development';
 
 
 // reactive values
+const sourceFileList = ref<FileWithId[]>([]);
+const additionalFiles = ref<FileWithId[]>([]);
 
-const inputConversionFiles = ref(null);
+
+
 const availableThreadCount = ref(0);
 
 let showTooltipsBeforeMounted = ref<boolean | undefined>(undefined);
@@ -73,6 +76,9 @@ const contentVisible = ref(false);
 const firstPageView = ref(true);
 const langSwitchMounted = ref(false);
 
+const outputDirHandle = ref<FileSystemDirectoryHandle | null>(null);
+
+
 // for SSG
 if( import.meta.env.SSR ) {
   contentVisible.value = true;
@@ -80,7 +86,7 @@ if( import.meta.env.SSR ) {
 }
 
 const showNote = ref(false);
-
+const expandedAdvSettings = ref();
 
 
 
@@ -171,8 +177,13 @@ function checkLandScape() {
   LANDSCAPE.value = w * 0.75 > h || w > 900;
 }
 
-function onInputFile(list: File[]) {
-  inputConversionFiles.value = list;
+async function onInputFile(list: FileWithId[]) {
+  // clear current list
+  if( UserSettings.autoStartConversion ) {
+    sourceFileList.value.length = 0;
+    await nextTick();
+  }
+  additionalFiles.value = list;
 }
 
 function onInputClick(flag: boolean) {
@@ -197,7 +208,7 @@ function onInputClick(flag: boolean) {
           <SwitchLanguages
             @lang-change="onLangChange"
             @lang-ready="onLangReady"
-            @lang-path-change="onLangChangeByPath"
+            @lang-change-by-user="onLangChangeByPath"
             @ready="onLangSwitchReady"
             :delay="firstPageView ? 0 : TRANSTIME"
           />
@@ -211,29 +222,73 @@ function onInputClick(flag: boolean) {
     
     <transition name="fade">
     <n-flex v-show="contentVisible" vertical align="stretch" justify="space-between" style="height:100%;">
+      
       <n-flex justify="space-around" vertical style="height:100%;">
+        
         <Title/>
-        <n-flex justify="center">
+
+        <!-- file -->
+        <n-flex justify="center" align="center">
           <FileSelector
+            key="key-fselector"
             v-model:target="UserSettings.acceptTypeValue"
             v-model:userExtensions="UserSettings.editedAcceptTypes"
             v-model:disable-notifying-folder-select="UserSettings.disableNotifyingFolderSelect"
+            v-model:auto-start-opt="UserSettings.autoStartConversion"
             :forbidden="processing"
             @input="onInputFile"
             @click="onInputClick(true)"
             @cancel="onInputClick(false)"
           />
+
+          <transition-group>
+          <FileList
+            key="key-filelist"
+            v-show="sourceFileList.length"
+            v-model:file-list="sourceFileList"
+            :additional-files="additionalFiles"
+          />
+          </transition-group>
+        </n-flex>
+
+        <n-flex vertical align="center">
+          <n-popover trigger="manual" placement="top" :keep-alive-on-hover="false" :duration="0" :delay="0">
+          <template #trigger>
+            <n-icon size="5vh" color="#DADADA" style="margin:0px;"><ArrowDown/></n-icon>
+          </template>
+          <span>CONVERT TO👇</span>
+          </n-popover>
         </n-flex>
         
+        <n-flex vertical align="center">  
+          <OutputSettings
+            v-model:format="UserSettings.imageFormat"
+            v-model:quality="UserSettings.imageQuality"
+            v-model:method="UserSettings.outputMethod"
+            v-model:target-folder-handle="outputDirHandle"
+            :is-multithread-enabled="UserSettings.multithread"
+          />         
+        </n-flex>
+
+        <!--
+        <n-flex vertical align="center">  
+          <MethodSettings/>
+        </n-flex>
+        -->
+
+
         <!-- core component -->
         <Converter
-          :input="inputConversionFiles"
+          :input="sourceFileList"
           :format="UserSettings.imageFormat"
           :quality="UserSettings.imageQuality"
           :retain-extension="UserSettings.retainExtension"
           :maxZipSizeMB="UserSettings.maxZipSizeMB"
           :threads="UserSettings.multithread ? UserSettings.threadCount : 0"
-          v-model:show-note="showNote"
+          :auto-start="UserSettings.autoStartConversion"
+          
+          :output-to-dir="UserSettings.outputMethod === 'fs'"
+          :output-dir-handle="UserSettings.outputMethod === 'fs' ? outputDirHandle : null"
           
           @start="processing=true"
           @end="processing=false"
@@ -247,33 +302,19 @@ function onInputClick(flag: boolean) {
           </template>
         </Converter>
 
-        <n-flex vertical align="center">
-          <n-popover trigger="manual" placement="top" :keep-alive-on-hover="false" :duration="0" :delay="0">
-          <template #trigger>
-            <n-icon size="5vh" color="#DADADA" style="margin:0px;"><ArrowDown/></n-icon>
-          </template>
-          <span>CONVERT TO👇</span>
-          </n-popover>
-        </n-flex>
-
-        <n-flex vertical align="center">  
-          <OutputSettings
-            v-model:format="UserSettings.imageFormat"
-            v-model:quality="UserSettings.imageQuality"
-          />
-
+        <n-flex vertical :align="expandedAdvSettings ? 'center' : 'end'" style="padding-right: 1em;">
           <AdvancedSettings
             v-model:retain-ext="UserSettings.retainExtension"
             v-model:use-folder-name-for-zip="UserSettings.useFolderNameForZip"
             v-model:max-zip-size="UserSettings.maxZipSizeMB"
             v-model:multithread="UserSettings.multithread"
             v-model:thread-count="UserSettings.threadCount"
+            v-model:expanded="expandedAdvSettings"
             
             v-model:shrink-image="UserSettings.shrinkImage"
             v-model:max-width="UserSettings.maxWidth"
             v-model:max-height="UserSettings.maxHeight"
           />
-          
         </n-flex>
 
         <Descriptions/>
@@ -345,15 +386,19 @@ a {
 }
 
 /* default transition */
+
+.v-move, 
 .v-enter-active, .v-leave-active {
   transition: all 0.3s ease;
 }
 .v-enter-from, .v-leave-to {
   opacity: 0;
   max-height: 0px;
+  max-width: 0px;
 }
 .v-enter-to, .v-leave-from {
   max-height: 500px;
+  max-width: 1024px;
   opacity: 1;
 }
 

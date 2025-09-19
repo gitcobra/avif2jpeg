@@ -2,7 +2,7 @@
 import { useHead } from '@unhead/vue';
 import { GlobeOutline, Close } from '@vicons/ionicons5';
 import { useI18n } from "vue-i18n";
-import { LANG_ID_LIST, LANG_NAMES, loadLocaleMessages, I18n } from '@/i18n';
+import { LANG_ID_LIST, LANG_FULL_NAMES, loadLocaleMessages, I18n } from '@/i18n';
 import { GlobalValsKey } from "../../Avif2Jpeg.vue";
 import { sleep } from '../util';
 import { SelectMixedOption } from 'naive-ui/es/select/src/interface';
@@ -30,20 +30,23 @@ const emit = defineEmits<{
   'ready': []
   'lang-ready': [string]
   'lang-change': [string]
-  'lang-path-change': [string]
+  'lang-change-by-user': [string]
 }>();
 
 
 // constants
 
 // create language list
-const langOptions: SelectMixedOption[] = Object.entries( LANG_NAMES ).map( ([key, val]) => ({ label:val, value:key }) );
+const langOptions: SelectMixedOption[] = Object.entries( LANG_FULL_NAMES ).map( ([key, val]) => ({ label:val, value:key }) );
 langOptions.sort((a, b) => {
   const c = a.label;
   const d = b.label;
   return c > d ? 1 : c < d ? -1 : 0;
 });
 
+
+// variables
+let lastUserSelectedLangId = '';
 
 
 // initialize on mounted 
@@ -164,8 +167,9 @@ async function setLocaleByCurrentPath() {
   if( lang && LANG_ID_LIST.includes(lang) ) {
     const success = await setLocaleMessages(lang);
     if( success ) {
-      //locale.value = lang;
-      emit('lang-path-change', lang);
+      // emit 'lang-change-by-user' if it equils to last selected lang from the menu
+      if( lastUserSelectedLangId === lang )
+        emit('lang-change-by-user', lang);
     }
   }
   else {
@@ -202,6 +206,7 @@ function getBrowserLanguage(): string {
 
 function changeRoute(val: string) {
   console.log(`changeRoute: ${router.currentRoute.value.fullPath} => ${val}`);
+  lastUserSelectedLangId = val;
   const path = val ? val + '/' : '';
   router.push('/' + path);
 }
@@ -220,7 +225,7 @@ function changeRoute(val: string) {
       <template #trigger>
         <router-link
           to="/"
-          @click="emit('lang-path-change', '')"
+          @click="emit('lang-change-by-user', '')"
           style="color: gray; line-height: 0px; font-size:1.2em;"
         >
           <n-icon :component="Close"/>
@@ -240,7 +245,6 @@ function changeRoute(val: string) {
           :consistent-menu-width="false"
           
           :options="langOptions"
-          _v-model:value="locale"
           :value="locale"
           @update:value="changeRoute"
         >

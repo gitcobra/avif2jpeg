@@ -1,3 +1,5 @@
+import { start } from "repl";
+import { ComputedRef } from "vue";
 
 export function getUnitSize(bytes: number, precise=2) {
   const sign = Math.sign(bytes);
@@ -15,7 +17,11 @@ export function getUnitSize(bytes: number, precise=2) {
   return `${val}${units[index]}`;
 }
 
-export function getThumbnailedSize(image: {width:number, height:number}, maxSize: number | {width:number, height:number} =100, disallowExpanding=false) {
+export function getThumbnailedSize(
+  image: {width:number, height:number},
+  maxSize: number | {width:number, height:number} =100,
+  disallowExpanding=false
+) {
   maxSize = typeof maxSize === 'number' ? ({width:maxSize, height:maxSize}) : maxSize;
   const {width: mwidth, height: mheight} = maxSize;
 
@@ -88,9 +94,26 @@ export function sleep(msec: number) {
   return new Promise(res => setTimeout(res, msec));
 }
 
-// This is for the naive-ui components that is triggered by the "show" property, such as n-tooltip, n-popover or any related components
-// when you want to manually display it once with :show="true" but do not want to keep it visible permanently.
-// It receives a value, waits for the screen to update, and then resets the value to "undefined", so that the element's hiding follows settings like "duration".
+export function invertRef(r: Ref, msec: number = 0, startVal?: any, invertedVal?: any) {
+  if( typeof startVal !== 'undefined' )
+    r.value = startVal;
+  else
+    startVal = r.value;
+  
+  const tid = setTimeout(() => {
+    r.value = typeof invertedVal !== 'undefined' ? invertedVal : !startVal;
+  }, msec);
+  return () => clearTimeout(tid);
+}
+
+
+
+
+// This is for the naive-ui components that is triggered by the "show" property, 
+// such as n-tooltip, n-popover or any related components when you want to manually display it once
+// with :show="true" but do not want to keep it visible permanently.
+// It receives a value, waits for the screen to update, and then resets the value to "undefined",
+// so that the element's hiding follows settings like "duration".
 export function useTimeoutRef<T>(val?: T, ms: number = 0) {
   const tflag = ref(val);
   watch(tflag, (val) => {
@@ -103,4 +126,59 @@ export function useTimeoutRef<T>(val?: T, ms: number = 0) {
   }, {immediate:true});
 
   return tflag;
+}
+export function timeoutRefByAnotherRef<T>(
+  targetRef: Ref | ComputedRef, ms: number = 0, invertFlag = false
+) {
+  const flag = ref<T>(invertFlag ? !targetRef.value : targetRef.value);
+  watch(targetRef, (val) => {
+    if( val === undefined )
+      return;
+    
+    flag.value = invertFlag ? !val : val;
+    nextTick(() => {
+      setTimeout(() => flag.value = undefined, ms);
+    });
+  }, {immediate:true});
+
+  return flag;
+}
+
+
+
+// path utilities
+export function addSelfAndAncestorPathToSet(list: Set<string>, path: string) {
+  const dirs = path.replace(/^\s*\/?|\/?\s*$/g, '').split('/');
+  do {
+    const path = dirs.join('/');
+    if( list.has(path) )
+      return;
+    
+    list.add(path);
+    dirs.pop();
+  } while( dirs.length )
+}
+
+export function isAnyAncestorPathInSet(list: Set<string>, path: string) {
+  const dirs = path.replace(/^\/?|\/?$/g, '').split('/');
+  let curPath = '';
+  while( dirs.length ) {
+    curPath += dirs.shift();
+    if( list.has(curPath) )
+      return true;
+    
+    curPath += '/';
+  }
+
+  return false;
+}
+
+export function setFileNameAndExtension(path: string, outputExt: string, keepPrevExt: boolean) {
+  // remove existing extension
+  if( !keepPrevExt )
+    path = path.replace(/\.(jpe?g|jfif|pjpeg|pjp|gif|png|avif|webp|bmp|apng|ico)$/i, '');
+  
+  let outputPath = path + '.' + outputExt;
+
+  return outputPath;
 }

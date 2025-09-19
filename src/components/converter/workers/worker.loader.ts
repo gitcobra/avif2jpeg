@@ -1,36 +1,54 @@
 import * as WorkerManager from './worker-manager';
-import type { MessageToCanvasWorker, MessageFromCanvasWorker } from './worker.canvas';
+import type { MessageToCanvasWorker, MessageFromCanvasWorker, MessageToCanvasWorkerPort, OverwriteResponse, RequestOverwrite } from './worker.canvas';
 import type { FileWithId } from '../../file-selector.vue'
 import { sleep } from '../../util';
 import { start } from 'repl';
+import { buildDirsAndWriteFile } from '../../filesystem-api';
 
 // message types
 
-export type LoaderMessageType = {
-  action: 'set-zip-port';
-} | {
-  action: 'start-convert';
-  list: FileWithId[];
-  extraPropsForList: [number, string][];
-  outputType: string;
-  outputQuality: number;
-  threads: number;
-  maxSize?: {
-    width: number;
-    height: number;
-  }
-} | {
-  action: 'cancel-convert';
-};
+export type LoaderMessageType =
+  | {
+      action: 'set-zip-port';
+    }
+  | {
+      action: 'start-convert';
+      list: FileWithId[];
+      extraPropsForList: [number, string][];
+      outputType: string;
+      outputQuality: number;
+      keepExt: boolean;
+      outputExt: string;
 
-export type MessageFromLoader = MessageFromCanvasWorker | {
-  action: 'file-retry'
-  index: number
-  path: string
-  fileId: number
-};
+      threads: number;
+      maxSize?: {
+        width: number;
+        height: number;
+      }
 
+      //outputToFsys: boolean;
+      fsysDirHandler?: FileSystemDirectoryHandle;
+      existingFolders: Set<string>;
+    }
+  | {
+      action: 'cancel-convert';
+    };
 
+export type MessageFromLoader =
+  | MessageFromCanvasWorker
+  | {
+    action: 'file-retry';
+    index: number;
+    path: string;
+    fileId: number;
+  };
+
+export type RequestOverwriteToMain = RequestOverwrite & { workerId: number };
+export type OverwriteResponseToLoader =
+  OverwriteResponse &
+  {
+    workerId: number;
+  };
 
 // constants
 
@@ -66,10 +84,10 @@ let totalChunkSize = 0;
 let canceled = false;
 let startedCount = 0;
 let resolvedCount = 0;
-
+//let fsysDirHandler: FileSystemDirectoryHandle;
 
 // recieve messages from main thread
-self.onmessage = async (params: MessageEvent<LoaderMessageType>) => {
+self.onmessage = async (params: MessageEvent<LoaderMessageType | OverwriteResponseToLoader>) => {
   const { data, ports } = params;
   const { action } = data;
 
@@ -79,9 +97,16 @@ self.onmessage = async (params: MessageEvent<LoaderMessageType>) => {
       self.postMessage({action: 'respond-to-first-message'});
       break;
     }
+    
     case 'start-convert': {
-      const {list, extraPropsForList, outputType, outputQuality, threads, maxSize} = data;
-      
+      const {
+        list, extraPropsForList, outputType, outputQuality,
+        threads, maxSize, keepExt, outputExt,
+        //outputToFsys,
+        fsysDirHandler,
+        existingFolders,
+      } = data;
+
       // add extra properties
       list.forEach((val, i) => {
         val._id = extraPropsForList[i][0];
@@ -89,23 +114,46 @@ self.onmessage = async (params: MessageEvent<LoaderMessageType>) => {
           Object.defineProperty(val, 'webkitRelativePath', {value: extraPropsForList[i][1]});
       });
 
-      loadImageList(list, outputType, outputQuality, threads, maxSize);
+      loadImageList(
+        list, outputType, outputQuality, threads, outputExt, keepExt, 
+        maxSize, fsysDirHandler, existingFolders,
+        
+      );
       break;
     }
     case 'cancel-convert':
       canceled = true;
       break;
+    
+    case 'respond-overwrite': {
+      const wid = data.workerId;
+      const cworker = WorkerManager.getWorkerById(wid);
+      cworker.postMessage({
+        action: 'respond-overwrite',
+        command: data.command,
+        target: data.target,
+        fileId: data.fileId,
+        path: data.path,
+      } satisfies OverwriteResponse);
+      break;
+    }
   }
 };
 
 // main
-async function loadImageList(filelist: FileWithId[], outputType: string, outputQuality: number, threads: number, maxSize?: {width: number, height:number}) {
+async function loadImageList(
+  filelist: FileWithId[], outputType: string, outputQuality: number, threads: number,
+  outputExt: string, keepExt: boolean,
+  maxSize?: {width: number, height:number},
+  fsysDirHandler?: FileSystemDirectoryHandle,
+  existingFolders?: Set<string>,
+) {
   files = filelist;
   
   // initialize canvas workers
   const canvasWorkerCount = Math.max(1, Math.min(threads - 3, files.length)); // preserve +3 for main, worker.loader, worker.zip
   const workerCountForHugeImages = Math.min(MAX_HEAVY_LOADING_THREADS, canvasWorkerCount);
-  createCanvasWorkers(canvasWorkerCount, workerCountForHugeImages);
+  createCanvasWorkers(canvasWorkerCount, workerCountForHugeImages, fsysDirHandler, existingFolders);
 
   // wait until active worker is released if totalChunkSize reaches the limit
   const waitTotalCunkDissolves = async () => {
@@ -208,6 +256,8 @@ async function loadImageList(filelist: FileWithId[], outputType: string, outputQ
       outputPath,
       type: outputType,
       quality: outputQuality / 100,
+      keepPrevExt: keepExt,
+      outputExt: outputExt,
       demandThumbnail: demandThumbnail || isLastItem,
       isSingleImage: isSingleImageFile,
       maxSize,
@@ -215,7 +265,9 @@ async function loadImageList(filelist: FileWithId[], outputType: string, outputQ
       
       // chrome (currently v126.0.6478.127) cannot seem to read a property of a File that defined by Object.defineProperty from a Worker,
       // (Firefox can) so send the property directly.
-      webkitRelativePath: file.webkitRelativePath,
+      webkitRelativePath: file.webkitRelativePath.replace(/^\//, ''),
+      
+      //outputToMain: outputToFsys,
     };
 
     demandThumbnail = false;
@@ -276,7 +328,12 @@ async function loadImageList(filelist: FileWithId[], outputType: string, outputQ
 
 
 // create canvas Workers to convert each image
-function createCanvasWorkers(canvasWorkerCount: number, workerCountForHugeImages: number) {
+function createCanvasWorkers(
+  canvasWorkerCount: number,
+  workerCountForHugeImages: number,
+  fsysDirHandler?: FileSystemDirectoryHandle,
+  existingFolders?: Set<string>,
+) {
   WorkerManager.init();
   for( let i = 0; i < canvasWorkerCount; i++ ) {
     const cworker = WorkerManager.createWorker(workerCountForHugeImages > i);
@@ -287,11 +344,15 @@ function createCanvasWorkers(canvasWorkerCount: number, workerCountForHugeImages
     // Open ports between "worker.zip" and each "worker.canvas" so that converted data are directly sent to "worker.zip".
     const {port1, port2} = new MessageChannel();
     zipWorkerPort.postMessage({action: 'set-port-canvas'}, [port1]);
-    cworker.postMessage({}, [port2]);
+    cworker.postMessage({
+      port: 'zip',
+      fsysDirHandler,
+      existingFolders,
+    } satisfies MessageToCanvasWorkerPort, [port2]);
   }
 }
 
-const canvasListener = (params: MessageEvent<MessageFromCanvasWorker>) => {
+const canvasListener = async (params: MessageEvent<MessageFromCanvasWorker | RequestOverwrite>) => {
   const worker = params.target as WorkerManager.WorkerWithId;
   
   const { data } = params;
@@ -301,16 +362,24 @@ const canvasListener = (params: MessageEvent<MessageFromCanvasWorker>) => {
     // pass through the message to main
     case 'file-load':
       data.workerId = worker.id;
-    case 'file-converted':
-    // NOTE: file-completed is posted after zipping is completed or failed
-    //case 'file-completed':
     case 'file-canceled': {
       self.postMessage(data);
       break;
     }
   
-    //case 'file-converted': {
-    case 'file-completed': {
+    case 'file-converted': {
+      const { convertedImageBlob, path } = data;
+      /*
+      if( convertedImageBlob ) {
+        await buildDirsAndWriteFile(fsysDirHandler, path, convertedImageBlob, true);
+      }
+      */
+      self.postMessage(data);
+      break;
+    }
+    // NOTE: file-completed is posted after zipping is completed or failed
+    case 'file-completed':
+    case 'file-sys-completed': {
       // release the worker
       WorkerManager.releaseWorker(worker);
       
@@ -324,10 +393,23 @@ const canvasListener = (params: MessageEvent<MessageFromCanvasWorker>) => {
 
     
     // need to handle retry 
+    case 'file-skip':
     case 'file-error': {
       const { index, path, fileId } = data;
-      retryFileCallback(index, path, fileId);
-      break;
+      // release the worker
+      WorkerManager.releaseWorker(worker);
+      
+      // subtract worker possesed chunk size from totalChunkSize when recieved "list-end" action
+      totalChunkSize -= chunksEachWorkerPossessed.get(worker.id) || 0;
+      chunksEachWorkerPossessed.delete(worker.id);
+
+      if( action === 'file-error' ) {
+        retryFileCallback(index, path, fileId);
+      }
+      else {
+        passMessageToMain('file-skip', index, path, fileId);
+      }
+      return;
     }
 
     case 'list-start':
@@ -335,6 +417,12 @@ const canvasListener = (params: MessageEvent<MessageFromCanvasWorker>) => {
     case 'list-end':
     case 'respond-to-first-message':
       break;
+    
+
+    case 'confirm-overwrite':
+      self.postMessage({...data, workerId: worker.id} satisfies RequestOverwriteToMain);
+      return;
+
 
     default:
       console.error(`unexptected action "${action}"`);
@@ -343,7 +431,7 @@ const canvasListener = (params: MessageEvent<MessageFromCanvasWorker>) => {
   checkIfFileIsDone(action);
 };
 
-function passMessageToMain(action: 'file-start'|'file-retry'|'file-canceled'|'file-error', index: number, path: string, fileId: number) {
+function passMessageToMain(action: 'file-start'|'file-retry'|'file-canceled'|'file-error'|'file-skip', index: number, path: string, fileId: number) {
   const errorMsg: MessageFromLoader = {
     action,
     index,
@@ -358,8 +446,10 @@ function passMessageToMain(action: 'file-start'|'file-retry'|'file-canceled'|'fi
 function checkIfFileIsDone(action: MessageFromLoader['action']) {
   switch( action ) {
     case 'file-completed':
+    case 'file-sys-completed':
     case 'file-canceled':
     case 'file-error':
+    case 'file-skip':
     
     case 'file-retry':
       resolvedCount++;

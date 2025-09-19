@@ -1,6 +1,12 @@
 import { reactive } from 'vue';
 
-export const MaxThreads = ref(navigator.hardwareConcurrency ? Math.min(navigator.hardwareConcurrency, 12) : 0);
+const THREADS_MAX_LIMIT = 10;
+
+
+export const MaxThreads = ref(navigator.hardwareConcurrency ? Math.min(navigator.hardwareConcurrency, THREADS_MAX_LIMIT) : 0);
+export type OutputMethods = 'zip' | 'fs';
+export type ActionOnDuplicate = 'prompt' | 'ignore' | 'overwrite';
+
 const Limits: {
   [key: string]: {
     min?: number
@@ -37,7 +43,16 @@ const DefaultSettings = {
   changeLogCheckedDate: 0,
 
   lang: '',
+  autoStartConversion: false,
+  
+  outputMethod: 'zip' as OutputMethods,
+  actionOnDuplicate: 'prompt' as ActionOnDuplicate,
 };
+
+const ExcludedPropertiesFromSave: (keyof typeof DefaultSettings)[] = [
+  'outputMethod',
+  'actionOnDuplicate',
+];
 
 
 
@@ -78,16 +93,24 @@ for( const p in UserSettings ) {
   }
 }
 
+
+
 // save settings on unload
-const saveSettings = () => {
+export function saveSettings() {
   const dat = {} as any;
   for( const p in UserSettings ) {
+    // ignore the property
+    if( ExcludedPropertiesFromSave.includes(p as any) )
+      continue;
+    
     dat[p] = (UserSettings as any)[p];
   }
   localStorage.setItem(storeName, JSON.stringify(dat));
   //console.log(UserSettings.changeLogCheckedDate);
 };
 window.addEventListener('beforeunload', saveSettings);
+
+
 
 // clear and disable saving settings for testing initial value
 export function _deleteLocalStorage() {

@@ -155,4 +155,6 @@ export function init() {
   WorkerId = 0;
 }
 
-
+export function getWorkerById(id: number) {
+  return [...workers].find(item => item.id === id);
+}

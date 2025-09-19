@@ -2,7 +2,7 @@
 <template>
 
   <div class="container-1">
-    <n-tooltip :to="false" display-directive="show" trigger="hover" :duration="0" :delay="0" placement="right">
+    <n-tooltip :to="false" display-directive="show" trigger="hover" :duration="0" :delay="0" placement="bottom">
       <template #trigger>
         <!--
         <n-flex vertical class="container-2">

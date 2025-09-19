@@ -12,6 +12,7 @@ const props = defineProps<{
   fileType: string;
   shrink?: [number, number] | null;
   zipSize: number;
+  outputToDir: boolean;
 
   inputTotalSize: number;
   outputTotalSize: number;
@@ -63,7 +64,7 @@ watch(() => [props.thumbnail, props.opened], () => {
           ({{ successPerc |0 }}%)
         </template>
 
-        <n-spin :size="16" v-show="processing && !props.opened"> </n-spin>
+        <!-- <n-spin :size="16" v-if="processing && !props.opened"> </n-spin> -->
       </n-flex>
     </template>
     <n-flex justify="center" align="center" :size="0" :wrap="false" style="white-space: nowrap; margin-top:-1em; padding-bottom:5px;">
@@ -72,6 +73,7 @@ watch(() => [props.thumbnail, props.opened], () => {
 
 
       <n-flex justify="center" class="grow" :wrap="false" style="z-index:1;">
+        
         <!-- left column -->
         <n-flex vertical justify="center" class="left-column">
     
@@ -91,7 +93,8 @@ watch(() => [props.thumbnail, props.opened], () => {
             <n-flex vertical justify="end" style="font-size: 0.6rem; line-height:0.6rem;">
               <div>{{$t('settings.imageType')}}: {{ fileType }}</div>
               <div v-if="shrink">{{$t('status.Shrinking')}}: <span style="">{{shrink[0]}}×{{shrink[1]}}</span></div>
-              <div>Zip: {{ zipSize }}MB</div>
+              <div v-if="!outputToDir">Zip: {{ zipSize }}MB</div>
+              <div v-else style="color:red">{{ $t('status.outputToDir') }}</div>
             </n-flex>
           </n-statistic>
 
