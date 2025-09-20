@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { Terminal } from "@vicons/ionicons5";
+import canvasThumbnail from "./canvas-thumbnail.vue";
 import { getUnitSize } from "./util";
 
 import PromptDup from "./prompt-on-dup.vue";
+import { FileWithId } from "./file-selector.vue";
 
 // type
 type PromptProps = InstanceType<typeof PromptDup>['$props'];
@@ -13,13 +14,13 @@ const { t } = useI18n();
 
 // props
 const props = defineProps<{
-  additionalFiles: File[];
+  additionalFiles: FileWithId[];
 }>();
 // v-model
-const fileList = defineModel<File[]>('file-list', {required:true});
+const fileList = defineModel<FileWithId[]>('file-list', {required:true});
 
 // refs
-const imageList = ref<{url: string, name: string}[]>([]);
+const imageList = ref<{file: FileWithId, name: string}[]>([]);
 const listTotal = ref('');
 const prevListLength = ref(0);
 
@@ -72,6 +73,7 @@ onMounted(() => {
         }
       }
       //list.push(file);
+      baseMap.delete(newkey);
       baseMap.set(newkey, file);
     }
     if( baseMap.size > fileList.value.length || overwritten ) {
@@ -81,14 +83,14 @@ onMounted(() => {
   }/*, {immediate: true}*/);
 
   // update thumbnails
-  watch(() => fileList.value.length, (len, prevlen) => {
+  watch(() => fileList.value[fileList.value.length - 1], () => {
     const list = fileList.value.slice(-MAX_LEN);
 
     for( const file of list ) {
-      const url = URL.createObjectURL(file);
+      //const url = URL.createObjectURL(file);
       const name = file.name;
       
-      imageList.value.push({url, name});
+      imageList.value.push({file, name});
     }
 
     const minlen = Math.min(MAX_LEN, fileList.value.length);
@@ -97,8 +99,7 @@ onMounted(() => {
     }
 
     listTotal.value = getUnitSize( fileList.value.reduce((c, item) => c + item.size, 0) );
-    prevListLength.value = prevlen;
-  }/*, {immediate:true}*/);
+  });
 
 });
 
@@ -129,11 +130,20 @@ function clear() {
             show-separator
             :to="fileList.length"
             :from="prevListLength"
+            @finish="prevListLength = fileList.length"
           /> {{ $t('files', fileList.length) }}
         </div>
       </n-flex>
       
       <transition-group name="list">
+        <canvas-thumbnail v-for="(item, i) in imageList"
+          :key="item.file._id"
+          :source="item.file"
+          :width="67"
+          :height="100"
+          class="image-item"
+        />
+        <!--
         <n-image
           v-for="(item, i) in imageList"
           :key="item.name"
@@ -145,6 +155,8 @@ function clear() {
           class="image-item"
         >
         </n-image>
+        -->
+
       </transition-group>
     </n-flex>
     
@@ -222,11 +234,13 @@ function clear() {
       top: 4px;
       font-size: 1em;
       line-height: 100%;
+      z-index: 1;
     }
     .list-status {
       position: absolute;
       bottom: 4px;
       right: 10px;
+      z-index: 1;
 
       .sum {
         font-size: 0.8em;
@@ -256,6 +270,7 @@ function clear() {
 }
 .image-item {
   position: relative;
+  z-index: 0;
   opacity: 0.2;
 }
 

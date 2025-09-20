@@ -196,7 +196,7 @@
   "folder": "フォルダ",
   "confirmFileOverwriteTitle": "上書き確認",
   "convertUnpreparedTooltip": "まず変換する画像を読み込んで下さい",
-  "warnAboutFileSysBeforeConversion1": "変換画像の出力先がフォルダに設定されています。",
+  "warnAboutFileSysBeforeConversion1": "以下のフォルダが出力先に設定されています。",
   "warnAboutFileSysBeforeConversion2": "これは試験的な機能です。このフォルダ内のファイルを失ってもよい場合のみ続行して下さい。",
   "warnAboutFileSysTitle": "画像はフォルダへ直接書き込まれます",
   "warnAboutResetMsg": "このアプリの設定をすべて初期状態に戻します"

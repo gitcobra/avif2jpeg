@@ -125,7 +125,7 @@ async function digOutFileSystemEntries(entries: FileSystemEntry[], list?: File[]
       const file = await new Promise<File>( resolve => (entry as FileSystemFileEntry).file(file => resolve(file)) );
       
       // add "webkitRelativePath" property
-      Object.defineProperty(file, 'webkitRelativePath', {value: entry.fullPath});
+      Object.defineProperty(file, 'webkitRelativePath', {value: entry.fullPath.replace(/^\//, '')});
       
       list.push(file);
       fileCount.value++;

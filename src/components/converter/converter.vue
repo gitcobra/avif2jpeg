@@ -828,14 +828,14 @@ async function openOverwriteConfirmation(
     @positive-click="void(warnfsysAccepted = true)"
     @negative-click="void(warnfsysAccepted = false)"
   >
-    <p style="color: red">
+    <p>
     {{ $t('warnAboutFileSysBeforeConversion1') }}
     </p>
     <n-flex class="path" align="center" :size="1" :wrap="false">
       <MaterialSymbolsFolderOutline/>
       {{ outputDirHandle.name }}
     </n-flex>
-    <p>
+    <p style="color: red">
     {{ $t('warnAboutFileSysBeforeConversion2') }}
     </p>
     <!--

@@ -8,6 +8,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    CanvasThumbnail: typeof import('./src/components/canvas-thumbnail.vue')['default']
     Changelog: typeof import('./src/components/header/changelog.vue')['default']
     Converter: typeof import('./src/components/converter/converter.vue')['default']
     Descriptions: typeof import('./src/components/descriptions.vue')['default']

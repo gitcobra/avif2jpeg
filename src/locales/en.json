@@ -196,7 +196,7 @@
   "folder": "folder",
   "confirmFileOverwriteTitle": "Overwrite Confirmation",
   "convertUnpreparedTooltip": "Load source images first",
-  "warnAboutFileSysBeforeConversion1": "Converted images will be saved to the folder on your local drive.",
+  "warnAboutFileSysBeforeConversion1": "Converted images will be saved to the folder below.",
   "warnAboutFileSysBeforeConversion2": "This feature is experimental. Continue only if it is acceptable to lose data in the output folder.",
   "warnAboutFileSysTitle": "Images will be written directly to folder",
   "warnAboutResetMsg": "Restore all settings to default"
