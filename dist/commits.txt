@@ -1,3 +1,9 @@
+2025-09-20 13:55:14 +0900
+v1.12.2
+
+2025-09-20 13:53:35 +0900
+tweak: replace file-list thumbnail rendering from <img> to <canvas>
+
 2025-09-19 18:15:49 +0900
 v1.12.1
 
@@ -6,9 +12,3 @@ feat: support writing via File System API
 
 2025-09-09 07:57:24 +0900
 v1.11.4
-
-2025-09-09 06:48:12 +0900
-chore: slight update to PWA
-
-2025-09-08 04:06:53 +0900
-v1.11.3
