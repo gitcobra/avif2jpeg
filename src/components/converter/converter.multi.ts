@@ -646,6 +646,7 @@ const ImgLoaderListener = async (params: MessageTypeCanvasWorkerListener) => {
         path,
         fileId,
         workerId,
+        skippedFolderPath: (type === 'folder' && result.startsWith('skip')) ? target : '',
       } satisfies OverwriteResponseToLoader);
 
       break;

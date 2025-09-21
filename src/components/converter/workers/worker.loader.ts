@@ -48,6 +48,7 @@ export type OverwriteResponseToLoader =
   OverwriteResponse &
   {
     workerId: number;
+    skippedFolderPath?: string;
   };
 
 // constants
@@ -79,6 +80,7 @@ let files: FileWithId[]; // it is got in arguments of loadImageList
 const chunksEachWorkerPossessed = new Map<number, number>;
 const failedFileCountMap = new Map<number, number>(); // <fileId, count>
 const retriedFileTime = new Map<number, number>; // <fileId, time>
+const overwriteSkipDirList = new Set<string>();
 
 let totalChunkSize = 0;
 let canceled = false;
@@ -135,6 +137,12 @@ self.onmessage = async (params: MessageEvent<LoaderMessageType | OverwriteRespon
         fileId: data.fileId,
         path: data.path,
       } satisfies OverwriteResponse);
+
+      const skippedFolder = data.skippedFolderPath;
+      if( skippedFolder ) {
+        console.log('skippedFolder', skippedFolder);
+        overwriteSkipDirList.add(skippedFolder + '/');
+      }
       break;
     }
   }
@@ -214,6 +222,19 @@ async function loadImageList(
       passMessageToMain('file-canceled', index, path, fileId);
       continue;
     }
+
+    // check whether the path exists in overwriteSkipDirList
+    let skippedDueToDir = false;
+    for( const dir of overwriteSkipDirList ) {
+      if( path.startsWith(dir) ) {
+        passMessageToMain('file-skip', index, path, fileId);
+        console.log('skipped due to dir', dir, path)
+        skippedDueToDir = true;
+        break;
+      }
+    }
+    if( skippedDueToDir )
+      continue;
 
     // try to parse the file as an image
     let bitmap: ImageBitmap;
