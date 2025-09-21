@@ -134,7 +134,9 @@
     "saveToSpecifiedFolder": "चयनित फ़ोल्डर को लिखें",
     "actionOnDuplicate": "डुप्लिकेट पर कार्रवाई",
     "autoStartConversionTooltip": "छवियों के लोड होने के बाद रूपांतरण स्वचालित रूप से शुरू हो जाएगा। \nहर बार जब आप छवियों को लोड करते हैं तो सूची रीसेट हो जाती है।",
-    "chooseOutputFolderTooltip": "कोई आउटपुट फ़ोल्डर चयनित नहीं।"
+    "chooseOutputFolderTooltip": "कोई आउटपुट फ़ोल्डर चयनित नहीं।",
+    "outputType": "उत्पादन का प्रकार",
+    "outputQuality": "आउटपुट -क्वालिटी"
   },
   "githubOpenSource": "खुला स्त्रोत",
   "copiedDataURLDialogTitle": "क्लिपबोर्ड पर कॉपी किया गया",

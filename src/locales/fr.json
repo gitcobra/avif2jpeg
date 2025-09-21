@@ -134,7 +134,9 @@
     "saveToSpecifiedFolder": "Écrire dans le dossier sélectionné",
     "actionOnDuplicate": "Action sur duplicate",
     "autoStartConversionTooltip": "La conversion commencera automatiquement après le chargement des images. \nLa liste est réinitialisée chaque fois que vous chargez des images.",
-    "chooseOutputFolderTooltip": "Aucun dossier de sortie sélectionné."
+    "chooseOutputFolderTooltip": "Aucun dossier de sortie sélectionné.",
+    "outputType": "Type de sortie",
+    "outputQuality": "Qualité de sortie"
   },
   "githubOpenSource": "Source ouverte",
   "copiedDataURLDialogTitle": "Copié dans le presse-papiers",

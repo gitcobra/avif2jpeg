@@ -134,7 +134,9 @@
     "saveToSpecifiedFolder": "Напишите в выбранную папку",
     "actionOnDuplicate": "Действие на дубликате",
     "autoStartConversionTooltip": "Преобразование начнется автоматически после загрузки изображений. \nСписок сбрасывается каждый раз, когда вы загружаете изображения.",
-    "chooseOutputFolderTooltip": "Не выбрана выходная папка."
+    "chooseOutputFolderTooltip": "Не выбрана выходная папка.",
+    "outputType": "Вывод типа",
+    "outputQuality": "Качество вывода"
   },
   "githubOpenSource": "Открытый исходный код",
   "copiedDataURLDialogTitle": "Скопировано в буфер обмена",

@@ -134,7 +134,9 @@
     "saveToSpecifiedFolder": "Escreva para a pasta selecionada",
     "actionOnDuplicate": "Ação em duplicado",
     "autoStartConversionTooltip": "A conversão será iniciada automaticamente após o carregamento das imagens. \nA lista é redefinida sempre que você carrega imagens.",
-    "chooseOutputFolderTooltip": "Nenhuma pasta de saída selecionada."
+    "chooseOutputFolderTooltip": "Nenhuma pasta de saída selecionada.",
+    "outputType": "Tipo de saída",
+    "outputQuality": "Qualidade de saída"
   },
   "githubOpenSource": "Código aberto",
   "copiedDataURLDialogTitle": "Copiado para a área de transferência",

@@ -134,7 +134,9 @@
     "saveToSpecifiedFolder": "Schrijf naar de geselecteerde map",
     "actionOnDuplicate": "Actie op duplicaat",
     "autoStartConversionTooltip": "De conversie start automatisch nadat afbeeldingen zijn geladen. \nDe lijst wordt gereset telkens wanneer u afbeeldingen laadt.",
-    "chooseOutputFolderTooltip": "Geen uitvoermap geselecteerd."
+    "chooseOutputFolderTooltip": "Geen uitvoermap geselecteerd.",
+    "outputType": "Uitgangstype",
+    "outputQuality": "Outputkwaliteit"
   },
   "githubOpenSource": "Open bron",
   "copiedDataURLDialogTitle": "Gekopieerd naar klembord",

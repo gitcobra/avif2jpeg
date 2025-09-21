@@ -82,7 +82,9 @@
     "saveToSpecifiedFolder": "Kirjoita valitulle kansiolle",
     "actionOnDuplicate": "Toimi kaksoiskappaleessa",
     "autoStartConversionTooltip": "Muutos alkaa automaattisesti kuvien lataamisen jälkeen. \nLuettelo nollataan joka kerta kun lataat kuvia.",
-    "chooseOutputFolderTooltip": "Lähtökansiota ei ole valittu."
+    "chooseOutputFolderTooltip": "Lähtökansiota ei ole valittu.",
+    "outputType": "Lähtötyyppi",
+    "outputQuality": "Tuotoksen laatu"
   },
   "status": {
     "Converted": "Muunnettu",

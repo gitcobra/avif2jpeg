@@ -6,17 +6,6 @@
       
       <n-flex vertical align="stretch" justify="center">
         
-        <n-tooltip>
-          <template #trigger>
-            <n-checkbox v-model:checked="autoStartOpt" size="small" style="font-size:smaller;">
-              {{ $t('settings.autoStartConversion') }}
-            </n-checkbox>
-          </template>
-          <template #default>
-            {{ $t('settings.autoStartConversionTooltip') }}
-          </template>
-        </n-tooltip>
-        
         <!-- file select -->
         <n-tooltip :to="false" display-directive="show"
           :show="INJ.showTooltipsBeforeMounted.value" trigger="hover" :keep-alive-on-hover="false"
@@ -85,7 +74,7 @@
           :show="INJ.showTooltipsBeforeMounted.value"
         >
           <template #trigger>
-            <span style="white-space: nowrap; font-size: smaller;">
+            <span style="white-space: nowrap;">
               {{ $t('TargetFileTypeExt') }}:
             </span>
           </template>
@@ -139,6 +128,17 @@
         <span v-html="$t('editAcceptTypes')"></span>
       </n-tooltip>
     </n-flex>
+
+      <n-tooltip>
+        <template #trigger>
+          <n-checkbox v-model:checked="autoStartOpt" size="small" style="">
+            {{ $t('settings.autoStartConversion') }}
+          </n-checkbox>
+        </template>
+        <template #default>
+          {{ $t('settings.autoStartConversionTooltip') }}
+        </template>
+      </n-tooltip>
 
   </n-flex>
   </div>

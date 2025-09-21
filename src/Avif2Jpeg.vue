@@ -228,7 +228,7 @@ function onInputClick(flag: boolean) {
         <Title/>
 
         <!-- file -->
-        <n-flex justify="center" align="center">
+        <n-flex justify="center" align="center" style="margin-top: 0.3em;">
           <FileSelector
             key="key-fselector"
             v-model:target="UserSettings.acceptTypeValue"

@@ -134,7 +134,9 @@
     "saveToSpecifiedFolder": "Напишіть у вибрану папку",
     "actionOnDuplicate": "Дія на дублікат",
     "autoStartConversionTooltip": "Перетворення розпочнеться автоматично після завантаження зображень. \nСписок скидається щоразу, коли ви завантажуєте зображення.",
-    "chooseOutputFolderTooltip": "Немає вихідної папки."
+    "chooseOutputFolderTooltip": "Немає вихідної папки.",
+    "outputType": "Тип виходу",
+    "outputQuality": "Якість виходу"
   },
   "githubOpenSource": "Відкритий код",
   "copiedDataURLDialogTitle": "Скопійовано в буфер обміну",

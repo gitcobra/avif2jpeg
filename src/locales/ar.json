@@ -134,7 +134,9 @@
     "saveToSpecifiedFolder": "اكتب إلى مجلد محدد",
     "actionOnDuplicate": "العمل على مكرر",
     "autoStartConversionTooltip": "سيبدأ التحويل تلقائيًا بعد تحميل الصور. \nيتم إعادة تعيين القائمة في كل مرة تقوم فيها بتحميل الصور.",
-    "chooseOutputFolderTooltip": "لم يتم اختيار مجلد الإخراج."
+    "chooseOutputFolderTooltip": "لم يتم اختيار مجلد الإخراج.",
+    "outputType": "نوع الإخراج",
+    "outputQuality": "جودة الإخراج"
   },
   "githubOpenSource": "مفتوح المصدر",
   "copiedDataURLDialogTitle": "تم النسخ إلى الحافظة",

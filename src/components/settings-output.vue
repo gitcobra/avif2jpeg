@@ -179,7 +179,7 @@ async function onDestFolderClick() {
       <n-tooltip :to="false" display-directive="show" :show="INJ.showTooltipsBeforeMounted.value" trigger="hover" :placement="INJ.LANDSCAPE.value ? 'left' : 'top-start'" :keep-alive-on-hover="false" :duration="0" :delay="0">
         <template #trigger>
           <n-flex align="center" :wrap="false">
-            <n-icon><ImageOutline /></n-icon>{{t('settings.imageType')}}:
+            <n-icon><ImageOutline /></n-icon>{{t('settings.outputType')}}:
             <n-select v-model:value="format" :options="supportedFormats.map(value => ({value, label:value}))" :consistent-menu-width="false" size="small" />
           </n-flex>
         </template>
@@ -191,7 +191,7 @@ async function onDestFolderClick() {
         <template #trigger>
           <n-flex align="center">
             <n-flex align="start" :wrap="false">
-              <n-icon><ImageSharp /></n-icon><span style="white-space: nowrap;">{{t('settings.quality')}}:</span>
+              <n-icon><ImageSharp /></n-icon><span style="white-space: nowrap;">{{t('settings.outputQuality')}}:</span>
               <n-flex align="center" justify="space-between">
                 <n-slider :tooltip="false" v-model:value="quality" :step="1" style="width:120px;" :disabled="disableQuality" />
                 <n-input-number @blur="quality=quality==null?0:quality" v-model:value="quality" step="1" min="0" max="100" :disabled="disableQuality" style="width:90px;" size="small" />

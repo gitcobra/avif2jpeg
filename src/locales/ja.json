@@ -142,7 +142,9 @@
     "saveAsZIP": "ZIPファイルとして保存",
     "useFileSystemAPI": "ローカルフォルダへ直接出力ファイルを書き込みます",
     "autoStartConversionTooltip": "画像のロード後に自動的に変換を開始します。リストはロードするごとにリセットされます。",
-    "chooseOutputFolderTooltip": "出力フォルダが未選択です"
+    "chooseOutputFolderTooltip": "出力フォルダが未選択です",
+    "outputType": "出力形式",
+    "outputQuality": "出力画質"
   },
   "reset": "リセット",
   "back": "戻る",

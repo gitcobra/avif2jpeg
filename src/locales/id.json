@@ -134,7 +134,9 @@
     "saveToSpecifiedFolder": "Tulis ke folder yang dipilih",
     "actionOnDuplicate": "Tindakan pada duplikat",
     "autoStartConversionTooltip": "Konversi akan dimulai secara otomatis setelah gambar dimuat. \nDaftar ini diatur ulang setiap kali Anda memuat gambar.",
-    "chooseOutputFolderTooltip": "Tidak ada folder output yang dipilih."
+    "chooseOutputFolderTooltip": "Tidak ada folder output yang dipilih.",
+    "outputType": "Tipe output",
+    "outputQuality": "Kualitas output"
   },
   "githubOpenSource": "Sumber Terbuka",
   "copiedDataURLDialogTitle": "Disalin ke papan klip",

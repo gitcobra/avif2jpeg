@@ -140,7 +140,9 @@
     "saveToSpecifiedFolder": "Write to Selected Folder Directly",
     "actionOnDuplicate": "Action on Duplicate",
     "autoStartConversionTooltip": "Conversion will start automatically after images are loaded. The list is reset each time you load images.",
-    "chooseOutputFolderTooltip": "No output folder selected."
+    "chooseOutputFolderTooltip": "No output folder selected.",
+    "outputType": "Output Type",
+    "outputQuality": "Output Quality"
   },
   "disabled": "Disabled",
   "Download": "Download",

@@ -134,7 +134,9 @@
     "saveToSpecifiedFolder": "Seçilen klasöre yaz",
     "actionOnDuplicate": "Yinelenen eylem",
     "autoStartConversionTooltip": "Görüntüler yüklendikten sonra dönüşüm otomatik olarak başlar. \nResimleri her yüklediğinizde liste sıfırlanır.",
-    "chooseOutputFolderTooltip": "Çıktı klasörü seçilmedi."
+    "chooseOutputFolderTooltip": "Çıktı klasörü seçilmedi.",
+    "outputType": "Çıktı Türü",
+    "outputQuality": "Çıktı kalitesi"
   },
   "githubOpenSource": "Açık Kaynak",
   "copiedDataURLDialogTitle": "Panoya kopyalandı",
