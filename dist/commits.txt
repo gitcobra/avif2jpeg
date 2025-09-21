@@ -1,14 +1,14 @@
+2025-09-21 17:28:08 +0900
+v1.12.3
+
+2025-09-21 17:04:41 +0900
+style: minor layout adjustments
+
+2025-09-21 17:03:53 +0900
+refactor: improve folder skip handling
+
+2025-09-21 13:42:19 +0900
+fix: thumbnail aspect ratio issue in file list on Firefox
+
 2025-09-20 13:55:14 +0900
 v1.12.2
-
-2025-09-20 13:53:35 +0900
-tweak: replace file-list thumbnail rendering from <img> to <canvas>
-
-2025-09-19 18:15:49 +0900
-v1.12.1
-
-2025-09-19 18:12:52 +0900
-feat: support writing via File System API
-
-2025-09-09 07:57:24 +0900
-v1.11.4

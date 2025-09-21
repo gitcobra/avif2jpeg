@@ -12453,7 +12453,7 @@
     "/avif2jpeg/dist/assets/Roboto-Medium-DPwG85_g.ttf",
     "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
   ],
-  "src/components/canvas-thumbnail.vue?vue&type=style&index=0&scoped=10914d6b&lang.scss": [
+  "src/components/canvas-thumbnail.vue?vue&type=style&index=0&scoped=14a1f9fe&lang.scss": [
     "/avif2jpeg/dist/assets/Roboto-Regular-f0lhpOnz.ttf",
     "/avif2jpeg/dist/assets/Roboto-Medium-DPwG85_g.ttf",
     "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
@@ -12648,7 +12648,7 @@
     "/avif2jpeg/dist/assets/Roboto-Medium-DPwG85_g.ttf",
     "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
   ],
-  "src/components/file-selector.vue?vue&type=style&index=0&scoped=6f706eda&lang.scss": [
+  "src/components/file-selector.vue?vue&type=style&index=0&scoped=1689b029&lang.scss": [
     "/avif2jpeg/dist/assets/Roboto-Regular-f0lhpOnz.ttf",
     "/avif2jpeg/dist/assets/Roboto-Medium-DPwG85_g.ttf",
     "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
@@ -12733,7 +12733,7 @@
     "/avif2jpeg/dist/assets/Roboto-Medium-DPwG85_g.ttf",
     "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
   ],
-  "src/components/settings-output.vue?vue&type=style&index=0&scoped=0b7a23ab&lang.scss": [
+  "src/components/settings-output.vue?vue&type=style&index=0&scoped=26344520&lang.scss": [
     "/avif2jpeg/dist/assets/Roboto-Regular-f0lhpOnz.ttf",
     "/avif2jpeg/dist/assets/Roboto-Medium-DPwG85_g.ttf",
     "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
@@ -12769,10 +12769,10 @@
     "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
   ],
   "src/locales/ar.json": [
-    "/avif2jpeg/dist/assets/ar-Cq3xFD0d.js"
+    "/avif2jpeg/dist/assets/ar-Ikflx6l4.js"
   ],
   "src/locales/de.json": [
-    "/avif2jpeg/dist/assets/de-BYyL2Q8a.js"
+    "/avif2jpeg/dist/assets/de-c3czPvNh.js"
   ],
   "src/locales/en.json": [
     "/avif2jpeg/dist/assets/Roboto-Regular-f0lhpOnz.ttf",
@@ -12780,52 +12780,52 @@
     "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
   ],
   "src/locales/es.json": [
-    "/avif2jpeg/dist/assets/es-y3kENsfK.js"
+    "/avif2jpeg/dist/assets/es-hmw6qoc9.js"
   ],
   "src/locales/fi.json": [
-    "/avif2jpeg/dist/assets/fi-BOOsWj3A.js"
+    "/avif2jpeg/dist/assets/fi-CieSZ_6-.js"
   ],
   "src/locales/fr.json": [
-    "/avif2jpeg/dist/assets/fr-DBPGR-AH.js"
+    "/avif2jpeg/dist/assets/fr-Ntr_VsJE.js"
   ],
   "src/locales/hi.json": [
-    "/avif2jpeg/dist/assets/hi-C0yXRgeK.js"
+    "/avif2jpeg/dist/assets/hi-CVEH8snI.js"
   ],
   "src/locales/id.json": [
-    "/avif2jpeg/dist/assets/id-BKh816kV.js"
+    "/avif2jpeg/dist/assets/id-C0CTfUnd.js"
   ],
   "src/locales/it.json": [
-    "/avif2jpeg/dist/assets/it-BZjU0Iw8.js"
+    "/avif2jpeg/dist/assets/it-DBBMsFoD.js"
   ],
   "src/locales/ja.json": [
-    "/avif2jpeg/dist/assets/ja-DWhNn72H.js"
+    "/avif2jpeg/dist/assets/ja-DUG1ANiW.js"
   ],
   "src/locales/ko.json": [
-    "/avif2jpeg/dist/assets/ko-DcgjgIJ8.js"
+    "/avif2jpeg/dist/assets/ko-4BySyTdz.js"
   ],
   "src/locales/nl.json": [
-    "/avif2jpeg/dist/assets/nl-C0-dxknq.js"
+    "/avif2jpeg/dist/assets/nl-C3a2ArPH.js"
   ],
   "src/locales/pl.json": [
-    "/avif2jpeg/dist/assets/pl-BT6NOQ9_.js"
+    "/avif2jpeg/dist/assets/pl-BTfPrP5Q.js"
   ],
   "src/locales/pt.json": [
-    "/avif2jpeg/dist/assets/pt-CpN3z_92.js"
+    "/avif2jpeg/dist/assets/pt-B2BJjkec.js"
   ],
   "src/locales/ru.json": [
-    "/avif2jpeg/dist/assets/ru-GLKsqtkO.js"
+    "/avif2jpeg/dist/assets/ru-DwH_JxLh.js"
   ],
   "src/locales/tr.json": [
-    "/avif2jpeg/dist/assets/tr-jnx2eT_g.js"
+    "/avif2jpeg/dist/assets/tr-lITmrr_t.js"
   ],
   "src/locales/uk.json": [
-    "/avif2jpeg/dist/assets/uk-q8xUtVmg.js"
+    "/avif2jpeg/dist/assets/uk-_A6jRv1V.js"
   ],
   "src/locales/zh-hant.json": [
-    "/avif2jpeg/dist/assets/zh-hant-DrVla1ow.js"
+    "/avif2jpeg/dist/assets/zh-hant-VL25lLo6.js"
   ],
   "src/locales/zh.json": [
-    "/avif2jpeg/dist/assets/zh-CbAaPGeL.js"
+    "/avif2jpeg/dist/assets/zh-iNdkdJOg.js"
   ],
   "src/main.ts": [
     "/avif2jpeg/dist/assets/Roboto-Regular-f0lhpOnz.ttf",
