@@ -12453,7 +12453,7 @@
     "/avif2jpeg/dist/assets/Roboto-Medium-DPwG85_g.ttf",
     "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
   ],
-  "src/components/canvas-thumbnail.vue?vue&type=style&index=0&scoped=14a1f9fe&lang.scss": [
+  "src/components/canvas-thumbnail.vue?vue&type=style&index=0&scoped=642e679e&lang.scss": [
     "/avif2jpeg/dist/assets/Roboto-Regular-f0lhpOnz.ttf",
     "/avif2jpeg/dist/assets/Roboto-Medium-DPwG85_g.ttf",
     "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
@@ -12648,7 +12648,7 @@
     "/avif2jpeg/dist/assets/Roboto-Medium-DPwG85_g.ttf",
     "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
   ],
-  "src/components/file-selector.vue?vue&type=style&index=0&scoped=1689b029&lang.scss": [
+  "src/components/file-selector.vue?vue&type=style&index=0&scoped=79e449e5&lang.scss": [
     "/avif2jpeg/dist/assets/Roboto-Regular-f0lhpOnz.ttf",
     "/avif2jpeg/dist/assets/Roboto-Medium-DPwG85_g.ttf",
     "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
@@ -12718,7 +12718,7 @@
     "/avif2jpeg/dist/assets/Roboto-Medium-DPwG85_g.ttf",
     "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
   ],
-  "src/components/settings-adv.vue?vue&type=style&index=0&scoped=c3ff20ca&lang.scss": [
+  "src/components/settings-adv.vue?vue&type=style&index=0&scoped=58cc8d3c&lang.scss": [
     "/avif2jpeg/dist/assets/Roboto-Regular-f0lhpOnz.ttf",
     "/avif2jpeg/dist/assets/Roboto-Medium-DPwG85_g.ttf",
     "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
@@ -12733,7 +12733,7 @@
     "/avif2jpeg/dist/assets/Roboto-Medium-DPwG85_g.ttf",
     "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
   ],
-  "src/components/settings-output.vue?vue&type=style&index=0&scoped=26344520&lang.scss": [
+  "src/components/settings-output.vue?vue&type=style&index=0&scoped=31d6c0c9&lang.scss": [
     "/avif2jpeg/dist/assets/Roboto-Regular-f0lhpOnz.ttf",
     "/avif2jpeg/dist/assets/Roboto-Medium-DPwG85_g.ttf",
     "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
@@ -12769,10 +12769,10 @@
     "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
   ],
   "src/locales/ar.json": [
-    "/avif2jpeg/dist/assets/ar-Ikflx6l4.js"
+    "/avif2jpeg/dist/assets/ar-BlQUsQY6.js"
   ],
   "src/locales/de.json": [
-    "/avif2jpeg/dist/assets/de-c3czPvNh.js"
+    "/avif2jpeg/dist/assets/de-DaOkktnE.js"
   ],
   "src/locales/en.json": [
     "/avif2jpeg/dist/assets/Roboto-Regular-f0lhpOnz.ttf",
@@ -12780,52 +12780,52 @@
     "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
   ],
   "src/locales/es.json": [
-    "/avif2jpeg/dist/assets/es-hmw6qoc9.js"
+    "/avif2jpeg/dist/assets/es-Dn9bzDfa.js"
   ],
   "src/locales/fi.json": [
-    "/avif2jpeg/dist/assets/fi-CieSZ_6-.js"
+    "/avif2jpeg/dist/assets/fi-Du42DQB7.js"
   ],
   "src/locales/fr.json": [
-    "/avif2jpeg/dist/assets/fr-Ntr_VsJE.js"
+    "/avif2jpeg/dist/assets/fr-BHEA5dbc.js"
   ],
   "src/locales/hi.json": [
-    "/avif2jpeg/dist/assets/hi-CVEH8snI.js"
+    "/avif2jpeg/dist/assets/hi-DyR3vLWh.js"
   ],
   "src/locales/id.json": [
-    "/avif2jpeg/dist/assets/id-C0CTfUnd.js"
+    "/avif2jpeg/dist/assets/id-Dt6xcqz_.js"
   ],
   "src/locales/it.json": [
-    "/avif2jpeg/dist/assets/it-DBBMsFoD.js"
+    "/avif2jpeg/dist/assets/it-BFMcyKOK.js"
   ],
   "src/locales/ja.json": [
-    "/avif2jpeg/dist/assets/ja-DUG1ANiW.js"
+    "/avif2jpeg/dist/assets/ja-DO_GS_KB.js"
   ],
   "src/locales/ko.json": [
-    "/avif2jpeg/dist/assets/ko-4BySyTdz.js"
+    "/avif2jpeg/dist/assets/ko-CwQBTgO-.js"
   ],
   "src/locales/nl.json": [
-    "/avif2jpeg/dist/assets/nl-C3a2ArPH.js"
+    "/avif2jpeg/dist/assets/nl-CVIx3Y2C.js"
   ],
   "src/locales/pl.json": [
-    "/avif2jpeg/dist/assets/pl-BTfPrP5Q.js"
+    "/avif2jpeg/dist/assets/pl-CnCDTIkG.js"
   ],
   "src/locales/pt.json": [
-    "/avif2jpeg/dist/assets/pt-B2BJjkec.js"
+    "/avif2jpeg/dist/assets/pt-tm5hjAzx.js"
   ],
   "src/locales/ru.json": [
-    "/avif2jpeg/dist/assets/ru-DwH_JxLh.js"
+    "/avif2jpeg/dist/assets/ru-BzO4Zv_8.js"
   ],
   "src/locales/tr.json": [
-    "/avif2jpeg/dist/assets/tr-lITmrr_t.js"
+    "/avif2jpeg/dist/assets/tr-gEbi1tPy.js"
   ],
   "src/locales/uk.json": [
-    "/avif2jpeg/dist/assets/uk-_A6jRv1V.js"
+    "/avif2jpeg/dist/assets/uk-DXnC_6XK.js"
   ],
   "src/locales/zh-hant.json": [
-    "/avif2jpeg/dist/assets/zh-hant-VL25lLo6.js"
+    "/avif2jpeg/dist/assets/zh-hant-2trgrrlh.js"
   ],
   "src/locales/zh.json": [
-    "/avif2jpeg/dist/assets/zh-iNdkdJOg.js"
+    "/avif2jpeg/dist/assets/zh-C0XKYdeQ.js"
   ],
   "src/main.ts": [
     "/avif2jpeg/dist/assets/Roboto-Regular-f0lhpOnz.ttf",
