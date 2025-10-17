@@ -12,6 +12,7 @@ export type ConverterResult = {
 import { NButton, type NotificationType } from 'naive-ui';
 import { convertTargetFilesInMultithread, demandImage as demandImageMulti, deleteImage } from './converter.multi';
 import { convertImagesInSingleThread, getAsPromise, demandImage as demandImageSingle } from './converter.single';
+import { getFileSystemWritePermission, isDirHandleValid } from '../filesystem-api';
 
 // sub components
 import ConversionStatus from './status/status.vue';
@@ -113,7 +114,7 @@ const confirmationTargetIsFolder = ref<boolean>(true);
 const warnfsysShow = ref(false);
 let onCloseWarnFsys = () => {};
 const noWarnFilesys = ref(false);
-let warnfsysAccepted = false;
+let warnfsysAccepted = false as boolean;
 
 // normal variables
 
@@ -129,7 +130,7 @@ let demandImage: (index: number) => any | null;
 
 // conversion statuses
 let elapsedTimeForConversion = 0;
-let allZipsClicked = false;
+let allZipsClicked = false as boolean;
 
 
 
@@ -250,15 +251,31 @@ async function beginConversion() {
     return;
   }
 
-  if( props.outputToDir && !noWarnFilesys.value ) {
-    await new Promise<void>(resolve => {
-      warnfsysShow.value = true;
-      warnfsysAccepted = false;
-      onCloseWarnFsys = resolve;
-    });
+  if( props.outputToDir ) {
+    if( !noWarnFilesys.value ) {
+      await new Promise<void>(resolve => {
+        warnfsysShow.value = true;
+        warnfsysAccepted = false;
+        onCloseWarnFsys = resolve;
+      });
 
-    if( !warnfsysAccepted ) {
-      noWarnFilesys.value = false;
+      if( !warnfsysAccepted ) {
+        noWarnFilesys.value = false;
+        return;
+      }
+    }
+
+    // check permission
+    if(
+      !(await getFileSystemWritePermission(props.outputDirHandle)) ||
+      !(await isDirHandleValid(props.outputDirHandle))
+    ) {
+      await dialog.warning({
+        title: 'Rejected',
+        positiveText: 'OK',
+        maskClosable: true,
+        content: t('settings.permissionDenied'),
+      });
       return;
     }
   }

@@ -136,7 +136,8 @@
     "autoStartConversionTooltip": "이미지가로드 된 후 변환이 자동으로 시작됩니다. \n이미지를로드 할 때마다 목록이 재설정됩니다.",
     "chooseOutputFolderTooltip": "출력 폴더가 선택되지 않았습니다.",
     "outputType": "출력 유형",
-    "outputQuality": "출력 품질"
+    "outputQuality": "출력 품질",
+    "permissionDenied": "폴더에 대한 액세스 권한을 얻지 못했습니다."
   },
   "githubOpenSource": "오픈 소스",
   "copiedDataURLDialogTitle": "클립보드에 복사됨",

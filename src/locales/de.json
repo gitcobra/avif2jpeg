@@ -136,7 +136,8 @@
     "autoStartConversionTooltip": "Die Konvertierung beginnt automatisch nach dem Laden der Bilder. \nDie Liste wird jedes Mal zurückgesetzt, wenn Sie Bilder laden.",
     "chooseOutputFolderTooltip": "Kein Ausgangsordner ausgewählt.",
     "outputType": "Ausgangstyp",
-    "outputQuality": "Ausgangsqualität"
+    "outputQuality": "Ausgangsqualität",
+    "permissionDenied": "Die Zugriffsberechtigung für den Ordner konnte nicht abgerufen werden."
   },
   "githubOpenSource": "Open Source",
   "copiedDataURLDialogTitle": "In die Zwischenablage kopiert",

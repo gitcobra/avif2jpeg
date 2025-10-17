@@ -18,11 +18,11 @@ const MIN_WIDTH = 100;
 const MIN_HEIGHT = 100;
 const TooltipDefAttr: InstanceType<typeof NTooltip>['$props'] = {
   trigger: "hover",
-  placement: "left",
+  //placement: "left",
   keepAliveOnHover: false,
-  duration: 0,
-  delay: 0,
-  style: 'max-width: 20vw;',
+  //duration: 0,
+  //delay: 0,
+  //style: 'max-width: 20vw;',
 };
 
 
@@ -71,7 +71,7 @@ watch(threadCount, (val) => {
 
 // confirmation for reset
 const warnResetShow = ref(false);
-let confirmedReset = false;
+let confirmedReset = false as boolean;
 let resolveConfirmation: Function = () => {};
 const enableNewFeatures = computed(() => multithread.value && MaxThreads.value > 1);
 

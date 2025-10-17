@@ -111,10 +111,7 @@ provide(GlobalValsKey, {
 
 // on mounted
 
-onMounted(() => {
-  // remove style for svg size fix
-  //document.querySelector('head').removeChild(document.getElementById('svgfix'));
-  
+onMounted(() => {  
   checkLandScape();
   window.addEventListener('resize', checkLandScape);
 

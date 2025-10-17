@@ -136,7 +136,8 @@
     "autoStartConversionTooltip": "De conversie start automatisch nadat afbeeldingen zijn geladen. \nDe lijst wordt gereset telkens wanneer u afbeeldingen laadt.",
     "chooseOutputFolderTooltip": "Geen uitvoermap geselecteerd.",
     "outputType": "Uitgangstype",
-    "outputQuality": "Outputkwaliteit"
+    "outputQuality": "Outputkwaliteit",
+    "permissionDenied": "Kan geen toegangsrechten voor de map krijgen."
   },
   "githubOpenSource": "Open bron",
   "copiedDataURLDialogTitle": "Gekopieerd naar klembord",

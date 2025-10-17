@@ -144,7 +144,8 @@
     "autoStartConversionTooltip": "画像のロード後に自動的に変換を開始します。リストはロードするごとにリセットされます。",
     "chooseOutputFolderTooltip": "出力フォルダが未選択です",
     "outputType": "出力形式",
-    "outputQuality": "出力画質"
+    "outputQuality": "出力画質",
+    "permissionDenied": "フォルダへのアクセス権限が得られませんでした"
   },
   "reset": "リセット",
   "back": "戻る",

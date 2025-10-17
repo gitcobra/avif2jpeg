@@ -136,7 +136,8 @@
     "autoStartConversionTooltip": "加载图像后，转换将自动启动。\n每次加载图像时，列表都是重置的。",
     "chooseOutputFolderTooltip": "未选择输出文件夹。",
     "outputType": "输出类型",
-    "outputQuality": "产出质量"
+    "outputQuality": "产出质量",
+    "permissionDenied": "无法获得文件夹的访问权限。"
   },
   "githubOpenSource": "开源",
   "copiedDataURLDialogTitle": "已复制到剪贴板",

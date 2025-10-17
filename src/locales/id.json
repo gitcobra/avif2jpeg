@@ -136,7 +136,8 @@
     "autoStartConversionTooltip": "Konversi akan dimulai secara otomatis setelah gambar dimuat. \nDaftar ini diatur ulang setiap kali Anda memuat gambar.",
     "chooseOutputFolderTooltip": "Tidak ada folder output yang dipilih.",
     "outputType": "Tipe output",
-    "outputQuality": "Kualitas output"
+    "outputQuality": "Kualitas output",
+    "permissionDenied": "Gagal mendapatkan izin akses untuk folder tersebut."
   },
   "githubOpenSource": "Sumber Terbuka",
   "copiedDataURLDialogTitle": "Disalin ke papan klip",

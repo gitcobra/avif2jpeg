@@ -136,7 +136,8 @@
     "autoStartConversionTooltip": "Konwersja rozpocznie się automatycznie po załadowaniu obrazów. \nLista jest resetowana za każdym razem, gdy ładujesz obrazy.",
     "chooseOutputFolderTooltip": "Brak folderu wyjściowego.",
     "outputType": "Typ wyjściowy",
-    "outputQuality": "Jakość wyjściowa"
+    "outputQuality": "Jakość wyjściowa",
+    "permissionDenied": "Nie udało się uzyskać uprawnień dostępu do folderu."
   },
   "githubOpenSource": "Otwarte źródło",
   "copiedDataURLDialogTitle": "Skopiowano do schowka",

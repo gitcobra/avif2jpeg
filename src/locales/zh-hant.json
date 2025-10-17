@@ -137,7 +137,8 @@
     "autoStartConversionTooltip": "加載圖像後，轉換將自動啟動。每次加載圖像時，列表都是重置的。",
     "chooseOutputFolderTooltip": "未選擇輸出文件夾。",
     "outputType": "輸出類型",
-    "outputQuality": "產出質量"
+    "outputQuality": "產出質量",
+    "permissionDenied": "無法獲得文件夾的訪問權限。"
   },
   "githubOpenSource": "開源",
   "copiedDataURLDialogTitle": "已複製到剪貼簿",

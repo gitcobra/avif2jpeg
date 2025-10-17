@@ -84,7 +84,8 @@
     "autoStartConversionTooltip": "Muutos alkaa automaattisesti kuvien lataamisen jälkeen. \nLuettelo nollataan joka kerta kun lataat kuvia.",
     "chooseOutputFolderTooltip": "Lähtökansiota ei ole valittu.",
     "outputType": "Lähtötyyppi",
-    "outputQuality": "Tuotoksen laatu"
+    "outputQuality": "Tuotoksen laatu",
+    "permissionDenied": "Kansion käyttöoikeuden saaminen epäonnistui."
   },
   "status": {
     "Converted": "Muunnettu",

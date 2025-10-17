@@ -142,7 +142,8 @@
     "autoStartConversionTooltip": "Conversion will start automatically after images are loaded. The list is reset each time you load images.",
     "chooseOutputFolderTooltip": "No output folder selected.",
     "outputType": "Output Type",
-    "outputQuality": "Output Quality"
+    "outputQuality": "Output Quality",
+    "permissionDenied": "Failed to get access permission for the folder."
   },
   "disabled": "Disabled",
   "Download": "Download",

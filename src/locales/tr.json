@@ -136,7 +136,8 @@
     "autoStartConversionTooltip": "Görüntüler yüklendikten sonra dönüşüm otomatik olarak başlar. \nResimleri her yüklediğinizde liste sıfırlanır.",
     "chooseOutputFolderTooltip": "Çıktı klasörü seçilmedi.",
     "outputType": "Çıktı Türü",
-    "outputQuality": "Çıktı kalitesi"
+    "outputQuality": "Çıktı kalitesi",
+    "permissionDenied": "Klasöre erişim izni alınamadı."
   },
   "githubOpenSource": "Açık Kaynak",
   "copiedDataURLDialogTitle": "Panoya kopyalandı",

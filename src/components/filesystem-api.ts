@@ -6,34 +6,43 @@ export function isFileSystemAPISupported() {
   return typeof window.showDirectoryPicker === 'function';
 }
 
-export async function openDirectoryPicker() {
-  let state;
+export async function openDirectoryPicker(write = true): Promise<FileSystemDirectoryHandle | null> {
   let dirHandle;
-  
   try {
     // @ts-ignore
     dirHandle = await window.showDirectoryPicker();
-    if( dirHandle ) {
-      state = await dirHandle.quryPermission({ mode: 'readwrite' });
-      if (state !== 'granted') {
-        state = await dirHandle.requestPermission({ mode: 'readwrite' });
-      }
+    if( dirHandle && write ) {
+      if( await getFileSystemWritePermission(dirHandle) )
+        return dirHandle;
     }
   } catch(e) {
-    //return null;
+    console.error(e);
+  }
+
+  return null;
+}
+
+export async function getFileSystemWritePermission(handle: FileSystemHandle) {
+  let state;
+  
+  try {
+    // @ts-ignore
+    state = await handle.queryPermission({ mode: 'readwrite' });
+  } catch(e) {
+    console.error(e);
   }
 
   if( state !== 'granted' ) {
     try {
-      state = await dirHandle.requestPermission({ mode: 'readwrite' });
+      // @ts-ignore
+      state = await handle.requestPermission({ mode: 'readwrite' });
     }
     catch(e) {
-      //alert('Permission request denied.');
-      return null;
+      console.error(e);
     }
   }
-  
-  return state === 'granted' ? dirHandle : null;
+
+  return state === 'granted';
 }
 
 export async function getFileHandle<T extends boolean>(
@@ -244,7 +253,8 @@ export async function isDirHandleValid(dirHandle: FileSystemDirectoryHandle): Pr
     }
     return true;
   } catch (err: any) {
-    if (err.name === 'NotFoundError') return false;
+    if( err.name === 'NotFoundError' )
+      return false;
     throw err; // other errors are real failures
   }
 }
@@ -296,4 +306,69 @@ export async function createExistingFolderSetWithinFileList(
   }
 
   return result;
+}
+
+
+
+// store DirectoryHandle in IndexedDB
+const DB_NAME = 'avif2jpeg-db';
+const DB_VER = 1;
+const DB_STORE = 'output-dirs';
+const DB_ENTRY = 'last-used';
+
+export async function initIndexDB() {
+  return new Promise<any>(resolve => {
+    const db = indexedDB.open(DB_NAME, DB_VER);
+
+    // initialize database
+    db.onupgradeneeded = (event: any) => {
+      const db = event.target.result as IDBDatabase;
+      db.createObjectStore(DB_STORE, /*{ keyPath: 'type' }*/);
+    };
+    db.onsuccess = db.onerror = resolve;
+  });
+}
+export async function saveDirHandleToInexDB(dirHandle: FileSystemDirectoryHandle) {
+  return new Promise<void>(async (resolve, reject) => {
+    const db = indexedDB.open(DB_NAME, DB_VER);
+    // put data
+    db.onsuccess = (event: any) => {
+      const db = event.target.result as IDBDatabase;
+      const tx = db.transaction([DB_STORE], 'readwrite');
+      const store = tx.objectStore(DB_STORE);
+      store.put(dirHandle, DB_ENTRY);
+      
+      resolve();
+    };
+    db.onerror = reject;
+  });
+}
+export async function restoreDirHandleFromIndexDB() {
+  return new Promise<FileSystemDirectoryHandle>(async (resolve, reject) => {
+    const db = await indexedDB.open(DB_NAME, DB_VER);
+    db.onsuccess = (event: any) => {
+      const db = event.target.result as IDBDatabase;
+
+      let tx;
+      try {
+        tx = db.transaction([DB_STORE], 'readonly');
+      } catch(e) {
+        reject(e);
+        return;
+      }
+
+      const store = tx.objectStore(DB_STORE);
+      const req = store.get(DB_ENTRY);
+
+      req.onsuccess = (event: any) => {
+        const result = event.target.result;
+        resolve(result);
+      };
+      req.onerror = reject;
+    };
+    db.onerror = reject;
+  }).catch(reason => {
+    console.error(reason);
+    return null;
+  });
 }

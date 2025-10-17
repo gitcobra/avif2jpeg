@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { getThumbnailedSize, sleep } from './util';
-
 
 const props = defineProps<{
   source: ImageBitmapSource;

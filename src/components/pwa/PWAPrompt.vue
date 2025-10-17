@@ -35,7 +35,10 @@ const {
   onOfflineReady() {
   },
   async onNeedRefresh() {
-    const res = await fetch(location.origin + import.meta.env.BASE_URL + 'version.txt', { cache: 'no-store' });
+    const res = await fetch(
+      location.origin + import.meta.env.BASE_URL + 'version.txt',
+      { cache: 'no-store' }
+    );
     if( res.status !== 200 )
       return;
     

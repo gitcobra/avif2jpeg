@@ -2,6 +2,21 @@
   <div class="container-1">
   <div class="container-2">
   <n-flex vertical align="center" justify="center" inline size="large">
+    
+    <!-- auto start -->
+    <n-flex justify="center">
+      <n-tooltip placement="top-start">
+        <template #trigger>
+          <n-checkbox v-model:checked="autoStartOpt" size="small" style="">
+            {{ $t('settings.autoStartConversion') }}
+          </n-checkbox>
+        </template>
+        <template #default>
+          {{ $t('settings.autoStartConversionTooltip') }}
+        </template>
+      </n-tooltip>
+    </n-flex>
+    
     <n-flex align="center" justify="space-around" class="main-buttons">
       
       <n-flex vertical align="stretch" justify="center">
@@ -33,7 +48,7 @@
 
           <!-- folder select -->
           <n-tooltip :to="false" display-directive="show" trigger="hover"
-            placement="left" :keep-alive-on-hover="false" style="max-width: 40vw;"
+            :placement="INJ.LANDSCAPE ? 'left' : 'bottom'" :keep-alive-on-hover="false" style="max-width: 40vw;"
             :duration="0" :delay="0" :z-index="10"
             :show="INJ.showTooltipsBeforeMounted.value"
           >
@@ -65,8 +80,9 @@
       </n-flex>
     </n-flex>
 
-    <!-- target file type menu -->
     <n-flex vertical>
+      
+      <!-- target file type menu -->
       <n-flex :wrap="INJ.IS_SP" align="center" justify="stretch">
         <n-tooltip :to="false" display-directive="show" trigger="hover"
           :keep-alive-on-hover="false" style="max-width: 40vw;"
@@ -83,7 +99,10 @@
           </template>
         </n-tooltip>
 
-        <n-tooltip :keep-alive-on-hover="false" placement="right" style="max-width:200px;" :duration="0" :delay="0">
+        <n-tooltip
+          :keep-alive-on-hover="false" placement="right" style="max-width:200px;"
+          :duration="0" :delay="0"
+        >
         <template #trigger>
           <n-select
             trigger="click" width="trigger"
@@ -98,10 +117,16 @@
         </n-tooltip>
       </n-flex>
 
-      <n-tooltip v-if="targetType === 'edit_type'" trigger="hover" :keep-alive-on-hover="false" placement="bottom-start" :show="userExtInputActive" :duration="0" :delay="0">
+      <!-- edit box -->
+      <n-tooltip v-if="targetType === 'edit_type'"
+        trigger="hover" :keep-alive-on-hover="false"
+        placement="bottom-start" :show="userExtInputActive" :duration="0" :delay="0"
+      >
         <template #trigger>
           <div style="padding-left:1em;">
-            <n-popover trigger="manual" placement="right-end" :show="targetType === 'edit_type' && userExtValidationStat !== 'success' && !!userExtInputActive">
+            <n-popover trigger="manual" placement="right-end"
+              :show="targetType === 'edit_type' && userExtValidationStat !== 'success' && !!userExtInputActive"
+            >
               <template #trigger>
                 <n-input
                   v-model:value="customExtensions"
@@ -127,18 +152,8 @@
         </template>
         <span v-html="$t('editAcceptTypes')"></span>
       </n-tooltip>
-    </n-flex>
 
-      <n-tooltip>
-        <template #trigger>
-          <n-checkbox v-model:checked="autoStartOpt" size="small" style="">
-            {{ $t('settings.autoStartConversion') }}
-          </n-checkbox>
-        </template>
-        <template #default>
-          {{ $t('settings.autoStartConversionTooltip') }}
-        </template>
-      </n-tooltip>
+    </n-flex>
 
   </n-flex>
   </div>

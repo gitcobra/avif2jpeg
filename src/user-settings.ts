@@ -50,7 +50,7 @@ const DefaultSettings = {
 };
 
 const ExcludedPropertiesFromSave: (keyof typeof DefaultSettings)[] = [
-  'outputMethod',
+  //'outputMethod',
   'actionOnDuplicate',
 ];
 

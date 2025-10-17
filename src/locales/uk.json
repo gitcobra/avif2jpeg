@@ -136,7 +136,8 @@
     "autoStartConversionTooltip": "Перетворення розпочнеться автоматично після завантаження зображень. \nСписок скидається щоразу, коли ви завантажуєте зображення.",
     "chooseOutputFolderTooltip": "Немає вихідної папки.",
     "outputType": "Тип виходу",
-    "outputQuality": "Якість виходу"
+    "outputQuality": "Якість виходу",
+    "permissionDenied": "Не вдалося отримати дозвіл на доступ до папки."
   },
   "githubOpenSource": "Відкритий код",
   "copiedDataURLDialogTitle": "Скопійовано в буфер обміну",

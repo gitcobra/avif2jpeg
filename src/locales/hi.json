@@ -136,7 +136,8 @@
     "autoStartConversionTooltip": "छवियों के लोड होने के बाद रूपांतरण स्वचालित रूप से शुरू हो जाएगा। \nहर बार जब आप छवियों को लोड करते हैं तो सूची रीसेट हो जाती है।",
     "chooseOutputFolderTooltip": "कोई आउटपुट फ़ोल्डर चयनित नहीं।",
     "outputType": "उत्पादन का प्रकार",
-    "outputQuality": "आउटपुट -क्वालिटी"
+    "outputQuality": "आउटपुट -क्वालिटी",
+    "permissionDenied": "फ़ोल्डर तक पहुंच की अनुमति प्राप्त करने में विफल."
   },
   "githubOpenSource": "खुला स्त्रोत",
   "copiedDataURLDialogTitle": "क्लिपबोर्ड पर कॉपी किया गया",

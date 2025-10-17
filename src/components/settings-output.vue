@@ -4,7 +4,12 @@ import { ImageSharp, ImageOutline } from '@vicons/ionicons5';
 import { useI18n } from "vue-i18n";
 import { GlobalValsKey } from "../Avif2Jpeg.vue";
 import { OutputMethods } from "@/user-settings";
-import { isFileSystemAPISupported, openDirectoryPicker } from "./filesystem-api";
+import {
+  isFileSystemAPISupported, openDirectoryPicker,
+  initIndexDB,
+  restoreDirHandleFromIndexDB,
+  saveDirHandleToInexDB,
+} from "./filesystem-api";
 import { sleep, invertRef } from "./util";
 import { SelectOption } from 'naive-ui';
 
@@ -14,6 +19,7 @@ const props = defineProps<{
   format: string;
   isMultithreadEnabled?: boolean;
 }>();
+// v-models
 const outputMethod = defineModel<OutputMethods>('method', {required: true});
 const targetFolderHandle = defineModel<FileSystemDirectoryHandle>('target-folder-handle');
 const actionOnDuplicate = defineModel<ActionsOnDuplicte>('action-on-duplicate', {default: 'prompt'});
@@ -84,7 +90,7 @@ const canvas = ref<HTMLCanvasElement | null>(null);
 // reactives
 const showAlertToChooseDest = ref(false);
 const noOutputFolderSet = computed(() => outputMethod.value === 'fs' && !targetFolderHandle.value);
-
+const fsysSelected = computed(() => outputMethod.value === 'fs');
 
 // watchers
 watch(() => props.isMultithreadEnabled, (val) => {
@@ -94,20 +100,32 @@ watch(() => props.isMultithreadEnabled, (val) => {
 
 // variables
 const fsysIsAvailable = isFileSystemAPISupported();
-
-
+if( fsysIsAvailable ) {
+  checkStoredDirHandle();
+}
 
 
 
 onMounted(() => {
   checkSupportedImageFormats();
-  if( !fsysIsAvailable && outputMethod.value === 'fs' )
+  if( !fsysIsAvailable && fsysSelected.value )
     outputMethod.value = 'zip';
+  if( fsysSelected.value )
+    onOutputToFolderChecked();
 });
 
 
 
-
+async function checkStoredDirHandle() {
+  await initIndexDB();
+  const dirHandle = await restoreDirHandleFromIndexDB();
+  if( dirHandle ) {
+    targetFolderHandle.value = dirHandle;
+  }
+  else {
+    outputMethod.value = 'zip';
+  }
+}
 
 function checkFormat(val) {
   if( supportedFormats.value.indexOf(val) < 0 ) {
@@ -142,6 +160,7 @@ function onOutputToFolderChecked() {
   */
   invertRef(showAlertToChooseDest, 200, false);
 }
+
 async function onDestFolderClick() {
   const dh = await openDirectoryPicker();
   if( !dh ) {
@@ -160,6 +179,12 @@ async function onDestFolderClick() {
   }
   
   targetFolderHandle.value = dh;
+  saveDirHandleToInexDB(dh);
+}
+
+function clearTargetFolder() {
+  targetFolderHandle.value = null;
+  saveDirHandleToInexDB(null);
 }
 
 </script>
@@ -193,7 +218,10 @@ async function onDestFolderClick() {
             <n-flex align="start" :wrap="false">
               <n-icon><ImageSharp /></n-icon><span style="white-space: nowrap;">{{t('settings.outputQuality')}}:</span>
               <n-flex align="center" justify="space-between">
-                <n-slider :tooltip="false" v-model:value="quality" :step="1" style="width:120px;" :disabled="disableQuality" />
+                <n-slider
+                  :tooltip="false" v-model:value="quality" :step="1" style="width:120px;"
+                  :disabled="disableQuality"
+                />
                 <n-input-number @blur="quality=quality==null?0:quality" v-model:value="quality" step="1" min="0" max="100" :disabled="disableQuality" style="width:90px;" size="small" />
               </n-flex>
             </n-flex>
@@ -203,12 +231,15 @@ async function onDestFolderClick() {
       </n-tooltip>
     </n-flex>
 
-    <n-collapse :trigger-areas="['arrow', 'main']">
-    <n-collapse-item :disabled="outputMethod === 'fs'/*noOutputFolderSet*/">
+    <!-- output method -->
+    <n-collapse
+      :trigger-areas="['arrow', 'main']"
+      :default-expanded-names="fsysSelected ? 'def' : undefined"
+    >
+    <n-collapse-item name="def" :disabled="fsysSelected" >
       <template #header>
         {{ $t('settings.changeSaveMethod') }}
       </template>
-      <!-- output method -->
       <n-flex vertical align="stretch" class="method-box" :size="1">
         <n-radio
           :checked="outputMethod === 'zip'"
@@ -227,25 +258,26 @@ async function onDestFolderClick() {
         
         <n-radio
           :disabled="!fsysIsAvailable || !isMultithreadEnabled"
-          :checked="outputMethod === 'fs'"
+          :checked="fsysSelected"
           @update:checked="checked => checked && fsysIsAvailable && onOutputToFolderChecked()"
         >
-          <n-flex align="center" :size="2"
-            :class="outputMethod === 'fs' ? 'method-active':'method-inactive'"
+          <n-flex align="center" :size="2" :wrap="false"
+            :class="fsysSelected ? 'method-active':'method-inactive'"
           >
             <n-icon size="1.5em"><MdiFolderEditOutline/></n-icon>
             <n-flex align="center" :size="1">
               {{ $t('settings.saveToSpecifiedFolder') }}
-              (<MaterialSymbolsExperimentOutline/>{{ $t('experimental') }})
+              <n-flex
+                style="font-size: 0.8em; color:gray; font-weight: normal;"
+                :size="0" align="center"
+              >
+                (<MaterialSymbolsExperimentOutline/>{{ $t('experimental') }})
+              </n-flex>
             </n-flex>
           </n-flex>
         </n-radio>
         <transition>
-          <n-flex
-            vertical
-            justify="center"
-            v-if="outputMethod === 'fs'" style="margin-left: 2em;"
-          >
+          <n-flex v-if="fsysSelected" style="margin-left: 2em;" :wrap="false">
             <n-popover trigger="manual" placement="right-start"
               :show="showAlertToChooseDest && noOutputFolderSet"
               :keep-alive-on-hover="true"
@@ -253,8 +285,9 @@ async function onDestFolderClick() {
               <template #trigger>
                 <n-button
                   @click="onDestFolderClick()"
-                  size="small" style="justify-content: start;" ghost
+                  size="small" ghost
                   :color="targetFolderHandle ? 'green' : 'red'"
+                  style="justify-content: start; flex-grow: 1;"
                 >
                   <template #icon>
                     <StashChevronRightDuotone/>
@@ -275,6 +308,16 @@ async function onDestFolderClick() {
                 <n-alert type="error" :show-icon="true" :title="$t('settings.chooseOutputFolderTooltip')"/>
               </template>
             </n-popover>
+
+            <!-- close -->
+            <n-button
+              size="small" v-if="targetFolderHandle" @click="clearTargetFolder"
+              :title="$t('Cancel')"
+            >
+              <template #icon>
+                <MaterialSymbolsCloseRounded/>
+              </template>
+            </n-button>
 
             <!--
             <n-flex :wrap="false" align="center" style="font-size:smaller; padding-left: 2em;">
@@ -301,6 +344,7 @@ async function onDestFolderClick() {
   white-space: nowrap;
 }
 .method-box {
+  margin-top: -0.6em;
   padding-left: 2em;
 }
 .method-active, .method-inactive {
