@@ -1,21 +1,7 @@
 <template>
   <div class="container-1">
   <div class="container-2">
-  <n-flex vertical align="center" justify="center" inline size="large">
-    
-    <!-- auto start -->
-    <n-flex justify="center">
-      <n-tooltip placement="top-start">
-        <template #trigger>
-          <n-checkbox v-model:checked="autoStartOpt" size="small" style="">
-            {{ $t('settings.autoStartConversion') }}
-          </n-checkbox>
-        </template>
-        <template #default>
-          {{ $t('settings.autoStartConversionTooltip') }}
-        </template>
-      </n-tooltip>
-    </n-flex>
+  <n-flex vertical align="center" justify="center" inline size="small">
     
     <n-flex align="center" justify="space-around" class="main-buttons">
       
@@ -78,6 +64,20 @@
           />
         </template>
       </n-flex>
+    </n-flex>
+
+    <!-- auto start -->
+    <n-flex justify="center">
+      <n-tooltip placement="top-start">
+        <template #trigger>
+          <n-checkbox v-model:checked="autoStartOpt" size="small" style="font-size: smaller;">
+            {{ $t('settings.autoStartConversion') }}
+          </n-checkbox>
+        </template>
+        <template #default>
+          {{ $t('settings.autoStartConversionTooltip') }}
+        </template>
+      </n-tooltip>
     </n-flex>
 
     <n-flex vertical>

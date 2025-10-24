@@ -117,6 +117,7 @@ registerRoute(
 
 
 // fallback to index.html for all SPA navigation requests
+/*
 registerRoute(
   ({ request }) => request.mode === 'navigate' &&
                    request.destination === 'document' &&
@@ -139,7 +140,7 @@ registerRoute(
     }
   }
 );
-
+*/
 
 // handle route for Non-precached files
 registerRoute(

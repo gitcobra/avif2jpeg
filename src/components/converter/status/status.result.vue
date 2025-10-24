@@ -347,13 +347,19 @@ function createFailedFileLink(download = false) {
       <n-flex align="center" :size="1"
         :style="`border: 1px solid ${c.successColor}; border-radius:4px; padding:0.3em;`"
       >
-        <MdiFolderEditOutline style="vertical-align: middle;"/>
+        <MaterialSymbolsFolderOutline style="vertical-align: middle;"/>
         <n-ellipsis style="font-size: smaller; max-width: 25em;">
           {{ outputDirName }}
         </n-ellipsis>
         <span style="margin-left:0.5em;">
           <span :style="{color: c.successColor}">{{ success }}</span>
           {{ t('files', success) }}
+        </span>
+        <span title="Writing to the folder">
+          <NotoV1WritingHand
+            style="vertical-align: middle; margin-left:2px; margin-bottom: 2px;"
+            :class="{shake: processing}"
+          />
         </span>
       </n-flex>
     </template>
@@ -541,6 +547,19 @@ function createFailedFileLink(download = false) {
 
 .singleimage {
   transition: all .5s ease;
+}
+
+.shake {
+  animation: shake 0.5s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes shake {
+  0% { transform: translate(0px, 0px); }
+  25% { transform: translate(2px, 0px); }
+  50% { transform: translate(-2px, -2px); }
+  75% { transform: translate(0px, -2px); }
+  100% { transform: translate(0px, 0px); }
 }
 
 </style>

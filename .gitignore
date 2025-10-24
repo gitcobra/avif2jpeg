@@ -6,3 +6,4 @@ dev-dist/*
 old/*
 test/
 *.sh
+public/version.txt

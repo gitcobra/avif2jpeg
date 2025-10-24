@@ -20,10 +20,19 @@ window.addEventListener('beforeinstallprompt', (e) => {
   beforeinstallpromptFired.value = true;
   isPWAInstalled.value = false;
 });
+
 // installed as PWA
 window.addEventListener('appinstalled', (evt) => {
   console.log('fired appinstalled');
   notifySWOnInstallationComplete();
+
+  try {
+    // @ts-ignore
+    gtag('event', 'pwa_installed', {
+      event_category: 'PWA',
+      event_label: 'User installed PWA',
+    });
+  } catch(e) {}
 });
 
 
@@ -66,8 +75,16 @@ async function initPWAStatus() {
   // if "beforeinstallprompt" event has not fired, set the installed flag.
   isPWAInstalled.value = !!( isRunningAsPWA() || !beforeinstallpromptFired.value );
 
-  if( isPWAInstalled.value )
+  if( isPWAInstalled.value ) {
     console.log('PWA is installed as APP.');
+    try {
+      // @ts-ignore
+      gtag('event', 'pwa_launch', {
+        event_category: 'PWA',
+        event_label: 'App opened as PWA',
+      });
+    } catch(e) {}
+  }
   else
     console.log('PWA is NOT installed as APP');
 }

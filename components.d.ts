@@ -49,6 +49,7 @@ declare module 'vue' {
     NModal: typeof import('naive-ui')['NModal']
     NModalProvider: typeof import('naive-ui')['NModalProvider']
     NNumberAnimation: typeof import('naive-ui')['NNumberAnimation']
+    NotoV1WritingHand: typeof import('~icons/noto-v1/writing-hand')['default']
     NPopover: typeof import('naive-ui')['NPopover']
     NPopselect: typeof import('naive-ui')['NPopselect']
     NProgress: typeof import('naive-ui')['NProgress']
