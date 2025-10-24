@@ -12543,7 +12543,7 @@
     "/avif2jpeg/dist/assets/Roboto-Medium-DPwG85_g.ttf",
     "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
   ],
-  "src/components/converter/status/status.result.vue?vue&type=style&index=0&scoped=1aee218a&lang.scss": [
+  "src/components/converter/status/status.result.vue?vue&type=style&index=0&scoped=b09bfddd&lang.scss": [
     "/avif2jpeg/dist/assets/Roboto-Regular-f0lhpOnz.ttf",
     "/avif2jpeg/dist/assets/Roboto-Medium-DPwG85_g.ttf",
     "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
@@ -12648,7 +12648,7 @@
     "/avif2jpeg/dist/assets/Roboto-Medium-DPwG85_g.ttf",
     "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
   ],
-  "src/components/file-selector.vue?vue&type=style&index=0&scoped=79e449e5&lang.scss": [
+  "src/components/file-selector.vue?vue&type=style&index=0&scoped=2eb05c45&lang.scss": [
     "/avif2jpeg/dist/assets/Roboto-Regular-f0lhpOnz.ttf",
     "/avif2jpeg/dist/assets/Roboto-Medium-DPwG85_g.ttf",
     "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
@@ -12733,7 +12733,7 @@
     "/avif2jpeg/dist/assets/Roboto-Medium-DPwG85_g.ttf",
     "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
   ],
-  "src/components/settings-output.vue?vue&type=style&index=0&scoped=31d6c0c9&lang.scss": [
+  "src/components/settings-output.vue?vue&type=style&index=0&scoped=3e127ad4&lang.scss": [
     "/avif2jpeg/dist/assets/Roboto-Regular-f0lhpOnz.ttf",
     "/avif2jpeg/dist/assets/Roboto-Medium-DPwG85_g.ttf",
     "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
@@ -12868,6 +12868,11 @@
     "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
   ],
   "~icons/mdi/folder-edit-outline": [
+    "/avif2jpeg/dist/assets/Roboto-Regular-f0lhpOnz.ttf",
+    "/avif2jpeg/dist/assets/Roboto-Medium-DPwG85_g.ttf",
+    "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
+  ],
+  "~icons/noto-v1/writing-hand": [
     "/avif2jpeg/dist/assets/Roboto-Regular-f0lhpOnz.ttf",
     "/avif2jpeg/dist/assets/Roboto-Medium-DPwG85_g.ttf",
     "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
