@@ -93,10 +93,12 @@ const noOutputFolderSet = computed(() => outputMethod.value === 'fs' && !targetF
 const fsysSelected = computed(() => outputMethod.value === 'fs');
 
 // watchers
+/*
 watch(() => props.isMultithreadEnabled, (val) => {
   if( !val )
     outputMethod.value = 'zip';
 });
+*/
 
 // variables
 const fsysIsAvailable = isFileSystemAPISupported();
@@ -195,34 +197,58 @@ function clearTargetFolder() {
   <n-flex vertical justify="center" class="body">
     
     <!--
-    <n-divider style="font-size:1em; color:gray; margin:0.4em 0em 0em;" title-placement="left">出力形式</n-divider>
+    <n-divider style="font-size:1em; color:gray; margin:0.4em 0em 0em;" title-placement="left">
+      出力形式
+    </n-divider>
     -->
     <n-flex vertical>
       <!-- <n-divider title-placement="left" style="margin-bottom:0px;">Output Settings</n-divider> -->
 
       <!-- output type -->
-      <n-tooltip :to="false" display-directive="show" :show="INJ.showTooltipsBeforeMounted.value" trigger="hover" :placement="INJ.LANDSCAPE.value ? 'left' : 'top-start'" :keep-alive-on-hover="false" :duration="0" :delay="0">
+      <n-tooltip
+        :to="false" display-directive="show" :show="INJ.showTooltipsBeforeMounted.value"
+        trigger="hover" :placement="INJ.LANDSCAPE.value ? 'left' : 'top-start'"
+        :keep-alive-on-hover="false" :duration="0" :delay="0"
+      >
         <template #trigger>
           <n-flex align="center" :wrap="false">
-            <n-icon><ImageOutline /></n-icon>{{t('settings.outputType')}}:
-            <n-select v-model:value="format" :options="supportedFormats.map(value => ({value, label:value}))" :consistent-menu-width="false" size="small" />
+            <n-flex align="center" :wrap="false" :size="4">
+              <n-icon><ImageOutline /></n-icon>
+              {{t('settings.outputType')}}:
+            </n-flex>
+            <n-select
+              v-model:value="format"
+              :options="supportedFormats.map(value => ({value, label:value}))"
+              :consistent-menu-width="false"
+              size="small"
+            />
           </n-flex>
         </template>
         {{t('settings.imageTypeTooltip')}}
       </n-tooltip>
 
       <!-- output quality -->
-      <n-tooltip :to="false" display-directive="show" :show="INJ.showTooltipsBeforeMounted.value" trigger="hover" :placement="INJ.LANDSCAPE.value ? 'left' : 'top-start'" :keep-alive-on-hover="false" :duration="0" :delay="0">
+      <n-tooltip :to="false" display-directive="show" :show="INJ.showTooltipsBeforeMounted.value"
+        trigger="hover" :placement="INJ.LANDSCAPE.value ? 'left' : 'top-start'"
+        :keep-alive-on-hover="false" :duration="0" :delay="0"
+      >
         <template #trigger>
           <n-flex align="center">
             <n-flex align="start" :wrap="false">
-              <n-icon><ImageSharp /></n-icon><span style="white-space: nowrap;">{{t('settings.outputQuality')}}:</span>
+              <n-flex align="center" :size="4">
+                <n-icon><ImageSharp /></n-icon>
+                <span style="white-space: nowrap;">{{t('settings.outputQuality')}}:</span>
+              </n-flex>
               <n-flex align="center" justify="space-between">
                 <n-slider
                   :tooltip="false" v-model:value="quality" :step="1" style="width:120px;"
                   :disabled="disableQuality"
                 />
-                <n-input-number @blur="quality=quality==null?0:quality" v-model:value="quality" step="1" min="0" max="100" :disabled="disableQuality" style="width:90px;" size="small" />
+                <n-input-number
+                  @blur="quality=quality==null?0:quality" v-model:value="quality"
+                  step="1" min="0" max="100" :disabled="disableQuality"
+                  style="width:90px;" size="small"
+                />
               </n-flex>
             </n-flex>
           </n-flex>
@@ -257,7 +283,7 @@ function clearTargetFolder() {
         </n-radio>
         
         <n-radio
-          :disabled="!fsysIsAvailable || !isMultithreadEnabled"
+          :disabled="!fsysIsAvailable/* || !isMultithreadEnabled*/"
           :checked="fsysSelected"
           @update:checked="checked => checked && fsysIsAvailable && onOutputToFolderChecked()"
         >

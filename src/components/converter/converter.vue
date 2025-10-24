@@ -12,7 +12,7 @@ export type ConverterResult = {
 import { NButton, type NotificationType } from 'naive-ui';
 import { convertTargetFilesInMultithread, demandImage as demandImageMulti, deleteImage } from './converter.multi';
 import { convertImagesInSingleThread, getAsPromise, demandImage as demandImageSingle } from './converter.single';
-import { getFileSystemWritePermission, isDirHandleValid } from '../filesystem-api';
+import { clearDirCache, getFileSystemWritePermission, isDirHandleValid, useDirCache } from '../filesystem-api';
 
 // sub components
 import ConversionStatus from './status/status.vue';
@@ -28,6 +28,7 @@ import { VNode } from 'vue';
 
 import { buildDirsAndWriteFile, createExistingFolderSetWithinFileList } from '../filesystem-api';
 import themeLight from 'naive-ui/es/float-button-group/styles/light';
+import { OverwriteCommand } from './workers/worker.canvas';
 
 // common
 const INJ = inject(GlobalValsKey);
@@ -377,6 +378,9 @@ function cleanUpProcessedData() {
   appliedOverwriteDecision = undefined;
   overwriteAllowList.clear();
   overwriteDenyList.clear();
+
+  clearDirCache();
+  //useDirCache(true);
 }
 
 
@@ -468,7 +472,9 @@ async function startConversion(input: FileWithId[]) {
   // single-threading
   else {
     demandImage = demandImageSingle;
-    result = await convertImagesInSingleThread(fileList, completedFileIdSet, props, canceled, ConvStats);
+    result = await convertImagesInSingleThread(
+      fileList, completedFileIdSet, props, canceled, ConvStats, enqueueOverwriteConfirmation,
+    );
   }
   ({exception, callbackToGenerateFailedZips, callbackToClearConverter} = result);
   
@@ -527,7 +533,7 @@ async function startConversion(input: FileWithId[]) {
   processing.value = false;
   ConvStats.processing = false;
   processCompleted.value = true;
-  fileList.length = 0;
+  //fileList.length = 0;
   //input.length = 0;
 
   elapsedTimeForConversion = Date.now() - startedTime;
@@ -626,26 +632,34 @@ async function writeUsingFileSystem(path: string, blob: Blob) {
 
 let isConfirmationQueueActive = false;
 const confirmationQueue: {
-  resolver: Function, target: string, type: 'file' | 'folder', path: string,
+  resolver: (val: OverwriteCommand) => any,
+  target: string,
+  type: 'file' | 'folder',
+  path: string,
 }[] = [];
 
 async function enqueueOverwriteConfirmation(
-  resolver: Function, target: string, type: 'file' | 'folder', path: string,
+  /*resolver: Function,*/ target: string, type: 'file' | 'folder', path: string,
 ) {
-  if( !isConfirmationQueueActive ) {
-    isConfirmationQueueActive = true;
-    openOverwriteConfirmation(resolver, target, type, path);
-  }
-  else
-    confirmationQueue.push({resolver, target, type, path});
+  return new Promise<OverwriteCommand>(resolver => {
+    if( !isConfirmationQueueActive ) {
+      isConfirmationQueueActive = true;
+      openOverwriteConfirmation(resolver, target, type, path);
+    }
+    else
+      confirmationQueue.push({resolver, target, type, path});
+  });
 }
 
 const overwriteAllowList = new Set<string>();
 const overwriteDenyList = new Set<string>();
 async function openOverwriteConfirmation(
-  resolver: Function, target: string, type: 'file' | 'folder', path: string
+  resolver: (val: OverwriteCommand) => any,
+  target: string,
+  type: 'file' | 'folder',
+  path: string,
 ) {
-  let result = '';
+  let result: OverwriteCommand;
   
   if( canceled.value )
     result = 'cancel';
@@ -676,9 +690,9 @@ async function openOverwriteConfirmation(
       result += '-all';
       appliedOverwriteDecision = result;
     }
-    console.log("result", result)
   }
 
+  console.log("result", result, target);
   resolver(result);
 
   if( confirmationQueue.length ) {

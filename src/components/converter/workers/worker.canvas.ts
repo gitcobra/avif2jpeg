@@ -109,7 +109,8 @@ export type OverwriteResponse = {
   fileId: number;
   path: string;
 };
-export type OverwriteCommand = 'skip' | 'skip-all' | 'overwrite' | 'overwrite-all' | 'close';
+export type OverwriteCommand =
+  'skip' | 'skip-all' | 'overwrite' | 'overwrite-all' | 'close' | 'cancel';
 
 // listen messages from main thread
 self.onmessage = async (
@@ -428,6 +429,7 @@ function createOverwriteDialog(path: string, fileId: number, index: number) {
       case 'skip-all':
         overwriteDecision = false;
       case 'close':
+      case 'cancel':
       case 'skip':
         overwriteDenyList.add(path);
         return false;

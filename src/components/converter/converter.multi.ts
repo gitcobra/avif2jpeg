@@ -28,6 +28,11 @@ type Props = ConverterType['$props'];
 type ConversionStatusType = InstanceType<typeof ConversionStatus>;
 type Stat = ConversionStatusType['status'];
 type LogType = Stat['logs'][number];
+export type EnqueueOverwriteConfirmation = (
+  target: string,
+  type: 'file' | 'folder',
+  path: string
+) => Promise<OverwriteCommand>;
 
 type ConverterParameter = {
   files: FileWithId[];
@@ -49,12 +54,7 @@ type ConverterParameter = {
   writeUsingFileSystem: (path:string, blob:Blob) => any;
   //openOverwriteConfirmation:
   //  (target: string, type: 'file' | 'folder', path: string) => any;
-  enqueueOverwriteConfirmation: (
-    resolver: Function,
-    target: string,
-    type: 'file' | 'folder',
-    path: string
-  ) => any;
+  enqueueOverwriteConfirmation: EnqueueOverwriteConfirmation,
   existingFolders: Set<string>;
 
   message: MessageApiInjection;
@@ -83,58 +83,18 @@ const variousFileInfo = new Map<number, {
 
 // parameters from parent module
 let par: ConverterParameter; // the parameter is used throughout the module
-/*
-let completedFileIdSet: Set<number>;
-let ConvStats: Stat;
-let canceled: Ref<boolean, boolean>;
-let props: Props;
-let files: FileWithId[];
-let format: string;
-let quality: number;
-let outputExt: string;
-let imageType: string;
-let message: MessageApiInjection;
-//let notification: NotificationApiInjection;
-*/
 
 // set or clear the variables
 function clearModuleVariables(param?: ConverterParameter) {
-  /*
-  let obj = param || {} as any;
-  ({
-    files,
-    completedFileIdSet, 
-    ConvStats, 
-    canceled, 
-    props, 
-    format, 
-    quality, 
-    outputExt, 
-    imageType, 
-    message, 
-    //notification,
-  } = obj);
-  */
-
   zipWorkerInModuleScope = null;
 
   processingLogItems.clear();
   fileMapById.clear();
   failedFileCountMap.clear();
-  //variousFileInfo.clear();
 
   fileMapById.clear();
   failedFileCountMap.clear();
-  //variousFileInfo.clear();
 
-  /*
-  // clear param object
-  if( param ) {
-    for( const p in param ) {
-      delete param[p];
-    }
-  }
-  */
   par = {...param};
 };
 
@@ -634,9 +594,12 @@ const ImgLoaderListener = async (params: MessageTypeCanvasWorkerListener) => {
       //const result = await par.openOverwriteConfirmation(target, type, path);
       
       // wait for user's decision in dialog
+      /*
       const result = await new Promise<OverwriteCommand>(
         resolve => par.enqueueOverwriteConfirmation(resolve, target, type, path)
       );
+      */
+      const result = await par.enqueueOverwriteConfirmation(target, type, path);
       
       // send the command
       worker.postMessage({

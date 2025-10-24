@@ -7,6 +7,8 @@ import { SplitZipsIndexer } from '../util';
 import type Converter from './converter.vue';
 import type ConversionStatus from './status/status.vue';
 import { ConverterResult } from './converter.vue';
+import { EnqueueOverwriteConfirmation } from './converter.multi';
+import { buildDirsAndWriteFile, getFileHandle } from '../filesystem-api';
 
 
 type ConverterType = InstanceType<typeof Converter>;
@@ -22,7 +24,8 @@ export async function convertImagesInSingleThread(
   props: Props,
   canceled,
   ConvStats: Stat,
-  
+  enqueueConfirmation: EnqueueOverwriteConfirmation,
+
 ): Promise<ConverterResult> {
   let currentImgBlobUrl = '';
   const canvas = document.createElement('canvas');
@@ -39,6 +42,8 @@ export async function convertImagesInSingleThread(
   const fileCount = list.length;
   const maxZipSizeMB = props.maxZipSizeMB * 1024 * 1024;
 
+  const fsysDirHandle = props.outputDirHandle;
+
   let index = 0;
   let lastImageBlob = null;
   let lastImageName = '';
@@ -54,27 +59,59 @@ export async function convertImagesInSingleThread(
   let currentOutputSizeSum = 0;
   let memoryProblemOccurred = false;
 
-  demandImageModuleScope = (index: number) => {
-    const [zidx, fidx] = zipIndex.get(index);
-    const azip = aziplist[zidx];
 
-    
-    const blob = azip.get(fidx, type);
-    ConvStats.convertedImageIndex = index;
-    ConvStats.convertedImageName = azip.getPathByIndex(fidx);
-    //ConvStats.convertedImageUrl = URL.createObjectURL( new Blob([azip.get(fidx)], {type}) );
-    ConvStats.convertedImageUrl = URL.createObjectURL( blob );
-    ConvStats.convertedImageSize = blob.size;
-    
-    // create an object url of the original image
-    let orgUrl = '', orgSize = 0, orgName = '';
-    const file = fileListByZippedIndex[index];
-    orgUrl = URL.createObjectURL(file);
-    orgSize = file.size;
-    orgName = file.webkitRelativePath || file.name;
-    ConvStats.convertedImageOrgUrl = orgUrl;
-    ConvStats.convertedImageOrgSize = orgSize;
-    ConvStats.convertedImageOrgName = orgName;
+  const completedFileDat: {id: number, path: string, originalIndex: number}[] = [];
+  demandImageModuleScope = async (index: number) => {
+    if( fsysDirHandle ) {
+      const citem = completedFileDat[index];
+      if( !citem ) {
+        console.error('item is not in completedFileDat', index);
+        return;
+      }
+      
+      // create an object url of the original image
+      let orgUrl = '', orgSize = 0, orgName = '';
+      const orgfile = list[citem.originalIndex];
+      console.log(list);
+      console.log(orgfile, citem.originalIndex);
+      orgUrl = URL.createObjectURL(orgfile);
+      orgSize = orgfile.size;
+      orgName = orgfile.webkitRelativePath || orgfile.name;
+      ConvStats.convertedImageOrgUrl = orgUrl;
+      ConvStats.convertedImageOrgSize = orgSize;
+      ConvStats.convertedImageOrgName = orgName;
+
+      // load an image written to local folder
+      const path = citem.path;
+      const file = await getFileHandle(fsysDirHandle, path, true);
+      // Create a Blob URL for the image
+      const url = URL.createObjectURL(file);
+      ConvStats.convertedImageUrl = url;
+      ConvStats.convertedImageSize = file.size;
+      ConvStats.convertedImageIndex = index;
+      ConvStats.convertedImageName = citem.path;
+    }
+    else { 
+      const [zidx, fidx] = zipIndex.get(index);
+      const azip = aziplist[zidx];
+
+      const blob = azip.get(fidx, type);
+      ConvStats.convertedImageIndex = index;
+      ConvStats.convertedImageName = azip.getPathByIndex(fidx);
+      //ConvStats.convertedImageUrl = URL.createObjectURL( new Blob([azip.get(fidx)], {type}) );
+      ConvStats.convertedImageUrl = URL.createObjectURL( blob );
+      ConvStats.convertedImageSize = blob.size;
+      
+      // create an object url of the original image
+      let orgUrl = '', orgSize = 0, orgName = '';
+      const file = fileListByZippedIndex[index];
+      orgUrl = URL.createObjectURL(file);
+      orgSize = file.size;
+      orgName = file.webkitRelativePath || file.name;
+      ConvStats.convertedImageOrgUrl = orgUrl;
+      ConvStats.convertedImageOrgSize = orgSize;
+      ConvStats.convertedImageOrgName = orgName;
+    }
   };
 
   const fileListByZippedIndex: FileWithId[] = [];
@@ -87,6 +124,7 @@ export async function convertImagesInSingleThread(
     const inputSize = file.size;
     const path = (file.webkitRelativePath || (file as any).relativePath || fileName).replace(/^\//, '');
     const img: HTMLImageElement = document.createElement('img');
+    const basename = (path || fileName);
 
     const item: Stat['logs'][number] = {
       key: _keyCounter++,
@@ -174,67 +212,113 @@ export async function convertImagesInSingleThread(
     outputSize = blob.size;//abuffer.byteLength;
     ConvStats.converted++;
     item.outputSize = outputSize;
-    
-    // emit a zip when the current total size exceeds maxZipSize
-    let zipUrl = '';
-    if( /*restItemCount > 5 &&*/ currentOutputSizeSum + outputSize >= maxZipSizeMB ) {
-      try {
-        await azip.wait();
-        zipUrl = await azip.url();
-      } catch(e: any) {
-        memoryProblemOccurred = true;
-        console.warn(e.message, currentOutputSizeSum);
-        alert("memory problem occurred");
-        break;
-      }
-      ConvStats.zips.push({url: zipUrl, size:currentOutputSizeSum, count:zippedCount});
-      ConvStats.zippedTotalCount += zippedCount;
-      ConvStats.zippedTotalSize += currentOutputSizeSum;
-      
-      currentOutputSizeSum = 0;
-      zippedCount = 0;
-      zipIndex.split();
-      //azip.clear();
-      azip = new AnZip();
-      aziplist.push(azip);
-    }
 
-    currentOutputSizeSum += outputSize;
+    // output
+    const baseOutputName =
+      basename.replace(props.retainExtension? '' : /\.(jpe?g|gif|png|avif|webp|bmp)$/i, '');
     
-    const basename = (path || fileName);
-    // add a number to the filname if the name already exists in the zip file
-    for( let dupCounter = 1; dupCounter < 0xFF; dupCounter++ ) {
-      fname = basename.replace(props.retainExtension? '' : /\.(jpe?g|gif|png|avif|webp|bmp)$/i, '') + (dupCounter > 1 ? `(${dupCounter})` : '') + '.' + ext;
-      if( azip.has(fname) ) {
+    if( fsysDirHandle ) {
+      // use File Sytem API
+      fname = baseOutputName + '.' + ext;
+      
+      try {
+        const writeSucceeded = await buildDirsAndWriteFile(
+          fsysDirHandle,
+          fname,
+          blob,
+          async (handle, name, parent) => {
+            const type = handle instanceof FileSystemFileHandle ? 'file' : 'folder';
+            const targetPath = parent + name;
+            console.log([type, name, parent, fname]);
+            const command = await enqueueConfirmation(targetPath, type, "fname");
+            switch(command) {
+              case 'overwrite-all':
+              case 'overwrite':
+                return true;
+              case 'skip-all':
+              case 'close':
+              case 'cancel':
+              case 'skip':
+                return false;
+              
+              default:
+                throw new Error(`unexpected OverwriteCommand ${"command"}`);
+            }
+          }
+        );
+
+        if( !writeSucceeded ) {
+          item.command = `⚠skipped`;
+          ConvStats.done++;
+          continue;          
+        }
+      } catch(e) {
+        item.command = `❗failed`;
+        ConvStats.done++;
         continue;
       }
-      break;
     }
+    else {
+      // emit a zip when the current total size exceeds maxZipSize
+      let zipUrl = '';
+      if( /*restItemCount > 5 &&*/ currentOutputSizeSum + outputSize >= maxZipSizeMB ) {
+        try {
+          await azip.wait();
+          zipUrl = await azip.url();
+        } catch(e: any) {
+          memoryProblemOccurred = true;
+          console.warn(e.message, currentOutputSizeSum);
+          alert("memory problem occurred");
+          break;
+        }
+        ConvStats.zips.push({url: zipUrl, size:currentOutputSizeSum, count:zippedCount});
+        ConvStats.zippedTotalCount += zippedCount;
+        ConvStats.zippedTotalSize += currentOutputSizeSum;
+        
+        currentOutputSizeSum = 0;
+        zippedCount = 0;
+        zipIndex.split();
+        //azip.clear();
+        azip = new AnZip();
+        aziplist.push(azip);
+      }
+
+      currentOutputSizeSum += outputSize;
+      
+      // add a number to the filname if the name already exists in the zip file
+      for( let dupCounter = 1; dupCounter < 0xFF; dupCounter++ ) {
+        fname = baseOutputName + (dupCounter > 1 ? `(${dupCounter})` : '') + '.' + ext;
+        if( azip.has(fname) ) {
+          continue;
+        }
+        break;
+      }
 
 
-    ConvStats.done++;
-    try {
-      zippedCount++;
-      //azip.add(fname, abuffer);
-      azip.add(fname, blob);
-    }
-    catch(e: any) {
-      console.error(e.message);
-      //failure++;
-      //emit('failure', {name: fileName});
-      continue;
+      ConvStats.done++;
+      try {
+        zippedCount++;
+        //azip.add(fname, abuffer);
+        azip.add(fname, blob);
+      }
+      catch(e: any) {
+        console.error(e.message);
+        //failure++;
+        //emit('failure', {name: fileName});
+        continue;
+      }
+
+      zipIndex.increase();
+      fileListByZippedIndex.push(file);
+      
+      ConvStats.ziplogs.push({
+        fileId: file._id,
+        storedPath: fname,
+      });
     }
 
-    zipIndex.increase();
-    fileListByZippedIndex.push(file);
     ConvStats.inputTotalSize += inputSize;
     ConvStats.outputTotalSize += outputSize;
-    
-    ConvStats.ziplogs.push({
-      fileId: file._id,
-      storedPath: fname,
-    });
-    
 
     lastImageName = fname;
     item.zippedIndex = ConvStats.success;
@@ -244,6 +328,7 @@ export async function convertImagesInSingleThread(
     item.fileId = file._id;
 
     completedFileIdSet.add(file._id);
+    completedFileDat.push({id: file._id, path: fname, originalIndex: index - 1});
   }
   
 
