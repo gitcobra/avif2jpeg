@@ -154,72 +154,76 @@ export async function createDirectory(
 }
 
 
+let dirCacheEnabled = false;
 const dirCaches = new Map<
   FileSystemDirectoryHandle, { [path: string]: FileSystemDirectoryHandle }
 >();
+
+export function useDirCache(flag = true) {
+  dirCacheEnabled = flag;
+}
+export function clearDirCache() {
+  dirCaches.clear();
+}
+
 export async function buildDirectories(
   dirHandle: FileSystemDirectoryHandle,
   path: string | string[],
   allowOverwrite?: ConfirmOverwrite,
-  parentPath?: string,
 ) {
-  let cache = dirCaches.get(dirHandle);
-  if( !cache ) {
-    console.log("create cache");
-    cache = {};
-    dirCaches.set(dirHandle, cache);
+  let cache = {};
+  if( dirCacheEnabled ) {
+    cache = dirCaches.get(dirHandle);
+    if( !cache ) {
+      console.log("create cache");
+      cache = {};
+      dirCaches.set(dirHandle, cache);
+    }
   }
   
   const dirs = [];
   let curDirHandle: FileSystemDirectoryHandle = dirHandle;
-  let cachePath: string;
+  let parentPath: string;
 
   // seek cached dirHandle
-  const cdirs = typeof path === 'string' ? path.split('/') : path;
-  cachePath = cdirs.join('/');
+  const cdirs = path instanceof Array ? path.concat() : String(path).split('/');
+  parentPath = cdirs.join('/');
   do {
-    const cachedDir = cache[cachePath];
-    // check if target dir exists in cache
-    if( cachedDir ) {
-      //console.log('cache found', cachePath);
-      curDirHandle = cache[cachePath];
-      cachePath += '/';
-      break;
+    if( dirCacheEnabled ) {
+      const cachedDir = cache[parentPath];
+      // check if target dir exists in cache
+      if( cachedDir ) {
+        //console.log('cache found', cachePath);
+        curDirHandle = cache[parentPath];
+        parentPath += '/';
+        break;
+      }
     }
     
     // push uncached dir to list
     dirs.unshift( cdirs.pop() );
-    cachePath = cdirs.join('/');
+    parentPath = cdirs.join('/');
   } while( cdirs.length )
   
   // retrieve uncached directories from parent to child
+  const parentDirStack = [];
   for( const targetDirName of dirs ) {
     if( !targetDirName )
       throw new Error('folderName is empty');
     
-    curDirHandle = await createDirectory(curDirHandle, targetDirName, allowOverwrite, cachePath);
+    curDirHandle = await createDirectory(
+      curDirHandle, targetDirName, allowOverwrite, parentPath
+    );
     if( !curDirHandle )
       return null;
 
-    cache[cachePath + targetDirName] = curDirHandle;
-    cachePath += targetDirName + '/';
-    
+    parentDirStack.push(targetDirName);
+
+    cache[parentPath + targetDirName] = curDirHandle;
+    parentPath += targetDirName + '/';
   }
 
   return curDirHandle;
-  /*
-  const newDirName = dirs.shift();
-  if( !newDirName )
-    throw new Error('folderName is empty');
-  
-  const subdir = await createDirectory(dirHandle, newDirName, callback, parentPath);
-  if( subdir ) {
-    if( dirs.length && dirs[0] )
-      return await buildDirectories(subdir, dirs, callback, parentPath + newDirName + '/');
-    return subdir;
-  }
-  return null;
-  */
 }
 
 export async function buildDirsAndWriteFile(
@@ -234,10 +238,10 @@ export async function buildDirsAndWriteFile(
     throw new Error('fileName is empty');
   
   const lastdir = !dirs.length ?
-    dirHandle : await buildDirectories(dirHandle, dirs, allowOverwrite, '');
+    dirHandle : await buildDirectories(dirHandle, dirs, allowOverwrite);
   if( lastdir ) {
     return await writeFile(
-      lastdir, fileName, blob, allowOverwrite, !dirs.length ? '' : dirs.join('/') + '/'
+      lastdir, fileName, blob, allowOverwrite, !dirs.length ? 'afo' : dirs.join('/') + '/'
     );
   }
 
@@ -280,7 +284,8 @@ function createFolderSetFromFiles(flist: File[]): Set<string> {
 }
 
 export async function createExistingFolderSetWithinFileList(
-  baseDirHandle: FileSystemDirectoryHandle, fileList: File[]
+  baseDirHandle: FileSystemDirectoryHandle,
+  fileList: File[]
 ): Promise< Set<string> > {
   const folderSet = createFolderSetFromFiles(fileList);
   const sortedFolders = [...folderSet].sort();
