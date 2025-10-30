@@ -37,7 +37,9 @@ const emit = defineEmits<{
 // constants
 
 // create language list
-const langOptions: SelectMixedOption[] = Object.entries( LANG_FULL_NAMES ).map( ([key, val]) => ({ label:val, value:key }) );
+const langOptions: SelectMixedOption[] = Object.entries( LANG_FULL_NAMES ).map(
+  ([key, val]) => ({ label:val, value:key })
+);
 langOptions.sort((a, b) => {
   const c = a.label;
   const d = b.label;
@@ -217,7 +219,7 @@ function changeRoute(val: string) {
 
 
 <template>
-  <n-flex align="center" :size="2">
+  <n-flex align="center" :size="2" :wrap="false">
     <n-tooltip
       v-if="router.currentRoute.value.path !== '/'"
       trigger="hover" :keep-alive-on-hover="false" placement="left" :duration="0" :delay="50"
@@ -236,7 +238,9 @@ function changeRoute(val: string) {
       </template>
     </n-tooltip>
 
-    <n-tooltip :to="false" trigger="hover" :keep-alive-on-hover="false" :placement="INJ.LANDSCAPE.value ? 'left' : 'bottom'" :duration="0" :delay="50">
+    <n-tooltip :to="false" trigger="hover" :keep-alive-on-hover="false"
+      :placement="INJ.LANDSCAPE.value ? 'left' : 'bottom'" :duration="0" :delay="50"
+    >
       <template #trigger>
         <n-select
           ref="langselect"

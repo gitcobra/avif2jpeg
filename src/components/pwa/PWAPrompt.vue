@@ -73,10 +73,11 @@ async function initPWAStatus() {
     return;
   
   // if "beforeinstallprompt" event has not fired, set the installed flag.
-  isPWAInstalled.value = !!( isRunningAsPWA() || !beforeinstallpromptFired.value );
+  const runningAsPWA = isRunningAsPWA();
+  isPWAInstalled.value = !!( runningAsPWA || !beforeinstallpromptFired.value );
 
-  if( isPWAInstalled.value ) {
-    console.log('PWA is installed as APP.');
+  if( runningAsPWA ) {
+    console.log('App is installed as PWA.');
     try {
       // @ts-ignore
       gtag('event', 'pwa_launch', {
@@ -86,7 +87,7 @@ async function initPWAStatus() {
     } catch(e) {}
   }
   else
-    console.log('PWA is NOT installed as APP');
+    console.log('App is not installed as PWA.');
 }
 
 /**

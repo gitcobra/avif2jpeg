@@ -1,5 +1,14 @@
 import { readFile, writeFile } from 'fs/promises';
 import { simpleGit } from 'simple-git';
+import * as readline from 'node:readline/promises';
+import { stdin as input, stdout as output } from 'node:process';
+
+const rl = readline.createInterface({ input, output });
+const answer =
+  await rl.question('Create a tag with the incremented version number and push it. (y/n): ');
+if( answer.trim().toLowerCase() !== 'y' )
+  process.exit(0);
+
 
 const args = process.argv.slice(2);
 const git = simpleGit();
