@@ -7,85 +7,76 @@ import { sleep } from '../util';
 
 // properties
 const props = defineProps<{
-  /*
-  owner: string;
-  repo: string;
-  */
   url: string;
 }>();
 
-// reactives
-/*
-const logs = ref<{
-  date: string,
-  message: string,
-}[] | null>([]);
-*/
-const logs = ref('fetching...');
-const updated = ref(false);
+
+const changeLogLatestTime = ref(0);
+const logTxt = ref('');
+const updated = computed(
+  () => changeLogLatestTime.value > UserSettings.changeLogCheckedDate
+);
+const logs = computed<string>(() => {
+  if( !logTxt.value )
+    return 'fetching...';
+  
+  // change the date to local time and highlight if updated  
+  return logTxt.value.replace(
+    /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2}) \+\d+$/mg,
+    (m, $1) => {
+      const commitDate = new Date(m);
+      const commitTime = commitDate.getTime();
+      const locTimeStr = commitDate.toLocaleString();
+      let update = '';
+      if( commitTime > UserSettings.changeLogCheckedDate ) {
+        if( commitTime > changeLogLatestTime.value )
+          changeLogLatestTime.value = commitTime;
+        update = 'update';
+      }
+      return `<span class="date ${update}">${locTimeStr}</span>`;
+    }
+  );
+});
 
 onMounted(() => getChangeLog(props.url /*props.owner, props.repo*/));
 
-
-
-let changeLogLatestTime = 0;
-async function getChangeLog(url: string /*owner: string, repo: string*/) {
-  //const url = `https://api.github.com/repos/${owner}/${repo}/commits?per_page=5`;
+async function getChangeLog(url: string) {
   const txt = await fetch(url, {
     headers: {
         'Accept': 'application/vnd.github.v3+json'
     }
   }).then(res => res.ok ? res.text() : null);
 
-  logs.value = '';
-  if( !txt )
-    return;
-
-  //console.log(txt);
-
-  /*
-  updated.value = txt[0]?.commit.author.date > UserSettings.changeLogCheckedDate;
-  if( updated.value ) {
-    UserSettings.changeLogCheckedDate = txt[0]?.commit.author.date;
+  if( txt ) {
+    logTxt.value = txt;
+    changeLogLatestTime.value = 1;
   }
-
-  logs.value = txt.map(commit => ({
-    date: new Date(commit.commit.author.date).toLocaleString(),
-    message: commit.commit.message
-  }));
-  */
-
-  // change the date to local time and highlight if updated  
-  logs.value = txt.replace(/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2}) \+\d+$/mg, (m, $1) => {
-    const commitDate = new Date(m);
-    const commitTime = commitDate.getTime();
-    const locTimeStr = commitDate.toLocaleString();
-    let update = '';
-    if( commitTime > UserSettings.changeLogCheckedDate ) {
-      updated.value = true;
-      if( commitTime > changeLogLatestTime )
-        changeLogLatestTime = commitTime;
-      update = 'update';
-    }
-    return `<span class="date ${update}">${locTimeStr}</span>`;
-  });
 }
 
-function onClickChangelog() {
-  if( changeLogLatestTime > UserSettings.changeLogCheckedDate ) {
-    UserSettings.changeLogCheckedDate = changeLogLatestTime;
+function onClickChangelog(show) {
+  if( show )
+    return;
+  if( changeLogLatestTime.value > UserSettings.changeLogCheckedDate ) {
+    UserSettings.changeLogCheckedDate = changeLogLatestTime.value;
   }
-  updated.value = false;
 }
 
 
 </script>
 
 <template>
-<n-popover trigger="click" placement="bottom" arrow-point-to-center @update:show="onClickChangelog" style="margin-left:-1em; max-width:80%; white-space:initial;">
+<n-popover
+  trigger="click" placement="bottom" arrow-point-to-center
+  @update:show="onClickChangelog"
+  style="margin-left:-1em; max-width:80%; white-space:initial;"
+>
   <template #trigger>
     <n-flex align="center" :size="1" style="cursor:pointer;">
-      <n-icon :component="NotificationsCircleOutline" size="1.5em" :color="updated ? 'blue' : 'silver'" style="transition: color 0.5s;"></n-icon>
+      <n-icon :component="NotificationsCircleOutline"
+        size="1.5em"
+        :color="updated ? 'blue' : 'silver'"
+        style="transition: color 0.5s;"
+      />
       {{ $t('changelog') }}
     </n-flex>
   </template>
@@ -94,18 +85,6 @@ function onClickChangelog() {
       connection error
     </div>
     <pre v-else v-html="logs" class="commits"/>
-    <!--
-    <ul v-else v-for="({date, message}) in logs" class="commits">
-      <li class="date">{{date}}</li>
-      <li class="message"><pre>{{message}}</pre></li>
-    </ul>
-    -->
-
-    <!--
-    <n-flex justify="end" style="font-size:0.7em;">
-      <a href="https://github.com/gitcobra/avif2jpeg/commits/main/">Commitments</a>
-    </n-flex>
-    -->
   </template>
 </n-popover>
 </template>
@@ -128,9 +107,6 @@ function onClickChangelog() {
 ul {
   margin: 0px;
   padding-left: 1em;
-}
-.date {
-
 }
 .message {
   list-style-type: none;
