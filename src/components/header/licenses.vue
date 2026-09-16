@@ -1,6 +1,10 @@
 <template>
 <n-button text @click="visible=true" style="color:black; font-size:small">Licenses</n-button>
 <n-modal preset="dialog" ref="dialog" v-model:show="visible" positive-text="OK" title="Licenses">
+  <p>
+    <a href="https://github.com/gitcobra/avif2jpeg/blob/main/LICENSE">This app is licensed under the MIT License.</a>
+  </p>
+  
   <h3>Frameworks and Libraries</h3>
   <ul>
     <li v-for:="(value, key) in Licenses"><a :href="value">{{key}}</a></li>

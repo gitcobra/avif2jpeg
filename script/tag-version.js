@@ -11,7 +11,12 @@ if( answer.trim().toLowerCase() !== 'y' )
 
 
 const args = process.argv.slice(2);
-const git = simpleGit();
+const git = simpleGit({
+  env: {
+    ...process.env,
+    GPG_TTY: process.env.GPG_TTY,
+  },
+});
 
 // update version
 const path = './src/version.json';

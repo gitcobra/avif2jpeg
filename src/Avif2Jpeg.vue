@@ -116,7 +116,9 @@ onMounted(() => {
   window.addEventListener('resize', checkLandScape);
 
   switchToolTipVisibility();
-  setTimeout(() => mounted.value = true, 3000);
+  setTimeout(() => {
+    mounted.value = true;
+  }, 3000);
 });
 
 onUnmounted(() => {
@@ -241,7 +243,7 @@ function onInputClick(flag: boolean) {
           <transition-group>
           <FileList
             key="key-filelist"
-            v-show="sourceFileList.length"
+            v-show="sourceFileList.length > 0"
             v-model:file-list="sourceFileList"
             :additional-files="additionalFiles"
           />

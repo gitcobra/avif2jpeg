@@ -8,6 +8,15 @@ const beforeinstallpromptFired = ref(false);
 const isPWAInstalled = ref(undefined);
 const refreshPageCancelled = ref(false);
 
+//Check if the PWA is running in standalone mode
+const isRunningAsPWA = ref(
+  Boolean(
+    window.matchMedia('(display-mode: standalone)').matches
+    // @ts-ignore
+    || window.navigator.standalone
+  )
+);
+
 const newVersion = ref('unknown');
 
 
@@ -73,11 +82,10 @@ async function initPWAStatus() {
     return;
   
   // if "beforeinstallprompt" event has not fired, set the installed flag.
-  const runningAsPWA = isRunningAsPWA();
-  isPWAInstalled.value = !!( runningAsPWA || !beforeinstallpromptFired.value );
+  isPWAInstalled.value = !!( isRunningAsPWA.value || !beforeinstallpromptFired.value );
 
-  if( runningAsPWA ) {
-    console.log('App is installed as PWA.');
+  if( isRunningAsPWA.value ) {
+    console.log('App is running as a PWA.');
     try {
       // @ts-ignore
       gtag('event', 'pwa_launch', {
@@ -87,7 +95,7 @@ async function initPWAStatus() {
     } catch(e) {}
   }
   else
-    console.log('App is not installed as PWA.');
+    console.log('App is not installed as a PWA.');
 }
 
 /**
@@ -105,15 +113,6 @@ async function isChromiumBrowser() {
 
   // fallback for older browsers
   return flag || /Chrome|Chromium|Edg\//.test(navigator.userAgent);
-}
-
-/**
- * Check if the PWA is running in standalone mode
- */
-function isRunningAsPWA() {
-  return window.matchMedia('(display-mode: standalone)').matches
-    // @ts-ignore
-    || window.navigator.standalone === true;
 }
 
 // PWA installation prompt

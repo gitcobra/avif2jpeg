@@ -2,8 +2,6 @@ import * as WorkerManager from './worker-manager';
 import type { MessageToCanvasWorker, MessageFromCanvasWorker, MessageToCanvasWorkerPort, OverwriteResponse, RequestOverwrite } from './worker.canvas';
 import type { FileWithId } from '../../file-selector.vue'
 import { sleep } from '../../util';
-import { start } from 'repl';
-import { buildDirsAndWriteFile } from '../../filesystem-api';
 
 // message types
 
