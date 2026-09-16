@@ -5,9 +5,10 @@
   "metaDescription": "Es ist eine kostenlose Webanwendung zur Konvertierung von AVIF- oder WebP-Bildern in andere gängige Bildformate wie JPEG oder PNG ohne Serverkommunikation.",
   "descriptions": [
     "Dies ist eine kostenlose Webanwendung zur Stapelkonvertierung von AVIF-Bildern (oder WebP-Bildern usw.) in gängige Bildformate wie JPEG und PNG.",
-    "It uses a browser's built-in function for the conversions, so no data is sent to any server and therefore it is fast and safe.",
+    "Für die Konvertierung wird die integrierte Funktion des Browsers verwendet, daher werden keine Daten an einen Server gesendet und die Anwendung ist schnell und sicher.",
     "Die konvertierten Bilder werden als <strong>eine Zip-Datei</strong> ausgegeben, wenn mehrere Bilder geladen sind.",
-    "Benötigt die <a href=\"https://caniuse.com/avif\" target=\"_self\" style=\"color:red\">neueste</a> Version von Firefox oder Chrome, um AVIF-Bilder zu laden."
+    "Benötigt die <a href=\"https://caniuse.com/avif\" target=\"_self\" style=\"color:red\">neueste</a> Version von Firefox oder Chrome, um AVIF-Bilder zu laden.",
+    "Verwenden Sie diese Anwendung auf eigene Gefahr."
   ],
   "fileTypeRadioTitle": "Zieldateierweiterungen wählen",
   "fileTypeRadioOptions": {
@@ -27,16 +28,21 @@
   "noimage": "Es wurden keine Dateien mit den Erweiterungen gefunden",
   "avifUnsupported": "Ihr Browser unterstützt das AVIF-Format nicht. Bitte verwenden Sie die neueste Version von Firefox oder Chrome, um AVIF-Bilder zu konvertieren.",
   "cancel": "Abbrechen",
+  "remove": "Entfernen",
   "save": "Speichern",
   "close": "Schließen",
   "open": "Öffnen",
-  "reconvert": "Rückwandeln",
+  "reconvert": "Erneut konvertieren",
   "reconvertTip": "Vorherige ausgewählte Dateien {n} @:files",
   "files": "Datei | Dateien",
   "confirmCloseDialog": "Sie haben die konvertierten Bilder noch nicht gespeichert.",
   "confirmCloseDialogTitle": "Die Daten wurden noch nicht gespeichert",
   "copiedDataURLMessage": "Das konvertierte Bild wurde als DataURL in Ihre Zwischenablage kopiert.",
   "status": {
+    "scrollToTop": "Zum Anfang des Protokolls",
+    "scrollPageUp": "Eine Seite nach oben",
+    "scrollPageDown": "Eine Seite nach unten",
+    "scrollToBottom": "Zum Ende des Protokolls",
     "expandLogTooltip": "Die Anzeige des gesamten Protokolls kann die Konvertierungsgeschwindigkeit erheblich verringern.",
     "showOnlyErrors": "Nur Fehler anzeigen",
     "elapsedTime": "Verstrichene Zeit",
@@ -57,7 +63,7 @@
     "table": {
       "index": "Index",
       "status": "Status",
-      "core": "Faden",
+      "core": "Thread",
       "details": "Datei"
     },
     "saveFailedList": "Liste der fehlgeschlagenen Dateien speichern",
@@ -75,7 +81,7 @@
     "convertedZips": "ZIP erfolgreich abgeschlossen",
     "outInRate": "Out/In-Verhältnis",
     "zipped": "ZIPPED",
-    "saveAll": "Rette alles",
+    "saveAll": "Alle speichern",
     "progressRetries": "Dateien wiederholen",
     "success": "Erfolg",
     "started": "begonnen",
@@ -180,6 +186,7 @@
   "loadbutton": "Fügen Sie Bilder hinzu",
   "loadfolderbutton": "Fügen Sie den gesamten Ordner hinzu",
   "SourceImageList": "Quellbildliste",
+  "editConvertedImageList": "Quellbildliste bearbeiten",
   "resetListButtonTooltip": "Löschen Sie die aktuelle Liste der Quellbilder",
   "convertTooltip": "Klicken Sie hier, um die Konvertierung zu starten",
   "experimental": "Experimental-",

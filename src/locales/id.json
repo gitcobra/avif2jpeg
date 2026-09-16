@@ -7,7 +7,8 @@
     "Ini adalah aplikasi web gratis untuk mengonversi batch convert avif (atau webp, dll) gambar ke format gambar umum seperti jpeg, png.",
     "Ini menggunakan fungsi bawaan browser untuk konversi, jadi <strong>tidak ada data yang dikirim ke server mana pun</strong> dan oleh karena itu cepat dan aman.",
     "Gambar yang dikonversi akan di-output sebagai file zip apabila beberapa gambar dimuat.",
-    "Membutuhkan <a href=\"https://caniuse.com/avif\" target=\"_self\" style=\"color:red\" >versi terbaru dari</a> Firefox atau Chrome untuk memuat gambar AVIF."
+    "Membutuhkan <a href=\"https://caniuse.com/avif\" target=\"_self\" style=\"color:red\" >versi terbaru dari</a> Firefox atau Chrome untuk memuat gambar AVIF.",
+    "Gunakan aplikasi ini atas risiko Anda sendiri."
   ],
   "fileTypeRadioTitle": "Pilih Ekstensi File Target",
   "fileTypeRadioOptions": {
@@ -27,6 +28,7 @@
   "noimage": "Tidak ada file dengan ekstensi yang ditemukan.",
   "avifUnsupported": "Browser Anda tidak mendukung format AVIF. Silakan gunakan Firefox atau Chrome versi terbaru untuk mengonversi gambar AVIF.",
   "cancel": "Batal",
+  "remove": "Hapus",
   "save": "Simpan",
   "close": "Tutup",
   "open": "Buka",
@@ -37,6 +39,10 @@
   "confirmCloseDialogTitle": "Data belum disimpan",
   "copiedDataURLMessage": "Gambar yang dikonversi disalin ke clipboard Anda sebagai DataURL.",
   "status": {
+    "scrollToTop": "Ke bagian atas log",
+    "scrollPageUp": "Naik satu halaman",
+    "scrollPageDown": "Turun satu halaman",
+    "scrollToBottom": "Ke bagian bawah log",
     "expandLogTooltip": "Menampilkan seluruh log mungkin sangat mengurangi kecepatan konversi.",
     "showOnlyErrors": "Tampilkan hanya kesalahan",
     "elapsedTime": "Waktu yang Berlalu",
@@ -57,8 +63,8 @@
     "table": {
       "index": "indeks",
       "status": "status",
-      "core": "benang",
-      "details": "mengajukan"
+      "core": "utas",
+      "details": "file"
     },
     "saveFailedList": "Simpan daftar file yang gagal",
     "done": "Selesai",
@@ -76,7 +82,7 @@
     "outInRate": "Rasio Keluar / Masuk",
     "zipped": "ZIP",
     "saveAll": "Simpan semua",
-    "progressRetries": "Mencoba lagi file",
+    "progressRetries": "File yang dicoba lagi",
     "success": "kesuksesan",
     "started": "dimulai",
     "total": "total",
@@ -103,8 +109,8 @@
     "outputToDir": "Ekspor ke folder",
     "numberOfFilesWrittenToDir": "Jumlah file yang ditulis ke folder"
   },
-  "disabled": "Dengan disabilitas",
-  "threads": "benang | \nbenang",
+  "disabled": "Dinonaktifkan",
+  "threads": "utas | utas",
   "Download": "Unduh",
   "settings": {
     "retainExtTooltip": "ekstensi baru akan ditambahkan ke ekstensi asli",
@@ -180,6 +186,7 @@
   "loadbutton": "Tambahkan gambar",
   "loadfolderbutton": "Tambahkan seluruh folder",
   "SourceImageList": "Daftar gambar sumber",
+  "editConvertedImageList": "Edit daftar gambar sumber",
   "resetListButtonTooltip": "Hapus daftar gambar sumber saat ini",
   "convertTooltip": "Klik di sini untuk memulai konversi",
   "experimental": "Eksperimental",
@@ -193,7 +200,7 @@
   "confirmApplyAllLabel": "Terapkan tindakan ini untuk semua",
   "confirmFileOverwriteMsg": "A {type} dengan nama yang sama sudah ada.",
   "file": "mengajukan",
-  "folder": "map",
+  "folder": "folder",
   "confirmFileOverwriteTitle": "Timpa konfirmasi",
   "convertUnpreparedTooltip": "Memuat gambar sumber terlebih dahulu",
   "warnAboutFileSysBeforeConversion1": "Gambar yang dikonversi akan disimpan ke folder di drive lokal Anda.",

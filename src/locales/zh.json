@@ -7,7 +7,8 @@
     "这是一款免费的网络应用程序，可将 AVIF（或 WebP 等）图像批量转换为 JPEG、PNG 等常见图像格式",
     "它使用浏览器的内置功能进行转换，因此<strong>不会向任何服务器发送数据</strong>，既快速又安全",
     "当加载多个图像时，转换后的图像将以 <strong>zip 文件</strong>的形式输出",
-    "需要 <a href=\"https://caniuse.com/avif\" target=\"_self\" style=\"color:red\">最新</a> 版本的 Firefox 或 Chrome 浏览器才能加载 AVIF 图像"
+    "需要 <a href=\"https://caniuse.com/avif\" target=\"_self\" style=\"color:red\">最新</a> 版本的 Firefox 或 Chrome 浏览器才能加载 AVIF 图像",
+    "使用此应用的风险由您自行承担。"
   ],
   "fileTypeRadioTitle": "选择目标文件扩展名",
   "fileTypeRadioOptions": {
@@ -27,6 +28,7 @@
   "noimage": "未找到具有扩展名的文件",
   "avifUnsupported": "您的浏览器不支持 AVIF 格式。请使用最新版本的 Firefox 或 Chrome 浏览器转换 AVIF 图像",
   "cancel": "取消",
+  "remove": "删除",
   "save": "保存",
   "close": "关闭",
   "open": "打开",
@@ -37,6 +39,10 @@
   "confirmCloseDialogTitle": "数据尚未保存",
   "copiedDataURLMessage": "转换后的图像已作为 DataURL 复制到剪贴板。",
   "status": {
+    "scrollToTop": "转到日志顶部",
+    "scrollPageUp": "向上翻页",
+    "scrollPageDown": "向下翻页",
+    "scrollToBottom": "转到日志底部",
     "expandLogTooltip": "显示整个日志可能会严重降低转换速度。",
     "showOnlyErrors": "仅显示错误",
     "elapsedTime": "经过时间",
@@ -56,7 +62,7 @@
     "openFailedList": "打开失败的文件列表",
     "table": {
       "index": "指数",
-      "status": "地位",
+      "status": "状态",
       "core": "线",
       "details": "文件"
     },
@@ -103,7 +109,7 @@
     "outputToDir": "导出到文件夹",
     "numberOfFilesWrittenToDir": "写入文件夹的文件数量"
   },
-  "disabled": "残疾人",
+  "disabled": "已禁用",
   "threads": "thread | threads",
   "Download": "下载",
   "settings": {
@@ -166,12 +172,12 @@
   "Prev": "以前的",
   "or": "或者",
   "TargetFileTypeExt": "目标文件扩展",
-  "changelog": "ChangElog",
+  "changelog": "更新日志",
   "TargetFileTypeExtTooltip": "选择源图像的文件扩展",
   "droptargetTooltip": "拖放 AVIF 图像进行转换",
   "droptargetLabel": "或拖动",
   "installAsApp": "作为应用程序安装",
-  "PWAinstallAsAppTooltip": "安装使您可以直接从桌面图标或其他快捷方式启动此Web应用程序。\n安全级别与常规网页相同，因此它仍然安全。\n有关更多详细信息，请参见<a href =“ https://support.google.com/chrome/answer/9658361”> Google的支持页</a>。",
+  "PWAinstallAsAppTooltip": "安装使您可以直接从桌面图标或其他快捷方式启动此 Web 应用程序。\n安全级别与常规网页相同，因此它仍然安全。\n有关更多详细信息，请参见<a href=\"https://support.google.com/chrome/answer/9658361\">Google 的支持页</a>。",
   "selectLangCloseTooltip": "使用浏览器的语言设置",
   "PWAInstalledTooltip": "作为应用程序安装",
   "PWAUpdateMessage": "该页面的新版本可用。\n单击“重新加载”按钮进行更新。",
@@ -180,6 +186,7 @@
   "loadbutton": "添加图像",
   "loadfolderbutton": "添加整个文件夹",
   "SourceImageList": "源图像列表",
+  "editConvertedImageList": "编辑源图像列表",
   "resetListButtonTooltip": "清除当前源图像的列表",
   "convertTooltip": "单击此处开始转换",
   "experimental": "实验",
@@ -190,7 +197,7 @@
   "confirmListOverwriteMsg": "列表中已经存在此路径。",
   "dupAction_replace": "代替",
   "errMsgOutputDirNotFound": "未指定输出文件夹。",
-  "confirmApplyAllLabel": "将此诉讼应用于所有人",
+  "confirmApplyAllLabel": "将此操作应用于所有项目",
   "confirmFileOverwriteMsg": "具有相同名称的{type}已经存在。",
   "file": "文件",
   "folder": "文件夹",
