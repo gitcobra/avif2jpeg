@@ -83,6 +83,7 @@ const filteredLogList = computed(() => {
   return list;
 });
 const logSizeSliderShow = useTimeoutRef(false);
+const showOverlayScrollButtons = ref(false);
 
 
 // sort options
@@ -262,10 +263,10 @@ function changeLogMaxHeight() {
     
     const logHeight = scrollref.value.$parent.$el.offsetHeight;
     const modalMargin = window.innerHeight - inst.parent.parent.parent.parent.parent.vnode.el.offsetHeight - 8;
-    const availModalHeight = Math.min(logItemHeight.value * Math.max(5, props.logs.length + 2), Math.max(200, logHeight + modalMargin));
+    const availModalHeight = Math.min(logItemHeight.value * Math.max(6, props.logs.length + 2), Math.max(200, logHeight + modalMargin));
     
     availDocumentHeight.value = document.documentElement.clientHeight;
-    availDialogHeight.value = Math.min(logItemHeight.value * Math.max(5, props.logs.length), Math.max(logDefHeight, availModalHeight));
+    availDialogHeight.value = Math.min(logItemHeight.value * Math.max(6, props.logs.length), Math.max(logDefHeight, availModalHeight));
 
     if( !props.opened /*|| !expanded.value*/ )
       return;
@@ -336,6 +337,7 @@ function calculateLogTableViewRange(force?: any/*ev: Event*/) {
     }
   }
   lastTimeLogViewUpdated = now;
+
   
   if( !realLogHeight && props.logs.length ) {
     realLogHeight = logtbody.value.rows[1].offsetHeight;
@@ -347,6 +349,7 @@ function calculateLogTableViewRange(force?: any/*ev: Event*/) {
   const scrollEl = scrollref.value.scrollbarInstRef.containerRef; // *HACK: get container element
   //const bottomScrollVal = scrollEl.scrollHeight - scrollEl.clientHeight - 1;
   const scrtop = scrollEl.scrollTop;
+  
   // ignore too small scroll amount
   if( !force ) {
     if( loglen === lastLogLengthWhenRangeUpdated ) {
@@ -357,7 +360,7 @@ function calculateLogTableViewRange(force?: any/*ev: Event*/) {
   }
   lastScrollTopWhenRangeUpdated = scrtop;
   lastLogLengthWhenRangeUpdated = loglen;
-
+  
   const viewStartIndex = Math.max(0, (scrtop / logItemHeight.value | 0) - LOG_INVISIBLE_ITEM_MARGIN);
   logStartIndex.value = viewStartIndex;
   logTopMarginStyle.value.height = (viewStartIndex * logItemHeight.value) + 'px';
@@ -371,19 +374,26 @@ function resetLogTableViewRange() {
   calculateLogTableViewRange();
 }
 
+
+// observe props.logs
+var prevLogLength = 0;
 watch(() => props.logs, () => {
   if( !props.opened )
     return;
+  if( prevLogLength === props.logs.length ) {
+    return;
+  }
+  prevLogLength = props.logs.length;
   
+  console.log('updated props.logs');
+
   nextTick( calculateLogTableViewRange );
   if( autoScrollLog.value ) {
     scrollLogViewToBottom();
   }
 
-  //console.log('updated props.logs');
   sortListPeriodically();
 });
-
 
 
 
@@ -432,9 +442,19 @@ function sortListBySortOptions() {
   }
 }
 
-function onKeyPressInLogTable(ev: KeyboardEvent) {
+function onKeyPressInLogTable(arg: string | KeyboardEvent) {
   const logs = props.logs;
   const currentSelectedIndex = logs.findIndex(item => item.zippedIndex === props.imageIndex);
+
+  let ev: KeyboardEvent;
+  if( typeof arg === 'string' ) {
+    ev = new KeyboardEvent('keydown', {
+      code: arg,
+    });
+  }
+  else {
+    ev = arg;
+  }
   
   let sign = 0;
   let count = 1;
@@ -502,11 +522,44 @@ function onKeyPressInLogTable(ev: KeyboardEvent) {
   causedChangeSelectByKeyboard = true;
 }
 
+function onScrollButtonPress(action: string) {
+  const pageHeight = logTableViewHeight.value - logItemHeight.value * 2;
+  switch(action) {
+    case 'Top':
+      scrollref.value?.scrollTo({
+        //behavior: 'smooth',
+        top: 0,
+      });
+      break;
+    case 'PageUp':
+      scrollref.value?.scrollBy({
+        behavior: 'smooth',
+        top: -pageHeight,
+      });
+      break;
+    
+    case 'Bottom':
+      scrollref.value?.scrollTo({
+        //behavior: 'smooth',
+        top: props.logs.length * logItemHeight.value,
+      });
+      break;
+    case 'PageDown':
+      scrollref.value?.scrollBy({
+        behavior: 'smooth',
+        top: pageHeight,
+      });
+      break;
+  }
+  onMouseDownScrollbar();
+}
+
 
 let prevScrollLeft = -1;
 let prevScrollTop = -1;
 let storedLogTableScrollLeft = 0;
 let ignoreScrollLeftChangeFlag = false;
+let timeoutScrollLeftId: any = -1;
 function onLogTableScroll(ev: Event) {
   //console.log('onLogTableScroll', (ev.target as HTMLElement)?.scrollLeft, (ev.target as HTMLElement)?.scrollTop);
   calculateLogTableViewRange();
@@ -532,16 +585,20 @@ function onLogTableScroll(ev: Event) {
 
   // restore scrollLeft
   nextTick(() => {
-    ignoreScrollLeftChangeFlag = true;
-    const el = scrollref.value?.scrollbarInstRef?.containerRef;
-    if( el )
-      el.scrollLeft = storedLogTableScrollLeft;
+    clearTimeout(timeoutScrollLeftId);
+    timeoutScrollLeftId = setTimeout(() => {
+      ignoreScrollLeftChangeFlag = true;
+      const el = scrollref.value?.scrollbarInstRef?.containerRef;
+      if( el )
+        el.scrollLeft = storedLogTableScrollLeft;
+    }, 2000);
   });
 }
 
-function onMouseDownScrollbar(ev: MouseEvent) {
+function onMouseDownScrollbar(ev?: MouseEvent) {
   autoScrollLog.value = false;
 }
+
 
 
 function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
@@ -598,7 +655,6 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
         <n-checkbox key="b" v-model:checked="autoScrollLog" @update:checked="flag => flag && scrollLogViewToBottom(true)" size="small" style="font-size: 0.9em;">
           {{$t('status.autoScroll')}}
         </n-checkbox>
-        <!--</transition-group>-->
 
         <!-- expand log -->
         <n-popover trigger="hover" :show="logSizeSliderShow" :disabled="!expanded" placement="top" :delay="0" :duration="1000">
@@ -648,8 +704,72 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
       :class="{'log-container':1, 'expand-log': expanded}"
       :style="{height:logTableViewHeight + 'px'}"
       @keydown="onKeyPressInLogTable"
+      @mouseenter="showOverlayScrollButtons = true"
+      @mouseleave="showOverlayScrollButtons = false"
+      vertical
+      :size="1"
       tabindex="-1"
     >
+      
+      <!-- scroll buttons -->
+      <Transition name="fade">
+        <n-flex
+          class="overlay-buttons"
+          vertical
+          v-show="showOverlayScrollButtons"
+          :size="0"
+          justify="space-between"
+        >
+          <n-button-group vertical class="overlay-button-group">
+            <n-tooltip placement="left">
+              <template #trigger>
+                <n-button @click="onScrollButtonPress('Top')" color="black" round class="edge">
+                  <PhCaretLineUpFill/>
+                </n-button>
+              </template>
+              {{ $t('status.scrollToTop') }}
+            </n-tooltip>
+            <n-tooltip placement="left">
+              <template #trigger>
+                <n-button @click="onScrollButtonPress('PageUp')" color="black" round>
+                  <F7ArrowUp/>
+                </n-button>
+              </template>
+              {{ $t('status.scrollPageUp') }}
+            </n-tooltip>
+            <!--
+            <n-button @click="onScrollButtonPress('ArrowUp')" color="black" round>
+              <F7ArrowUp/>
+            </n-button>
+            -->
+          </n-button-group>
+          
+          <n-button-group vertical class="overlay-button-group bottom-part">
+            <!--
+            <n-button @click="onScrollButtonPress('ArrowDown')" color="black" round>
+              <F7ArrowDown/>
+            </n-button>
+            -->
+            <n-tooltip placement="left">
+              <template #trigger>
+                <n-button @click="onScrollButtonPress('PageDown')" color="black" round>
+                  <F7ArrowDown/>
+                </n-button>
+              </template>
+              {{ $t('status.scrollPageDown') }}
+            </n-tooltip>
+            <n-tooltip placement="left">
+              <template #trigger>
+                <n-button @click="onScrollButtonPress('Bottom')" color="black" round class="edge">
+                  <PhCaretLineDownFill/>
+                </n-button>
+              </template>
+              {{ $t('status.scrollToBottom') }}
+            </n-tooltip>
+          </n-button-group>
+        </n-flex>
+      </Transition>
+
       <!-- filelist table -->
       <n-scrollbar
         ref="scrollref"
@@ -660,7 +780,7 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
         @scroll="onLogTableScroll"
         load="handleLogLoad"
         trigger="none"
-        style="z-index:2; padding-right:10px; height:100%;"
+        style="z-index:2; padding-right:10px; height:100%; position: relative;"
         :size="50"
         :style="{height:logTableViewHeight + 'px'}"
       >
@@ -712,7 +832,21 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
         <div style="height:1em"></div>
       </n-scrollbar>
 
-
+      <n-flex
+        justify="center"
+        :style="{marginBottom: (logItemHeight) + 'px'}"
+        class="expand-container"
+        v-if="logs.length > 5"
+      >
+        <n-button v-if="true" 
+          @click="(expanded=!expanded) && onExpandClick()" 
+          class="expand-button"
+          :style="{height: logItemHeight + 'px'}"
+        >
+          <OcticonTriangleDown16 v-if="!expanded"/>
+          <OcticonTriangleUp16 v-else/>
+        </n-button>
+      </n-flex>
     </n-flex>
   </n-collapse-item>
 
@@ -811,6 +945,46 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
       background-color: white;
     }
     */
+  }
+
+  .overlay-buttons {
+    position: absolute;
+    right: 1em;
+    top: 0px;
+    height: 100%;
+    z-index: 10;
+    padding-bottom: 1em;
+
+    .overlay-button-group {
+      height: 50%;
+
+      &.bottom-part {
+        justify-content: flex-end;
+      }
+    }
+    
+    button {
+      opacity: 0.4;
+      padding: 4px;
+      height: 60%;
+      max-height: 100px;
+      &.page {
+        height: 30%;
+      }
+      &.edge {
+        height: 30%;
+        font-size: 70%;
+      }
+    }
+  }
+
+  .expand-container {
+    font-size: 1px;
+  }
+  .expand-button {
+    position: absolute;
+    max-width: 800px;
+    width: 50%;
   }
 }
 
