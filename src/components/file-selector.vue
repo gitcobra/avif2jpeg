@@ -2,7 +2,7 @@
   <div class="container-1">
   <div class="container-2">
   <n-flex vertical align="center" justify="center" inline size="small">
-    
+
     <n-flex align="center" justify="space-around" class="main-buttons">
       
       <n-flex vertical align="stretch" justify="center">
@@ -418,6 +418,9 @@ async function filterByExtension(list: File[]) {
 }
 
 async function emitInputs(list: File[]) {
+  if( props.forbidden ) {
+    return;
+  }
   disableInputButtons.value = true;
   list = await filterByExtension(list);
   inputtedFileCount.value = list.length;

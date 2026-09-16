@@ -4,6 +4,7 @@ import { getUnitSize } from "./util";
 
 import PromptDup from "./prompt-on-dup.vue";
 import { FileWithId } from "./file-selector.vue";
+import FileThumbnailList from './file-list-edit.vue'
 
 // type
 type PromptProps = InstanceType<typeof PromptDup>['$props'];
@@ -16,8 +17,10 @@ const { t } = useI18n();
 const props = defineProps<{
   additionalFiles: FileWithId[];
 }>();
+
 // v-model
 const fileList = defineModel<FileWithId[]>('file-list', {required:true});
+
 
 // refs
 const imageList = ref<{file: FileWithId, name: string}[]>([]);
@@ -27,6 +30,8 @@ const prevListLength = ref(0);
 const promptdup = ref();
 const applyToAll = ref(false);
 const duplicatedPath = ref('');
+
+const editboxOpened = ref(false);
 
 
 // const
@@ -114,103 +119,125 @@ function clear() {
 
 <template>
   <div>
-  <n-flex class="container" justify="stretch" align="stretch" :wrap="false" :size="1">
-    
-    <!-- thumbnail box -->
-    <n-flex class="list-box" :wrap="false" :size="0">
+    <n-flex class="container" justify="stretch" align="stretch" :wrap="false" :size="1">
       
-      <span class="list-label">{{ $t('SourceImageList') }}</span>
-      <n-flex class="list-status" vertical :size="4" align="end" justify="end">
-        <div class="sum">{{ $t('status.total') }}</div>
-        <div class="size">{{ listTotal }}</div>
-        <div class="files">
-          <n-number-animation
-            :active="true"
-            :duration="1000"
-            show-separator
-            :to="fileList.length"
-            :from="prevListLength"
-            @finish="prevListLength = fileList.length"
-          /> {{ $t('files', fileList.length) }}
-        </div>
+      <!-- thumbnail box -->
+      <button type='button' class='open-button' @click='editboxOpened = true'>
+        <n-flex class="list-box" :wrap="false" :size="0">
+          <span class="list-label">{{ $t('SourceImageList') }}</span>
+          <n-flex class="list-status" vertical :size="4" align="end" justify="end">
+            <div class="sum">{{ $t('status.total') }}</div>
+            <div class="size">{{ listTotal }}</div>
+            <div class="files">
+              <n-number-animation
+                :active="true"
+                :duration="1000"
+                show-separator
+                :to="fileList.length"
+                :from="prevListLength"
+                @finish="prevListLength = fileList.length"
+              /> {{ $t('files', fileList.length) }}
+            </div>
+          </n-flex>
+          <transition-group name="list">
+            <canvas-thumbnail v-for="(item, i) in imageList"
+              :key="item.file._id"
+              :source="item.file"
+              :width="67"
+              :height="100"
+              class="image-item"
+            />
+            <!--
+            <n-image
+              v-for="(item, i) in imageList"
+              :key="item.name"
+              :src="item.url"
+              :alt="item.name"
+              object-fit="cover"
+              :width="200 / imageList.length" height="100"
+              preview-disabled
+              class="image-item"
+            >
+            </n-image>
+            -->
+
+          </transition-group>
+        </n-flex>
+      </button>
+      <!-- clear button -->
+      <n-flex class="button-box" align="center" justify="center">
+        <n-tooltip trigger="hover" placement="top" :keep-alive-on-hover="false" :delay="100">
+          <template #trigger>
+            <n-button
+              class="close-button"
+              :bordered="false"
+              color="gray"
+              ghost
+              size="tiny"
+              @click="clear()"
+            >
+              <n-flex vertical align="center">
+                <n-icon size="1.6em"><MaterialSymbolsCloseRounded/></n-icon>
+                <span>{{$t('reset')}}</span>
+              </n-flex>
+            </n-button>
+          </template>
+          <template #default>
+            {{ $t('resetListButtonTooltip') }}
+          </template>
+        </n-tooltip>
       </n-flex>
-      
-      <transition-group name="list">
-        <canvas-thumbnail v-for="(item, i) in imageList"
-          :key="item.file._id"
-          :source="item.file"
-          :width="67"
-          :height="100"
-          class="image-item"
-        />
-        <!--
-        <n-image
-          v-for="(item, i) in imageList"
-          :key="item.name"
-          :src="item.url"
-          :alt="item.name"
-          object-fit="cover"
-          :width="200 / imageList.length" height="100"
-          preview-disabled
-          class="image-item"
-        >
-        </n-image>
-        -->
 
-      </transition-group>
-    </n-flex>
-    
-    <!-- clear button -->
-    <n-flex class="button-box" align="center" justify="center">
-      <n-tooltip trigger="hover" placement="top" :keep-alive-on-hover="false" :delay="100">
-        <template #trigger>
-          <n-button
-            class="close-button"
-            :bordered="false"
-            color="gray"
-            ghost
-            size="tiny"
-            @click="clear()"
-          > 
-            <n-flex vertical align="center">
-              <n-icon size="1.6em"><MaterialSymbolsCloseRounded/></n-icon>
-              <span>{{$t('reset')}}</span>
-            </n-flex>
-          </n-button>
-        </template>
-        <template #default>
-          {{ $t('resetListButtonTooltip') }}
-        </template>
-      </n-tooltip>
     </n-flex>
 
-  </n-flex>
+    <!-- confirm on duplicate path -->
+    <PromptDup
+      ref="promptdup"
+      closable
+      :buttons="buttonList"
+      close-on-esc
+      show-apply-all
+      :label-apply-all="$t('confirmApplyAllLabel')"
+      v-model:apply-all-checked="applyToAll"
+    >
+      <template #header>
+        {{ $t('confirmListOverwrite') }}
+      </template>
+      <template #default>
+        <div>
+          {{ $t('confirmListOverwriteMsg') }}
+        </div>
+        <p class="path">
+          {{ duplicatedPath }}
+        </p>
+      </template>
+    </PromptDup>
 
-  <!-- confirm on duplicate path -->
-  <PromptDup
-    ref="promptdup"
-    closable
-    :buttons="buttonList"
-    close-on-esc
-    
-    show-apply-all
-    :label-apply-all="$t('confirmApplyAllLabel')"
-    v-model:apply-all-checked="applyToAll"
-  >
-    <template #header>
-      {{ $t('confirmListOverwrite') }}
-    </template>
-    <template #default>
-      <div>
-        {{ $t('confirmListOverwriteMsg') }}
-      </div>
-      <p class="path">
-        {{ duplicatedPath }}
-      </p>
-    </template>
-  </PromptDup>
+    <!-- open edit box -->
+    <n-modal
+      ref="editBox"
+      display-directive="if"
+      v-model:show="editboxOpened"
+      :closable="true"
+      preset="dialog"
+      :title="$t('editConvertedImageList')"
+      type="info"
+    >
+      <FileThumbnailList
+        v-model:files="fileList"
+        :item-height="70"
+        :thumbnail-size="64"
+        _@select="onSelect"
+      />
+
+      <template #action>
+        <n-button @click="editboxOpened = false">
+          {{ $t('close') }}
+        </n-button>
+      </template>
+    </n-modal>
+
   </div>
-
 </template>
 
 <style lang="scss" scoped>
@@ -219,8 +246,23 @@ function clear() {
   border-radius: 4px;
   height: 100px;
   padding: 2px;
+
   
-  .list-box {
+  .open-button {
+    border: none;
+    background: none;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    overflow: hidden;
+
+    &:hover, &:focus-visible {
+      outline: 1px solid lime;
+      outline-offset: 1px;
+    }
+
     flex-grow: 1;
     width: 200px;
     border: 1px solid silver;
@@ -258,12 +300,15 @@ function clear() {
       }
     }
   }
+
   .button-box {
     .close-button {
       height: 100%;
       font-size: 0.8em;
-      &:hover {
+      &:hover, &:focus-visible {
         color: red;
+        outline: 1px solid red;
+        outline-offset: 1px;
       }
     }
   }
@@ -294,5 +339,4 @@ function clear() {
   opacity: 0;
   transform: translateX(-100px);
 }
-
 </style>
