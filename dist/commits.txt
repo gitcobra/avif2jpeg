@@ -1,3 +1,9 @@
+2026-09-18 00:23:32 +0900
+v1.12.7
+
+2026-09-18 00:21:19 +0900
+fix: service worker cache not working in offline mode
+
 2026-09-17 04:56:59 +0900
 v1.12.6
 
@@ -15,9 +21,3 @@ fix(i18n): correct locale translations
 
 2025-11-20 10:35:31 +0900
 fix: update Changelog component when resetting settings
-
-2025-10-30 21:16:39 +0900
-chore: miscellaneous changes
-
-2025-10-25 06:47:49 +0900
-v1.12.5
