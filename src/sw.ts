@@ -1,8 +1,8 @@
 /// <reference lib="webworker" />
 declare let self: ServiceWorkerGlobalScope;
-import { PrecacheController } from "workbox-precaching";
+import { matchPrecache, PrecacheController } from "workbox-precaching";
 //import { cacheNames } from 'workbox-core';
-import { registerRoute, setDefaultHandler, } from 'workbox-routing';
+import { NavigationRoute, registerRoute, setDefaultHandler, } from 'workbox-routing';
 import { ExpirationPlugin } from 'workbox-expiration';
 import { NetworkFirst, CacheOnly, CacheFirst, StaleWhileRevalidate,  } from 'workbox-strategies';
 //import { CacheableResponsePlugin } from 'workbox-cacheable-response';
@@ -17,15 +17,19 @@ const CACHE_NAME = 'pwa-cache';
 
 const __WB_MANIFEST = self.__WB_MANIFEST;
 // @ts-ignore
-const cacheFilesWhenPWAInstall = self.__DIST_FILES__ || [];//import.meta.env.__DIST_FILES__;
+const cacheFilesWhenPWAInstall = self.__DIST_FILES__ || [];
 const ver = import.meta.env.__APP_VERSION__;
+const basePath = import.meta.env.VITE_BASE_PATH
+
+console.log("basePath", basePath);
+console.log("__APP_VERSION__", ver);
 console.log("__WB_MANIFEST", __WB_MANIFEST);
 console.log("cacheFilesPWAInstall", cacheFilesWhenPWAInstall);
 
 
 // use PrecacheController to manually handle caching in case the precache has been deleted
 //precacheAndRoute(__WB_MANIFEST);
-const pcctrl = new PrecacheController();
+const pcctrl = new PrecacheController({cacheName: 'precache'});
 pcctrl.addToCacheList(__WB_MANIFEST);
 
 
@@ -111,42 +115,73 @@ registerRoute(
 
     // Use manual cache if not found in precache
     console.log('manual caching');
-    return defaultStrategy.handle(event as FetchEvent);
+    return defaultStrategy.handle({event, request});
   }
 );
 
 
-// fallback to index.html for all SPA navigation requests
-/*
+// handle route for Non-precached files
 registerRoute(
-  ({ request }) => request.mode === 'navigate' &&
+  ({ request, url }) => (
+      cacheFilesWhenPWAInstall.includes(url.pathname)
+    ),
+  defaultStrategy
+);
+
+
+// fallback to index.html for all SPA navigation requests
+const ROOT_INDEX_PATH = basePath + 'index.html';
+console.log("ROOT_INDEX_PATH", ROOT_INDEX_PATH);
+
+registerRoute(
+  ({ request, url }) => request.mode === 'navigate' &&
                    request.destination === 'document' &&
-                   request.url.match(/\.html$|\/[^./]+\/?$/),
+                   request.url.match(/\.html$|\/[a-z\-]*$/),
   async (args) => {
     const { request, event, url } = args;
-    
-    const pcached = await pcctrl.matchPrecache('index.html');
-    if( pcached ) {
+
+    const baseIndexCacheExists = await pcctrl.matchPrecache(ROOT_INDEX_PATH);
+    if( !baseIndexCacheExists && url.pathname !== ROOT_INDEX_PATH ) {
+      event.waitUntil( ensureBaseIndexCached() );
+    }
+
+    // check lang-indivisual index.html
+    try {
+      return await defaultStrategy.handle({
+        request: new Request(url),
+        event,
+      });
+    } catch(e) {}
+
+    // check precache's root index.html
+    if( baseIndexCacheExists ) {
       console.log('fallback to base index.html');
-      return pcctrl.createHandlerBoundToURL('index.html')(args);
+      return pcctrl.createHandlerBoundToURL(ROOT_INDEX_PATH)(args);
     }
     else {
       console.log('manually cached index.html');
-      const durl = 'index.html';
       return defaultStrategy.handle({
-        request: new Request(durl),
+        request: new Request(ROOT_INDEX_PATH),
         event,
       });
     }
   }
 );
-*/
 
-// handle route for Non-precached files
-registerRoute(
-  ({ request, url }) => cacheFilesWhenPWAInstall.includes(url.pathname),
-  defaultStrategy
-);
+async function ensureBaseIndexCached() {
+  await caches.open(CACHE_NAME).then(async cache => {
+    if( await cache.match(ROOT_INDEX_PATH) ) {
+      return;
+    }
+    
+    const response = await fetch(ROOT_INDEX_PATH)
+    if (response.ok) {
+      await cache.put(ROOT_INDEX_PATH, response);
+    }
+  });
+}
+
+
 
 
 // default route

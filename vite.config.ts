@@ -101,7 +101,7 @@ export default defineConfig(({mode}) => {
     srcDir: 'src',
     filename: 'sw.ts',
     registerType: 'prompt',
-    
+    scope: basePath,
     
     injectManifest: {
       globPatterns: precacheGlob,
