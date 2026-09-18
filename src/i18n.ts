@@ -18,6 +18,23 @@ const localeImports: Record<string, () => Promise<DefaultLocaleMessageSchema>> =
 const messageImports = import.meta.glob('./locales/*.json');
 //const localeUrls = import.meta.glob<string>('./locales/*.json', {query:'?url', import:'default'});
 const messageGlobbedPath = {};
+
+function mergeLocaleMessages(base: any, overrides: any): any {
+  if( !base || typeof base !== 'object' || Array.isArray(base) )
+    return overrides;
+  if( !overrides || typeof overrides !== 'object' || Array.isArray(overrides) )
+    return overrides ?? base;
+
+  const merged = {...base};
+  for(const key of Object.keys(overrides)) {
+    merged[key] = key in base
+      ? mergeLocaleMessages(base[key], overrides[key])
+      : overrides[key];
+  }
+  return merged;
+}
+
+const regionalChineseLocales = new Set(['zh-tw', 'zh-hk']);
 for(const path in messageImports) {
   const lang = ( path.match(/\/([a-z]{2}(?:-[a-z]+)?)\.json$/i) )?.[1];
   if( !lang )
@@ -41,6 +58,11 @@ if( import.meta.env.SSR ) {
     if( !lang || lang in messages )
       continue;
     messages[lang] = messageImports[path];
+  }
+
+  for(const lang of regionalChineseLocales) {
+    if( messages[lang] && messages['zh-hant'] )
+      messages[lang] = mergeLocaleMessages(messages['zh-hant'], messages[lang]);
   }
 }
 
@@ -94,7 +116,13 @@ export async function loadLocaleMessages(locale) {
     console.error(messageGlobbedPath[locale], err);
   });
   */
-  const message = await localeImports[locale]().catch(err => console.error(err));
+  const localeMessage = await localeImports[locale]().catch(err => console.error(err));
+  const baseMessage = regionalChineseLocales.has(locale)
+    ? await localeImports['zh-hant']().catch(err => console.error(err))
+    : undefined;
+  const message = baseMessage
+    ? mergeLocaleMessages(baseMessage, localeMessage)
+    : localeMessage;
   if( !message ) {
     return false;
   }

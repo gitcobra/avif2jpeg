@@ -86,7 +86,7 @@ function insertHeadForSSG() {
     const linkobj = {
       rel: 'alternate',
       hreflang: lang,
-      href: basepath + lang,
+      href: basepath + lang + '/',
     };
     linkset.push(linkobj);
   }
@@ -180,30 +180,54 @@ async function setLocaleByCurrentPath() {
 }
 
 async function setLocaleByBrowserLanguage() {
-  const userlang = getBrowserLanguage().toLowerCase();
-  const langhead = userlang.split(/[-_]/)[0];
+  for(const userlang of getBrowserLanguages()) {
+    const langhead = userlang.split('-')[0];
 
-  if( LANG_ID_LIST.includes(langhead) ) {
-    let lang = langhead;
-    
-    // choose traditional or simplified chinese
-    if( langhead === 'zh' ) {
-      switch( userlang ) {
-        case 'zh-hant':
-        case 'zh-mo':
-        case 'zh-hk':
-        case 'zh-tw':
-          lang = 'zh-hant';
-      }
+    if( LANG_ID_LIST.includes(userlang) ) {
+      await setLocaleMessages(userlang);
+      return;
     }
 
-    await setLocaleMessages(lang);
+    if( LANG_ID_LIST.includes(langhead) ) {
+      let lang = langhead;
+
+      // choose traditional or simplified chinese
+      if( langhead === 'zh' ) {
+        switch( userlang ) {
+          case 'zh-hant':
+          case 'zh-mo':
+            lang = 'zh-hant';
+            break;
+          case 'zh-hk':
+            lang = 'zh-hk';
+            break;
+          case 'zh-tw':
+            lang = 'zh-tw';
+        }
+      }
+
+      await setLocaleMessages(lang);
+      return;
+    }
   }
 }
 
-function getBrowserLanguage(): string {
+function getBrowserLanguages(): string[] {
   const navigator = window.navigator as any;
-  return navigator.language || navigator.userLanguage || navigator.browserLanguage;
+  const languages = Array.isArray(navigator.languages) ? navigator.languages : [];
+  const fallbackLanguages = [
+    navigator.language,
+    navigator.userLanguage,
+    navigator.browserLanguage,
+  ];
+  const result = new Set<string>();
+
+  for(const language of [...languages, ...fallbackLanguages]) {
+    if( typeof language === 'string' && language )
+      result.add(language.toLowerCase().replace(/_/g, '-'));
+  }
+
+  return [...result];
 }
 
 function changeRoute(val: string) {
