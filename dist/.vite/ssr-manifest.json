@@ -12786,6 +12786,9 @@
   "src/locales/ar.json": [
     "/avif2jpeg/dist/assets/ar-CvO0JV1I.js"
   ],
+  "src/locales/cs.json": [
+    "/avif2jpeg/dist/assets/cs-lnBruDII.js"
+  ],
   "src/locales/de.json": [
     "/avif2jpeg/dist/assets/de-BsJnlOww.js"
   ],
@@ -12796,6 +12799,9 @@
   ],
   "src/locales/es.json": [
     "/avif2jpeg/dist/assets/es-DY7QXRzd.js"
+  ],
+  "src/locales/fa.json": [
+    "/avif2jpeg/dist/assets/fa-CsUpxwbk.js"
   ],
   "src/locales/fi.json": [
     "/avif2jpeg/dist/assets/fi-CGLq0f9f.js"
@@ -12824,11 +12830,23 @@
   "src/locales/pl.json": [
     "/avif2jpeg/dist/assets/pl-DvOLhvlF.js"
   ],
+  "src/locales/pt-br.json": [
+    "/avif2jpeg/dist/assets/pt-br-hXDksiSH.js"
+  ],
   "src/locales/pt.json": [
-    "/avif2jpeg/dist/assets/pt-ClXIgJat.js"
+    "/avif2jpeg/dist/assets/pt-KCk117h7.js"
+  ],
+  "src/locales/ro.json": [
+    "/avif2jpeg/dist/assets/ro-DWEylu2D.js"
   ],
   "src/locales/ru.json": [
     "/avif2jpeg/dist/assets/ru-_vq7rACV.js"
+  ],
+  "src/locales/sv.json": [
+    "/avif2jpeg/dist/assets/sv-r2pyZwhn.js"
+  ],
+  "src/locales/th.json": [
+    "/avif2jpeg/dist/assets/th-UYO-0Mpe.js"
   ],
   "src/locales/tr.json": [
     "/avif2jpeg/dist/assets/tr-DfkzUwlQ.js"
@@ -12836,8 +12854,17 @@
   "src/locales/uk.json": [
     "/avif2jpeg/dist/assets/uk-CFj2209v.js"
   ],
+  "src/locales/vi.json": [
+    "/avif2jpeg/dist/assets/vi-BrJoLlrA.js"
+  ],
   "src/locales/zh-hant.json": [
     "/avif2jpeg/dist/assets/zh-hant-DXh-0oe-.js"
+  ],
+  "src/locales/zh-hk.json": [
+    "/avif2jpeg/dist/assets/zh-hk-CJFetJI6.js"
+  ],
+  "src/locales/zh-tw.json": [
+    "/avif2jpeg/dist/assets/zh-tw-B6uXj4gD.js"
   ],
   "src/locales/zh.json": [
     "/avif2jpeg/dist/assets/zh-DjD9tfX8.js"

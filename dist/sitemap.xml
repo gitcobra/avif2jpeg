@@ -5,7 +5,7 @@
             https://gitcobra.github.io/
         </loc>
         <lastmod>
-            2026-09-17T15:24:03.409Z
+            2026-09-18T10:05:43.804Z
         </lastmod>
         <changefreq>
             daily
@@ -19,7 +19,21 @@
             https://gitcobra.github.io/ar
         </loc>
         <lastmod>
-            2026-09-17T15:24:03.409Z
+            2026-09-18T10:05:43.804Z
+        </lastmod>
+        <changefreq>
+            daily
+        </changefreq>
+        <priority>
+            1.0
+        </priority>
+    </url>
+    <url>
+        <loc>
+            https://gitcobra.github.io/cs
+        </loc>
+        <lastmod>
+            2026-09-18T10:05:43.804Z
         </lastmod>
         <changefreq>
             daily
@@ -33,7 +47,7 @@
             https://gitcobra.github.io/de
         </loc>
         <lastmod>
-            2026-09-17T15:24:03.409Z
+            2026-09-18T10:05:43.804Z
         </lastmod>
         <changefreq>
             daily
@@ -47,7 +61,7 @@
             https://gitcobra.github.io/en
         </loc>
         <lastmod>
-            2026-09-17T15:24:03.409Z
+            2026-09-18T10:05:43.804Z
         </lastmod>
         <changefreq>
             daily
@@ -61,7 +75,21 @@
             https://gitcobra.github.io/es
         </loc>
         <lastmod>
-            2026-09-17T15:24:03.409Z
+            2026-09-18T10:05:43.804Z
+        </lastmod>
+        <changefreq>
+            daily
+        </changefreq>
+        <priority>
+            1.0
+        </priority>
+    </url>
+    <url>
+        <loc>
+            https://gitcobra.github.io/fa
+        </loc>
+        <lastmod>
+            2026-09-18T10:05:43.804Z
         </lastmod>
         <changefreq>
             daily
@@ -75,7 +103,7 @@
             https://gitcobra.github.io/fi
         </loc>
         <lastmod>
-            2026-09-17T15:24:03.409Z
+            2026-09-18T10:05:43.804Z
         </lastmod>
         <changefreq>
             daily
@@ -89,7 +117,7 @@
             https://gitcobra.github.io/fr
         </loc>
         <lastmod>
-            2026-09-17T15:24:03.409Z
+            2026-09-18T10:05:43.804Z
         </lastmod>
         <changefreq>
             daily
@@ -103,7 +131,7 @@
             https://gitcobra.github.io/hi
         </loc>
         <lastmod>
-            2026-09-17T15:24:03.409Z
+            2026-09-18T10:05:43.804Z
         </lastmod>
         <changefreq>
             daily
@@ -117,7 +145,7 @@
             https://gitcobra.github.io/id
         </loc>
         <lastmod>
-            2026-09-17T15:24:03.409Z
+            2026-09-18T10:05:43.804Z
         </lastmod>
         <changefreq>
             daily
@@ -131,7 +159,7 @@
             https://gitcobra.github.io/it
         </loc>
         <lastmod>
-            2026-09-17T15:24:03.409Z
+            2026-09-18T10:05:43.804Z
         </lastmod>
         <changefreq>
             daily
@@ -145,7 +173,7 @@
             https://gitcobra.github.io/ja
         </loc>
         <lastmod>
-            2026-09-17T15:24:03.409Z
+            2026-09-18T10:05:43.804Z
         </lastmod>
         <changefreq>
             daily
@@ -159,7 +187,7 @@
             https://gitcobra.github.io/ko
         </loc>
         <lastmod>
-            2026-09-17T15:24:03.409Z
+            2026-09-18T10:05:43.804Z
         </lastmod>
         <changefreq>
             daily
@@ -173,7 +201,7 @@
             https://gitcobra.github.io/nl
         </loc>
         <lastmod>
-            2026-09-17T15:24:03.409Z
+            2026-09-18T10:05:43.804Z
         </lastmod>
         <changefreq>
             daily
@@ -187,7 +215,7 @@
             https://gitcobra.github.io/pl
         </loc>
         <lastmod>
-            2026-09-17T15:24:03.409Z
+            2026-09-18T10:05:43.804Z
         </lastmod>
         <changefreq>
             daily
@@ -201,7 +229,35 @@
             https://gitcobra.github.io/pt
         </loc>
         <lastmod>
-            2026-09-17T15:24:03.409Z
+            2026-09-18T10:05:43.804Z
+        </lastmod>
+        <changefreq>
+            daily
+        </changefreq>
+        <priority>
+            1.0
+        </priority>
+    </url>
+    <url>
+        <loc>
+            https://gitcobra.github.io/pt-br
+        </loc>
+        <lastmod>
+            2026-09-18T10:05:43.804Z
+        </lastmod>
+        <changefreq>
+            daily
+        </changefreq>
+        <priority>
+            1.0
+        </priority>
+    </url>
+    <url>
+        <loc>
+            https://gitcobra.github.io/ro
+        </loc>
+        <lastmod>
+            2026-09-18T10:05:43.804Z
         </lastmod>
         <changefreq>
             daily
@@ -215,7 +271,35 @@
             https://gitcobra.github.io/ru
         </loc>
         <lastmod>
-            2026-09-17T15:24:03.409Z
+            2026-09-18T10:05:43.804Z
+        </lastmod>
+        <changefreq>
+            daily
+        </changefreq>
+        <priority>
+            1.0
+        </priority>
+    </url>
+    <url>
+        <loc>
+            https://gitcobra.github.io/sv
+        </loc>
+        <lastmod>
+            2026-09-18T10:05:43.804Z
+        </lastmod>
+        <changefreq>
+            daily
+        </changefreq>
+        <priority>
+            1.0
+        </priority>
+    </url>
+    <url>
+        <loc>
+            https://gitcobra.github.io/th
+        </loc>
+        <lastmod>
+            2026-09-18T10:05:43.804Z
         </lastmod>
         <changefreq>
             daily
@@ -229,7 +313,7 @@
             https://gitcobra.github.io/tr
         </loc>
         <lastmod>
-            2026-09-17T15:24:03.409Z
+            2026-09-18T10:05:43.804Z
         </lastmod>
         <changefreq>
             daily
@@ -243,7 +327,21 @@
             https://gitcobra.github.io/uk
         </loc>
         <lastmod>
-            2026-09-17T15:24:03.409Z
+            2026-09-18T10:05:43.804Z
+        </lastmod>
+        <changefreq>
+            daily
+        </changefreq>
+        <priority>
+            1.0
+        </priority>
+    </url>
+    <url>
+        <loc>
+            https://gitcobra.github.io/vi
+        </loc>
+        <lastmod>
+            2026-09-18T10:05:43.804Z
         </lastmod>
         <changefreq>
             daily
@@ -257,7 +355,7 @@
             https://gitcobra.github.io/zh
         </loc>
         <lastmod>
-            2026-09-17T15:24:03.409Z
+            2026-09-18T10:05:43.804Z
         </lastmod>
         <changefreq>
             daily
@@ -271,7 +369,35 @@
             https://gitcobra.github.io/zh-hant
         </loc>
         <lastmod>
-            2026-09-17T15:24:03.409Z
+            2026-09-18T10:05:43.804Z
+        </lastmod>
+        <changefreq>
+            daily
+        </changefreq>
+        <priority>
+            1.0
+        </priority>
+    </url>
+    <url>
+        <loc>
+            https://gitcobra.github.io/zh-hk
+        </loc>
+        <lastmod>
+            2026-09-18T10:05:43.804Z
+        </lastmod>
+        <changefreq>
+            daily
+        </changefreq>
+        <priority>
+            1.0
+        </priority>
+    </url>
+    <url>
+        <loc>
+            https://gitcobra.github.io/zh-tw
+        </loc>
+        <lastmod>
+            2026-09-18T10:05:43.804Z
         </lastmod>
         <changefreq>
             daily

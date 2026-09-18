@@ -1,3 +1,12 @@
+2026-09-18 19:05:08 +0900
+v1.12.8
+
+2026-09-18 18:47:20 +0900
+fix: html loading issue with service worker on reload
+
+2026-09-18 18:41:21 +0900
+feat(i18n): support Taiwan, Hong Kong, and Brazilian Portuguese locales
+
 2026-09-18 00:23:32 +0900
 v1.12.7
 
@@ -12,12 +21,3 @@ feat: add scroll buttons to log container
 
 2026-09-16 22:53:02 +0900
 feat: add file list editing
-
-2026-09-16 22:35:11 +0900
-chore: miscellaneous changes
-
-2026-09-16 15:09:20 +0900
-fix(i18n): correct locale translations
-
-2025-11-20 10:35:31 +0900
-fix: update Changelog component when resetting settings

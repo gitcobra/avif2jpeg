@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Konversi Batch Offline dari AVIF ke JPEG</title>
+    <title>AVIF 轉 JPEG「離線」批次圖片轉換器</title>
     <link rel="icon" type="image/png" href="/avif2jpeg/dist/pwa-64x64.png">
     <link rel="apple-touch-icon" href="/avif2jpeg/dist/apple-touch-icon-180x180.png" sizes="180x180">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -29,8 +29,8 @@
     </script>
 
     <link rel="manifest" href="/avif2jpeg/dist/manifest.webmanifest">
-    <meta property="og:title" content="Konversi Batch Offline dari AVIF ke JPEG">
-    <meta property="og:description" content="Ini adalah aplikasi web gratis untuk mengonversi gambar AVIF atau WebP ke format gambar umum lainnya seperti JPEG atau PNG tanpa komunikasi server.">
+    <meta property="og:title" content="AVIF 轉 JPEG「離線」批次圖片轉換器">
+    <meta property="og:description" content="這是一款免費的網路應用程式，可將 AVIF 或 WebP 圖片轉換為 JPEG 或 PNG 等常見圖片格式，無需與伺服器通訊。">
     <link rel="alternate" hreflang="ar" href="/avif2jpeg/dist/ar/">
     <link rel="alternate" hreflang="cs" href="/avif2jpeg/dist/cs/">
     <link rel="alternate" hreflang="de" href="/avif2jpeg/dist/de/">
@@ -40,6 +40,7 @@
     <link rel="alternate" hreflang="fi" href="/avif2jpeg/dist/fi/">
     <link rel="alternate" hreflang="fr" href="/avif2jpeg/dist/fr/">
     <link rel="alternate" hreflang="hi" href="/avif2jpeg/dist/hi/">
+    <link rel="alternate" hreflang="id" href="/avif2jpeg/dist/id/">
     <link rel="alternate" hreflang="it" href="/avif2jpeg/dist/it/">
     <link rel="alternate" hreflang="ja" href="/avif2jpeg/dist/ja/">
     <link rel="alternate" hreflang="ko" href="/avif2jpeg/dist/ko/">
@@ -56,8 +57,6 @@
     <link rel="alternate" hreflang="vi" href="/avif2jpeg/dist/vi/">
     <link rel="alternate" hreflang="zh-hant" href="/avif2jpeg/dist/zh-hant/">
     <link rel="alternate" hreflang="zh-hk" href="/avif2jpeg/dist/zh-hk/">
-    <link rel="alternate" hreflang="zh-tw" href="/avif2jpeg/dist/zh-tw/">
-    <link rel="alternate" hreflang="zh" href="/avif2jpeg/dist/zh/">
     <link rel="alternate" hreflang="x-default" href="/avif2jpeg/dist/">
 </head>
 
@@ -77,14 +76,14 @@
                             <div>
                                 <div>
                                     <div>
-                                        <div> Sumber Terbuka</div>
+                                        <div> 開源</div>
                                         <div>
                                             <div></div>
                                         </div>
                                     </div>
                                 </div>
                             </div><span>v1.12.8</span>
-                            <div><i></i> Changelog</div><button tabindex="0" type="button"><span>Licenses</span></button>
+                            <div><i></i> 更新記錄</div><button tabindex="0" type="button"><span>Licenses</span></button>
                             <div><a href="/avif2jpeg/dist/" class="">HOME</a></div>
                         </div>
                         <div id="langtarget">
@@ -92,8 +91,8 @@
                                 <div>
                                     <div>
                                         <div tabindex="0">
-                                            <div title="Indonesian">
-                                                <div>Indonesian</div>
+                                            <div title="Chinese (Taiwan)">
+                                                <div>Chinese (Taiwan)</div>
                                             </div>
                                             <div aria-label="loading">
                                                 <div>
@@ -117,7 +116,7 @@
                 <div>
                     <div>
                         <div>
-                            <h1><img src="/avif2jpeg/dist/pwa-64x64.png"> Konversi Batch Offline dari AVIF ke JPEG</h1>
+                            <h1><img src="/avif2jpeg/dist/pwa-64x64.png"> AVIF 轉 JPEG「離線」批次圖片轉換器</h1>
                         </div>
                         <div>
                             <div>
@@ -126,7 +125,7 @@
                                         <div>
                                             <div><button tabindex="0" type="button"><span>
                                                         <div><i></i></div>
-                                                    </span><span> Tambahkan gambar</span>
+                                                    </span><span> 新增圖片</span>
                                                     <div aria-hidden="true"></div>
                                                     <div aria-hidden="true"></div>
                                                     <div aria-hidden="true"></div>
@@ -135,7 +134,7 @@
                                                     <div>
                                                         <div>
                                                             <div>
-                                                                <div>Pilih gambar Anda dari jendela dialog.<br>*Pilihan ganda diperbolehkan.</div>
+                                                                <div>從對話方塊中選擇圖片。<br>*可複選。</div>
                                                             </div>
                                                             <div>
                                                                 <div></div>
@@ -144,7 +143,7 @@
                                                     </div>
                                                 </div><button tabindex="0" type="button"><span>
                                                         <div><i></i></div>
-                                                    </span><span> Tambahkan seluruh folder</span>
+                                                    </span><span> 新增整個資料夾</span>
                                                     <div aria-hidden="true"></div>
                                                     <div aria-hidden="true"></div>
                                                     <div aria-hidden="true"></div>
@@ -153,7 +152,7 @@
                                                     <div>
                                                         <div>
                                                             <div>
-                                                                <div>Mengkonversi semua gambar dalam folder yang dipilih dan subfoldernya, dan menambahkan gambar yang dikonversi ke arsip ZIP dengan jalur relatif.<br>*Ini akan menampilkan tombol "Unggah", tetapi sebenarnya tidak mengunggah apa pun ke server mana pun.</div>
+                                                                <div>轉換所選資料夾及其子資料夾中的所有圖片，並以相對路徑加入 ZIP 檔案。</div>
                                                             </div>
                                                             <div>
                                                                 <div></div>
@@ -162,25 +161,25 @@
                                                     </div>
                                                 </div>
                                                 <div _class="drop-target">
-                                                    <div> (Atau seret) </div>
+                                                    <div> (或拖動) </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div>
-                                            <div tabindex="0" aria-checked="false" aria-labelledby="2c122131">
+                                            <div tabindex="0" aria-checked="false" aria-labelledby="0e93eeed">
                                                 <div>&nbsp;<div>
                                                         <div></div>
                                                         <div></div>
                                                     </div>
-                                                </div><span id="2c122131">Mulai Konversi Segera Setelah Memuat</span>
+                                                </div><span id="0e93eeed">載入後立即開始轉換</span>
                                             </div>
                                         </div>
                                         <div>
-                                            <div><span>Ekstensi file target: </span>
+                                            <div><span>目標檔案副檔名: </span>
                                                 <div>
                                                     <div>
                                                         <div>
-                                                            <div>Pilih ekstensi file dari gambar sumber</div>
+                                                            <div>選擇來源圖片的檔案副檔名</div>
                                                             <div>
                                                                 <div></div>
                                                             </div>
@@ -191,7 +190,7 @@
                                                     <div>
                                                         <div tabindex="0">
                                                             <div>
-                                                                <div>hanya ".avif" atau ".webp"</div>
+                                                                <div>僅限 ".avif" 或 ".webp"</div>
                                                             </div>
                                                             <div aria-label="loading">
                                                                 <div>
@@ -212,16 +211,16 @@
                             </div><input type="file" multiple="" accept=".avif, .webp"><input webkitdirectory="" directory="" type="file">
                             <div>
                                 <div><button type="button">
-                                        <div><span>Daftar gambar sumber</span>
+                                        <div><span>來源圖片清單</span>
                                             <div>
-                                                <div>total</div>
+                                                <div>全部的</div>
                                                 <div></div>
-                                                <div>0 Files</div>
+                                                <div>0 檔案</div>
                                             </div>
                                         </div>
                                     </button>
                                     <div><button tabindex="0" type="button"><span>
-                                                <div><i></i><span>Mengatur ulang</span></div>
+                                                <div><i></i><span>重置</span></div>
                                             </span>
                                             <div aria-hidden="true"></div>
                                         </button></div>
@@ -233,7 +232,7 @@
                             <div>
                                 <div>
                                     <div>
-                                        <div><i></i> Tipe output: </div>
+                                        <div><i></i> 輸出類型: </div>
                                         <div>
                                             <div>
                                                 <div tabindex="0">
@@ -256,7 +255,7 @@
                                     <div>
                                         <div>
                                             <div>
-                                                <div> Pilih format gambar untuk output</div>
+                                                <div> 選擇輸出圖片格式</div>
                                                 <div>
                                                     <div></div>
                                                 </div>
@@ -265,7 +264,7 @@
                                     </div>
                                     <div>
                                         <div>
-                                            <div><i></i><span>Kualitas output:</span></div>
+                                            <div><i></i><span>產出質量:</span></div>
                                             <div>
                                                 <div>
                                                     <div>
@@ -297,7 +296,7 @@
                                     <div>
                                         <div>
                                             <div>
-                                                <div> Tetapkan kualitas gambar untuk output</div>
+                                                <div> 設定輸出圖片品質</div>
                                                 <div>
                                                     <div></div>
                                                 </div>
@@ -309,7 +308,7 @@
                                     <div>
                                         <div>
                                             <div>
-                                                <div data-arrow="true"><i></i></div>Ubah metode simpan
+                                                <div data-arrow="true"><i></i></div>變更儲存方式
                                             </div>
                                             <div data-extra="true"></div>
                                         </div>
@@ -319,7 +318,7 @@
                         </div>
                         <div><button tabindex="-1" type="button" disabled="" _:class="{'button-ready': isReadyToConvert}"><span>
                                     <div><i></i></div>
-                                </span><span> Mulai Konversi</span>
+                                </span><span> 開始轉換</span>
                                 <div aria-hidden="true"></div>
                                 <div aria-hidden="true"></div>
                                 <div aria-hidden="true"></div>
@@ -330,7 +329,7 @@
                                     <div>
                                         <div>
                                             <div>
-                                                <div data-arrow="true"><span><i></i><i></i></span></div><span>Pengaturan Lanjutan</span>
+                                                <div data-arrow="true"><span><i></i><i></i></span></div><span>進階設定</span>
                                             </div>
                                             <div data-extra="true"></div>
                                         </div>
@@ -344,11 +343,11 @@
                             </div>
                             <div>
                                 <ul>
-                                    <li>Ini adalah aplikasi web gratis untuk mengonversi batch convert avif (atau webp, dll) gambar ke format gambar umum seperti jpeg, png.</li>
-                                    <li>Ini menggunakan fungsi bawaan browser untuk konversi, jadi <strong>tidak ada data yang dikirim ke server mana pun</strong> dan oleh karena itu cepat dan aman.</li>
-                                    <li>Gambar yang dikonversi akan di-output sebagai file zip apabila beberapa gambar dimuat.</li>
-                                    <li>Membutuhkan <a href="https://caniuse.com/avif" target="_self">versi terbaru dari</a> Firefox atau Chrome untuk memuat gambar AVIF.</li>
-                                    <li>Gunakan aplikasi ini atas risiko Anda sendiri.</li>
+                                    <li>這是一款免費的網路應用程式，可將 AVIF（或 WebP 等）圖片批次轉換為 JPEG、PNG 等常見圖片格式。</li>
+                                    <li>轉換使用瀏覽器內建功能，因此<strong>不會將資料傳送至任何伺服器</strong>，快速又安全。</li>
+                                    <li>載入多張圖片時，轉換後的圖片會以<strong>ZIP 檔案</strong>輸出。</li>
+                                    <li>載入 AVIF 圖片需要<a href="https://caniuse.com/avif" target="_self">最新版</a> Firefox 或 Chrome。</li>
+                                    <li>使用本應用程式的風險由您自行承擔。</li>
                                 </ul>
                             </div>
                         </div>

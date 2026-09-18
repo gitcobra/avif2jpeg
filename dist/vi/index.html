@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Konversi Batch Offline dari AVIF ke JPEG</title>
+    <title>Công cụ chuyển đổi hàng loạt AVIF sang JPEG "Ngoại tuyến"</title>
     <link rel="icon" type="image/png" href="/avif2jpeg/dist/pwa-64x64.png">
     <link rel="apple-touch-icon" href="/avif2jpeg/dist/apple-touch-icon-180x180.png" sizes="180x180">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -29,8 +29,8 @@
     </script>
 
     <link rel="manifest" href="/avif2jpeg/dist/manifest.webmanifest">
-    <meta property="og:title" content="Konversi Batch Offline dari AVIF ke JPEG">
-    <meta property="og:description" content="Ini adalah aplikasi web gratis untuk mengonversi gambar AVIF atau WebP ke format gambar umum lainnya seperti JPEG atau PNG tanpa komunikasi server.">
+    <meta property="og:title" content="Công cụ chuyển đổi hàng loạt AVIF sang JPEG &quot;Ngoại tuyến&quot;">
+    <meta property="og:description" content="Ứng dụng Web miễn phí để chuyển đổi hình ảnh AVIF hoặc WebP sang các định dạng phổ biến như JPEG hoặc PNG mà không giao tiếp với máy chủ.">
     <link rel="alternate" hreflang="ar" href="/avif2jpeg/dist/ar/">
     <link rel="alternate" hreflang="cs" href="/avif2jpeg/dist/cs/">
     <link rel="alternate" hreflang="de" href="/avif2jpeg/dist/de/">
@@ -40,6 +40,7 @@
     <link rel="alternate" hreflang="fi" href="/avif2jpeg/dist/fi/">
     <link rel="alternate" hreflang="fr" href="/avif2jpeg/dist/fr/">
     <link rel="alternate" hreflang="hi" href="/avif2jpeg/dist/hi/">
+    <link rel="alternate" hreflang="id" href="/avif2jpeg/dist/id/">
     <link rel="alternate" hreflang="it" href="/avif2jpeg/dist/it/">
     <link rel="alternate" hreflang="ja" href="/avif2jpeg/dist/ja/">
     <link rel="alternate" hreflang="ko" href="/avif2jpeg/dist/ko/">
@@ -53,7 +54,6 @@
     <link rel="alternate" hreflang="th" href="/avif2jpeg/dist/th/">
     <link rel="alternate" hreflang="tr" href="/avif2jpeg/dist/tr/">
     <link rel="alternate" hreflang="uk" href="/avif2jpeg/dist/uk/">
-    <link rel="alternate" hreflang="vi" href="/avif2jpeg/dist/vi/">
     <link rel="alternate" hreflang="zh-hant" href="/avif2jpeg/dist/zh-hant/">
     <link rel="alternate" hreflang="zh-hk" href="/avif2jpeg/dist/zh-hk/">
     <link rel="alternate" hreflang="zh-tw" href="/avif2jpeg/dist/zh-tw/">
@@ -77,14 +77,14 @@
                             <div>
                                 <div>
                                     <div>
-                                        <div> Sumber Terbuka</div>
+                                        <div> Mã nguồn mở</div>
                                         <div>
                                             <div></div>
                                         </div>
                                     </div>
                                 </div>
                             </div><span>v1.12.8</span>
-                            <div><i></i> Changelog</div><button tabindex="0" type="button"><span>Licenses</span></button>
+                            <div><i></i> Nhật ký thay đổi</div><button tabindex="0" type="button"><span>Licenses</span></button>
                             <div><a href="/avif2jpeg/dist/" class="">HOME</a></div>
                         </div>
                         <div id="langtarget">
@@ -92,8 +92,8 @@
                                 <div>
                                     <div>
                                         <div tabindex="0">
-                                            <div title="Indonesian">
-                                                <div>Indonesian</div>
+                                            <div title="Vietnamese">
+                                                <div>Vietnamese</div>
                                             </div>
                                             <div aria-label="loading">
                                                 <div>
@@ -117,7 +117,7 @@
                 <div>
                     <div>
                         <div>
-                            <h1><img src="/avif2jpeg/dist/pwa-64x64.png"> Konversi Batch Offline dari AVIF ke JPEG</h1>
+                            <h1><img src="/avif2jpeg/dist/pwa-64x64.png"> Công cụ chuyển đổi hàng loạt AVIF sang JPEG "Ngoại tuyến"</h1>
                         </div>
                         <div>
                             <div>
@@ -126,7 +126,7 @@
                                         <div>
                                             <div><button tabindex="0" type="button"><span>
                                                         <div><i></i></div>
-                                                    </span><span> Tambahkan gambar</span>
+                                                    </span><span> Thêm hình ảnh</span>
                                                     <div aria-hidden="true"></div>
                                                     <div aria-hidden="true"></div>
                                                     <div aria-hidden="true"></div>
@@ -135,7 +135,7 @@
                                                     <div>
                                                         <div>
                                                             <div>
-                                                                <div>Pilih gambar Anda dari jendela dialog.<br>*Pilihan ganda diperbolehkan.</div>
+                                                                <div>Chọn hình ảnh từ cửa sổ hộp thoại.<br>*Cho phép chọn nhiều tệp.</div>
                                                             </div>
                                                             <div>
                                                                 <div></div>
@@ -144,7 +144,7 @@
                                                     </div>
                                                 </div><button tabindex="0" type="button"><span>
                                                         <div><i></i></div>
-                                                    </span><span> Tambahkan seluruh folder</span>
+                                                    </span><span> Thêm toàn bộ thư mục</span>
                                                     <div aria-hidden="true"></div>
                                                     <div aria-hidden="true"></div>
                                                     <div aria-hidden="true"></div>
@@ -153,7 +153,7 @@
                                                     <div>
                                                         <div>
                                                             <div>
-                                                                <div>Mengkonversi semua gambar dalam folder yang dipilih dan subfoldernya, dan menambahkan gambar yang dikonversi ke arsip ZIP dengan jalur relatif.<br>*Ini akan menampilkan tombol "Unggah", tetapi sebenarnya tidak mengunggah apa pun ke server mana pun.</div>
+                                                                <div>Chuyển đổi tất cả hình ảnh trong thư mục đã chọn và các thư mục con, sau đó thêm hình ảnh đã chuyển đổi vào tệp ZIP với đường dẫn tương đối.<br>*Nút "Upload" sẽ hiển thị, nhưng thực tế không có dữ liệu nào được tải lên máy chủ.</div>
                                                             </div>
                                                             <div>
                                                                 <div></div>
@@ -162,25 +162,25 @@
                                                     </div>
                                                 </div>
                                                 <div _class="drop-target">
-                                                    <div> (Atau seret) </div>
+                                                    <div> (Hoặc kéo và thả trực tiếp) </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div>
-                                            <div tabindex="0" aria-checked="false" aria-labelledby="2c122131">
+                                            <div tabindex="0" aria-checked="false" aria-labelledby="73beeb9d">
                                                 <div>&nbsp;<div>
                                                         <div></div>
                                                         <div></div>
                                                     </div>
-                                                </div><span id="2c122131">Mulai Konversi Segera Setelah Memuat</span>
+                                                </div><span id="73beeb9d">Tự động bắt đầu chuyển đổi sau khi tải hình ảnh</span>
                                             </div>
                                         </div>
                                         <div>
-                                            <div><span>Ekstensi file target: </span>
+                                            <div><span>Phần mở rộng tệp hình ảnh nguồn: </span>
                                                 <div>
                                                     <div>
                                                         <div>
-                                                            <div>Pilih ekstensi file dari gambar sumber</div>
+                                                            <div>Chọn phần mở rộng tệp hình ảnh nguồn</div>
                                                             <div>
                                                                 <div></div>
                                                             </div>
@@ -191,7 +191,7 @@
                                                     <div>
                                                         <div tabindex="0">
                                                             <div>
-                                                                <div>hanya ".avif" atau ".webp"</div>
+                                                                <div>Chỉ ".avif" hoặc ".webp"</div>
                                                             </div>
                                                             <div aria-label="loading">
                                                                 <div>
@@ -212,16 +212,16 @@
                             </div><input type="file" multiple="" accept=".avif, .webp"><input webkitdirectory="" directory="" type="file">
                             <div>
                                 <div><button type="button">
-                                        <div><span>Daftar gambar sumber</span>
+                                        <div><span>Danh sách hình ảnh nguồn</span>
                                             <div>
-                                                <div>total</div>
+                                                <div>tổng cộng</div>
                                                 <div></div>
-                                                <div>0 Files</div>
+                                                <div>0 tệp</div>
                                             </div>
                                         </div>
                                     </button>
                                     <div><button tabindex="0" type="button"><span>
-                                                <div><i></i><span>Mengatur ulang</span></div>
+                                                <div><i></i><span>Đặt lại</span></div>
                                             </span>
                                             <div aria-hidden="true"></div>
                                         </button></div>
@@ -233,7 +233,7 @@
                             <div>
                                 <div>
                                     <div>
-                                        <div><i></i> Tipe output: </div>
+                                        <div><i></i> Loại đầu ra: </div>
                                         <div>
                                             <div>
                                                 <div tabindex="0">
@@ -256,7 +256,7 @@
                                     <div>
                                         <div>
                                             <div>
-                                                <div> Pilih format gambar untuk output</div>
+                                                <div> Chọn định dạng hình ảnh đầu ra</div>
                                                 <div>
                                                     <div></div>
                                                 </div>
@@ -265,7 +265,7 @@
                                     </div>
                                     <div>
                                         <div>
-                                            <div><i></i><span>Kualitas output:</span></div>
+                                            <div><i></i><span>Chất lượng đầu ra:</span></div>
                                             <div>
                                                 <div>
                                                     <div>
@@ -297,7 +297,7 @@
                                     <div>
                                         <div>
                                             <div>
-                                                <div> Tetapkan kualitas gambar untuk output</div>
+                                                <div> Đặt chất lượng hình ảnh đầu ra</div>
                                                 <div>
                                                     <div></div>
                                                 </div>
@@ -309,7 +309,7 @@
                                     <div>
                                         <div>
                                             <div>
-                                                <div data-arrow="true"><i></i></div>Ubah metode simpan
+                                                <div data-arrow="true"><i></i></div>Thay đổi phương thức lưu
                                             </div>
                                             <div data-extra="true"></div>
                                         </div>
@@ -319,7 +319,7 @@
                         </div>
                         <div><button tabindex="-1" type="button" disabled="" _:class="{'button-ready': isReadyToConvert}"><span>
                                     <div><i></i></div>
-                                </span><span> Mulai Konversi</span>
+                                </span><span> Bắt đầu chuyển đổi</span>
                                 <div aria-hidden="true"></div>
                                 <div aria-hidden="true"></div>
                                 <div aria-hidden="true"></div>
@@ -330,7 +330,7 @@
                                     <div>
                                         <div>
                                             <div>
-                                                <div data-arrow="true"><span><i></i><i></i></span></div><span>Pengaturan Lanjutan</span>
+                                                <div data-arrow="true"><span><i></i><i></i></span></div><span>Cài đặt nâng cao</span>
                                             </div>
                                             <div data-extra="true"></div>
                                         </div>
@@ -344,11 +344,11 @@
                             </div>
                             <div>
                                 <ul>
-                                    <li>Ini adalah aplikasi web gratis untuk mengonversi batch convert avif (atau webp, dll) gambar ke format gambar umum seperti jpeg, png.</li>
-                                    <li>Ini menggunakan fungsi bawaan browser untuk konversi, jadi <strong>tidak ada data yang dikirim ke server mana pun</strong> dan oleh karena itu cepat dan aman.</li>
-                                    <li>Gambar yang dikonversi akan di-output sebagai file zip apabila beberapa gambar dimuat.</li>
-                                    <li>Membutuhkan <a href="https://caniuse.com/avif" target="_self">versi terbaru dari</a> Firefox atau Chrome untuk memuat gambar AVIF.</li>
-                                    <li>Gunakan aplikasi ini atas risiko Anda sendiri.</li>
+                                    <li>Đây là ứng dụng Web miễn phí để chuyển đổi hàng loạt hình ảnh AVIF (hoặc WebP, v.v.) sang các định dạng phổ biến như JPEG và PNG.</li>
+                                    <li>Ứng dụng sử dụng chức năng tích hợp của trình duyệt để chuyển đổi, vì vậy <strong>không có dữ liệu nào được gửi đến máy chủ</strong>, giúp quá trình nhanh chóng và an toàn.</li>
+                                    <li>Hình ảnh đã chuyển đổi sẽ được xuất thành <strong>một tệp ZIP</strong> khi tải lên nhiều hình ảnh.</li>
+                                    <li>Cần có <a href="https://caniuse.com/avif" target="_self">phiên bản mới nhất</a> của Firefox hoặc Chrome để tải hình ảnh AVIF.</li>
+                                    <li>Bạn tự chịu mọi rủi ro khi sử dụng ứng dụng này.</li>
                                 </ul>
                             </div>
                         </div>
