@@ -140,15 +140,23 @@ registerRoute(
   async (args) => {
     const { request, event, url } = args;
 
+    const normalizedUrl = new URL(url);
+    if (
+      !normalizedUrl.pathname.endsWith('/') &&
+      !normalizedUrl.pathname.endsWith('.html')
+    ) {
+      normalizedUrl.pathname += '/';
+    }
+
     const baseIndexCacheExists = await pcctrl.matchPrecache(ROOT_INDEX_PATH);
-    if( !baseIndexCacheExists && url.pathname !== ROOT_INDEX_PATH ) {
+    if( !baseIndexCacheExists && normalizedUrl.pathname !== ROOT_INDEX_PATH ) {
       event.waitUntil( ensureBaseIndexCached() );
     }
 
     // check lang-indivisual index.html
     try {
       return await defaultStrategy.handle({
-        request: new Request(url),
+        request: new Request(normalizedUrl),
         event,
       });
     } catch(e) {}
