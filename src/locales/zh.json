@@ -1,5 +1,7 @@
 {
   "lang": "Chinese",
+  "langNotice": "中文可用",
+  "langName": "中文",
   "flags": "🇨🇳",
   "title": "AVIF 转 JPEG \"离线\" 批量转换器",
   "metaDescription": "这是一款免费的网络应用程序，可将 AVIF 或 WebP 图像转换为 JPEG 或 PNG 等其他常见图像格式，而无需进行服务器通信",
@@ -151,6 +153,7 @@
   "convertedImageDataUrlTooltip": "将转换后的图像复制为 DataURL",
   "convertAgain": "再次转换",
   "reset": "重置",
+  "apply": "应用",
   "selectLanguage": "选择您的语言",
   "back": "后退",
   "failed": "失败的",

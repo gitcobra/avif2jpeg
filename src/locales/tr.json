@@ -1,5 +1,7 @@
 {
   "lang": "Turkish",
+  "langNotice": "Türkçe kullanılabilir",
+  "langName": "Türkçe",
   "flags": "🇹🇷",
   "title": "AVIF'ten JPEG'e \"Çevrimdışı\" Toplu Dönüştürücü",
   "metaDescription": "AVIF veya WebP görüntülerini sunucu iletişimi olmadan JPEG veya PNG gibi diğer yaygın görüntü formatlarına dönüştürmek için ücretsiz bir web uygulamasıdır.",
@@ -151,6 +153,7 @@
   "convertedImageDataUrlTooltip": "Dönüştürülen görüntüyü DataURL olarak kopyalayın",
   "convertAgain": "Tekrar Dönüştür",
   "reset": "Sıfırla",
+  "apply": "Uygula",
   "selectLanguage": "Dilinizi seçin",
   "back": "Geri",
   "failed": "Arızalı",

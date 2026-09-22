@@ -1,5 +1,7 @@
 {
   "lang": "Japanese",
+  "langName": "日本語",
+  "langNotice": "日本語が利用可能です",
   "flags": "🇯🇵",
   "title": "AVIFからJPEGへ「オフライン」一括画像変換",
   "metaDescription": "AVIF・WebP形式の画像をJPEGやPNG等へオフラインで一括変換する無料ツール",
@@ -153,6 +155,7 @@
     "permissionDenied": "フォルダへのアクセス権限が得られませんでした"
   },
   "reset": "リセット",
+  "apply": "適用",
   "back": "戻る",
   "failed": "失敗",
   "success": "成功",

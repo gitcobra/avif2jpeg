@@ -1,5 +1,7 @@
 {
   "lang": "French",
+  "langNotice": "Français est disponible",
+  "langName": "Français",
   "flags": "🇫🇷",
   "title": "Convertisseur AVIF à JPEG \"Hors Ligne\" Par Lots",
   "metaDescription": "Il s'agit d'une application Web gratuite permettant de convertir des images AVIF ou WebP en d'autres formats d'image courants tels que JPEG ou PNG sans communication avec le serveur",
@@ -151,6 +153,7 @@
   "convertedImageDataUrlTooltip": "Copiez l'image convertie en tant que DataURL",
   "convertAgain": "Convertir à nouveau",
   "reset": "Réinitialiser",
+  "apply": "Appliquer",
   "selectLanguage": "Sélectionnez votre langue",
   "back": "Retour",
   "failed": "Échoué",

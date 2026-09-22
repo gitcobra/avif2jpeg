@@ -1,5 +1,7 @@
 {
   "lang": "Dutch",
+  "langNotice": "Nederlands is beschikbaar",
+  "langName": "Nederlands",
   "flags": "🇳🇱",
   "title": "AVIF naar JPEG Offline batchconverter",
   "metaDescription": "Het is een gratis webapplicatie om AVIF- of WebP-afbeeldingen te converteren naar andere gangbare afbeeldingsformaten zoals JPEG of PNG zonder servercommunicatie.",
@@ -151,6 +153,7 @@
   "convertedImageDataUrlTooltip": "Kopieer de geconverteerde afbeelding als DataURL",
   "convertAgain": "Opnieuw converteren",
   "reset": "Opnieuw instellen",
+  "apply": "Toepassen",
   "selectLanguage": "Selecteer uw taal",
   "back": "Terug",
   "failed": "Mislukt",

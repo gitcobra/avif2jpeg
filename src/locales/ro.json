@@ -1,5 +1,7 @@
 {
   "lang": "Romanian",
+  "langNotice": "Română este disponibilă",
+  "langName": "Română",
   "flags": "🇷🇴",
   "title": "Convertor în lot AVIF în JPEG \"Offline\"",
   "metaDescription": "Aplicație Web gratuită pentru conversia imaginilor AVIF sau WebP în formate comune precum JPEG sau PNG, fără comunicare cu serverul.",
@@ -105,6 +107,7 @@
     "permissionDenied": "Nu s-a putut obține permisiunea de acces la folder"
   },
   "reset": "Resetați",
+  "apply": "Aplică",
   "back": "Înapoi",
   "failed": "Eșuat",
   "success": "Succes",

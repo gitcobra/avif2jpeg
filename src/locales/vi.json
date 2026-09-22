@@ -1,5 +1,7 @@
 {
   "lang": "Vietnamese",
+  "langNotice": "Tiếng Việt có sẵn",
+  "langName": "Tiếng Việt",
   "flags": "🇻🇳",
   "title": "Công cụ chuyển đổi hàng loạt AVIF sang JPEG \"Ngoại tuyến\"",
   "metaDescription": "Ứng dụng Web miễn phí để chuyển đổi hình ảnh AVIF hoặc WebP sang các định dạng phổ biến như JPEG hoặc PNG mà không giao tiếp với máy chủ.",
@@ -153,6 +155,7 @@
     "permissionDenied": "Không thể nhận quyền truy cập thư mục."
   },
   "reset": "Đặt lại",
+  "apply": "Áp dụng",
   "back": "Quay lại",
   "failed": "Thất bại",
   "success": "Thành công",

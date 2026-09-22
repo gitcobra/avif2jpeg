@@ -1,5 +1,7 @@
 {
   "lang": "Italian",
+  "langNotice": "Italiano è disponibile",
+  "langName": "Italiano",
   "flags": "🇮🇹",
   "title": "Convertitore batch da AVIF a JPEG \"Offline\"",
   "metaDescription": "È un'applicazione web gratuita per convertire le immagini AVIF o WebP in altri formati di immagine comuni come JPEG o PNG senza comunicazione con il server",
@@ -151,6 +153,7 @@
   "convertedImageDataUrlTooltip": "Copia l'immagine convertita come DataURL",
   "convertAgain": "Converti di nuovo",
   "reset": "Reset",
+  "apply": "Applica",
   "selectLanguage": "Seleziona la tua lingua",
   "back": "Indietro",
   "failed": "Fallito",

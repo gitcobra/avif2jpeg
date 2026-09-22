@@ -4,9 +4,8 @@ import { GlobeOutline, Close } from '@vicons/ionicons5';
 import { useI18n } from "vue-i18n";
 import { LANG_ID_LIST, LANG_FULL_NAMES, loadLocaleMessages, I18n } from '@/i18n';
 import { GlobalValsKey } from "../../Avif2Jpeg.vue";
-import { sleep } from '../util';
+import { invertRef, sleep, useTimeoutRef } from '../util';
 import { SelectMixedOption } from 'naive-ui/es/select/src/interface';
-
 
 
 // injections
@@ -21,17 +20,28 @@ const dialog = useDialog();
 
 // properties
 const props = defineProps<{
+  initialLang?: string;
   // delay before applying a changed language
-  delay: number
+  delay: number;
 }>();
+
+defineExpose({
+  checkAppropriateLang,
+});
 
 // emits
 const emit = defineEmits<{
-  'ready': []
-  'lang-ready': [string]
-  'lang-change': [string]
-  'lang-change-by-user': [string]
+  'mounted': [];
+  'ready': [];
+  'lang-ready': [string];
+  'lang-change': [string];
+  'lang-change-by-user': [string];
 }>();
+
+// reactive values
+const noticedLang = ref('');
+const langNoticeFlag = ref(false);
+
 
 
 // constants
@@ -51,9 +61,13 @@ langOptions.sort((a, b) => {
 let lastUserSelectedLangId = '';
 
 
-// initialize on mounted 
 
-onMounted(() => {
+
+await initializeLanguage();
+emit('ready');
+
+// initialize on mounted 
+onMounted(async () => {
  
   // router settings
   // set locale when changing page path
@@ -63,16 +77,64 @@ onMounted(() => {
     // show tooltips
     INJ.switchToolTipVisibility();
   });
+
+  emit('mounted');
 });
 
 
 
-// change locale by current path
-await setLocaleByCurrentPath();
-insertHeadForSSG();
+async function initializeLanguage() {
+  // check language
+  const route = useRoute();
+  const pathlang = route.path.match(/[^/]+(?=\/?$)/)?.[0];
+  
+  // set language by settings
+  let ulang = props.initialLang;
+  if( !pathlang && ulang ) {
+    const router = useRouter();
+    console.log('change lang by root', ulang);
+    await router.push('/' + ulang + '/');
+  }
 
-emit('ready');
+  // change locale by current path
+  await setLocaleByCurrentPath();
 
+  checkAppropriateLang();
+
+  insertHeadForSSG();
+}
+
+async function checkAppropriateLang() {
+  const currentPath = router.currentRoute.value.path || '';
+  const clang = currentPath.match(/([^/]+)\/?$/)?.[1] || '';
+  if( !clang ) {
+    return;
+  }
+
+  const blangs = getBrowserLanguages();
+  let prior = 0;
+  for(; prior < blangs.length; prior++ ) {
+    const lang = blangs[prior];
+    if( clang === lang ) {
+      break;
+    }
+  }
+
+  if( prior === 0 ) {
+    return;
+  }
+
+  const len = Math.max(prior, blangs.length);
+  for( let i = 0; i < len; i++ ) {
+    const lang = blangs[i];
+    if( await loadLocaleMessages(lang) ) {
+      noticedLang.value = lang;
+      langNoticeFlag.value = true;
+      invertRef(langNoticeFlag, 15000);
+      break;
+    }
+  }
+}
 
 
 function insertHeadForSSG() {
@@ -159,8 +221,7 @@ async function setLocaleMessages(lang: string) {
 
 async function setLocaleByCurrentPath() {
   const currentPath = router.currentRoute.value.path || '';
-  const lang = currentPath.match(/([^/]+)\/?$/)?.[1] || '';
-  //alert(lang)
+  const lang = currentPath.match(/([a-z\-]{2,})\/? *$/)?.[1] || '';
 
   if( import.meta.env.SSR )
     locale.value = lang;
@@ -181,13 +242,12 @@ async function setLocaleByCurrentPath() {
 
 async function setLocaleByBrowserLanguage() {
   for(const userlang of getBrowserLanguages()) {
-    const langhead = userlang.split('-')[0];
 
     if( LANG_ID_LIST.includes(userlang) ) {
-      await setLocaleMessages(userlang);
-      return;
+      return await setLocaleMessages(userlang);
     }
 
+    const langhead = userlang.split('-')[0];
     if( LANG_ID_LIST.includes(langhead) ) {
       let lang = langhead;
 
@@ -206,10 +266,11 @@ async function setLocaleByBrowserLanguage() {
         }
       }
 
-      await setLocaleMessages(lang);
-      return;
+      return await setLocaleMessages(lang);
     }
   }
+
+  return false;
 }
 
 function getBrowserLanguages(): string[] {
@@ -243,46 +304,65 @@ function changeRoute(val: string) {
 
 
 <template>
-  <n-flex align="center" :size="2" :wrap="false">
-    <n-tooltip
-      v-if="router.currentRoute.value.path !== '/'"
-      trigger="hover" :keep-alive-on-hover="false" placement="left" :duration="0" :delay="50"
-    >
-      <template #trigger>
-        <router-link
-          to="/"
-          @click="emit('lang-change-by-user', '')"
-          style="color: gray; line-height: 0px; font-size:1.2em;"
+  <n-popover
+    trigger="manual"
+    placement="left"
+    :show="langNoticeFlag"
+    @clickoutside="langNoticeFlag=false"
+  >
+    <template #trigger>
+      
+      
+      <n-flex align="center" :size="2" :wrap="false">
+        <n-tooltip
+          v-if="router.currentRoute.value.path !== '/'"
+          trigger="hover" :keep-alive-on-hover="false" placement="left" :duration="0" :delay="50"
         >
-          <n-icon :component="Close"/>
-        </router-link>
-      </template>
-      <template #default>
-        {{t('selectLangCloseTooltip')}}
-      </template>
-    </n-tooltip>
-
-    <n-tooltip :to="false" trigger="hover" :keep-alive-on-hover="false"
-      :placement="INJ.LANDSCAPE.value ? 'left' : 'bottom'" :duration="0" :delay="50"
-    >
-      <template #trigger>
-        <n-select
-          ref="langselect"
-          size="tiny"
-          style="width: auto;"
-          :consistent-menu-width="false"
-          
-          :options="langOptions"
-          :value="locale"
-          @update:value="changeRoute"
-        >
-          <template #arrow>
-            <n-icon><GlobeOutline /></n-icon>
+          <template #trigger>
+            <router-link
+              to="/"
+              @click="emit('lang-change-by-user', '')"
+              style="color: gray; line-height: 0px; font-size:1.2em;"
+            >
+              <n-icon :component="Close"/>
+            </router-link>
           </template>
-        </n-select>
-      </template>
-      <div v-html="$t('selectLanguage')"></div>
-    </n-tooltip>
-  </n-flex>
+          <template #default>
+            {{t('selectLangCloseTooltip')}}
+          </template>
+        </n-tooltip>
+
+        <n-tooltip :to="false" trigger="hover" :keep-alive-on-hover="false"
+          :placement="INJ.LANDSCAPE.value ? 'left' : 'bottom'" :duration="0" :delay="50"
+        >
+          <template #trigger>
+            <n-select
+              ref="langselect"
+              size="tiny"
+              style="width: auto;"
+              :consistent-menu-width="false"
+              
+              :options="langOptions"
+              :value="locale"
+              @update:value="changeRoute"
+            >
+              <template #arrow>
+                <n-icon><GlobeOutline /></n-icon>
+              </template>
+            </n-select>
+          </template>
+          <div v-html="$t('selectLanguage')"></div>
+        </n-tooltip>
+      </n-flex>
+    </template>
+    
+    
+    <span>
+      {{ $t('langNotice', {}, {locale: noticedLang}) }}
+      <n-button @click="changeRoute(noticedLang); langNoticeFlag = false;" type="primary">
+        {{ $t('apply', {}, {locale: noticedLang}) }}
+      </n-button>
+    </span>
+  </n-popover>
 </template>
 

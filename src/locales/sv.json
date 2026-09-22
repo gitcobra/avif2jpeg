@@ -1,5 +1,7 @@
 {
   "lang": "Swedish",
+  "langNotice": "Svenska är tillgängligt",
+  "langName": "Svenska",
   "flags": "🇸🇪",
   "title": "\"Offline\" batchkonverterare från AVIF till JPEG",
   "metaDescription": "En kostnadsfri webbapp för att konvertera AVIF- eller WebP-bilder till vanliga format som JPEG eller PNG utan serverkommunikation.",
@@ -105,6 +107,7 @@
     "permissionDenied": "Det gick inte att få åtkomst till mappen"
   },
   "reset": "Återställ",
+  "apply": "Verkställ",
   "back": "Tillbaka",
   "failed": "Misslyckades",
   "success": "Lyckades",

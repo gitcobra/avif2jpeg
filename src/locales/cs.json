@@ -1,5 +1,7 @@
 {
   "lang": "Czech",
+  "langNotice": "Čeština je k dispozici",
+  "langName": "Čeština",
   "flags": "🇨🇿",
   "title": "Dávkový převodník AVIF na JPEG \"Offline\"",
   "metaDescription": "Bezplatná webová aplikace pro převod obrázků AVIF nebo WebP do běžných formátů, jako je JPEG nebo PNG, bez komunikace se serverem.",
@@ -105,6 +107,7 @@
     "permissionDenied": "Nepodařilo se získat oprávnění ke složce"
   },
   "reset": "Obnovit",
+  "apply": "Použít",
   "back": "Zpět",
   "failed": "Neúspěšné",
   "success": "Úspěch",

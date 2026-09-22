@@ -1,5 +1,7 @@
 {
-  "lang": "Arabic_",
+  "lang": "Arabic",
+  "langNotice": "العربية متاحة",
+  "langName": "العربية",
   "flags": "🇦🇪",
   "title": "محول دفعة AVIF إلى JPEG دون اتصال بالإنترنت",
   "metaDescription": "إنه تطبيق ويب مجاني لتحويل صور AVIF أو WebP إلى تنسيقات صور شائعة أخرى مثل JPEG أو PNG دون الحاجة إلى الاتصال بالخادم.",
@@ -151,6 +153,7 @@
   "convertedImageDataUrlTooltip": "انسخ الصورة المحولة كـ DataURL",
   "convertAgain": "تحويل مرة أخرى",
   "reset": "إعادة ضبط",
+  "apply": "تطبيق",
   "selectLanguage": "اختر لغتك",
   "back": "خلف",
   "failed": "فشل",

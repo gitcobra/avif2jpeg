@@ -1,5 +1,4 @@
 <script lang="ts">
-import SwitchLanguages from './components/header/switch-lang.vue';
 // for provide
 import { type InjectionKey, type Ref } from 'vue';
 import { LANG_ID_LIST } from './i18n';
@@ -39,6 +38,7 @@ import AdvancedSettings from './components/settings-adv.vue';
 import MethodSettings from './components/settings-method.vue';
 import Descriptions from './components/descriptions.vue';
 import PWAPrompt from './components/pwa/PWAPrompt.vue';
+import SwitchLanguages from './components/header/switch-lang.vue';
 
 //import LangFlag from './components/lang-flag.vue';
 
@@ -63,8 +63,6 @@ const IS_DEV = process.env.NODE_ENV === 'development';
 const sourceFileList = ref<FileWithId[]>([]);
 const additionalFiles = ref<FileWithId[]>([]);
 
-
-
 const availableThreadCount = ref(0);
 
 let showTooltipsBeforeMounted = ref<boolean | undefined>(undefined);
@@ -74,7 +72,6 @@ const mounted = ref(false);
 
 const contentVisible = ref(false);
 const firstPageView = ref(true);
-const langSwitchMounted = ref(false);
 
 const outputDirHandle = ref<FileSystemDirectoryHandle | null>(null);
 
@@ -128,25 +125,18 @@ onUnmounted(() => {
 
 
 // functions
-function onLangSwitchReady() {
-  // check language
-  const route = useRoute();
-  const pathlang = route.path.match(/[^/]+(?=\/?$)/)?.[0];
-  // set language by settings
-  if( !pathlang && UserSettings.lang ) {
-    const router = useRouter();
-    console.log('change lang by root', UserSettings.lang);
-    router.push('/' + UserSettings.lang);
-  }
+async function onLangSwitchReady() {
+}
+async function onLangSwitchMounted() {
 }
 
 let transStartTime = 0;
 function onLangChange() {
   if( import.meta.env.SSR )
     return;
+  
   contentVisible.value = false;
   transStartTime = Date.now();
-  //alert("onLangChange")
 }
 function onLangChangeByPath(lang) {
   if( import.meta.env.SSR )
@@ -159,7 +149,6 @@ function onLangReady() {
   nextTick(() => {
     setTimeout(() => contentVisible.value = true, dif);
   });
-  //emit('ready');
 }
 
 async function switchToolTipVisibility() {
@@ -205,10 +194,13 @@ function onInputClick(flag: boolean) {
       <template #lang-switch>
         <Suspense><!-- it needs Suspense to wait for lang file to load -->
           <SwitchLanguages
-            @lang-change="onLangChange"
+            ref="switchLangRef"
+            _@mounted="onLangSwitchMounted"
+            _@ready="onLangSwitchReady"
+            :initial-lang="UserSettings.lang"
             @lang-ready="onLangReady"
+            @lang-change="onLangChange"
             @lang-change-by-user="onLangChangeByPath"
-            @ready="onLangSwitchReady"
             :delay="firstPageView ? 0 : TRANSTIME"
           />
         </Suspense>

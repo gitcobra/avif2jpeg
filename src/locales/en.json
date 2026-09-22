@@ -1,5 +1,7 @@
 {
   "lang": "English",
+  "langNotice": "English is available",
+  "langName": "English",
   "flags": "🇬🇧",
   "title": "AVIF to JPEG \"Offline\" Batch Converter",
   "metaDescription": "It is a free web application to convert AVIF or WebP images to other common image formats such as JPEG or PNG without server communication.",
@@ -153,6 +155,7 @@
   "disabled": "Disabled",
   "Download": "Download",
   "reset": "Reset",
+  "apply": "Apply",
   "back": "Back",
   "failed": "Failed",
   "success": "Success",

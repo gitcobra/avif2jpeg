@@ -1,5 +1,7 @@
 {
   "lang": "Indonesian",
+  "langNotice": "Indonesia tersedia",
+  "langName": "Indonesia",
   "flags": "🇮🇩",
   "title": "Konversi Batch Offline dari AVIF ke JPEG",
   "metaDescription": "Ini adalah aplikasi web gratis untuk mengonversi gambar AVIF atau WebP ke format gambar umum lainnya seperti JPEG atau PNG tanpa komunikasi server.",
@@ -151,6 +153,7 @@
   "convertedImageDataUrlTooltip": "Salin gambar yang dikonversi sebagai DataURL",
   "convertAgain": "Konversi Lagi",
   "reset": "Mengatur ulang",
+  "apply": "Terapkan",
   "selectLanguage": "Pilih bahasa Anda",
   "back": "Kembali",
   "failed": "Gagal",

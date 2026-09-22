@@ -1,5 +1,7 @@
 {
   "lang": "Polish",
+  "langNotice": "Polski jest dostępny",
+  "langName": "Polski",
   "flags": "🇵🇱",
   "title": "Konwerter wsadowy AVIF do JPEG \"Offline\"",
   "metaDescription": "Jest to bezpłatna aplikacja internetowa służąca do konwersji obrazów AVIF lub WebP do innych popularnych formatów obrazów, takich jak JPEG lub PNG, bez komunikacji z serwerem.",
@@ -151,6 +153,7 @@
   "convertedImageDataUrlTooltip": "Skopiuj przekonwertowany obraz jako DataURL",
   "convertAgain": "Konwertuj ponownie",
   "reset": "Nastawić",
+  "apply": "Zastosuj",
   "selectLanguage": "Wybierz swój język",
   "back": "Z powrotem",
   "failed": "Przegrany",

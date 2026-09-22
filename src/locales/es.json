@@ -1,5 +1,7 @@
 {
   "lang": "Spanish",
+  "langNotice": "Español está disponible",
+  "langName": "Español",
   "flags": "🇪🇸",
   "title": "Conversor por lotes \"Sin conexión\" de AVIF a JPEG",
   "metaDescription": "Es una aplicación web gratuita para convertir imágenes AVIF o WebP a otros formatos de imagen habituales, como JPEG o PNG, sin necesidad de comunicación con el servidor",
@@ -151,6 +153,7 @@
   "convertedImageDataUrlTooltip": "Copie la imagen convertida como DataURL",
   "convertAgain": "Convertir de nuevo",
   "reset": "Reiniciar",
+  "apply": "Aplicar",
   "selectLanguage": "Selecciona tu idioma",
   "back": "Atrás",
   "failed": "Fallido",

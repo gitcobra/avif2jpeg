@@ -1,5 +1,7 @@
 {
   "lang": "Finnish",
+  "langNotice": "Suomi on saatavilla",
+  "langName": "Suomi",
   "Cancel": "Peruuttaa",
   "Continue": "Jatkaa",
   "Download": "Lataa",
@@ -7,6 +9,7 @@
   "Reload": "Lataa uudelleen",
   "aborted": "Keskeytetty",
   "avifUnsupported": "Selaimesi ei tue AVIF-muotoa. \nKäytä Firefoxin tai Chromen uusinta versiota AVIF-kuvien muuntamiseen.",
+  "apply": "Käytä",
   "back": "Takaisin",
   "cancel": "Peruuttaa",
   "remove": "Poista",

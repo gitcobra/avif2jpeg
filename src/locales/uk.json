@@ -1,5 +1,7 @@
 {
   "lang": "Ukrainian",
+  "langNotice": "Українська доступна",
+  "langName": "Українська",
   "flags": "🇺🇦",
   "title": "Пакетний конвертер AVIF у JPEG \"Офлайн\"",
   "metaDescription": "Це безкоштовна веб-програма для перетворення зображень AVIF або WebP в інші поширені формати, такі як JPEG або PNG, без зв'язку з сервером",
@@ -151,6 +153,7 @@
   "convertedImageDataUrlTooltip": "Скопіюйте перетворене зображення як DataURL",
   "convertAgain": "Перетворити знову",
   "reset": "Скинути",
+  "apply": "Застосувати",
   "selectLanguage": "Виберіть свою мову",
   "back": "Назад",
   "failed": "Не вдалося",
