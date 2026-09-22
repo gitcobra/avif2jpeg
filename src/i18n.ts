@@ -106,16 +106,7 @@ export async function loadLocaleMessages(locale) {
 
   // load locale messages with dynamic import
   console.log(localeImports[locale], messageGlobbedPath[locale]);
-  /*
-  console.log(messageGlobbedPath[locale], localeUrls[messageGlobbedPath[locale]], localeUrls);
-  const url: string = await localeUrls[messageGlobbedPath[locale]]();
-  console.log(url);
-  fetch(url).then(response => response.text()).then(txt => {
-    console.log(txt);
-  }).catch(err => {
-    console.error(messageGlobbedPath[locale], err);
-  });
-  */
+
   const localeMessage = await localeImports[locale]().catch(err => console.error(err));
   const baseMessage = regionalChineseLocales.has(locale)
     ? await localeImports['zh-hant']().catch(err => console.error(err))
@@ -129,7 +120,6 @@ export async function loadLocaleMessages(locale) {
 
   // set locale and locale message
   I18n.global.setLocaleMessage(locale, message);
-
   await nextTick();
 
   return true;

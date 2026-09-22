@@ -11,7 +11,9 @@
         
         <ChangeLog url="/avif2jpeg/dist/commits.txt" />
         
+        <!--
         <Licenses/>
+        -->
         
         <n-flex v-if="route.path !== '/'" style="font-size: 1em;">
           <router-link to="/" style="color:black;">HOME</router-link>
