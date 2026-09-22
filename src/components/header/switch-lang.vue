@@ -25,9 +25,6 @@ const props = defineProps<{
   delay: number;
 }>();
 
-defineExpose({
-  checkAppropriateLang,
-});
 
 // emits
 const emit = defineEmits<{
@@ -99,7 +96,9 @@ async function initializeLanguage() {
   // change locale by current path
   await setLocaleByCurrentPath();
 
-  checkAppropriateLang();
+  if( !import.meta.env.SSR ) {
+    checkAppropriateLang();
+  }
 
   insertHeadForSSG();
 }
