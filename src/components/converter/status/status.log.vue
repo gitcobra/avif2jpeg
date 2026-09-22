@@ -54,7 +54,7 @@ const emit = defineEmits<{
 
 
 // element refs
-const logtable = useTemplateRef('table');
+const logtable = useTemplateRef<HTMLTableElement>('logtable');
 const logtbody = useTemplateRef<HTMLTableSectionElement>('tbody');
 const scrollref = ref<InstanceType<typeof NScrollbar>>();
 const currentSelectedLogNode = ref<HTMLTableRowElement>(null);
@@ -263,7 +263,7 @@ function changeLogMaxHeight() {
     
     const logHeight = scrollref.value.$parent.$el.offsetHeight;
     const modalMargin = window.innerHeight - inst.parent.parent.parent.parent.parent.vnode.el.offsetHeight - 8;
-    const availModalHeight = Math.min(logItemHeight.value * Math.max(6, props.logs.length + 2), Math.max(200, logHeight + modalMargin));
+    const availModalHeight = Math.max(200, logHeight + modalMargin);//Math.min(logItemHeight.value * Math.max(6, props.logs.length + 2), Math.max(200, logHeight + modalMargin));
     
     availDocumentHeight.value = document.documentElement.clientHeight;
     availDialogHeight.value = Math.min(logItemHeight.value * Math.max(6, props.logs.length), Math.max(logDefHeight, availModalHeight));
@@ -315,8 +315,13 @@ function scrollLogViewToBottom(instant = false) {
 const logTopMarginStyle = ref<CSSProperties>({height: '0px'});
 const logBottomMarginStyle = ref<CSSProperties>({height: '0px'});
 const logStartIndex = ref(0);
-const logDisplayQuantity = computed(() => logTableViewHeight.value / logItemHeight.value + LOG_INVISIBLE_ITEM_MARGIN*2 |0);
+const logDisplayQuantity = computed(
+  () => logTableViewHeight.value / logItemHeight.value + LOG_INVISIBLE_ITEM_MARGIN*2 |0
+);
 const logItemHeight = ref(15);
+const isLogLargerThanContainer = computed<boolean>(
+  () => logTableViewHeight.value < (props.logs.length + 3) * logItemHeight.value
+);
 let realLogHeight = 0;
 let _tidLogItem = 0;
 let lastTimeLogViewUpdated = 0;
@@ -418,6 +423,7 @@ function sortListPeriodically() {
 
 function sortListBySortOptions() {
   console.log('sortList', sortValue.value);
+
   switch( sortValue.value ) {
     case 'zipped':
       props.logs.sort((a, b) => a.zippedIndex - b.zippedIndex);
@@ -784,7 +790,7 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
         :size="50"
         :style="{height:logTableViewHeight + 'px'}"
       >
-        <table v-if="props.opened" class="log-table" ref="table">
+        <table v-if="props.opened" class="log-table" ref="logtable">
         <thead>
         <tr class="log-tr label">
           <th class="log-th" :title="$t('status.table.core')">th</th>
@@ -836,7 +842,7 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
         justify="center"
         :style="{marginBottom: (logItemHeight) + 'px'}"
         class="expand-container"
-        v-if="logs.length > 5"
+        v-if="isLogLargerThanContainer"
       >
         <n-button v-if="true" 
           @click="(expanded=!expanded) && onExpandClick()" 
