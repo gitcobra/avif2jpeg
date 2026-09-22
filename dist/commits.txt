@@ -1,23 +1,23 @@
+2026-09-22 23:40:13 +0900
+v1.12.10
+
+2026-09-22 23:39:47 +0900
+fix(ssg): skip browser language check during static generation
+
+2026-09-22 23:24:37 +0900
+v1.12.9
+
+2026-09-22 23:23:24 +0900
+fix: Log table expand button display issue
+
+2026-09-22 23:22:00 +0900
+feat: Notify when a preferred language is available
+
+2026-09-22 23:17:50 +0900
+chore: miscellaneous changes
+
 2026-09-18 19:05:08 +0900
 v1.12.8
 
 2026-09-18 18:47:20 +0900
 fix: html loading issue with service worker on reload
-
-2026-09-18 18:41:21 +0900
-feat(i18n): support Taiwan, Hong Kong, and Brazilian Portuguese locales
-
-2026-09-18 00:23:32 +0900
-v1.12.7
-
-2026-09-18 00:21:19 +0900
-fix: service worker cache not working in offline mode
-
-2026-09-17 04:56:59 +0900
-v1.12.6
-
-2026-09-16 23:00:12 +0900
-feat: add scroll buttons to log container
-
-2026-09-16 22:53:02 +0900
-feat: add file list editing
