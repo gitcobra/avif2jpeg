@@ -1,7 +1,7 @@
 {
   "lang": "Chinese (Taiwan)",
-  "langNotice": "繁體中文（台灣）可用",
-  "langName": "繁體中文（台灣）",
+  "langNotice": "繁體中文[台灣]可用",
+  "langName": "繁體中文[台灣]",
   "flags": "🇹🇼",
   "title": "AVIF 轉 JPEG「離線」批次圖片轉換器",
   "metaDescription": "這是一款免費的網路應用程式，可將 AVIF 或 WebP 圖片轉換為 JPEG 或 PNG 等常見圖片格式，無需與伺服器通訊。",

@@ -12,6 +12,7 @@
     "build:ver": "vite-ssg build --mode ver",
     "preview:ver": "vite preview --mode ver",
     "tag-ver": "node ./script/tag-version.js",
+    "generate-langlist": "node ./script/create-langlist.js",
     "build:pwatest": "node ./script/inc-version.js & vite-ssg build --mode pwatest",
     "test": "jest",
     "generate-pwa-assets": "pwa-assets-generator"
