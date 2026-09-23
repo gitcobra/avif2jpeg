@@ -163,10 +163,11 @@ async function updateSW() {
 </script>
 
 <template>
-  <div style="line-height: 0px;">
+  <div style="min-height: 2em;">
+  <span v-if="isPWAInstalled === undefined"></span>
   
   <!-- installed label -->
-  <n-tooltip v-if="isPWAInstalled === true" placement="bottom">
+  <n-tooltip v-else-if="isPWAInstalled === true" placement="bottom">
     <template #trigger>
       <n-flex id="app-installed" align="center" :size="1">
         <n-icon :component="AppsSharp"/>PWA
@@ -201,6 +202,7 @@ async function updateSW() {
     @close="onUpdateAlertClosed"
     type="info"
     closable
+    style="margin-bottom: 2em;"
   >
     <n-flex justify="space-between" align="center">
       <n-flex vertical class="message" :size="1">

@@ -211,9 +211,9 @@ function onInputClick(flag: boolean) {
        <PWAPrompt/>
      </ClientOnly>
     
+    <n-spin :show="!contentVisible" style="display:flex; justify-content: center; height:100%;">
     <transition name="fade">
     <n-flex v-show="contentVisible" vertical align="stretch" justify="space-between" style="height:100%;">
-      
       <n-flex justify="space-around" vertical style="height:100%;">
         
         <Title/>
@@ -311,10 +311,11 @@ function onInputClick(flag: boolean) {
         <Descriptions/>
 
       </n-flex> 
-      
+
     </n-flex>
 
     </transition>
+    </n-spin>
 
     <!-- <LangFlag/> -->
   
@@ -370,7 +371,7 @@ a {
   transition: all .4s ease;
 }
 .fade-leave-active {
-  transition: all .1s ease;
+  transition: all .4s ease;
 }
 .fade-leave-to, .fade-enter-from {
   opacity: 0;
