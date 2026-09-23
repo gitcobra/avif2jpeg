@@ -3,7 +3,7 @@ import { RouterOptions, ViteSSG } from 'vite-ssg'
 import { RouteRecordRaw } from 'vue-router'
 import App from "./App.vue";
 //import naive from "naive-ui";
-import { I18n, LANG_ID_LIST } from './i18n';
+import { I18n, LANG_ID_LIST, preloadAllLocaleMessages } from './i18n';
 
 
 const routes: RouteRecordRaw[] = [
@@ -24,8 +24,6 @@ for(const lang of LANG_ID_LIST) {
   });
 }
 
-//console.log(import.meta.env)
-
 export const createApp = ViteSSG(
   App,
   // vue-router options
@@ -34,8 +32,11 @@ export const createApp = ViteSSG(
     base: import.meta.env.BASE_URL,
   },
   // function to have custom setups
-  ({ app, router, routes, isClient, initialState }) => {
+  async ({ app, router, routes, initialState }) => {
     // install plugins etc.
+    if( import.meta.env.SSR )
+      await preloadAllLocaleMessages();
+
     app.use(I18n);
     //app.use(naive);
 

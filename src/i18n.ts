@@ -50,25 +50,6 @@ for(const path in messageImports) {
   messageGlobbedPath[lang] = path;
 }
 
-// preload all languages when generating static htmls
-if( import.meta.env.SSR ) {
-  const messageImports = import.meta.glob('./locales/*.json', {eager: true});
-  for(const path in messageImports) {
-    const lang = ( path.match(/\/([a-z]{2}(?:-[a-z]+)?)\.json$/i) )?.[1];
-    if( !lang || lang in messages )
-      continue;
-    messages[lang] = messageImports[path];
-  }
-
-  for(const lang of regionalChineseLocales) {
-    if( messages[lang] && messages['zh-hant'] )
-      messages[lang] = mergeLocaleMessages(messages['zh-hant'], messages[lang]);
-  }
-}
-
-
-
-
 // determine default language by current path
 let defaultLang = getCurrentLangPath();
 if( !(defaultLang in localeImports) )
@@ -83,7 +64,6 @@ const messages: Record<string, DefaultLocaleMessageSchema> = {
   //[defaultLang]: message,
 };
 */
-
 
 export const I18n = createI18n({
   legacy: false,
@@ -105,7 +85,7 @@ export async function loadLocaleMessages(locale) {
     return true;
 
   // load locale messages with dynamic import
-  console.log(localeImports[locale], messageGlobbedPath[locale]);
+  console.log("load a locale", localeImports[locale], messageGlobbedPath[locale]);
 
   const localeMessage = await localeImports[locale]().catch(err => console.error(err));
   const baseMessage = regionalChineseLocales.has(locale)
@@ -129,4 +109,25 @@ function getCurrentLangPath() {
   const currentPath = location.pathname;
   const langPath = String(currentPath.match(/[^/]+(?=\/?$)/) || '').toLowerCase();
   return langPath;
+}
+
+export async function preloadAllLocaleMessages() {
+  for (const [path, load] of Object.entries(messageImports)) {
+    const lang = path.match(/\/([a-z]{2}(?:-[a-z]+)?)\.json$/i)?.[1];
+
+    if (!lang || lang in messages) {
+      continue;
+    }
+
+    messages[lang] = await load();
+  }
+
+  for (const lang of regionalChineseLocales) {
+    if (messages[lang] && messages['zh-hant']) {
+      messages[lang] = mergeLocaleMessages(
+        messages['zh-hant'],
+        messages[lang]
+      );
+    }
+  }
 }
