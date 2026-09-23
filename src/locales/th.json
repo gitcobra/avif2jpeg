@@ -132,6 +132,7 @@
   "loadbutton": "เพิ่มรูปภาพ",
   "loadfolderbutton": "เพิ่มทั้งโฟลเดอร์",
   "SourceImageList": "รายการรูปภาพต้นฉบับ",
+  "editConvertedImageList": "แก้ไขรายการรูปภาพต้นฉบับ",
   "resetListButtonTooltip": "ล้างรายการรูปภาพต้นฉบับปัจจุบัน",
   "convertTooltip": "คลิกที่นี่เพื่อเริ่มการแปลง",
   "experimental": "ทดลอง",

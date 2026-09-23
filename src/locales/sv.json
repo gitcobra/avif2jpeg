@@ -132,6 +132,7 @@
   "loadbutton": "Lägg till bilder",
   "loadfolderbutton": "Lägg till hela mappen",
   "SourceImageList": "Lista över källbilder",
+  "editConvertedImageList": "Redigera listan över källbilder",
   "resetListButtonTooltip": "Rensa listan över aktuella källbilder",
   "convertTooltip": "Klicka här för att starta konverteringen",
   "experimental": "experimentell",

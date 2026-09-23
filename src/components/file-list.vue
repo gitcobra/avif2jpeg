@@ -122,48 +122,55 @@ function clear() {
     <n-flex class="container" justify="stretch" align="stretch" :wrap="false" :size="1">
       
       <!-- thumbnail box -->
-      <button type='button' class='open-button' @click='editboxOpened = true'>
-        <n-flex class="list-box" :wrap="false" :size="0">
-          <span class="list-label">{{ $t('SourceImageList') }}</span>
-          <n-flex class="list-status" vertical :size="4" align="end" justify="end">
-            <div class="sum">{{ $t('status.total') }}</div>
-            <div class="size">{{ listTotal }}</div>
-            <div class="files">
-              <n-number-animation
-                :active="true"
-                :duration="1000"
-                show-separator
-                :to="fileList.length"
-                :from="prevListLength"
-                @finish="prevListLength = fileList.length"
-              /> {{ $t('files', fileList.length) }}
-            </div>
-          </n-flex>
-          <transition-group name="list">
-            <canvas-thumbnail v-for="(item, i) in imageList"
-              :key="item.file._id"
-              :source="item.file"
-              :width="67"
-              :height="100"
-              class="image-item"
-            />
-            <!--
-            <n-image
-              v-for="(item, i) in imageList"
-              :key="item.name"
-              :src="item.url"
-              :alt="item.name"
-              object-fit="cover"
-              :width="200 / imageList.length" height="100"
-              preview-disabled
-              class="image-item"
-            >
-            </n-image>
-            -->
+      <n-tooltip trigger="hover" placement="top" :keep-alive-on-hover="false" :delay="100">
+        <template #trigger>
+          <button type='button' class='open-button' @click='editboxOpened = true'>
+            <n-flex class="list-box" :wrap="false" :size="0">
+              <span class="list-label">{{ $t('SourceImageList') }}</span>
+              <n-flex class="list-status" vertical :size="4" align="end" justify="end">
+                <div class="sum">{{ $t('status.total') }}</div>
+                <div class="size">{{ listTotal }}</div>
+                <div class="files">
+                  <n-number-animation
+                    :active="true"
+                    :duration="1000"
+                    show-separator
+                    :to="fileList.length"
+                    :from="prevListLength"
+                    @finish="prevListLength = fileList.length"
+                  /> {{ $t('files', fileList.length) }}
+                </div>
+              </n-flex>
+              <transition-group name="list">
+                <canvas-thumbnail v-for="(item, i) in imageList"
+                  :key="item.file._id"
+                  :source="item.file"
+                  :width="67"
+                  :height="100"
+                  class="image-item"
+                />
+                <!--
+                <n-image
+                  v-for="(item, i) in imageList"
+                  :key="item.name"
+                  :src="item.url"
+                  :alt="item.name"
+                  object-fit="cover"
+                  :width="200 / imageList.length" height="100"
+                  preview-disabled
+                  class="image-item"
+                >
+                </n-image>
+                -->
 
-          </transition-group>
-        </n-flex>
-      </button>
+              </transition-group>
+            </n-flex>
+          </button>
+        </template>
+        <template #default>
+          {{ $t('editConvertedImageList') }}
+        </template>
+      </n-tooltip>
       <!-- clear button -->
       <n-flex class="button-box" align="center" justify="center">
         <n-tooltip trigger="hover" placement="top" :keep-alive-on-hover="false" :delay="100">

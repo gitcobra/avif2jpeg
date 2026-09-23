@@ -132,6 +132,7 @@
   "loadbutton": "Přidat obrázky",
   "loadfolderbutton": "Přidat celou složku",
   "SourceImageList": "Seznam zdrojových obrázků",
+  "editConvertedImageList": "Upravit seznam zdrojových obrázků",
   "resetListButtonTooltip": "Vymazat aktuální seznam zdrojových obrázků",
   "convertTooltip": "Kliknutím zahájíte převod",
   "experimental": "experimentální",

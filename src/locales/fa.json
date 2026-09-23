@@ -137,6 +137,7 @@
   "loadbutton": "افزودن تصاویر",
   "loadfolderbutton": "افزودن پوشه کامل",
   "SourceImageList": "فهرست تصاویر منبع",
+  "editConvertedImageList": "ویرایش فهرست تصاویر منبع",
   "resetListButtonTooltip": "پاک کردن فهرست فعلی تصاویر منبع",
   "convertTooltip": "برای شروع تبدیل کلیک کنید",
   "experimental": "آزمایشی",
