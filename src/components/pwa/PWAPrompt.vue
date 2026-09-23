@@ -163,7 +163,7 @@ async function updateSW() {
 </script>
 
 <template>
-  <div style="min-height: 2em;">
+  <div>
   <span v-if="isPWAInstalled === undefined"></span>
   
   <!-- installed label -->
