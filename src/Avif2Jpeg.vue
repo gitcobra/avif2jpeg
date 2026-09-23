@@ -16,7 +16,7 @@ export const GlobalValsKey: InjectionKey<{
 <script setup lang="ts">
 import { UserSettings } from './user-settings';
 import { useI18n } from 'vue-i18n'
-import { useHead } from "@vueuse/head";
+import { useHead } from "@unhead/vue";
 
 //import 'vfonts/FiraSans.css';
 //import 'vfonts/IBMPlexSans.css';
@@ -207,9 +207,9 @@ function onInputClick(flag: boolean) {
       </template>
     </Header>
 
-     <ClientOnly>
-       <PWAPrompt/>
-     </ClientOnly>
+    <ClientOnly>
+      <PWAPrompt/>
+    </ClientOnly>
     
     <n-spin :show="!contentVisible" style="display:flex; justify-content: center; height:100%;">
     <transition name="fade">

@@ -23,6 +23,7 @@
     "@rollup/plugin-strip": "^3.0.4",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.15.29",
+    "@unhead/vue": "^2.1.17",
     "@vicons/ionicons5": "^0.13.0",
     "@vite-pwa/assets-generator": "^1.0.0",
     "@vitejs/plugin-vue": "^5.2.4",

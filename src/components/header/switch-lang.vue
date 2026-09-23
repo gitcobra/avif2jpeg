@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useHead } from '@unhead/vue';
+import { useHead } from '@vueuse/head';
 import { GlobeOutline, Close } from '@vicons/ionicons5';
 import { useI18n } from "vue-i18n";
 import { LANG_ID_LIST, LANG_FULL_NAMES, loadLocaleMessages, I18n } from '@/i18n';
@@ -59,7 +59,7 @@ let lastUserSelectedLangId = '';
 
 
 
-
+insertHeadForSSG();
 await initializeLanguage();
 emit('ready');
 
@@ -100,7 +100,6 @@ async function initializeLanguage() {
     checkAppropriateLang();
   }
 
-  insertHeadForSSG();
 }
 
 async function checkAppropriateLang() {
@@ -137,42 +136,48 @@ async function checkAppropriateLang() {
 
 
 function insertHeadForSSG() {
+  /*
+  if( !import.meta.env.SSR ) {
+    return;
+  }
+  */
+  
   // create <link rel="alternate" hreflang="...">
   const basepath = import.meta.env.BASE_URL;
-  const linkset = [];
-  for(const lang of LANG_ID_LIST) {
-    if( router.currentRoute.value.path.includes(lang) )
-      continue;
-    
-    const linkobj = {
-      rel: 'alternate',
-      hreflang: lang,
-      href: basepath + lang + '/',
-    };
-    linkset.push(linkobj);
-  }
-  linkset.push({
-    rel: 'alternate',
-    hreflang: 'x-default',
-    href: basepath,
-  });
-
   // insert appropriate language title (for SSG)
   useHead({
-    title: t('title'),
+    title: computed(() => t('title')),
 
     meta: [
       {
         property: "og:title",
-        content: t('title'),
+        content: computed(() => t('title')),
       },
       {
         property: `og:description`,
-        content: t('metaDescription'),
+        content: computed(() => t('metaDescription')),
       },
     ],
 
-    link: [...linkset]
+    link: computed(() => {
+      const linkset = [];
+      for(const lang of LANG_ID_LIST) {
+        if( router.currentRoute.value.path.includes(lang) )
+          continue;
+
+        linkset.push({
+          rel: 'alternate',
+          hreflang: lang,
+          href: basepath + lang + '/',
+        });
+      }
+      linkset.push({
+        rel: 'alternate',
+        hreflang: 'x-default',
+        href: basepath,
+      });
+      return linkset;
+    }),
   });
 }
 
