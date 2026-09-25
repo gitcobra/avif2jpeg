@@ -66,7 +66,7 @@ const currentSelectedLogNode = ref<HTMLTableRowElement>(null);
 //const autoScrollLog = ref(true);
 
 const logMaxHeightPX = ref(40);
-const logDefHeight = 80;
+const logDefHeight = 100;
 const logTableViewHeight = computed(() => expanded.value? logMaxHeightPX.value : logDefHeight);
 const expandedLogMinHeight = ref(logDefHeight);
 const filteredLogList = computed(() => {
@@ -390,7 +390,7 @@ watch(() => props.logs, () => {
   }
   prevLogLength = props.logs.length;
   
-  console.log('updated props.logs');
+  //console.log('updated props.logs');
 
   nextTick( calculateLogTableViewRange );
   if( autoScrollLog.value ) {
@@ -727,15 +727,17 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
           justify="space-between"
         >
           <n-button-group vertical class="overlay-button-group">
-            <n-tooltip placement="left">
+            <n-tooltip placement="left" :keep-alive-on-hover="false" :duration="0">
               <template #trigger>
-                <n-button @click="onScrollButtonPress('Top')" color="black" round class="edge">
+                <n-button @click="onScrollButtonPress('Top')"
+                  color="black" round class="edge"
+                >
                   <PhCaretLineUpFill/>
                 </n-button>
               </template>
               {{ $t('status.scrollToTop') }}
             </n-tooltip>
-            <n-tooltip placement="left">
+            <n-tooltip placement="left" :keep-alive-on-hover="false" :duration="0">
               <template #trigger>
                 <n-button @click="onScrollButtonPress('PageUp')" color="black" round>
                   <F7ArrowUp/>
@@ -756,7 +758,7 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
               <F7ArrowDown/>
             </n-button>
             -->
-            <n-tooltip placement="left">
+            <n-tooltip placement="left" :keep-alive-on-hover="false" :duration="0">
               <template #trigger>
                 <n-button @click="onScrollButtonPress('PageDown')" color="black" round>
                   <F7ArrowDown/>
@@ -764,7 +766,7 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
               </template>
               {{ $t('status.scrollPageDown') }}
             </n-tooltip>
-            <n-tooltip placement="left">
+            <n-tooltip placement="left" :keep-alive-on-hover="false" :duration="0">
               <template #trigger>
                 <n-button @click="onScrollButtonPress('Bottom')" color="black" round class="edge">
                   <PhCaretLineDownFill/>
@@ -835,14 +837,14 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
         <tr :style="logBottomMarginStyle"></tr>
         </tbody>
         </table>
-        <div style="height:1em"></div>
+        <!-- <div style="height:1em"></div> -->
       </n-scrollbar>
 
       <n-flex
         justify="center"
         :style="{marginBottom: (logItemHeight) + 'px'}"
         class="expand-container"
-        v-if="isLogLargerThanContainer"
+        v-if="isLogLargerThanContainer || expanded"
       >
         <n-button v-if="true" 
           @click="(expanded=!expanded) && onExpandClick()" 
@@ -978,8 +980,8 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
         height: 30%;
       }
       &.edge {
-        height: 30%;
-        font-size: 70%;
+        height: 10%;
+        font-size: 50%;
       }
     }
   }
