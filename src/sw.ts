@@ -100,8 +100,9 @@ const strategyOptions = {
     }),
   ],
 };
+
 const defaultStrategy = new StaleWhileRevalidate( strategyOptions );
-const netfirst = new NetworkFirst( strategyOptions );
+const netFirstStrategy = new NetworkFirst( strategyOptions );
 
 // handle precached route
 registerRoute(
@@ -115,7 +116,8 @@ registerRoute(
 
     // Use manual cache if not found in precache
     console.log('manual caching');
-    return defaultStrategy.handle({event, request});
+    //return defaultStrategy.handle({event, request});
+    return netFirstStrategy.handle({event, request});
   }
 );
 
@@ -155,7 +157,7 @@ registerRoute(
 
     // check lang-indivisual index.html
     try {
-      return await defaultStrategy.handle({
+      return await netFirstStrategy.handle({
         request: new Request(normalizedUrl),
         event,
       });
@@ -168,7 +170,7 @@ registerRoute(
     }
     else {
       console.log('manually cached index.html');
-      return defaultStrategy.handle({
+      return netFirstStrategy.handle({
         request: new Request(ROOT_INDEX_PATH),
         event,
       });
