@@ -28,6 +28,7 @@ declare module 'vue' {
     MaterialSymbolsCloseRounded: typeof import('~icons/material-symbols/close-rounded')['default']
     MaterialSymbolsExperimentOutline: typeof import('~icons/material-symbols/experiment-outline')['default']
     MaterialSymbolsFolderOutline: typeof import('~icons/material-symbols/folder-outline')['default']
+    MaterialSymbolsPhotoSizeSelectLarge: typeof import('~icons/material-symbols/photo-size-select-large')['default']
     MdiFolderEditOutline: typeof import('~icons/mdi/folder-edit-outline')['default']
     NAlert: typeof import('naive-ui')['NAlert']
     NBadge: typeof import('naive-ui')['NBadge']

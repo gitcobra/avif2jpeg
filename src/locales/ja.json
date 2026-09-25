@@ -136,6 +136,8 @@
     "enableMultiThreads": "マルチスレッドを有効にする",
     "resetButtonTooltip": "全ての設定を初期状態に戻します",
     "multiThreadsTooltip": "画像の変換をマルチスレッドで実行します",
+    "maxImageProcessingSizeTooltip": "複数の大きな画像をマルチスレッドで同時に処理するとメモリ不足でブラウザがクラッシュする事があります。この問題が発生する場合はこのオプションを有効にし、使用メモリ上限を小さめに設定して下さい。",
+    "setMaxImageProcessingSize": "画像処理に使用するメモリの上限を設定する",
     "shrinkImageTooltip": "画像寸法が指定した値よりも大きい場合、その値まで縮小します",
     "shrinkImage": "以下の寸法を超える画像を縮小する",
     "useFolderNameForZip": "ドロップされたフォルダ名をZIP名に使用する",

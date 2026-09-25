@@ -127,6 +127,8 @@
     "resetButtonTooltip": "将所有设置恢复为默认值。",
     "multiThreadsTooltip": "在多线程中转换图像",
     "advancedSettings": "高级设置",
+    "maxImageProcessingSizeTooltip": "在多线程模式下同时处理大量大图可能会耗尽内存并导致浏览器崩溃。如果出现这种情况，请启用此选项并将使用中的内存上限设为更小的值。",
+    "setMaxImageProcessingSize": "设置图像处理使用的最大内存",
     "shrinkImageTooltip": "如果图像尺寸大于指定值，则将图像缩小到该值",
     "shrinkImage": "缩小超过以下尺寸的图像",
     "useFolderNameForZip": "使用 zip 文件的删除文件夹名称",

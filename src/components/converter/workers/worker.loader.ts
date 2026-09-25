@@ -23,8 +23,8 @@ export type LoaderMessageType =
         width: number;
         height: number;
       }
+      maxImageProcessingMemoryMB: number;
 
-      //outputToFsys: boolean;
       fsysDirHandler?: FileSystemDirectoryHandle;
       existingFolders: Set<string>;
     }
@@ -56,16 +56,18 @@ export type OverwriteResponseToLoader =
 const MAX_RETRY_COUNT = 1;
 
 // large image size
-const IMG_OVER_LOADING_SIZE = 2000 * 2000 * 5;
+//const IMG_OVER_LOADING_SIZE = 3000 * 3000 * 4;
 
 // max number of threads processing large images
-const MAX_HEAVY_LOADING_THREADS = 5;
+//const MAX_HEAVY_LOADING_THREADS = 99;
+
 // max list length for each thread
-const LIST_MAX_LEN = 1;
+//const LIST_MAX_LEN = 1;
 // max total file size for each list
-const LIST_CHUNK_SIZE_LIMIT = IMG_OVER_LOADING_SIZE * 1;
+//const LIST_CHUNK_SIZE_LIMIT = IMG_OVER_LOADING_SIZE * 1;
+
 // max total file size for all lists
-const TOTAL_CHUNK_SIZE_LIMIT = IMG_OVER_LOADING_SIZE * 6;
+//const TOTAL_CHUNK_SIZE_LIMIT = 1024 * 1024 * 1024 * 2;
 
 // demand a thumbnail from a worker at the intervals
 const THUMB_DEMAND_INTERVAL = 100; // (msec)
@@ -105,6 +107,8 @@ self.onmessage = async (params: MessageEvent<LoaderMessageType | OverwriteRespon
         //outputToFsys,
         fsysDirHandler,
         existingFolders,
+        
+        maxImageProcessingMemoryMB,
       } = data;
 
       // add extra properties
@@ -117,7 +121,7 @@ self.onmessage = async (params: MessageEvent<LoaderMessageType | OverwriteRespon
       loadImageList(
         list, outputType, outputQuality, threads, outputExt, keepExt, 
         maxSize, fsysDirHandler, existingFolders,
-        
+        maxImageProcessingMemoryMB
       );
       break;
     }
@@ -153,13 +157,18 @@ async function loadImageList(
   maxSize?: {width: number, height:number},
   fsysDirHandler?: FileSystemDirectoryHandle,
   existingFolders?: Set<string>,
+  maxImageProcessingMemoryMB?: number,
 ) {
   files = filelist;
   
+  // max total file size for all lists
+  const TOTAL_CHUNK_SIZE_LIMIT: number = getMaxImgProcessingMemoryMB(maxImageProcessingMemoryMB);
+  console.log("TOTAL_CHUNK_SIZE_LIMIT", TOTAL_CHUNK_SIZE_LIMIT);
+  
   // initialize canvas workers
   const canvasWorkerCount = Math.max(1, Math.min(threads - 3, files.length)); // preserve +3 for main, worker.loader, worker.zip
-  const workerCountForHugeImages = Math.min(MAX_HEAVY_LOADING_THREADS, canvasWorkerCount);
-  createCanvasWorkers(canvasWorkerCount, workerCountForHugeImages, fsysDirHandler, existingFolders);
+  //const workerCountForHugeImages = Math.min(MAX_HEAVY_LOADING_THREADS, canvasWorkerCount);
+  createCanvasWorkers(canvasWorkerCount, /*workerCountForHugeImages,*/ fsysDirHandler, existingFolders);
 
   // wait until active worker is released if totalChunkSize reaches the limit
   const waitTotalCunkDissolves = async () => {
@@ -188,7 +197,7 @@ async function loadImageList(
     const trnsBitmaps: ImageBitmap[] = [];
     let isLastItem = false;
     const rest = files.length - index;
-    const sublistLen = Math.min( index + Math.max(Math.min(LIST_MAX_LEN, rest / threads |0), 1), files.length);
+    //const sublistLen = Math.min( index + Math.max(Math.min(LIST_MAX_LEN, rest / threads |0), 1), files.length);
     
     let chunkSize = 0;
     let includesRetryingFile = false;
@@ -255,8 +264,8 @@ async function loadImageList(
 
     trnsBitmaps.push(bitmap);
     const bitmapSize = bitmap.width * bitmap.height * 4;
-    chunkSize += bitmapSize + file.size;
-    totalChunkSize += bitmapSize + file.size;
+    chunkSize += bitmapSize * 3 + file.size;
+    totalChunkSize += chunkSize;
 
     // demand a ImageBitmap for a thumbnail
     let demandThumbnail = false;
@@ -296,9 +305,10 @@ async function loadImageList(
     let worker: WorkerManager.WorkerWithId;
 
     // wait to get an available worker
-    const heavyImage = chunkSize > IMG_OVER_LOADING_SIZE;
+    //const heavyImage = chunkSize > IMG_OVER_LOADING_SIZE;
     //console.log(workerCountForHugeImages > 0 && (includesRetryingFile ? 1 : heavyImage), 'getworker');
-    worker = await WorkerManager.getWorker(workerCountForHugeImages > 0 && (includesRetryingFile ? 1 : heavyImage));
+    //worker = await WorkerManager.getWorker(workerCountForHugeImages > 0 && (includesRetryingFile ? 1 : heavyImage));
+    worker = await WorkerManager.getWorker();
     
     // store chunk size
     chunksEachWorkerPossessed.set(worker.id, chunkSize);
@@ -349,13 +359,14 @@ async function loadImageList(
 // create canvas Workers to convert each image
 function createCanvasWorkers(
   canvasWorkerCount: number,
-  workerCountForHugeImages: number,
+  //workerCountForHugeImages: number,
   fsysDirHandler?: FileSystemDirectoryHandle,
   existingFolders?: Set<string>,
 ) {
   WorkerManager.init();
   for( let i = 0; i < canvasWorkerCount; i++ ) {
-    const cworker = WorkerManager.createWorker(workerCountForHugeImages > i);
+    //const cworker = WorkerManager.createWorker(workerCountForHugeImages > i);
+    const cworker = WorkerManager.createWorker();
     
     // set the listener
     cworker.onmessage = canvasListener;
@@ -497,6 +508,11 @@ function retryFileCallback(index:number, path:string, fileId:number) {
   }
 };
 
+function getMaxImgProcessingMemoryMB(settingVal?: number) {
+  if( settingVal > 0 ) {
+    return settingVal * 1024 * 1024;
+  }
 
-
-
+  const mainMemoryGB = Math.min((navigator as any).deviceMemory || 8, 32);
+  return ( mainMemoryGB * 1024 * 1024 * 1024 ) / 10;
+}

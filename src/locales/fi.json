@@ -61,6 +61,8 @@
   "selectLanguage": "Valitse kieli",
   "settings": {
     "advancedSettings": "Lisäasetukset",
+    "maxImageProcessingSizeTooltip": "Monien suurten kuvien samanaikainen käsittely monisäikeisessä tilassa voi kuluttaa muistin loppuun ja aiheuttaa selaimen kaatumisen. Jos näin tapahtuu, ota tämä asetus käyttöön ja aseta pienempi muistin käyttöraja.",
+    "setMaxImageProcessingSize": "Määritä kuvankäsittelyssä käytettävän muistin enimmäismäärä",
     "enableMultiThreads": "Ota monisäie käyttöön",
     "ignoreExtTooltip": "Yritä ladata tiedostoja, joilla ei ole kuvatiedostotunnistetta",
     "ignoreFileExtensions": "Lataa kaikki tiedostotyypit",

@@ -133,6 +133,8 @@
     "imageTypeTooltip": "Chọn định dạng hình ảnh đầu ra",
     "imageType": "Loại hình ảnh",
     "advancedSettings": "Cài đặt nâng cao",
+    "maxImageProcessingSizeTooltip": "Xử lý nhiều hình ảnh lớn cùng lúc ở chế độ đa luồng có thể làm hết bộ nhớ và khiến trình duyệt bị treo. Nếu xảy ra, hãy bật tùy chọn này và đặt giới hạn bộ nhớ thấp hơn cho quá trình xử lý.",
+    "setMaxImageProcessingSize": "Đặt bộ nhớ tối đa dùng để xử lý hình ảnh",
     "enableMultiThreads": "Bật đa luồng",
     "resetButtonTooltip": "Khôi phục tất cả cài đặt về mặc định.",
     "multiThreadsTooltip": "Chuyển đổi hình ảnh bằng nhiều luồng",

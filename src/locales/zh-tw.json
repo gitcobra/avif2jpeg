@@ -69,6 +69,8 @@
     "resetButtonTooltip": "將所有設定還原為預設值。",
     "multiThreadsTooltip": "使用多執行緒轉換圖片",
     "advancedSettings": "進階設定",
+    "maxImageProcessingSizeTooltip": "在多執行緒模式下同時處理大量大型圖片可能會耗盡記憶體並導致瀏覽器當機。如果發生這種情況，請啟用此選項並將使用中的記憶體上限設為較小的值。",
+    "setMaxImageProcessingSize": "設定圖片處理所使用的最大記憶體",
     "shrinkImageTooltip": "如果圖片尺寸大於指定值，將圖片縮小至該值",
     "shrinkImage": "縮小超過以下尺寸的圖片",
     "useFolderNameForZip": "使用資料夾名稱作為 ZIP 檔案名稱",

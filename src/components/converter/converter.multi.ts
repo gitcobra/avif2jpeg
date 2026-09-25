@@ -190,6 +190,8 @@ export async function convertTargetFilesInMultithread(
     //outputToFsys: par.outputToDir,
     fsysDirHandler: par.fsysDirHandler,
     existingFolders: par.existingFolders,
+    maxImageProcessingMemoryMB:
+      UserSettings.useMaxImageProcessMB ? UserSettings.maxImageProcessMB : 0,
 
     threads: par.props.threads,
     maxSize: UserSettings.shrinkImage ? {width: UserSettings.maxWidth, height: UserSettings.maxHeight} : null,

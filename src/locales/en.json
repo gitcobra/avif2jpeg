@@ -131,6 +131,8 @@
     "imageTypeTooltip": "Choose image format for output",
     "imageType": "Image Type",
     "advancedSettings": "Advanced Settings",
+    "maxImageProcessingSizeTooltip": "Processing many large images simultaneously in multi-threaded mode may cause the browser to run out of memory and crash. If this happens, enable this option and set a smaller memory limit.",
+    "setMaxImageProcessingSize": "Set the maximum memory used for image processing",
     "enableMultiThreads": "Enable multi-threading",
     "resetButtonTooltip": "Restore all settings to default.",
     "multiThreadsTooltip": "Convert images in multi-threaded",

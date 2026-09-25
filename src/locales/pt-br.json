@@ -127,6 +127,8 @@
     "resetButtonTooltip": "Restaurar todas as configurações para o padrão.",
     "multiThreadsTooltip": "Converter imagens usando multithreading",
     "advancedSettings": "Configurações avançadas",
+    "maxImageProcessingSizeTooltip": "Processar muitas imagens grandes simultaneamente em modo multithread pode esgotar a memória e fazer o navegador travar. Se isso acontecer, ative esta opção e defina um limite de memória menor.",
+    "setMaxImageProcessingSize": "Definir a memória máxima usada no processamento de imagens",
     "shrinkImageTooltip": "Se as dimensões da imagem forem maiores que o valor especificado, reduzir a imagem para esse valor",
     "shrinkImage": "Reduzir imagens que excedam as dimensões a seguir",
     "useFolderNameForZip": "Usar o nome da pasta descartada para o arquivo ZIP",

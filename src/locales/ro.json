@@ -91,6 +91,8 @@
     "ignoreFileExtensions": "Încărcați toate tipurile de fișiere",
     "imageType": "Tip imagine",
     "advancedSettings": "Setări avansate",
+    "maxImageProcessingSizeTooltip": "Procesarea simultană a multor imagini mari în modul multithread poate epuiza memoria și poate bloca browserul. Dacă se întâmplă acest lucru, activați această opțiune și setați o limită de memorie mai mică.",
+    "setMaxImageProcessingSize": "Setați memoria maximă utilizată pentru procesarea imaginilor",
     "enableMultiThreads": "Activați execuția pe mai multe fire",
     "resetButtonTooltip": "Restabiliți toate setările la valorile implicite",
     "shrinkImage": "Reduceți imaginile care depășesc dimensiunile următoare",

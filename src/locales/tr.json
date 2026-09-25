@@ -127,6 +127,8 @@
     "resetButtonTooltip": "Tüm ayarları varsayılana geri yükleyin.",
     "multiThreadsTooltip": "Görüntüleri çok iş parçacıklı olarak dönüştürün",
     "advancedSettings": "Gelişmiş Ayarlar",
+    "maxImageProcessingSizeTooltip": "Birden fazla büyük görseli aynı anda çoklu iş parçacığı modunda işlemek belleğin tükenmesine ve tarayıcının çökmesine neden olabilir. Bu olursa bu seçeneği etkinleştirin ve kullanılan bellek sınırını daha küçük bir değere ayarlayın.",
+    "setMaxImageProcessingSize": "Görüntü işleme için kullanılacak maksimum belleği ayarlayın",
     "shrinkImageTooltip": "Görüntü boyutları belirtilen değerden büyükse görüntüyü bu değere küçültün",
     "shrinkImage": "Aşağıdaki boyutları aşan görselleri küçültün",
     "useFolderNameForZip": "Zip dosyası için bırakılan klasör adını kullan",

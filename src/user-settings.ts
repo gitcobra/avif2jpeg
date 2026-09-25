@@ -34,6 +34,8 @@ const DefaultSettings = {
 
   multithread: true,
   threadCount: MaxThreads.value,
+  useMaxImageProcessMB: false,
+  maxImageProcessMB: 512,
 
   shrinkImage: false,
   maxWidth: 4096,

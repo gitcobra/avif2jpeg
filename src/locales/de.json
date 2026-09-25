@@ -127,6 +127,8 @@
     "resetButtonTooltip": "Alle Einstellungen auf die Standardeinstellungen zurücksetzen.",
     "multiThreadsTooltip": "Konvertieren Sie Bilder im Multithread-Modus",
     "advancedSettings": "Erweiterte Einstellungen",
+    "maxImageProcessingSizeTooltip": "Die gleichzeitige Verarbeitung vieler großer Bilder im Multithread-Modus kann dazu führen, dass dem Browser der Speicher ausgeht und er abstürzt. Wenn dies geschieht, aktivieren Sie diese Option und setzen Sie einen kleineren Grenzwert für den verwendeten Arbeitsspeicher.",
+    "setMaxImageProcessingSize": "Maximalen Speicher für die Bildverarbeitung festlegen",
     "shrinkImageTooltip": "Wenn die Bildabmessungen größer als der angegebene Wert sind, verkleinern Sie das Bild auf diesen Wert",
     "shrinkImage": "Verkleinern Sie Bilder, die die folgenden Abmessungen überschreiten",
     "useFolderNameForZip": "Verwenden Sie den abgelegten Ordnernamen für die ZIP-Datei",

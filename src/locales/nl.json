@@ -127,6 +127,8 @@
     "resetButtonTooltip": "Herstel alle instellingen naar de standaardinstellingen.",
     "multiThreadsTooltip": "Converteer afbeeldingen in multi-threaded",
     "advancedSettings": "Geavanceerde instellingen",
+    "maxImageProcessingSizeTooltip": "Het tegelijk verwerken van veel grote afbeeldingen in multithread-modus kan ervoor zorgen dat de browser geen geheugen meer heeft en vastloopt. Als dit gebeurt, schakel deze optie in en stel een kleinere geheugenlimiet in.",
+    "setMaxImageProcessingSize": "Maximaal geheugen voor beeldverwerking instellen",
     "shrinkImageTooltip": "Als de afmetingen van de afbeelding groter zijn dan de opgegeven waarde, verkleint u de afbeelding tot die waarde",
     "shrinkImage": "Verklein afbeeldingen die de volgende afmetingen overschrijden",
     "useFolderNameForZip": "Gebruik de verwijderde mapnaam voor het zipbestand",

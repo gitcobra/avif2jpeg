@@ -91,6 +91,8 @@
     "ignoreFileExtensions": "Läs in alla filtyper",
     "imageType": "Bildtyp",
     "advancedSettings": "Avancerade inställningar",
+    "maxImageProcessingSizeTooltip": "Om många stora bilder bearbetas samtidigt i multitrådsläge kan minnet ta slut och webbläsaren krascha. Om detta händer, aktivera detta alternativ och ange en lägre minnesgräns.",
+    "setMaxImageProcessingSize": "Ange maximalt minne som används för bildbehandling",
     "enableMultiThreads": "Aktivera flertrådning",
     "resetButtonTooltip": "Återställ alla inställningar till standard",
     "shrinkImage": "Förminska bilder som överskrider följande mått",

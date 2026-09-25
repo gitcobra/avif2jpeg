@@ -127,6 +127,8 @@
     "resetButtonTooltip": "Ripristina tutte le impostazioni predefinite.",
     "multiThreadsTooltip": "Converti immagini in multi-thread",
     "advancedSettings": "Impostazioni avanzate",
+    "maxImageProcessingSizeTooltip": "L'elaborazione simultanea di molte immagini grandi in modalità multithread può esaurire la memoria e causare il blocco del browser. Se accade, abilita questa opzione e imposta un limite di memoria più basso.",
+    "setMaxImageProcessingSize": "Imposta la memoria massima utilizzata per l'elaborazione delle immagini",
     "shrinkImageTooltip": "Se le dimensioni dell'immagine sono maggiori del valore specificato, riduci l'immagine a quel valore",
     "shrinkImage": "Riduci le immagini che superano le seguenti dimensioni",
     "useFolderNameForZip": "Utilizza il nome della cartella rilasciata per il file zip",

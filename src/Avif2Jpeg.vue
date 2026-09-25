@@ -195,8 +195,6 @@ function onInputClick(flag: boolean) {
         <Suspense><!-- it needs Suspense to wait for lang file to load -->
           <SwitchLanguages
             ref="switchLangRef"
-            _@mounted="onLangSwitchMounted"
-            _@ready="onLangSwitchReady"
             :initial-lang="UserSettings.lang"
             @lang-ready="onLangReady"
             @lang-change="onLangChange"
@@ -300,6 +298,8 @@ function onInputClick(flag: boolean) {
             v-model:max-zip-size="UserSettings.maxZipSizeMB"
             v-model:multithread="UserSettings.multithread"
             v-model:thread-count="UserSettings.threadCount"
+            v-model:use-max-img-process-size="UserSettings.useMaxImageProcessMB"
+            v-model:max-img-process-size="UserSettings.maxImageProcessMB"
             v-model:expanded="expandedAdvSettings"
             
             v-model:shrink-image="UserSettings.shrinkImage"

@@ -127,6 +127,8 @@
     "resetButtonTooltip": "Przywróć wszystkie ustawienia do wartości domyślnych.",
     "multiThreadsTooltip": "Konwertuj obrazy w trybie wielowątkowym",
     "advancedSettings": "Ustawienia zaawansowane",
+    "maxImageProcessingSizeTooltip": "Jednoczesne przetwarzanie wielu dużych obrazów w trybie wielowątkowym może wyczerpać pamięć i spowodować awarię przeglądarki. Jeśli tak się stanie, włącz tę opcję i ustaw niższe ograniczenie pamięci używanej przez przetwarzanie.",
+    "setMaxImageProcessingSize": "Ustaw maksymalną ilość pamięci używanej do przetwarzania obrazów",
     "shrinkImageTooltip": "Jeśli wymiary obrazu są większe niż określona wartość, zmniejsz obraz do tej wartości",
     "shrinkImage": "Zmniejsz obrazy, które przekraczają następujące wymiary",
     "useFolderNameForZip": "Użyj usuniętej nazwy folderu dla pliku zip",

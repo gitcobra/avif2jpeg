@@ -127,6 +127,8 @@
     "resetButtonTooltip": "Kembalikan semua pengaturan ke default.",
     "multiThreadsTooltip": "Konversi gambar dalam multi-utas",
     "advancedSettings": "Pengaturan Lanjutan",
+    "maxImageProcessingSizeTooltip": "Memproses banyak gambar besar secara bersamaan dalam mode multithread dapat menghabiskan memori dan membuat browser mogok. Jika ini terjadi, aktifkan opsi ini dan tetapkan batas memori yang lebih kecil.",
+    "setMaxImageProcessingSize": "Atur memori maksimum yang digunakan untuk pemrosesan gambar",
     "shrinkImageTooltip": "Jika dimensi gambar lebih besar dari nilai yang ditentukan, kecilkan gambar ke nilai tersebut",
     "shrinkImage": "Kecilkan gambar yang melebihi dimensi berikut",
     "useFolderNameForZip": "Gunakan nama folder yang hilang untuk file zip",

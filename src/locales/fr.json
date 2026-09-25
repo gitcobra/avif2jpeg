@@ -127,6 +127,8 @@
     "resetButtonTooltip": "Restaurez tous les paramètres par défaut.",
     "multiThreadsTooltip": "Convertir des images en multithread",
     "advancedSettings": "Paramètres avancés",
+    "maxImageProcessingSizeTooltip": "Le traitement simultané de nombreuses grandes images en mode multithread peut épuiser la mémoire et faire planter le navigateur. Si cela se produit, activez cette option et définissez une limite de mémoire inférieure.",
+    "setMaxImageProcessingSize": "Définir la mémoire maximale utilisée pour le traitement des images",
     "shrinkImageTooltip": "Si les dimensions de l'image sont plus grandes que la valeur spécifiée, réduisez l'image à cette valeur",
     "shrinkImage": "Réduire les images qui dépassent les dimensions suivantes",
     "useFolderNameForZip": "Utiliser le nom du dossier supprimé pour le fichier zip",

@@ -91,6 +91,8 @@
     "ignoreFileExtensions": "Načíst všechny typy souborů",
     "imageType": "Typ obrázku",
     "advancedSettings": "Pokročilá nastavení",
+    "maxImageProcessingSizeTooltip": "Současné zpracování mnoha velkých obrázků v multithreaded režimu může vyčerpat paměť a způsobit pád prohlížeče. Pokud k tomu dojde, povolte tuto možnost a nastavte nižší limit paměti používané pro zpracování.",
+    "setMaxImageProcessingSize": "Nastavit maximální paměť využívanou ke zpracování obrázků",
     "enableMultiThreads": "Povolit více vláken",
     "resetButtonTooltip": "Obnovit všechna nastavení na výchozí",
     "shrinkImage": "Zmenšit obrázky přesahující následující rozměry",

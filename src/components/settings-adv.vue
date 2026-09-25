@@ -24,6 +24,8 @@ const TooltipDefAttr: InstanceType<typeof NTooltip>['$props'] = {
   //delay: 0,
   //style: 'max-width: 20vw;',
 };
+const MIN_IMG_PROCESS_MB = 50;
+const MAX_IMG_PROCESS_MB = Math.max((navigator as any).deviceMemory || 1, 8) * 1024 / 10 |0;
 
 
 /*
@@ -44,6 +46,8 @@ const shrinkImage = defineModel<boolean>('shrinkImage', {required:true});
 const maxWidth = defineModel<number>('maxWidth', {required:true});
 const maxHeight = defineModel<number>('maxHeight', {required:true});
 
+const useMaxImgProcessMB = defineModel<boolean>('useMaxImgProcessSize', {required:true});
+const maxImgProcessMB = defineModel<number>('maxImgProcessSize', {required:true});
 
 // props
 const props = defineProps<{
@@ -159,6 +163,51 @@ async function onResetClick() {
             </n-flex>
             </template>
             {{ $t('settings.multiThreadsTooltip') }}
+          </n-tooltip>
+
+          <!-- max image processing size -->
+          <n-tooltip v-bind="TooltipDefAttr">
+            <template #trigger>
+            <n-flex vertical>
+              <n-flex :wrap="false" align="center">
+                <n-button
+                  text
+                  :disabled="!multithread"
+                  style="font-size:smaller;" :bordered="false" :focusable="false"
+                  @click="useMaxImgProcessMB = !useMaxImgProcessMB"
+                >
+                  <template #icon><MaterialSymbolsPhotoSizeSelectLarge/></template>
+                  {{ $t('settings.setMaxImageProcessingSize') }}
+                </n-button>
+                <n-switch
+                  v-model:value="useMaxImgProcessMB" size="small"
+                  :disabled="!multithread"
+                />
+              </n-flex>
+              <n-flex :wrap="false" align="center" style="padding-left: 2em;">
+                <n-slider v-model:value="maxImgProcessMB"
+                  :disabled="!useMaxImgProcessMB || !multithread"
+                  :step="1" :min="MIN_IMG_PROCESS_MB" :max="MAX_IMG_PROCESS_MB"
+                  style="width:120px;"
+                />
+                <n-input-number size="tiny"
+                  v-model:value="maxImgProcessMB"
+                  :disabled="(!useMaxImgProcessMB || !multithread)"
+                  :step="1" :min="MIN_IMG_PROCESS_MB" :max="MAX_IMG_PROCESS_MB * 8"
+                  @blur="maxImgProcessMB = maxImgProcessMB == null ? MIN_IMG_PROCESS_MB : maxImgProcessMB"
+                  style="max-width:10em; text-align: right;"
+                >
+                  <template #suffix>(MB)</template>
+                </n-input-number>
+              </n-flex>
+            </n-flex>
+            </template>
+            <template #default>
+              <div class="tooltip">
+                <img src="/outofmemory.png" width="100"/>
+                {{ $t('settings.maxImageProcessingSizeTooltip') }}
+              </div>
+            </template>
           </n-tooltip>
           
           <!-- zip size -->
@@ -290,5 +339,12 @@ async function onResetClick() {
   margin-top: 2em;
   border-radius: 1em;
   border: 1px dashed silver;
+}
+.tooltip {
+  max-width: 600px;
+  margin: 1em;
+  img {
+    float: right;
+  }
 }
 </style>
