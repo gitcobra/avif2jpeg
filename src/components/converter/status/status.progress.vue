@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { getThumbnailedSize } from '@/components/util';
-
+import { getThumbnailedSize, getUnitSize } from '@/components/util';
+import { getStatusByPercentage } from '../../util';
 
 const props = defineProps<{
   processing: boolean;
@@ -16,6 +16,7 @@ const props = defineProps<{
 
   inputTotalSize: number;
   outputTotalSize: number;
+  doneRatio: number;
 
   rateColor: string;
   difColor: string;
@@ -28,6 +29,28 @@ const props = defineProps<{
 const thumbcanvas = ref<HTMLCanvasElement>(null);
 const THUMB_SIZE = {W:110, H:80};
 
+const totalPerc = computed(() => {
+  return (props.outputTotalSize / props.inputTotalSize * 100 |0);
+});
+
+const totalPercType = computed(() => getStatusByPercentage(totalPerc.value));
+
+const inputPerc = computed(() => {
+  return props.outputTotalSize > props.inputTotalSize ?
+    props.inputTotalSize / props.outputTotalSize * 100 |0 :
+    100;
+});
+const outputPerc = computed(() => {
+  return props.outputTotalSize > props.inputTotalSize ?
+    100 : 
+    props.outputTotalSize / props.inputTotalSize * 100 |0;
+});
+
+const sizeDeltaStr = computed(() => {
+  const dif = props.outputTotalSize - props.inputTotalSize;//(props.outputTotalSize - props.inputTotalSize) / 1024 |0;
+  const deltaStr = getUnitSize(dif);
+  return (dif >= 0 ? '+' : '') + deltaStr;//.toLocaleString('en-us') + ' KB';
+});
 
 // update processing image
 let prevThumbBitmap;
@@ -105,19 +128,75 @@ watch(() => [props.thumbnail, props.opened], () => {
 
         <!-- right column -->
         <n-flex vertical style="height:100%;" justify="center" class="right-column">
+          
+          <!-- input -->
           <n-statistic tabular-nums :label="$t('status.inputSize')">
-            <n-flex justify="end" :wrap="false" style="font-family:v-mono;">{{(inputTotalSize / 1024 | 0).toLocaleString('en-us')}} KB</n-flex>
+            <n-flex vertical justify="center"
+              :size="0" 
+              align="end" :wrap="false" style="font-family:v-mono;"
+            >
+              <span>{{(inputTotalSize / 1024 | 0).toLocaleString('en-us')}} KB</span>
+              <n-progress
+                :height="4"
+                type="line"
+                color="gray"
+                rail-color="transparent"
+                :processing="props.processing"
+                :percentage="inputPerc * doneRatio"
+                :show-indicator="false"
+                rail-style="transform: scaleX(-1)"
+              >
+              </n-progress>
+            </n-flex>
           </n-statistic>
 
+          <!-- output -->
           <n-statistic tabular-nums :label="$t('status.outputSize')">
-            <n-flex justify="end" :wrap="false" style="font-family:v-mono;">{{(outputTotalSize / 1024 | 0).toLocaleString('en-us')}} KB</n-flex>
-          </n-statistic>
+            <n-flex vertical align="end" justify="center"
+              :size="0" :wrap="false" style="font-family:v-mono;"
+            >
+              <span style="font-family:v-mono;">
+                {{(outputTotalSize / 1024 | 0).toLocaleString('en-us')}} KB
+              </span>
 
+              <n-progress
+                :height="4"
+                type="line"
+                :color="totalPercType === 'default' ? 'gray' : undefined"
+                :status="totalPercType"
+                rail-color="transparent"
+                :processing="props.processing"
+                :percentage="outputPerc * doneRatio"
+                :show-indicator="false"
+                rail-style="transform: scaleX(-1)"
+              ></n-progress>
+            </n-flex>
+          
+          <!--
+          </n-statistic>
           <n-statistic tabular-nums :label="$t('status.outInRate')">
-            <n-flex vertical align="end" justify="start" style="font-size: 0.8em; font-family:v-mono; line-height:50%;">
-              <span :style="{color:rateColor, fontSize:'larger'}">× {{ (outputTotalSize / inputTotalSize || 1).toFixed(2) }}</span>
-              <span :style="{color:difColor}">({{ totalSizeDifStr }})</span>
-              
+          -->
+
+            <n-flex vertical
+              align="end" justify="end"
+              style="font-family:v-mono; margin-top: 0.5em;"
+            >
+              <n-popover placement="bottom-end">
+                <template #trigger>
+                  <n-tag
+                    :type="totalPercType"
+                    round
+                    size="tiny"
+                  >
+                    {{totalPerc + ' %'}}
+                  </n-tag>
+                </template>
+                <template #default>
+                  <n-text :type="totalPercType" :style="{fontSize:'smaller'}">
+                    {{ sizeDeltaStr }}
+                  </n-text>
+                </template>
+              </n-popover>
             </n-flex>
           </n-statistic>
         </n-flex>

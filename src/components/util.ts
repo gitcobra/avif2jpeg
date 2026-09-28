@@ -11,8 +11,8 @@ export function getUnitSize(bytes: number, precise=2) {
     'MB',
     'GB',
   ];
-  const index = bytes ? Math.floor(Math.log(bytes) / Math.log( 1024 )) : 0;
-  const val = (bytes / Math.pow(1024, index) * sign).toFixed(precise);
+  const index = bytes ? Math.floor(Math.log(bytes) / Math.log( 1000 )) : 0;
+  const val = (bytes / Math.pow(1000, index) * sign).toFixed(precise);
   
   return `${val}${units[index]}`;
 }
@@ -181,4 +181,14 @@ export function setFileNameAndExtension(path: string, outputExt: string, keepPre
   let outputPath = path + '.' + outputExt;
 
   return outputPath;
+}
+
+export function getStatusByPercentage(perc: number) {
+  if (perc > 0) {
+    if (perc < 100) return 'success';
+    if (perc < 120) return 'info';
+    if (perc >= 300) return 'error';
+    if (perc >= 160) return 'warning';
+  }
+  return 'default';
 }

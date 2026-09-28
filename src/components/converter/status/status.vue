@@ -146,6 +146,7 @@ const inputTotalSize = ref(0);
 const outputTotalSize = ref(0);
 const totalSizeDifStr = ref('');
 const elapsedTime = ref('00:00:00');
+const doneRatio = ref(0);
 
 
 
@@ -342,6 +343,8 @@ function update() {
 
   failedFilesZippedCount.value = stat.failedFileZippedCount;
   
+  doneRatio.value = props.status.done / props.status.length;
+  
   
   // conversion size rate
   const dif = (outputTotalSize.value - inputTotalSize.value);
@@ -519,6 +522,7 @@ function cleanup() {
       :threads="props.status.threads"
       :zip-size="props.status.zipSize"
       :output-to-dir="props.status.outputToDir"
+      :doneRatio="doneRatio"
 
       :rate-color="rateColor"
       :dif-color="difColor"

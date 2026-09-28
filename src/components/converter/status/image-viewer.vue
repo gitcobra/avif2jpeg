@@ -2,7 +2,7 @@
 import { ImageRenderToolbarProps, NBadge, NButton, NInput, useDialog, useThemeVars } from 'naive-ui';
 import { ref, render } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { getThumbnailedSize, getUnitSize } from '@/components/util';
+import { getStatusByPercentage, getThumbnailedSize, getUnitSize } from '@/components/util';
 import Thumbnail from './thumbnail.vue';
 import { ArrowForward, ArrowBack, ArrowRedoOutline, ArrowUndoOutline, ChevronForward, ChevronBack, Close } from '@vicons/ionicons5';
 import { title } from 'process';
@@ -85,6 +85,8 @@ const orgheight = ref(1);
 const demandingImage = ref(false);
 const thumbloaded = ref(false);
 const thumbOrgloaded = ref(false);
+const sizePerc = computed(() => (props.size / props.originalSize * 100 | 0));
+const sizePercType = computed(() => getStatusByPercentage(sizePerc.value));
 const isPreviewing = computed<boolean>(() => nImageGroupRef.value?.previewInstRef?.displayed);
 const isPreviewingConvertedImg = computed<boolean>(() => nImageGroupRef?.value?.previewInstRef?.previewSrc === convertedSrc.value);
 
@@ -629,8 +631,11 @@ function cleanup() {
                 </n-flex>
 
 
-                <n-flex vertical align="center" class="original-thumb">
+                <n-flex vertical align="center" class="original-thumb" style="overflow: visible;">
                   <n-icon size="20" color="silver" :component="ArrowForward"/>
+                  <n-tag :type="sizePercType" round>
+                    {{ sizePerc }} %
+                  </n-tag>
                 </n-flex>
                 
                 <!-- CONVERTED -->
