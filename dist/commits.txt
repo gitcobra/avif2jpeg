@@ -1,3 +1,18 @@
+2026-09-28 23:16:54 +0900
+v1.12.14
+
+2026-09-28 23:11:46 +0900
+style: make minor adjustments to status screen
+
+2026-09-28 23:09:23 +0900
+feat: add pause button
+
+2026-09-28 18:11:49 +0900
+feat: add auto-scroll button to log view
+
+2026-09-28 18:10:31 +0900
+feat: display in/out ratio as a percentage
+
 2026-09-26 00:40:23 +0900
 v1.12.13
 
@@ -6,18 +21,3 @@ style: make minor CSS adjustments
 
 2026-09-26 00:02:18 +0900
 refactor: Change service worker caching strategy to NetworkFirst
-
-2026-09-26 00:01:10 +0900
-feat: Relax multi-threaded image processing memory limits and add configuration option
-
-2026-09-24 03:02:11 +0900
-v1.12.12
-
-2026-09-24 02:57:40 +0900
-style: make minor CSS adjustments
-
-2026-09-24 02:57:22 +0900
-fix(ssg): collect localized head metadata during static generation
-
-2026-09-24 00:18:44 +0900
-v1.12.11
