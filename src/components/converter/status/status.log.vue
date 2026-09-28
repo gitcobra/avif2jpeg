@@ -753,19 +753,24 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
           </n-button-group>
           
           <n-flex class="overlay-bottom-controls" :wrap="false" align="end" :size="8">
+            
+            <!-- auto scroll -->
             <n-tooltip placement="left" :keep-alive-on-hover="false" :duration="0">
               <template #trigger>
                 <n-button
-                  class="auto-scroll-button"
+                  :class="{'auto-scroll-button': true, vivid: autoScrollLog}"
                   quaternary
                   circle
                   aria-label="Toggle auto scrolling lock"
                   @click="autoScrollLog = !autoScrollLog"
+                  color="black"
                 >
-                  <span class="auto-scroll-icon">
-                    <IcBaselineFlashAuto />
-                    <MaterialSymbolsLock v-if="autoScrollLog" class="auto-scroll-lock-icon" />
-                  </span>
+                  <template #icon>
+                    <span class="auto-scroll-icon">
+                      <IcBaselineFlashAuto />
+                      <MaterialSymbolsLock v-if="autoScrollLog" class="auto-scroll-lock-icon" />
+                    </span>
+                  </template>
                 </n-button>
               </template>
               {{ $t('status.autoScroll') }}
@@ -996,6 +1001,10 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
       width: 32px;
       height: 32px;
     }
+    .overlay-bottom-controls .vivid {
+      background-color: silver;
+      opacity: 0.6;
+    }
 
     .overlay-bottom-controls .overlay-button-group {
       height: 100%;
@@ -1004,7 +1013,6 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
     .auto-scroll-icon {
       position: relative;
       display: inline-flex;
-      font-size: 20px;
     }
 
     .auto-scroll-lock-icon {

@@ -192,9 +192,12 @@ watch(() => [props.thumbnail, props.opened], () => {
                   </n-tag>
                 </template>
                 <template #default>
-                  <n-text :type="totalPercType" :style="{fontSize:'smaller'}">
-                    {{ sizeDeltaStr }}
-                  </n-text>
+                  <n-flex vertical align="end">
+                    <div v-html="$t('status.progressDiffTip')"/>
+                    <n-text :type="totalPercType" :style="{fontSize:'smaller'}">
+                      {{ sizeDeltaStr }}
+                    </n-text>
+                  </n-flex>
                 </template>
               </n-popover>
             </n-flex>
