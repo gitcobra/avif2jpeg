@@ -752,29 +752,49 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
             -->
           </n-button-group>
           
-          <n-button-group vertical class="overlay-button-group bottom-part">
-            <!--
-            <n-button @click="onScrollButtonPress('ArrowDown')" color="black" round>
-              <F7ArrowDown/>
-            </n-button>
-            -->
+          <n-flex class="overlay-bottom-controls" :wrap="false" align="end" :size="8">
             <n-tooltip placement="left" :keep-alive-on-hover="false" :duration="0">
               <template #trigger>
-                <n-button @click="onScrollButtonPress('PageDown')" color="black" round>
-                  <F7ArrowDown/>
+                <n-button
+                  class="auto-scroll-button"
+                  quaternary
+                  circle
+                  aria-label="Toggle auto scrolling lock"
+                  @click="autoScrollLog = !autoScrollLog"
+                >
+                  <span class="auto-scroll-icon">
+                    <IcBaselineFlashAuto />
+                    <MaterialSymbolsLock v-if="autoScrollLog" class="auto-scroll-lock-icon" />
+                  </span>
                 </n-button>
               </template>
-              {{ $t('status.scrollPageDown') }}
+              {{ $t('status.autoScroll') }}
             </n-tooltip>
-            <n-tooltip placement="left" :keep-alive-on-hover="false" :duration="0">
-              <template #trigger>
-                <n-button @click="onScrollButtonPress('Bottom')" color="black" round class="edge">
-                  <PhCaretLineDownFill/>
-                </n-button>
-              </template>
-              {{ $t('status.scrollToBottom') }}
-            </n-tooltip>
-          </n-button-group>
+
+            <n-button-group vertical class="overlay-button-group bottom-part">
+              <!--
+              <n-button @click="onScrollButtonPress('ArrowDown')" color="black" round>
+                <F7ArrowDown/>
+              </n-button>
+              -->
+              <n-tooltip placement="left" :keep-alive-on-hover="false" :duration="0">
+                <template #trigger>
+                  <n-button @click="onScrollButtonPress('PageDown')" color="black" round>
+                    <F7ArrowDown/>
+                  </n-button>
+                </template>
+                {{ $t('status.scrollPageDown') }}
+              </n-tooltip>
+              <n-tooltip placement="left" :keep-alive-on-hover="false" :duration="0">
+                <template #trigger>
+                  <n-button @click="onScrollButtonPress('Bottom')" color="black" round class="edge">
+                    <PhCaretLineDownFill/>
+                  </n-button>
+                </template>
+                {{ $t('status.scrollToBottom') }}
+              </n-tooltip>
+            </n-button-group>
+          </n-flex>
         </n-flex>
       </Transition>
 
@@ -957,11 +977,42 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
 
   .overlay-buttons {
     position: absolute;
+    left: 0;
     right: 1em;
     top: 0px;
     height: 100%;
     z-index: 10;
     padding-bottom: 1em;
+    align-items: flex-end;
+    pointer-events: none;
+
+    .overlay-bottom-controls {
+      height: 50%;
+      justify-content: flex-end;
+    }
+
+    .overlay-bottom-controls .auto-scroll-button {
+      flex: 0 0 32px;
+      width: 32px;
+      height: 32px;
+    }
+
+    .overlay-bottom-controls .overlay-button-group {
+      height: 100%;
+    }
+
+    .auto-scroll-icon {
+      position: relative;
+      display: inline-flex;
+      font-size: 20px;
+    }
+
+    .auto-scroll-lock-icon {
+      position: absolute;
+      top: -10px;
+      right: -8px;
+      font-size: 11px;
+    }
 
     .overlay-button-group {
       height: 50%;
@@ -976,6 +1027,7 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
       padding: 4px;
       height: 60%;
       max-height: 100px;
+      pointer-events: auto;
       &.page {
         height: 30%;
       }
