@@ -42,6 +42,7 @@ type ConverterParameter = {
   
   ConvStats: Stat;
   canceled;
+  paused;
   props: Props;
   format: string;
   quality: number;
@@ -177,6 +178,14 @@ export async function convertTargetFilesInMultithread(
     imgloadWorker.postMessage(message);
   });
 
+  // observe paused button
+  const unwatchPauseButton = watch(par.paused, (val) => {
+    const message: LoaderMessageType = {
+      action: val ? 'pause-convert' : 'resume-convert',
+    };
+    imgloadWorker.postMessage(message);
+  });
+
   // send message
   const msgToLoader: LoaderMessageType = {
     action: 'start-convert',
@@ -229,6 +238,7 @@ export async function convertTargetFilesInMultithread(
   // end process
 
   unwatchCancelButton();
+  unwatchPauseButton();
 
   const callbackToClearConverter = () => {
     WorkerManager.init();

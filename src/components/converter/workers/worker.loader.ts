@@ -29,7 +29,10 @@ export type LoaderMessageType =
       existingFolders: Set<string>;
     }
   | {
-      action: 'cancel-convert';
+      action:
+        | 'cancel-convert'
+        | 'pause-convert'
+        | 'resume-convert';
     };
 
 export type MessageFromLoader =
@@ -88,10 +91,16 @@ let startedCount = 0;
 let resolvedCount = 0;
 //let fsysDirHandler: FileSystemDirectoryHandle;
 
+let paused = false;
+let resumePromise: Promise<void> | null = null;
+let resolveResume: (() => void) | null = null;
+
 // recieve messages from main thread
 self.onmessage = async (params: MessageEvent<LoaderMessageType | OverwriteResponseToLoader>) => {
   const { data, ports } = params;
   const { action } = data;
+
+  //console.log(action);
 
   switch(action) {
     case 'set-zip-port': {
@@ -125,9 +134,25 @@ self.onmessage = async (params: MessageEvent<LoaderMessageType | OverwriteRespon
       );
       break;
     }
+    
+    
     case 'cancel-convert':
       canceled = true;
+    case 'resume-convert': {
+      paused = false;
+      resolveResume?.();
+      resolveResume = null;
+      resumePromise = null;
       break;
+    }
+    case 'pause-convert': {
+      paused = true;
+      resolveResume?.();
+      resumePromise = new Promise<void>((resolve) => {
+          resolveResume = resolve;
+      });
+      break;
+    }
     
     case 'respond-overwrite': {
       const wid = data.workerId;
@@ -192,6 +217,7 @@ async function loadImageList(
   
   let index = 0
   for( ; index < files.length; index++ ) {    
+    await waitIfPaused(paused);
 
     //const messages: MessageToCanvasWorker = [];
     const trnsBitmaps: ImageBitmap[] = [];
@@ -515,4 +541,10 @@ function getMaxImgProcessingMemoryMB(settingVal?: number) {
 
   const mainMemoryGB = Math.min((navigator as any).deviceMemory || 8, 32);
   return ( mainMemoryGB * 1024 * 1024 * 1024 ) / 10;
+}
+
+async function waitIfPaused(paused: boolean) {
+  if( paused ) {
+    await resumePromise;
+  }
 }

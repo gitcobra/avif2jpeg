@@ -89,6 +89,7 @@ defineExpose({
 // significant flags
 const processing = ref(false);
 const canceled = ref(false);
+const paused = ref(false);
 const processCompleted = ref(false);
 
 // component display flags
@@ -96,7 +97,7 @@ const conversionModalActive = ref(false);
 const dispConvStatusComponent = ref(false); // conversion status
 
 // informations
-const processingMessage = ref<() => any>(() => 'initializing');
+const processingModalTitle = ref<() => any>(() => 'initializing');
 const processingType = ref<NotificationType>('info');
 
 // an object for ConversionStatus["status"] property
@@ -144,12 +145,14 @@ watch(() => props.input.length, (val, oldval) => {
   }
 });
 
-
 // hide browser's scrollbar while the processing modal is active
 watch(conversionModalActive, (val) => {
   document.body.style.overflowY = val ? 'hidden' : 'auto';
 });
 
+watch(paused, (val) => {
+  setProcessingModalCondition();
+});
 
 
 
@@ -371,6 +374,7 @@ function cleanUpProcessedData() {
   allZipsClicked = false;
   processCompleted.value = false;
   canceled.value = false;
+  paused.value = false;
 
   // dialog handling
   isConfirmationQueueActive = false;
@@ -406,8 +410,7 @@ async function startConversion(input: FileWithId[]) {
   ConvStats.processing = true;
 
   // set dialog condition
-  processingType.value = 'info';
-  processingMessage.value = () => t('processing');
+  setProcessingModalCondition();
 
   
   // --- prepare for converter ---
@@ -452,7 +455,9 @@ async function startConversion(input: FileWithId[]) {
       files:fileList,
       completedFileIdSet,
       completedFileDat: completedPathList,
-      ConvStats, canceled,
+      ConvStats,
+      canceled,
+      paused,
       props,
       imageType:format,
       quality,
@@ -473,7 +478,13 @@ async function startConversion(input: FileWithId[]) {
   else {
     demandImage = demandImageSingle;
     result = await convertImagesInSingleThread(
-      fileList, completedFileIdSet, props, canceled, ConvStats, enqueueOverwriteConfirmation,
+      fileList,
+      completedFileIdSet,
+      props,
+      canceled,
+      paused,
+      ConvStats,
+      enqueueOverwriteConfirmation,
     );
   }
   ({exception, callbackToGenerateFailedZips, callbackToClearConverter} = result);
@@ -510,11 +521,11 @@ async function startConversion(input: FileWithId[]) {
   // update condition by the result
   if( ConvStats.success === ConvStats.length ) {
     processingType.value = 'success';
-    processingMessage.value = () => t('completed');
+    processingModalTitle.value = () => t('completed');
   }
   else {
     processingType.value = 'error';
-    processingMessage.value = () => canceled.value? t('aborted') : t('incomplete');
+    processingModalTitle.value = () => canceled.value? t('aborted') : t('incomplete');
   }
   
   // when error files exist
@@ -703,6 +714,19 @@ async function openOverwriteConfirmation(
     isConfirmationQueueActive = false;
 }
 
+function setProcessingModalCondition() {
+  if( processing.value && !canceled.value ) {
+    if( paused.value ) {
+      processingType.value = 'warning';
+      processingModalTitle.value = () => t('paused');    
+    }
+    else {
+      processingType.value = 'info';
+      processingModalTitle.value = () => t('processing');
+    }
+  }
+}
+
 </script>
 
 
@@ -764,7 +788,7 @@ async function openOverwriteConfirmation(
     @mask-click="message.destroyAll();"
     @close="onBeforeProcessingDialogClose"
     @esc="onESCPress"
-    :title="processingMessage"
+    :title="processingModalTitle"
     :type="processingType"
     :mask-closable="false"
     @after-leave="cleanUpProcessedData"
@@ -795,14 +819,34 @@ async function openOverwriteConfirmation(
             <slot name="lang-switch"></slot>
           </n-flex>
           -->
+
+          <n-tooltip v-if="!canceled && processing">
+            <template #trigger>
+              <n-button
+                size="large"
+                circle
+                @click="paused = !paused"
+              >
+                <mdi-play v-if="paused" />
+                <mdi-pause v-else />
+              </n-button>
+            </template>
+            {{ paused ? t('resume') : t('pause') }}
+          </n-tooltip>
           
           <!-- cancel button -->
-          <n-button v-if="processing" :disabled="canceled" ref="cancelbutton" round size="large" @click="canceled = true">
+          <n-button
+            v-if="processing"
+            :disabled="canceled" ref="cancelbutton" round size="large"
+            @click="canceled = true"
+          >
             <!-- spinner waiting for complete -->
             <n-spin :show="canceled && !processCompleted" size="small">{{t('cancel')}}</n-spin>
           </n-button>
           <!-- close button -->
-          <n-button v-else-if="processCompleted" @click="onBeforeProcessingDialogClose" round size="large">
+          <n-button
+            v-else-if="processCompleted" @click="onBeforeProcessingDialogClose" round size="large"
+          >
             {{t('close')}}
           </n-button>
         </n-flex>

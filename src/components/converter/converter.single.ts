@@ -23,6 +23,7 @@ export async function convertImagesInSingleThread(
   completedFileIdSet: Set<number>,
   props: Props,
   canceled,
+  paused,
   ConvStats: Stat,
   enqueueConfirmation: EnqueueOverwriteConfirmation,
 
@@ -114,8 +115,36 @@ export async function convertImagesInSingleThread(
     }
   };
 
+  
+  // prepare to observe pause button
+  let resumePromise: Promise<void> | null = null;
+  let resolveResume: (() => void) | null = null;  
+  
+  const unwatchPaused = watch(paused, (val) => {
+    resolveResume?.();
+    resolveResume = null;
+    
+    if( val ) {
+      if( canceled.value ) 
+        return;
+      resumePromise = new Promise<void>((resolve) => {
+          resolveResume = resolve;
+      });
+    }
+  });
+  const unwatchCanceled = watch(canceled, (val) => {
+    if( val ) {
+      resolveResume?.();
+      resolveResume = null;
+    }
+  });
+
+
   const fileListByZippedIndex: FileWithId[] = [];
   for( const file of list ) {
+    if( paused.value ) {
+      await resumePromise;
+    }
     if( canceled.value )
       break;
 
@@ -359,6 +388,9 @@ export async function convertImagesInSingleThread(
       }
     }
   }
+
+  unwatchCanceled();
+  unwatchPaused();
 
   const Terminated = {value:false};
   const callbackToClearConverter = () => {
