@@ -1,3 +1,9 @@
+2026-10-06 02:51:25 +0900
+v1.12.16
+
+2026-10-06 02:51:01 +0900
+fix: change SW strategy to NetworkFirst
+
 2026-10-06 01:09:44 +0900
 v1.12.15
 
@@ -15,9 +21,3 @@ style: make minor adjustments to status screen
 
 2026-09-28 23:09:23 +0900
 feat: add pause button
-
-2026-09-28 18:11:49 +0900
-feat: add auto-scroll button to log view
-
-2026-09-28 18:10:31 +0900
-feat: display in/out ratio as a percentage
