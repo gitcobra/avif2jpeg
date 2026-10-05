@@ -45,6 +45,8 @@
   "copiedDataURLMessage": "Конвертированное изображение было скопировано в буфер обмена как DataURL.",
   "status": {
     "scrollToTop": "Перейти к началу журнала",
+    "scrollUp": "Вверх",
+    "scrollDown": "Вниз",
     "scrollPageUp": "На страницу вверх",
     "scrollPageDown": "На страницу вниз",
     "scrollToBottom": "Перейти к концу журнала",
@@ -105,6 +107,7 @@
     "log": "Журнал",
     "Output": "Выходные результаты",
     "expandLog": "Расширить размер журнала",
+    "shrinkLog": "Уменьшить размер журнала",
     "autoScroll": "Авторолль",
     "sortByStatus": "статус",
     "sortByName": "имя",

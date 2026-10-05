@@ -51,6 +51,8 @@
   "convertAgain": "تبدیل دوباره",
   "status": {
     "scrollToTop": "رفتن به ابتدای گزارش",
+    "scrollUp": "بالا",
+    "scrollDown": "پایین",
     "scrollPageUp": "یک صفحه بالا",
     "scrollPageDown": "یک صفحه پایین",
     "scrollToBottom": "رفتن به انتهای گزارش",
@@ -82,6 +84,7 @@
     "Progress": "پیشرفت",
     "PreviewImage": "پیش‌نمایش تصاویر",
     "Log": "گزارش",
+    "shrinkLog": "کوچک کردن اندازه گزارش",
     "Output": "نتایج خروجی",
     "sortByName": "نام",
     "sortBySize": "اندازه",

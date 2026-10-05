@@ -33,6 +33,9 @@
   "confirmCloseDialog": "您尚未儲存轉換後的圖片。",
   "confirmCloseDialogTitle": "資料尚未儲存",
   "status": {
+    "shrinkLog": "縮小日誌大小",
+    "scrollUp": "往上",
+    "scrollDown": "往下",
     "multiThreading": "多執行緒",
     "outputSettings": "輸出設定",
     "totalFiles": "檔案數量",

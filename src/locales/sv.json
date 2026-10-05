@@ -51,6 +51,8 @@
   "convertAgain": "Konvertera igen",
   "status": {
     "scrollToTop": "Gå till början av loggen",
+    "scrollUp": "Upp",
+    "scrollDown": "Ned",
     "scrollPageUp": "En sida upp",
     "scrollPageDown": "En sida ned",
     "scrollToBottom": "Gå till slutet av loggen",
@@ -80,6 +82,7 @@
     "Progress": "Förlopp",
     "PreviewImage": "Förhandsgranska bilder",
     "Log": "Logg",
+    "shrinkLog": "Minska loggstorleken",
     "Output": "Utdataresultat",
     "sortByName": "namn",
     "sortBySize": "storlek",

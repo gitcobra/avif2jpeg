@@ -37,6 +37,7 @@ const props = defineProps<{
   processing: boolean;
   status: {
     processing: boolean;
+    paused: boolean;
     length: number;
     
     startedCount: number;
@@ -511,6 +512,7 @@ function cleanup() {
 
     <Progress
       :processing="statusProcessing"
+      :paused="status.paused"
 
       :elapsed-time="elapsedTime"
       :success-perc="successPercentage[0]"

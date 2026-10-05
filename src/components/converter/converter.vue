@@ -314,6 +314,7 @@ function initConvStatPropObj(obj?: ConversionStatusType): ConversionStatusType {
     zippedTotalSize: 0,
     
     processing: false,
+    paused: false,
     zips: [],
     inputTotalSize: 0,
     outputTotalSize: 0,
@@ -719,10 +720,12 @@ function setProcessingModalCondition() {
     if( paused.value ) {
       processingType.value = 'warning';
       processingModalTitle.value = () => t('paused');    
+      ConvStats.paused = true;
     }
     else {
       processingType.value = 'info';
       processingModalTitle.value = () => t('processing');
+      ConvStats.paused = false;
     }
   }
 }

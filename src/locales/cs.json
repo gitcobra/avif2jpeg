@@ -51,6 +51,8 @@
   "convertAgain": "Převést znovu",
   "status": {
     "scrollToTop": "Přejít na začátek protokolu",
+    "scrollUp": "Nahoru",
+    "scrollDown": "Dolů",
     "scrollPageUp": "O stránku nahoru",
     "scrollPageDown": "O stránku dolů",
     "scrollToBottom": "Přejít na konec protokolu",
@@ -80,6 +82,7 @@
     "Progress": "Průběh",
     "PreviewImage": "Náhled obrázků",
     "Log": "Protokol",
+    "shrinkLog": "Zmenšit protokol",
     "Output": "Výsledky výstupu",
     "sortByName": "název",
     "sortBySize": "velikost",

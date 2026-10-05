@@ -45,6 +45,8 @@
   "copiedDataURLMessage": "Przekonwertowany obraz został skopiowany do schowka jako DataURL.",
   "status": {
     "scrollToTop": "Przejdź na początek dziennika",
+    "scrollUp": "W górę",
+    "scrollDown": "W dół",
     "scrollPageUp": "Przewiń stronę w górę",
     "scrollPageDown": "Przewiń stronę w dół",
     "scrollToBottom": "Przejdź na koniec dziennika",
@@ -105,6 +107,7 @@
     "log": "Dziennik",
     "Output": "Wyniki wyjściowe",
     "expandLog": "rozmiar dziennika",
+    "shrinkLog": "zmniejsz rozmiar dziennika",
     "autoScroll": "Auto-Scroll",
     "sortByStatus": "status",
     "sortByName": "nazwa",

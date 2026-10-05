@@ -45,6 +45,8 @@
   "copiedDataURLMessage": "Dönüştürülen görüntü panonuza DataURL olarak kopyalandı.",
   "status": {
     "scrollToTop": "Günlüğün en üstüne git",
+    "scrollUp": "Yukarı",
+    "scrollDown": "Aşağı",
     "scrollPageUp": "Bir sayfa yukarı",
     "scrollPageDown": "Bir sayfa aşağı",
     "scrollToBottom": "Günlüğün en altına git",
@@ -105,6 +107,7 @@
     "log": "Kayıt",
     "Output": "Çıktı sonuçları",
     "expandLog": "Günlük boyutunu genişletin",
+    "shrinkLog": "Günlük boyutunu küçültün",
     "autoScroll": "otomatik kaydırma",
     "sortByStatus": "durum",
     "sortByName": "isim",

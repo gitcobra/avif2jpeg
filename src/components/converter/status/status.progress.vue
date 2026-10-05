@@ -4,6 +4,7 @@ import { getStatusByPercentage } from '../../util';
 
 const props = defineProps<{
   processing: boolean;
+  paused: boolean;
   
   successPerc: number;
   elapsedTime: string;
@@ -87,7 +88,13 @@ watch(() => [props.thumbnail, props.opened], () => {
           ({{ successPerc |0 }}%)
         </template>
 
-        <!-- <n-spin :size="16" v-if="processing && !props.opened"> </n-spin> -->
+        <n-spin :size="16" v-if="processing && !paused">
+          <!--
+          <n-flex justify="center" align="center" style="font-size: 0.7em;">
+            <mdi-pause v-if="paused"/>
+          </n-flex>
+          -->
+        </n-spin>
       </n-flex>
     </template>
     <n-flex justify="center" align="center" :size="0" :wrap="false" style="white-space: nowrap; margin-top:-1em; padding-bottom:5px;">

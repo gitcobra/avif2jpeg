@@ -543,6 +543,12 @@ function onScrollButtonPress(action: string) {
         top: -pageHeight,
       });
       break;
+    case 'Up':
+      scrollref.value?.scrollBy({
+        behavior: 'smooth',
+        top: -logItemHeight.value,
+      });
+      break;
     
     case 'Bottom':
       scrollref.value?.scrollTo({
@@ -554,6 +560,12 @@ function onScrollButtonPress(action: string) {
       scrollref.value?.scrollBy({
         behavior: 'smooth',
         top: pageHeight,
+      });
+      break;
+    case 'Down':
+      scrollref.value?.scrollBy({
+        behavior: 'smooth',
+        top: logItemHeight.value,
       });
       break;
   }
@@ -658,12 +670,18 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
         </n-select>
         
         <!-- auto scroll -->
-        <n-checkbox key="b" v-model:checked="autoScrollLog" @update:checked="flag => flag && scrollLogViewToBottom(true)" size="small" style="font-size: 0.9em;">
+        <n-checkbox key="b" v-model:checked="autoScrollLog"
+          @update:checked="flag => flag && scrollLogViewToBottom(true)"
+          size="small" style="font-size: 0.9em;"
+        >
           {{$t('status.autoScroll')}}
         </n-checkbox>
 
         <!-- expand log -->
-        <n-popover trigger="hover" :show="logSizeSliderShow" :disabled="!expanded" placement="top" :delay="0" :duration="1000">
+        <n-popover
+          trigger="hover" :show="logSizeSliderShow" :disabled="!expanded"
+          placement="top" :delay="0" :duration="1000"
+        >
           <template #trigger>
             <n-tooltip style="max-width:30em;" :disabled="true">
               <template #trigger>
@@ -739,30 +757,36 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
             </n-tooltip>
             <n-tooltip placement="left" :keep-alive-on-hover="false" :duration="0">
               <template #trigger>
-                <n-button @click="onScrollButtonPress('PageUp')" color="black" round>
-                  <F7ArrowUp/>
+                <n-button @click="onScrollButtonPress('PageUp')"
+                  color="black" class="page">
+                  <FaSolidAngleDoubleUp/>
                 </n-button>
               </template>
               {{ $t('status.scrollPageUp') }}
             </n-tooltip>
-            <!--
-            <n-button @click="onScrollButtonPress('ArrowUp')" color="black" round>
-              <F7ArrowUp/>
-            </n-button>
-            -->
+            <n-tooltip placement="left" :keep-alive-on-hover="false" :duration="0">
+              <template #trigger>
+                <n-button @click="onScrollButtonPress('Up')" color="black" round>
+                  <F7ArrowUp/>
+                </n-button>
+              </template>
+              {{ $t('status.scrollUp') }}
+            </n-tooltip>
+
           </n-button-group>
           
           <n-flex class="overlay-bottom-controls" :wrap="false" align="end" :size="8">
             
-            <!-- auto scroll -->
-            <n-tooltip placement="left" :keep-alive-on-hover="false" :duration="0">
+            <!-- auto scroll button -->
+            <n-tooltip v-if="processing"
+              placement="left" :keep-alive-on-hover="false" :duration="0"
+            >
               <template #trigger>
                 <n-button
                   :class="{'auto-scroll-button': true, vivid: autoScrollLog}"
                   quaternary
-                  circle
                   aria-label="Toggle auto scrolling lock"
-                  @click="autoScrollLog = !autoScrollLog"
+                  @click="onScrollButtonPress('Bottom'); autoScrollLog = !autoScrollLog;"
                   color="black"
                 >
                   <template #icon>
@@ -777,15 +801,18 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
             </n-tooltip>
 
             <n-button-group vertical class="overlay-button-group bottom-part">
-              <!--
-              <n-button @click="onScrollButtonPress('ArrowDown')" color="black" round>
-                <F7ArrowDown/>
-              </n-button>
-              -->
               <n-tooltip placement="left" :keep-alive-on-hover="false" :duration="0">
                 <template #trigger>
-                  <n-button @click="onScrollButtonPress('PageDown')" color="black" round>
+                  <n-button @click="onScrollButtonPress('Down')" color="black" round>
                     <F7ArrowDown/>
+                  </n-button>
+                </template>
+                {{ $t('status.scrollDown') }}
+              </n-tooltip>
+              <n-tooltip placement="left" :keep-alive-on-hover="false" :duration="0">
+                <template #trigger>
+                  <n-button @click="onScrollButtonPress('PageDown')" color="black" class="page">
+                    <FaSolidAngleDoubleDown/>
                   </n-button>
                 </template>
                 {{ $t('status.scrollPageDown') }}
@@ -871,14 +898,19 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
         class="expand-container"
         v-if="isLogLargerThanContainer || expanded"
       >
-        <n-button v-if="true" 
-          @click="(expanded=!expanded) && onExpandClick()" 
-          class="expand-button"
-          :style="{height: logItemHeight + 'px'}"
-        >
-          <OcticonTriangleDown16 v-if="!expanded"/>
-          <OcticonTriangleUp16 v-else/>
-        </n-button>
+        <n-tooltip placement="bottom">
+          <template #trigger>
+            <n-button v-if="true" 
+              @click="(expanded=!expanded) && onExpandClick()" 
+              class="expand-button"
+              :style="{height: logItemHeight + 'px'}"
+            >
+              <OcticonTriangleDown16 v-if="!expanded"/>
+              <OcticonTriangleUp16 v-else/>
+            </n-button>
+          </template>
+          {{ expanded ? $t('status.shrinkLog') : $t('status.expandLog') }}
+        </n-tooltip>
       </n-flex>
     </n-flex>
   </n-collapse-item>
@@ -966,20 +998,6 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
     }
   }
 
-  &.expand-log {
-    /* change max-height by logMaxHeight */
-
-    /*
-    border: 1px dashed #BBB;
-    border-width: 0px 1px 0px;
-    */
-    /*
-    th {
-      background-color: white;
-    }
-    */
-  }
-
   .overlay-buttons {
     position: absolute;
     left: 0;
@@ -994,32 +1012,33 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
     .overlay-bottom-controls {
       height: 50%;
       justify-content: flex-end;
-    }
 
-    .overlay-bottom-controls .auto-scroll-button {
-      flex: 0 0 32px;
-      width: 32px;
-      height: 32px;
-    }
-    .overlay-bottom-controls .vivid {
-      background-color: silver;
-      opacity: 0.6;
-    }
+      .overlay-button-group {
+        height: 100%;
+      }
 
-    .overlay-bottom-controls .overlay-button-group {
-      height: 100%;
-    }
+      .auto-scroll-button {
+        max-height: 32px;
+        width: auto;
+        height: 50%;
+        min-height: 24px;
+        aspect-ratio: 3 / 4;
+        border-radius: 20%;
 
-    .auto-scroll-icon {
-      position: relative;
-      display: inline-flex;
-    }
-
-    .auto-scroll-lock-icon {
-      position: absolute;
-      top: -10px;
-      right: -8px;
-      font-size: 11px;
+        .auto-scroll-icon {
+          font-size: 1em;
+        }
+        .auto-scroll-lock-icon {
+          font-size: 0.5em;
+          position: absolute;
+          top: -10px;
+          right: -8px;
+        }
+      }
+      .vivid {
+        background-color: silver;
+        opacity: 0.6;
+      }
     }
 
     .overlay-button-group {
@@ -1033,11 +1052,12 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
     button {
       opacity: 0.4;
       padding: 4px;
-      height: 60%;
+      height: 40%;
       max-height: 100px;
       pointer-events: auto;
       &.page {
         height: 30%;
+        font-size: 60%;
       }
       &.edge {
         height: 10%;
@@ -1053,6 +1073,14 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
     position: absolute;
     max-width: 800px;
     width: 50%;
+  }
+}
+
+@media screen and (max-width: 580px) {
+  .hide-on-mobile {
+    * {
+      display: none;
+    }
   }
 }
 

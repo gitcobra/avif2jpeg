@@ -99,6 +99,8 @@
   },
   "status": {
     "scrollToTop": "Siirry lokin alkuun",
+    "scrollUp": "Ylös",
+    "scrollDown": "Alas",
     "scrollPageUp": "Sivu ylöspäin",
     "scrollPageDown": "Sivu alaspäin",
     "scrollToBottom": "Siirry lokin loppuun",
@@ -159,6 +161,7 @@
     "log": "Loki",
     "Output": "Lähtötulokset",
     "expandLog": "Laajenna lokikoko",
+    "shrinkLog": "Pienennä lokin kokoa",
     "autoScroll": "automaattinen rulla",
     "sortByStatus": "status",
     "sortByName": "nimi",

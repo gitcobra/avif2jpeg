@@ -51,6 +51,8 @@
   "convertAgain": "もう一度変換",
   "status": {
     "scrollToTop": "ログの先頭へ移動",
+    "scrollUp": "上へ",
+    "scrollDown": "下へ",
     "scrollPageUp": "1ページ上へ移動",
     "scrollPageDown": "1ページ下へ移動",
     "scrollToBottom": "ログの末尾へ移動",
@@ -111,6 +113,7 @@
     "Progress": "進行状況",
     "Output": "出力結果",
     "expandLog": "ログサイズを拡張",
+    "shrinkLog": "ログサイズを縮小",
     "autoScroll": "自動スクロール",
     "sortByStatus": "ステータス",
     "sort": "リストを並べ替え",

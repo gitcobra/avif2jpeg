@@ -45,6 +45,8 @@
   "copiedDataURLMessage": "La imagen convertida se copió a su portapapeles como DataURL.",
   "status": {
     "scrollToTop": "Ir al principio del registro",
+    "scrollUp": "Arriba",
+    "scrollDown": "Abajo",
     "scrollPageUp": "Subir una página",
     "scrollPageDown": "Bajar una página",
     "scrollToBottom": "Ir al final del registro",
@@ -105,6 +107,7 @@
     "log": "Registro",
     "Output": "Resultados de salida",
     "expandLog": "expandir el tamaño del registro",
+    "shrinkLog": "reducir el tamaño del registro",
     "autoScroll": "desplazamiento automático",
     "sortByStatus": "estado",
     "sortByName": "nombre",

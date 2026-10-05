@@ -51,6 +51,8 @@
   "convertAgain": "Convertiți din nou",
   "status": {
     "scrollToTop": "Mergeți la începutul jurnalului",
+    "scrollUp": "În sus",
+    "scrollDown": "În jos",
     "scrollPageUp": "O pagină în sus",
     "scrollPageDown": "O pagină în jos",
     "scrollToBottom": "Mergeți la sfârșitul jurnalului",
@@ -80,6 +82,7 @@
     "Progress": "Progres",
     "PreviewImage": "Previzualizați imaginile",
     "Log": "Jurnal",
+    "shrinkLog": "Micșorează dimensiunea jurnalului",
     "Output": "Rezultate de ieșire",
     "sortByName": "nume",
     "sortBySize": "dimensiune",

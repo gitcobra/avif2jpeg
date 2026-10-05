@@ -45,6 +45,8 @@
   "copiedDataURLMessage": "Gambar yang dikonversi disalin ke clipboard Anda sebagai DataURL.",
   "status": {
     "scrollToTop": "Ke bagian atas log",
+    "scrollUp": "Ke atas",
+    "scrollDown": "Ke bawah",
     "scrollPageUp": "Naik satu halaman",
     "scrollPageDown": "Turun satu halaman",
     "scrollToBottom": "Ke bagian bawah log",
@@ -105,6 +107,7 @@
     "log": "Log",
     "Output": "Hasil output",
     "expandLog": "Perluas ukuran log",
+    "shrinkLog": "Perkecil ukuran log",
     "autoScroll": "gulir otomatis",
     "sortByStatus": "status",
     "sortByName": "nama",

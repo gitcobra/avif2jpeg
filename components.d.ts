@@ -8,6 +8,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    BasilPauseSolid: typeof import('~icons/basil/pause-solid')['default']
     BxDownArrow: typeof import('~icons/bx/down-arrow')['default']
     CanvasThumbnail: typeof import('./src/components/canvas-thumbnail.vue')['default']
     Changelog: typeof import('./src/components/header/changelog.vue')['default']
@@ -17,6 +18,7 @@ declare module 'vue' {
     F7ArrowDown: typeof import('~icons/f7/arrow-down')['default']
     F7ArrowUp: typeof import('~icons/f7/arrow-up')['default']
     FaSolidAngleDoubleDown: typeof import('~icons/fa-solid/angle-double-down')['default']
+    FaSolidAngleDoubleUp: typeof import('~icons/fa-solid/angle-double-up')['default']
     FileList: typeof import('./src/components/file-list.vue')['default']
     FileListEdit: typeof import('./src/components/file-list-edit.vue')['default']
     FileSelector: typeof import('./src/components/file-selector.vue')['default']
@@ -53,6 +55,7 @@ declare module 'vue' {
     NFlex: typeof import('naive-ui')['NFlex']
     NFloatButton: typeof import('naive-ui')['NFloatButton']
     NIcon: typeof import('naive-ui')['NIcon']
+    'NIcon<IcBaselineFlashAuto': typeof import('naive-ui')['NIcon<IcBaselineFlashAuto']
     NImage: typeof import('naive-ui')['NImage']
     NImageGroup: typeof import('naive-ui')['NImageGroup']
     NInput: typeof import('naive-ui')['NInput']

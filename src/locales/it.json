@@ -45,6 +45,8 @@
   "copiedDataURLMessage": "L'immagine convertita è stata copiata negli appunti come DataURL.",
   "status": {
     "scrollToTop": "Vai all'inizio del log",
+    "scrollUp": "Su",
+    "scrollDown": "Giù",
     "scrollPageUp": "Pagina su",
     "scrollPageDown": "Pagina giù",
     "scrollToBottom": "Vai alla fine del log",
@@ -105,6 +107,7 @@
     "log": "Registro",
     "Output": "Risultati di output",
     "expandLog": "espandere la dimensione del registro",
+    "shrinkLog": "Riduci la dimensione del registro",
     "autoScroll": "scrollo automatico",
     "sortByStatus": "stato",
     "sortByName": "nome",

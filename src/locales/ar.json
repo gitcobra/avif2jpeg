@@ -45,6 +45,8 @@
   "copiedDataURLMessage": "تم نسخ الصورة المحولة إلى الحافظة الخاصة بك باسم DataURL.",
   "status": {
     "scrollToTop": "الانتقال إلى أعلى السجل",
+    "scrollUp": "لأعلى",
+    "scrollDown": "لأسفل",
     "scrollPageUp": "الانتقال صفحة إلى أعلى",
     "scrollPageDown": "الانتقال صفحة إلى أسفل",
     "scrollToBottom": "الانتقال إلى أسفل السجل",
@@ -105,6 +107,7 @@
     "log": "سجل",
     "Output": "نتائج الإخراج",
     "expandLog": "توسيع حجم السجل",
+    "shrinkLog": "تصغير حجم السجل",
     "autoScroll": "التمرير التلقائي",
     "sortByStatus": "حالة",
     "sortByName": "اسم",

@@ -46,6 +46,8 @@
   "copiedDataURLMessage": "轉換後的影像已複製為 DataURL 到剪貼簿。",
   "status": {
     "scrollToTop": "移至日誌頂端",
+    "scrollUp": "往上",
+    "scrollDown": "往下",
     "scrollPageUp": "向上翻頁",
     "scrollPageDown": "向下翻頁",
     "scrollToBottom": "移至日誌底端",
@@ -106,6 +108,7 @@
     "log": "紀錄",
     "Output": "輸出結果",
     "expandLog": "擴展日誌大小",
+    "shrinkLog": "縮小日誌大小",
     "autoScroll": "自動滾動",
     "sortByStatus": "地位",
     "sortByName": "姓名",

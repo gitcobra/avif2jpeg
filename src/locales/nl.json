@@ -45,6 +45,8 @@
   "copiedDataURLMessage": "De geconverteerde afbeelding is als DataURL naar uw klembord gekopieerd.",
   "status": {
     "scrollToTop": "Naar het begin van het logboek",
+    "scrollUp": "Omhoog",
+    "scrollDown": "Omlaag",
     "scrollPageUp": "Een pagina omhoog",
     "scrollPageDown": "Een pagina omlaag",
     "scrollToBottom": "Naar het einde van het logboek",
@@ -105,6 +107,7 @@
     "log": "Logboek",
     "Output": "Uitgangsresultaten",
     "expandLog": "Breid de loggrootte uit",
+    "shrinkLog": "Verklein de loggrootte",
     "autoScroll": "automatisch scrollen",
     "sortByStatus": "status",
     "sortByName": "naam",

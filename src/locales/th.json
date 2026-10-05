@@ -51,6 +51,8 @@
   "convertAgain": "แปลงอีกครั้ง",
   "status": {
     "scrollToTop": "ไปด้านบนของบันทึก",
+    "scrollUp": "ขึ้น",
+    "scrollDown": "ลง",
     "scrollPageUp": "ขึ้นหนึ่งหน้า",
     "scrollPageDown": "ลงหนึ่งหน้า",
     "scrollToBottom": "ไปด้านล่างของบันทึก",
@@ -80,6 +82,7 @@
     "Progress": "ความคืบหน้า",
     "PreviewImage": "ดูตัวอย่างรูปภาพ",
     "Log": "บันทึก",
+    "shrinkLog": "ลดขนาดบันทึก",
     "Output": "ผลลัพธ์เอาต์พุต",
     "sortByName": "ชื่อ",
     "sortBySize": "ขนาด",

@@ -45,6 +45,8 @@
   "copiedDataURLMessage": "परिवर्तित छवि को आपके क्लिपबोर्ड पर DataURL के रूप में कॉपी किया गया था।",
   "status": {
     "scrollToTop": "लॉग के शीर्ष पर जाएं",
+    "scrollUp": "ऊपर",
+    "scrollDown": "नीचे",
     "scrollPageUp": "एक पृष्ठ ऊपर जाएं",
     "scrollPageDown": "एक पृष्ठ नीचे जाएं",
     "scrollToBottom": "लॉग के अंत पर जाएं",
@@ -105,6 +107,7 @@
     "log": "लॉग",
     "Output": "आउटपुट परिणाम",
     "expandLog": "लॉग आकार का विस्तार करें",
+    "shrinkLog": "लॉग का आकार घटाएं",
     "autoScroll": "स्वतः स्क्रॉल",
     "sortByStatus": "स्थिति",
     "sortByName": "नाम",

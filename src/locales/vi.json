@@ -51,6 +51,8 @@
   "convertAgain": "Chuyển đổi lại",
   "status": {
     "scrollToTop": "Đi đến đầu nhật ký",
+    "scrollUp": "Lên",
+    "scrollDown": "Xuống",
     "scrollPageUp": "Cuộn lên một trang",
     "scrollPageDown": "Cuộn xuống một trang",
     "scrollToBottom": "Đi đến cuối nhật ký",
@@ -111,6 +113,7 @@
     "Progress": "Tiến trình",
     "Output": "Kết quả đầu ra",
     "expandLog": "Mở rộng kích thước nhật ký",
+    "shrinkLog": "Thu nhỏ kích thước nhật ký",
     "autoScroll": "tự động cuộn",
     "sortByStatus": "trạng thái",
     "sort": "Sắp xếp danh sách theo",

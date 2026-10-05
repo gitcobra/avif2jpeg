@@ -45,6 +45,8 @@
   "copiedDataURLMessage": "변환된 이미지가 클립보드에 DataURL로 복사되었습니다.",
   "status": {
     "scrollToTop": "로그 맨 위로 이동",
+    "scrollUp": "위로",
+    "scrollDown": "아래로",
     "scrollPageUp": "한 페이지 위로 이동",
     "scrollPageDown": "한 페이지 아래로 이동",
     "scrollToBottom": "로그 맨 아래로 이동",
@@ -105,6 +107,7 @@
     "log": "로그",
     "Output": "출력 결과",
     "expandLog": "로그 크기를 확장합니다",
+    "shrinkLog": "로그 크기를 축소합니다",
     "autoScroll": "자동 스크롤",
     "sortByStatus": "상태",
     "sortByName": "이름",

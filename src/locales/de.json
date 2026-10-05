@@ -45,6 +45,8 @@
   "copiedDataURLMessage": "Das konvertierte Bild wurde als DataURL in Ihre Zwischenablage kopiert.",
   "status": {
     "scrollToTop": "Zum Anfang des Protokolls",
+    "scrollUp": "Nach oben",
+    "scrollDown": "Nach unten",
     "scrollPageUp": "Eine Seite nach oben",
     "scrollPageDown": "Eine Seite nach unten",
     "scrollToBottom": "Zum Ende des Protokolls",
@@ -105,6 +107,7 @@
     "log": "Protokoll",
     "Output": "Ausgangsergebnisse",
     "expandLog": "Protokollgröße erweitern",
+    "shrinkLog": "Protokollgröße verkleinern",
     "autoScroll": "Auto-Scroll",
     "sortByStatus": "Status",
     "sortByName": "Name",

@@ -52,6 +52,8 @@
   "convertAgain": "Convert Again",
   "status": {
     "scrollToTop": "Go to top of log",
+    "scrollUp": "Up",
+    "scrollDown": "Down",
     "scrollPageUp": "Page up",
     "scrollPageDown": "Page down",
     "scrollToBottom": "Go to bottom of log",
@@ -112,6 +114,7 @@
     "log": "Log",
     "Output": "Output Results",
     "expandLog": "expand log size",
+    "shrinkLog": "shrink log size",
     "autoScroll": "auto-scroll",
     "sortByStatus": "status",
     "sort": "Sort list by",

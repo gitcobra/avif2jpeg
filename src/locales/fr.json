@@ -45,6 +45,8 @@
   "copiedDataURLMessage": "L'image convertie a été copiée dans votre presse-papiers en tant que DataURL.",
   "status": {
     "scrollToTop": "Aller au début du journal",
+    "scrollUp": "Haut",
+    "scrollDown": "Bas",
     "scrollPageUp": "Monter d'une page",
     "scrollPageDown": "Descendre d'une page",
     "scrollToBottom": "Aller à la fin du journal",
@@ -105,6 +107,7 @@
     "log": "Journal",
     "Output": "Résultats de sortie",
     "expandLog": "Développer la taille du journal",
+    "shrinkLog": "Réduire la taille du journal",
     "autoScroll": "défilement automatique",
     "sortByStatus": "statut",
     "sortByName": "nom",

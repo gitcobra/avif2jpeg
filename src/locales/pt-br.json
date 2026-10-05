@@ -45,6 +45,8 @@
   "copiedDataURLMessage": "A imagem convertida foi copiada para a área de transferência como DataURL.",
   "status": {
     "scrollToTop": "Ir para o início do registro",
+    "scrollUp": "Para cima",
+    "scrollDown": "Para baixo",
     "scrollPageUp": "Subir uma página",
     "scrollPageDown": "Descer uma página",
     "scrollToBottom": "Ir para o fim do registro",
@@ -105,6 +107,7 @@
     "log": "Registro",
     "Output": "Resultados de saída",
     "expandLog": "Expandir o registro",
+    "shrinkLog": "Reduzir o tamanho do registro",
     "autoScroll": "rolagem automática",
     "sortByStatus": "status",
     "sortByName": "nome",
