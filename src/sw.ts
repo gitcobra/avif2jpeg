@@ -127,7 +127,8 @@ registerRoute(
   ({ request, url }) => (
       cacheFilesWhenPWAInstall.includes(url.pathname)
     ),
-  defaultStrategy
+  //defaultStrategy
+  netFirstStrategy
 );
 
 
