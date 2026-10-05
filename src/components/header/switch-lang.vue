@@ -104,8 +104,8 @@ async function initializeLanguage() {
 
 async function checkAppropriateLang() {
   const currentPath = router.currentRoute.value.path || '';
-  const clang = currentPath.match(/([^/]+)\/?$/)?.[1] || '';
-  if( !clang ) {
+  const currentPathLang = currentPath.match(/([^/]+)\/?$/)?.[1] || '';
+  if( !currentPathLang ) {
     return;
   }
 
@@ -113,7 +113,7 @@ async function checkAppropriateLang() {
   let prior = 0;
   for(; prior < blangs.length; prior++ ) {
     const lang = blangs[prior];
-    if( clang === lang ) {
+    if( currentPathLang === lang ) {
       break;
     }
   }
@@ -122,14 +122,25 @@ async function checkAppropriateLang() {
     return;
   }
 
-  const len = Math.max(prior, blangs.length);
+  const len = Math.min(prior, blangs.length);
   for( let i = 0; i < len; i++ ) {
     const lang = blangs[i];
-    if( await loadLocaleMessages(lang) ) {
-      noticedLang.value = lang;
-      langNoticeFlag.value = true;
-      invertRef(langNoticeFlag, 15000);
-      break;
+    const candidates = [lang];
+    const baseLang = lang.split('-')[0];
+    if( baseLang !== lang ) {
+      candidates.push(baseLang);
+    }
+
+    for(const candidate of candidates) {
+      if( candidate === currentPathLang ) {
+        return;
+      }
+      if( LANG_ID_LIST.includes(candidate) && await loadLocaleMessages(candidate) ) {
+        noticedLang.value = candidate;
+        langNoticeFlag.value = true;
+        invertRef(langNoticeFlag, 15000);
+        return;
+      }
     }
   }
 }
@@ -360,13 +371,18 @@ function changeRoute(val: string) {
       </n-flex>
     </template>
     
-    
-    <span>
-      {{ $t('langNotice', {}, {locale: noticedLang}) }}
-      <n-button @click="changeRoute(noticedLang); langNoticeFlag = false;" type="primary">
-        {{ $t('apply', {}, {locale: noticedLang}) }}
-      </n-button>
-    </span>
+    <template #default>
+      <n-text type="info">
+        {{ $t('langNotice', {}, {locale: noticedLang}) }}
+        <n-button
+          @click="changeRoute(noticedLang); langNoticeFlag = false;"
+          size="small"
+          type="info"
+        >
+          {{ $t('apply', {}, {locale: noticedLang}) }}
+        </n-button>
+      </n-text>
+    </template>
   </n-popover>
 </template>
 
