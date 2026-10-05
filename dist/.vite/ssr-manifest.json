@@ -12551,7 +12551,7 @@
     "/avif2jpeg/dist/assets/Roboto-Medium-DPwG85_g.ttf",
     "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
   ],
-  "src/components/converter/status/status.progress.vue?vue&type=style&index=0&scoped=9e1246ef&lang.scss": [
+  "src/components/converter/status/status.progress.vue?vue&type=style&index=0&scoped=e483e4eb&lang.scss": [
     "/avif2jpeg/dist/assets/Roboto-Regular-f0lhpOnz.ttf",
     "/avif2jpeg/dist/assets/Roboto-Medium-DPwG85_g.ttf",
     "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
@@ -12581,7 +12581,7 @@
     "/avif2jpeg/dist/assets/Roboto-Medium-DPwG85_g.ttf",
     "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
   ],
-  "src/components/converter/status/status.vue?vue&type=style&index=0&scoped=d43ba08f&lang.css": [
+  "src/components/converter/status/status.vue?vue&type=style&index=0&scoped=cc34d642&lang.css": [
     "/avif2jpeg/dist/assets/Roboto-Regular-f0lhpOnz.ttf",
     "/avif2jpeg/dist/assets/Roboto-Medium-DPwG85_g.ttf",
     "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
@@ -12802,13 +12802,13 @@
     "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
   ],
   "src/locales/ar.json": [
-    "/avif2jpeg/dist/assets/ar-3VVSJaZ2.js"
+    "/avif2jpeg/dist/assets/ar-pq-eVM60.js"
   ],
   "src/locales/cs.json": [
-    "/avif2jpeg/dist/assets/cs-BRU4E00Y.js"
+    "/avif2jpeg/dist/assets/cs-Dfp1Kndi.js"
   ],
   "src/locales/de.json": [
-    "/avif2jpeg/dist/assets/de-CwfYNCjA.js"
+    "/avif2jpeg/dist/assets/de-B0-mPj7K.js"
   ],
   "src/locales/en.json": [
     "/avif2jpeg/dist/assets/Roboto-Regular-f0lhpOnz.ttf",
@@ -12816,76 +12816,76 @@
     "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
   ],
   "src/locales/es.json": [
-    "/avif2jpeg/dist/assets/es-BTKZS5Vd.js"
+    "/avif2jpeg/dist/assets/es-D9o1WyW_.js"
   ],
   "src/locales/fa.json": [
-    "/avif2jpeg/dist/assets/fa-CtxNT2A3.js"
+    "/avif2jpeg/dist/assets/fa-BBxFgLje.js"
   ],
   "src/locales/fi.json": [
-    "/avif2jpeg/dist/assets/fi-C3vTg0-R.js"
+    "/avif2jpeg/dist/assets/fi-D56fHQ-X.js"
   ],
   "src/locales/fr.json": [
-    "/avif2jpeg/dist/assets/fr-DuHcGey6.js"
+    "/avif2jpeg/dist/assets/fr-BqrqB_g4.js"
   ],
   "src/locales/hi.json": [
-    "/avif2jpeg/dist/assets/hi-Bc6aSsMb.js"
+    "/avif2jpeg/dist/assets/hi-CggMxRVg.js"
   ],
   "src/locales/id.json": [
-    "/avif2jpeg/dist/assets/id-DD18XOZt.js"
+    "/avif2jpeg/dist/assets/id-D1-azfjZ.js"
   ],
   "src/locales/it.json": [
-    "/avif2jpeg/dist/assets/it-jZHhED_u.js"
+    "/avif2jpeg/dist/assets/it-D_uRuYsF.js"
   ],
   "src/locales/ja.json": [
-    "/avif2jpeg/dist/assets/ja-DvLsRJIj.js"
+    "/avif2jpeg/dist/assets/ja-ChKdU9C1.js"
   ],
   "src/locales/ko.json": [
-    "/avif2jpeg/dist/assets/ko-CbrlI9ac.js"
+    "/avif2jpeg/dist/assets/ko-DOCadRa5.js"
   ],
   "src/locales/nl.json": [
-    "/avif2jpeg/dist/assets/nl-CHIBf_XM.js"
+    "/avif2jpeg/dist/assets/nl-BynCHyfg.js"
   ],
   "src/locales/pl.json": [
-    "/avif2jpeg/dist/assets/pl-DPnmDo3C.js"
+    "/avif2jpeg/dist/assets/pl-GT1SjAza.js"
   ],
   "src/locales/pt-br.json": [
-    "/avif2jpeg/dist/assets/pt-br-Bei_vzZK.js"
+    "/avif2jpeg/dist/assets/pt-br-CGFQPIr0.js"
   ],
   "src/locales/pt.json": [
-    "/avif2jpeg/dist/assets/pt-CO49emDU.js"
+    "/avif2jpeg/dist/assets/pt-DBVv5pf1.js"
   ],
   "src/locales/ro.json": [
-    "/avif2jpeg/dist/assets/ro--m8cAXoi.js"
+    "/avif2jpeg/dist/assets/ro-LPeVWB40.js"
   ],
   "src/locales/ru.json": [
-    "/avif2jpeg/dist/assets/ru-BV8KJCxI.js"
+    "/avif2jpeg/dist/assets/ru-CT_sLIoa.js"
   ],
   "src/locales/sv.json": [
-    "/avif2jpeg/dist/assets/sv-Dr6qj2xo.js"
+    "/avif2jpeg/dist/assets/sv-BPYrk_5b.js"
   ],
   "src/locales/th.json": [
-    "/avif2jpeg/dist/assets/th-hIlg7X9K.js"
+    "/avif2jpeg/dist/assets/th-vTge2kdu.js"
   ],
   "src/locales/tr.json": [
-    "/avif2jpeg/dist/assets/tr-D-8mTlYO.js"
+    "/avif2jpeg/dist/assets/tr-CHVUmKdm.js"
   ],
   "src/locales/uk.json": [
-    "/avif2jpeg/dist/assets/uk-DHLuysZM.js"
+    "/avif2jpeg/dist/assets/uk-DyuChKV8.js"
   ],
   "src/locales/vi.json": [
-    "/avif2jpeg/dist/assets/vi-BpNBB9hX.js"
+    "/avif2jpeg/dist/assets/vi-CmR1qSXA.js"
   ],
   "src/locales/zh-hant.json": [
-    "/avif2jpeg/dist/assets/zh-hant-i6-xjVrY.js"
+    "/avif2jpeg/dist/assets/zh-hant-B-6T9YQ5.js"
   ],
   "src/locales/zh-hk.json": [
-    "/avif2jpeg/dist/assets/zh-hk-DBgWC4JK.js"
+    "/avif2jpeg/dist/assets/zh-hk-loqPNh2g.js"
   ],
   "src/locales/zh-tw.json": [
-    "/avif2jpeg/dist/assets/zh-tw-D0NRjg5S.js"
+    "/avif2jpeg/dist/assets/zh-tw-BPJo4wWA.js"
   ],
   "src/locales/zh.json": [
-    "/avif2jpeg/dist/assets/zh-BhVTEFkc.js"
+    "/avif2jpeg/dist/assets/zh-CCb_KAkm.js"
   ],
   "src/main.ts": [
     "/avif2jpeg/dist/assets/Roboto-Regular-f0lhpOnz.ttf",
@@ -12908,6 +12908,16 @@
     "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
   ],
   "~icons/f7/arrow-up": [
+    "/avif2jpeg/dist/assets/Roboto-Regular-f0lhpOnz.ttf",
+    "/avif2jpeg/dist/assets/Roboto-Medium-DPwG85_g.ttf",
+    "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
+  ],
+  "~icons/fa-solid/angle-double-down": [
+    "/avif2jpeg/dist/assets/Roboto-Regular-f0lhpOnz.ttf",
+    "/avif2jpeg/dist/assets/Roboto-Medium-DPwG85_g.ttf",
+    "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
+  ],
+  "~icons/fa-solid/angle-double-up": [
     "/avif2jpeg/dist/assets/Roboto-Regular-f0lhpOnz.ttf",
     "/avif2jpeg/dist/assets/Roboto-Medium-DPwG85_g.ttf",
     "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"

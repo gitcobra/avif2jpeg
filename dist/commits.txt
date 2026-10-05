@@ -1,3 +1,12 @@
+2026-10-06 01:09:44 +0900
+v1.12.15
+
+2026-10-06 01:09:18 +0900
+refactor: make minor UI adjustments to the log
+
+2026-10-06 01:05:39 +0900
+fix: use matching language code for available language notification when locale does not match exactly
+
 2026-09-28 23:16:54 +0900
 v1.12.14
 
@@ -12,12 +21,3 @@ feat: add auto-scroll button to log view
 
 2026-09-28 18:10:31 +0900
 feat: display in/out ratio as a percentage
-
-2026-09-26 00:40:23 +0900
-v1.12.13
-
-2026-09-26 00:03:11 +0900
-style: make minor CSS adjustments
-
-2026-09-26 00:02:18 +0900
-refactor: Change service worker caching strategy to NetworkFirst
