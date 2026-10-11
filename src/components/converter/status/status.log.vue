@@ -84,6 +84,8 @@ const filteredLogList = computed(() => {
 });
 const logSizeSliderShow = useTimeoutRef(false);
 const showOverlayScrollButtons = ref(false);
+const canScrollUp = ref(true);
+const canScrollDown = ref(true);
 
 
 // sort options
@@ -271,6 +273,8 @@ function changeLogMaxHeight() {
     if( !props.opened /*|| !expanded.value*/ )
       return;
     logMaxHeightPX.value = Math.max(availModalHeight, expandedLogMinHeight.value);
+
+    updateScrollButtonAvailability();
   }, 100);
 }
 
@@ -398,6 +402,7 @@ watch(() => props.logs, () => {
   }
 
   sortListPeriodically();
+  updateScrollButtonAvailability();
 });
 
 
@@ -578,7 +583,7 @@ let prevScrollTop = -1;
 let storedLogTableScrollLeft = 0;
 let ignoreScrollLeftChangeFlag = false;
 let timeoutScrollLeftId: any = -1;
-function onLogTableScroll(ev: Event) {
+function onLogTableScroll(ev?: Event) {
   //console.log('onLogTableScroll', (ev.target as HTMLElement)?.scrollLeft, (ev.target as HTMLElement)?.scrollTop);
   calculateLogTableViewRange();
   
@@ -591,7 +596,8 @@ function onLogTableScroll(ev: Event) {
     return;
   }
 
-  const {scrollLeft=0, scrollTop=0} = scrollref.value?.scrollbarInstRef?.containerRef;
+  const {scrollLeft=0, scrollTop=0, clientHeight=0, scrollHeight=0} =
+    scrollref.value?.scrollbarInstRef?.containerRef;
   if( scrollLeft !== prevScrollLeft || prevScrollLeft < 0 ) {
     if( scrollTop === prevScrollTop || prevScrollTop < 0 ) {
       storedLogTableScrollLeft = scrollLeft;
@@ -600,6 +606,8 @@ function onLogTableScroll(ev: Event) {
   }
   prevScrollLeft = scrollLeft;
   prevScrollTop = scrollTop;
+
+  updateScrollButtonAvailability();
 
   // restore scrollLeft
   nextTick(() => {
@@ -611,6 +619,13 @@ function onLogTableScroll(ev: Event) {
         el.scrollLeft = storedLogTableScrollLeft;
     }, 2000);
   });
+}
+
+function updateScrollButtonAvailability() {
+  const {scrollTop=0, clientHeight=0, scrollHeight=0} =
+    scrollref.value?.scrollbarInstRef?.containerRef;
+  canScrollUp.value = scrollTop > 1;
+  canScrollDown.value = scrollTop + clientHeight < scrollHeight - 1;
 }
 
 function onMouseDownScrollbar(ev?: MouseEvent) {
@@ -648,7 +663,10 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
       </n-flex>
     </template>
     <template #header-extra>
-      <n-flex v-if="props.opened" align="center" justify="end" :wrap="true" style="margin-top:0.2em; margin-left:0.5em;">
+      <n-flex 
+        v-if="props.opened" align="center" justify="end" :wrap="false"
+        style="margin-top:0.2em; margin-left:0.5em;"
+      >
         
         <n-select
           v-model:value="sortValue"
@@ -670,14 +688,18 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
         </n-select>
         
         <!-- auto scroll -->
+        <!--
         <n-checkbox key="b" v-model:checked="autoScrollLog"
           @update:checked="flag => flag && scrollLogViewToBottom(true)"
           size="small" style="font-size: 0.9em;"
+
         >
           {{$t('status.autoScroll')}}
         </n-checkbox>
+        -->
 
         <!-- expand log -->
+        <!--
         <n-popover
           trigger="hover" :show="logSizeSliderShow" :disabled="!expanded"
           placement="top" :delay="0" :duration="1000"
@@ -695,7 +717,6 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
                 </n-checkbox>
               </template>
               <template #default>
-                <!-- {{$t('status.expandLogTooltip')}} -->
                 {{ $t('status.expandLog') }}
               </template>
             </n-tooltip>
@@ -713,205 +734,233 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
               :max="availDocumentHeight"
               style="z-index:3; width:100px;"
             />
-            <!--
-            <span style="width:3em; text-align: center;">
-              {{ LOG_EXPANDED_MINHEIGHT }}px
-            </span>
-            -->
           </n-flex>
         </n-popover>
+        -->
 
       </n-flex>
     </template>
     
-    <n-flex :wrap="false" align="stretch"
-      :class="{'log-container':1, 'expand-log': expanded}"
-      :style="{height:logTableViewHeight + 'px'}"
-      @keydown="onKeyPressInLogTable"
-      @mouseenter="showOverlayScrollButtons = true"
-      @mouseleave="showOverlayScrollButtons = false"
-      vertical
-      :size="1"
-      tabindex="-1"
-    >
+    
+    <!-- contents -->
+    <n-flex class="log-table-container" :size="1" :wrap="false">
       
-      <!-- scroll buttons -->
-      <Transition name="fade">
-        <n-flex
-          class="overlay-buttons"
-          vertical
-          v-show="showOverlayScrollButtons"
-          :size="0"
-          justify="space-between"
-        >
-          <n-button-group vertical class="overlay-button-group">
-            <n-tooltip placement="left" :keep-alive-on-hover="false" :duration="0">
-              <template #trigger>
-                <n-button @click="onScrollButtonPress('Top')"
-                  color="black" round class="edge"
-                >
-                  <PhCaretLineUpFill/>
-                </n-button>
-              </template>
-              {{ $t('status.scrollToTop') }}
-            </n-tooltip>
-            <n-tooltip placement="left" :keep-alive-on-hover="false" :duration="0">
-              <template #trigger>
-                <n-button @click="onScrollButtonPress('PageUp')"
-                  color="black" class="page">
-                  <FaSolidAngleDoubleUp/>
-                </n-button>
-              </template>
-              {{ $t('status.scrollPageUp') }}
-            </n-tooltip>
-            <n-tooltip placement="left" :keep-alive-on-hover="false" :duration="0">
-              <template #trigger>
-                <n-button @click="onScrollButtonPress('Up')" color="black" round>
-                  <F7ArrowUp/>
-                </n-button>
-              </template>
-              {{ $t('status.scrollUp') }}
-            </n-tooltip>
-
-          </n-button-group>
-          
-          <n-flex class="overlay-bottom-controls" :wrap="false" align="end" :size="8">
+      <!-- filelist -->
+      <Transition>
+      <n-flex :wrap="false" align="stretch"
+        vertical
+        :class="{'log-container':1}"
+        :style="{height:(logTableViewHeight + logItemHeight) + 'px'}"
+        @keydown="onKeyPressInLogTable"
+        @mouseenter="showOverlayScrollButtons = true"
+        @mouseleave="showOverlayScrollButtons = false"
+        :size="1"
+        tabindex="-1"
+      >
+        <n-flex class="log-scrollbar-container">
+          <n-scrollbar
+            ref="scrollref"
+            :distance="10"
+            :x-scrollable="true"
+            @click="onMouseDownScrollbar"
+            @wheel="autoScrollLog=false"
+            @scroll="onLogTableScroll"
+            load="handleLogLoad"
+            trigger="none"
+            :size="50"
+            class="log-scrollbar"
+            :style="{height:logTableViewHeight + 'px'}"
+          >
+            <table v-if="props.opened" class="log-table" ref="logtable">
+            <thead>
+            <tr class="log-tr label">
+              <th class="log-th" :title="$t('status.table.core')">th</th>
+              <th class="log-th">no.<!--{{$t('status.table.index')}}--></th>
+              <th style="min-width:7em;" class="log-th">{{$t('status.table.status')}}</th>
+              <th style="padding-left:2em;" class="log-th">{{$t('status.table.details')}}</th>
+              <th class="log-th">size</th>
+            </tr>
+            </thead>
             
+            <!-- converting items -->
+            <tbody ref="tbody"
+              @click="onLogTableClick"
+              @dblclick="ev => onLogTableClick(ev, true)"
+            >
+            <tr :style="logTopMarginStyle"></tr>
+            <tr
+              v-for="({
+                index, key, command, path, core, zippedIndex, completed,
+                fileId, shrinked, width, height, outputWidth, outputHeight,
+                size, outputSize
+              }, i) in filteredLogList.slice(logStartIndex, logStartIndex + logDisplayQuantity)"
+              :key="key"
+              :class="{
+                'log-tr':1, 
+                completed, 
+                selected: imageIndex === zippedIndex, 
+                stripe:(logStartIndex + i) % 2
+              }"
+              :ref="(el: any) => {if( imageIndex === zippedIndex ) currentSelectedLogNode = el}"
+              :data-index-loglist="logStartIndex + i"
+            >
+              <td class="log-td">{{ (core >= 0 ? core+1 : '-') }}</td>
+              <td class="log-td">{{ index+1 }}</td>
+              <td class="log-td">{{ command }}</td>
+              <td class="log-td">{{ path }}</td>
+              <td class="log-td log-extra" v-if="width" style="padding-left:0.5em;">
+                {{ `[${width}×${height}] (${getUnitSize(size, 0)})`}}
+                <span v-if="outputSize">
+                  →
+                  <span>
+                    ({{ (getUnitSize(outputSize, 0)) }})
+                  </span>
+                </span>
+                <span v-if="shrinked" style="color:blue">
+                  {{ ` [${outputWidth}×${outputHeight}]`}}
+                </span>
+              </td>
+              <td v-else></td>
+            </tr>
+            <tr :style="logBottomMarginStyle"></tr>
+            </tbody>
+            </table>
+            <!-- <div style="height:1em"></div> -->
+
             <!-- auto scroll button -->
-            <n-tooltip v-if="processing"
+            <n-tooltip
+              v-if="processing"
               placement="left" :keep-alive-on-hover="false" :duration="0"
             >
               <template #trigger>
-                <n-button
-                  :class="{'auto-scroll-button': true, vivid: autoScrollLog}"
-                  quaternary
-                  aria-label="Toggle auto scrolling lock"
-                  @click="onScrollButtonPress('Bottom'); autoScrollLog = !autoScrollLog;"
-                  color="black"
-                >
-                  <template #icon>
-                    <span class="auto-scroll-icon">
-                      <IcBaselineFlashAuto />
-                      <MaterialSymbolsLock v-if="autoScrollLog" class="auto-scroll-lock-icon" />
-                    </span>
-                  </template>
-                </n-button>
+                  <n-button
+                    :text-color="autoScrollLog ? 'white' : 'gray'"
+                    :color="autoScrollLog ? 'gray' : 'silver'"
+                    _v-show="showOverlayScrollButtons || autoScrollLog"
+                    :class="{'auto-scroll-button': true, vivid: autoScrollLog}"
+                    aria-label="Toggle auto scrolling lock"
+                    @click.stop="scrollLogViewToBottom(); autoScrollLog = !autoScrollLog;"
+                  >
+                    <template #icon>
+                      <n-flex
+                        class="auto-scroll-icon" justify="center" align="center" vertical :size="0"
+                      >
+                          <FluentMdl2ScrollUpDown/>
+                          <!--
+                          <MaterialSymbolsLock v-if="autoScrollLog" class="auto-scroll-lock-icon" />
+                          -->
+                      </n-flex>
+                    </template>
+                  </n-button>
               </template>
               {{ $t('status.autoScroll') }}
             </n-tooltip>
 
-            <n-button-group vertical class="overlay-button-group bottom-part">
-              <n-tooltip placement="left" :keep-alive-on-hover="false" :duration="0">
-                <template #trigger>
-                  <n-button @click="onScrollButtonPress('Down')" color="black" round>
-                    <F7ArrowDown/>
-                  </n-button>
-                </template>
-                {{ $t('status.scrollDown') }}
-              </n-tooltip>
-              <n-tooltip placement="left" :keep-alive-on-hover="false" :duration="0">
-                <template #trigger>
-                  <n-button @click="onScrollButtonPress('PageDown')" color="black" class="page">
-                    <FaSolidAngleDoubleDown/>
-                  </n-button>
-                </template>
-                {{ $t('status.scrollPageDown') }}
-              </n-tooltip>
-              <n-tooltip placement="left" :keep-alive-on-hover="false" :duration="0">
-                <template #trigger>
-                  <n-button @click="onScrollButtonPress('Bottom')" color="black" round class="edge">
-                    <PhCaretLineDownFill/>
-                  </n-button>
-                </template>
-                {{ $t('status.scrollToBottom') }}
-              </n-tooltip>
-            </n-button-group>
-          </n-flex>
+          </n-scrollbar>
         </n-flex>
+
+        <!-- expand button -->
+        <n-flex
+          justify="center"
+          :style="{marginBottom: (logItemHeight) + 'px'}"
+          class="expand-container"
+          v-if="isLogLargerThanContainer || expanded"
+        >
+          <n-tooltip placement="bottom">
+            <template #trigger>
+              <n-button v-if="true" 
+                @click="(expanded=!expanded) && onExpandClick()" 
+                class="expand-button"
+                :style="{height: logItemHeight + 'px'}"
+              >
+                <OcticonTriangleDown16 v-if="!expanded"/>
+                <OcticonTriangleUp16 v-else/>
+              </n-button>
+            </template>
+            {{ expanded ? $t('status.shrinkLog') : $t('status.expandLog') }}
+          </n-tooltip>
+        </n-flex>
+
+      </n-flex>
       </Transition>
 
-      <!-- filelist table -->
-      <n-scrollbar
-        ref="scrollref"
-        :distance="10"
-        :x-scrollable="true"
-        @mousedown.capture="onMouseDownScrollbar"
-        @wheel="autoScrollLog=false"
-        @scroll="onLogTableScroll"
-        load="handleLogLoad"
-        trigger="none"
-        style="z-index:2; padding-right:10px; height:100%; position: relative;"
-        :size="50"
-        :style="{height:logTableViewHeight + 'px'}"
-      >
-        <table v-if="props.opened" class="log-table" ref="logtable">
-        <thead>
-        <tr class="log-tr label">
-          <th class="log-th" :title="$t('status.table.core')">th</th>
-          <th class="log-th">no.<!--{{$t('status.table.index')}}--></th>
-          <th style="min-width:7em;" class="log-th">{{$t('status.table.status')}}</th>
-          <th style="padding-left:2em;" class="log-th">{{$t('status.table.details')}}</th>
-          <th class="log-th">size</th>
-        </tr>
-        </thead>
-        
-        <!-- converting items -->
-        <tbody ref="tbody"
-          @click="onLogTableClick"
-          @dblclick="ev => onLogTableClick(ev, true)"
-        >
-        <tr :style="logTopMarginStyle"></tr>
-        <tr
-          v-for="({index, key, command, path, core, zippedIndex, completed, fileId, shrinked, width, height, outputWidth, outputHeight, size, outputSize}, i) in filteredLogList.slice(logStartIndex, logStartIndex + logDisplayQuantity)"
-          :key="key"
-          :class="{'log-tr':1, completed, selected:imageIndex === zippedIndex, stripe:(logStartIndex + i) % 2}"
-          :ref="(el: any) => {if( imageIndex === zippedIndex ) currentSelectedLogNode = el}"
-          :data-index-loglist="logStartIndex + i"
-        >
-          <td class="log-td">{{ (core >= 0 ? core+1 : '-') }}</td>
-          <td class="log-td">{{ index+1 }}</td>
-          <td class="log-td">{{ command }}</td>
-          <td class="log-td">{{ path }}</td>
-          <td class="log-td log-extra" v-if="width" style="padding-left:0.5em;">
-            {{ `[${width}×${height}] (${getUnitSize(size, 0)})`}}
-            <span v-if="outputSize">
-              →
-              <span>
-                ({{ (getUnitSize(outputSize, 0)) }})
-              </span>
-            </span>
-            <span v-if="shrinked" style="color:blue">
-              {{ ` [${outputWidth}×${outputHeight}]`}}
-            </span>
-          </td>
-          <td v-else></td>
-        </tr>
-        <tr :style="logBottomMarginStyle"></tr>
-        </tbody>
-        </table>
-        <!-- <div style="height:1em"></div> -->
-      </n-scrollbar>
-
+      <!-- scroll buttons -->
       <n-flex
-        justify="center"
-        :style="{marginBottom: (logItemHeight) + 'px'}"
-        class="expand-container"
-        v-if="isLogLargerThanContainer || expanded"
+        class="overlay-buttons"
+        vertical
+        :size="0"
+        justify="space-between"
       >
-        <n-tooltip placement="bottom">
-          <template #trigger>
-            <n-button v-if="true" 
-              @click="(expanded=!expanded) && onExpandClick()" 
-              class="expand-button"
-              :style="{height: logItemHeight + 'px'}"
-            >
-              <OcticonTriangleDown16 v-if="!expanded"/>
-              <OcticonTriangleUp16 v-else/>
-            </n-button>
-          </template>
-          {{ expanded ? $t('status.shrinkLog') : $t('status.expandLog') }}
-        </n-tooltip>
+        <n-button-group vertical class="overlay-button-group">
+          <n-tooltip placement="left" :keep-alive-on-hover="false" :duration="100">
+            <template #trigger>
+              <n-button @click="onScrollButtonPress('Top')"
+                round class="edge"
+                :disabled="!canScrollUp"
+              >
+                <PhCaretLineUpFill/>
+              </n-button>
+            </template>
+            {{ $t('status.scrollToTop') }}
+          </n-tooltip>
+          <n-tooltip placement="left" :keep-alive-on-hover="false" :duration="0">
+            <template #trigger>
+              <n-button @click="onScrollButtonPress('PageUp')"
+                class="page"
+                :disabled="!canScrollUp"
+              >
+                <FaSolidAngleDoubleUp/>
+              </n-button>
+            </template>
+            {{ $t('status.scrollPageUp') }}
+          </n-tooltip>
+          <n-tooltip placement="left" :keep-alive-on-hover="false" :duration="0">
+            <template #trigger>
+              <n-button @click="onScrollButtonPress('Up')" round
+                :disabled="!canScrollUp"
+              >
+                <F7ArrowUp/>
+              </n-button>
+            </template>
+            {{ $t('status.scrollUp') }}
+          </n-tooltip>
+
+        </n-button-group>
+        
+        <n-button-group vertical class="overlay-button-group bottom-part">
+          <n-tooltip placement="left" :keep-alive-on-hover="false" :duration="0">
+            <template #trigger>
+              <n-button @click="onScrollButtonPress('Down')" round
+                :disabled="!canScrollDown"
+              >
+                <F7ArrowDown/>
+              </n-button>
+            </template>
+            {{ $t('status.scrollDown') }}
+          </n-tooltip>
+          <n-tooltip placement="left" :keep-alive-on-hover="false" :duration="0">
+            <template #trigger>
+              <n-button @click="onScrollButtonPress('PageDown')" class="page"
+                :disabled="!canScrollDown"
+              >
+                <FaSolidAngleDoubleDown/>
+              </n-button>
+            </template>
+            {{ $t('status.scrollPageDown') }}
+          </n-tooltip>
+          <n-tooltip placement="left" :keep-alive-on-hover="false" :duration="0">
+            <template #trigger>
+              <n-button @click="onScrollButtonPress('Bottom')" round class="edge"
+                :disabled="!canScrollDown"
+              >
+                <PhCaretLineDownFill/>
+              </n-button>
+            </template>
+            {{ $t('status.scrollToBottom') }}
+          </n-tooltip>
+        </n-button-group>
       </n-flex>
+
     </n-flex>
   </n-collapse-item>
 
@@ -919,95 +968,109 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
 
 <style lang="scss">
 
-.log-container {
-  position: relative;
-  overflow: hidden;
-  font-size: 1rem;
-  height: 110px;
-
-  transition: all .2s ease;
+.log-table-container {
+  flex-grow: 1;
   margin: -1em -1em 4px 0px;
-  /*height: 7em;*/
 
-  &:focus {
-    outline: 0px;
+  .log-container {
+    flex-grow: 1;
+    position: relative;
+    overflow: hidden;
+    font-size: 1rem;
+    height: 110px;
+    transition: all .2s ease;
+
+    &:focus {
+      outline: 0px;
+    }
+
+    /* log table */
+    .log-table {
+      z-index: 1;
+      position:relative;
+      font-size: 0.7rem;
+      line-height: 0.7rem;
+      white-space: nowrap;
+      border-collapse: collapse;
+      width: 100%;
+      
+      .completed {
+        cursor: pointer;
+      }
+      .stripe {
+        background-color: #CCCCCC55;
+      }
+      .selected {
+        background-color: #29a36155;
+        /*color: white;*/
+      }
+      .label {
+        position:sticky;
+        top:0px;
+        
+        .log-th {
+          color: #666;
+          padding: 0px 3px 3px;
+          background-color: white;
+        }
+        .log-th:nth-of-type(4) {
+          text-align: left;
+          width: 250px;
+        }
+      }
+      .blank-space {
+        height: 1em;
+      }
+      td:nth-of-type(n+1) {
+        width: 1em;
+        border-right: 1px dashed #CCC;
+        border-bottom: 1px dashed #CCC;
+      }
+      td:last-of-type {
+        border-right: 0px;
+      }
+      tr:nth-last-of-type(2) td {
+        border-bottom: 0px;
+      }
+      .log-td {
+        border-left: 1px dotted #CCC;
+        &:first-of-type, &:nth-of-type(2) {
+          text-align: right;
+          font-family: v-mono;
+        }
+        &:first-of-type {
+          border-left: none;
+        }
+        &:nth-of-type(4) {
+          width: 100%;
+        }
+      }
+      .log-extra {
+        
+      }
+    }
   }
-  /* log table */
-  .log-table {
-    z-index: 1;
-    position:relative;
-    font-size: 0.7rem;
-    line-height: 0.7rem;
-    white-space: nowrap;
-    border-collapse: collapse;
-    width: 100%;
+
+  .log-scrollbar-container {
+    z-index: 2;
+    position: relative;
+    overflow: hidden;
     
-    .completed {
-      cursor: pointer;
-    }
-    .stripe {
-      background-color: #CCCCCC55;
-    }
-    .selected {
-      background-color: #29a36155;
-      /*color: white;*/
-    }
-    .label {
-      position:sticky;
-      top:0px;
-      
-      .log-th {
-        color: #666;
-        padding: 0px 3px 3px;
-        background-color: white;
-      }
-      .log-th:nth-of-type(4) {
-        text-align: left;
-        width: 250px;
-      }
-    }
-    .blank-space {
-      height: 1em;
-    }
-    td:nth-of-type(n+1) {
-      width: 1em;
-      border-right: 1px dashed #CCC;
-      border-bottom: 1px dashed #CCC;
-    }
-    td:last-of-type {
-      border-right: 0px;
-    }
-    tr:nth-last-of-type(2) td {
-      border-bottom: 0px;
-    }
-    .log-td {
-      border-left: 1px dotted #CCC;
-      &:first-of-type, &:nth-of-type(2) {
-        text-align: right;
-        font-family: v-mono;
-      }
-      &:first-of-type {
-        border-left: none;
-      }
-      &:nth-of-type(4) {
-        width: 100%;
-      }
-    }
-    .log-extra {
-      
+    .log-scrollbar {
+      width: 100%;
+      padding-right: 10px;
+      padding-bottom: 10px;
+      position: relative;
     }
   }
 
   .overlay-buttons {
-    position: absolute;
-    left: 0;
-    right: 1em;
-    top: 0px;
-    height: 100%;
-    z-index: 10;
-    padding-bottom: 1em;
+    flex-grow: 0;
     align-items: flex-end;
     pointer-events: none;
+    overflow: hidden;
+    font-size: 1em;
+    padding-left: 4px;
 
     .overlay-bottom-controls {
       height: 50%;
@@ -1015,29 +1078,6 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
 
       .overlay-button-group {
         height: 100%;
-      }
-
-      .auto-scroll-button {
-        max-height: 32px;
-        width: auto;
-        height: 50%;
-        min-height: 24px;
-        aspect-ratio: 3 / 4;
-        border-radius: 20%;
-
-        .auto-scroll-icon {
-          font-size: 1em;
-        }
-        .auto-scroll-lock-icon {
-          font-size: 0.5em;
-          position: absolute;
-          top: -10px;
-          right: -8px;
-        }
-      }
-      .vivid {
-        background-color: silver;
-        opacity: 0.6;
       }
     }
 
@@ -1050,20 +1090,43 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
     }
     
     button {
-      opacity: 0.4;
-      padding: 4px;
+      padding: 0.3em;
       height: 40%;
-      max-height: 100px;
+      max-height: 80px;
       pointer-events: auto;
       &.page {
         height: 30%;
         font-size: 60%;
       }
       &.edge {
-        height: 10%;
+        height: 20%;
         font-size: 50%;
       }
     }
+  }
+
+  .auto-scroll-button {
+    z-index: 99;
+    position: absolute;
+    right: 14px;
+    bottom: 12px;
+    width: 0.9em;
+    height: 2em;
+    border-radius: 20%;
+    opacity: 0.6;
+
+    .auto-scroll-icon {
+      font-size: 0.9em;
+    }
+    .auto-scroll-lock-icon {
+      font-size: 0.5em;
+      position: absolute;
+      top: -10px;
+      right: -8px;
+    }
+  }
+  .vivid {
+    opacity: 0.9;
   }
 
   .expand-container {
