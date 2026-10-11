@@ -1,3 +1,9 @@
+2026-10-12 00:51:48 +0900
+v1.12.17
+
+2026-10-12 00:50:55 +0900
+style: Update log component UI
+
 2026-10-06 02:51:25 +0900
 v1.12.16
 
@@ -15,9 +21,3 @@ fix: use matching language code for available language notification when locale 
 
 2026-09-28 23:16:54 +0900
 v1.12.14
-
-2026-09-28 23:11:46 +0900
-style: make minor adjustments to status screen
-
-2026-09-28 23:09:23 +0900
-feat: add pause button

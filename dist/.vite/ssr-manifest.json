@@ -12922,17 +12922,17 @@
     "/avif2jpeg/dist/assets/Roboto-Medium-DPwG85_g.ttf",
     "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
   ],
+  "~icons/fluent-mdl2/scroll-up-down": [
+    "/avif2jpeg/dist/assets/Roboto-Regular-f0lhpOnz.ttf",
+    "/avif2jpeg/dist/assets/Roboto-Medium-DPwG85_g.ttf",
+    "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
+  ],
   "~icons/formkit/fileimage": [
     "/avif2jpeg/dist/assets/Roboto-Regular-f0lhpOnz.ttf",
     "/avif2jpeg/dist/assets/Roboto-Medium-DPwG85_g.ttf",
     "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
   ],
   "~icons/hugeicons/zip02": [
-    "/avif2jpeg/dist/assets/Roboto-Regular-f0lhpOnz.ttf",
-    "/avif2jpeg/dist/assets/Roboto-Medium-DPwG85_g.ttf",
-    "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
-  ],
-  "~icons/ic/baseline-flash-auto": [
     "/avif2jpeg/dist/assets/Roboto-Regular-f0lhpOnz.ttf",
     "/avif2jpeg/dist/assets/Roboto-Medium-DPwG85_g.ttf",
     "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
@@ -12948,11 +12948,6 @@
     "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
   ],
   "~icons/material-symbols/folder-outline": [
-    "/avif2jpeg/dist/assets/Roboto-Regular-f0lhpOnz.ttf",
-    "/avif2jpeg/dist/assets/Roboto-Medium-DPwG85_g.ttf",
-    "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
-  ],
-  "~icons/material-symbols/lock": [
     "/avif2jpeg/dist/assets/Roboto-Regular-f0lhpOnz.ttf",
     "/avif2jpeg/dist/assets/Roboto-Medium-DPwG85_g.ttf",
     "/avif2jpeg/dist/assets/FiraCode-Regular-CRwVj4V2.woff2"
