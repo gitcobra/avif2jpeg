@@ -39,10 +39,20 @@ const props = defineProps<{
   //thumbnail: ImageBitmap | HTMLImageElement | null;
 }>();
 
+defineExpose({
+  expand() {
+    if( isLogLargerThanContainer.value ) {
+      expanded.value = true;
+    }
+  },
+  shrink() {expanded.value = false},
+});
+
 // v-model
 const expanded = defineModel<boolean>('expanded', {required: false});
 const autoScrollLog = defineModel<boolean>('auto-scroll', {required: false});
 //const sortValue *this v-model variable is described with SortObtions below
+
 
 
 
@@ -86,7 +96,6 @@ const logSizeSliderShow = useTimeoutRef(false);
 const showOverlayScrollButtons = ref(false);
 const canScrollUp = ref(true);
 const canScrollDown = ref(true);
-
 
 // sort options
 const SortOptions: {label:() => any, readonly value: 'processed'|'zipped'|'status'|'name'|'size'|'outputsize'}[] = [
@@ -323,9 +332,9 @@ const logDisplayQuantity = computed(
   () => logTableViewHeight.value / logItemHeight.value + LOG_INVISIBLE_ITEM_MARGIN*2 |0
 );
 const logItemHeight = ref(15);
-const isLogLargerThanContainer = computed<boolean>(
+const isLogLargerThanContainer = ref(false);/*computed<boolean>(
   () => logTableViewHeight.value < (props.logs.length + 3) * logItemHeight.value
-);
+);*/
 let realLogHeight = 0;
 let _tidLogItem = 0;
 let lastTimeLogViewUpdated = 0;
@@ -626,13 +635,13 @@ function updateScrollButtonAvailability() {
     scrollref.value?.scrollbarInstRef?.containerRef;
   canScrollUp.value = scrollTop > 1;
   canScrollDown.value = scrollTop + clientHeight < scrollHeight - 1;
+
+  isLogLargerThanContainer.value = scrollHeight > clientHeight;
 }
 
 function onMouseDownScrollbar(ev?: MouseEvent) {
   autoScrollLog.value = false;
 }
-
-
 
 function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
   const target = ev.target as HTMLElement;

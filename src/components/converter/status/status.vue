@@ -193,7 +193,7 @@ const outputImg = reactive({
 // element references
 const body = useTemplateRef('body');
 const imageViewer = useTemplateRef('imageViewer');
-
+const logTableRef = useTemplateRef('logTableRef');
 
 // common variables
 let _tmpCounter = 0;
@@ -420,7 +420,8 @@ function onFinished() {
     if( logAutoScroll.value ) {
       removeCollapsed('log');
       //if( workingLogs.value.length >= 5 ) {
-        logExpanded.value = true;
+      //logExpanded.value = true;
+      logTableRef.value.expand();
       //}
     }
     // show preview
@@ -558,12 +559,13 @@ function cleanup() {
 
     <!-- log view *aliased to n-collapse-item-->
     <log-table
+      ref="logTableRef"
       :processing="statusProcessing"
       :image-index="outputImg.index"
       :opened="logOpened"
       :preview-collapsed="isCollapsed('preview')"
       :logs="workingLogs"
-      v-model:expanded="logExpanded"
+      _v-model:expanded="logExpanded"
       v-model:auto-scroll="logAutoScroll"
       :order="logTableOrder"
       @change-index="changeImgViewerIndexBySelectedLogItem"
