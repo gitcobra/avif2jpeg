@@ -16,12 +16,13 @@ const logTxt = ref('');
 const updated = computed(
   () => changeLogLatestTime.value > UserSettings.changeLogCheckedDate
 );
-const logs = computed<string>(() => {
+const logs = ref('');
+watch<string>(logTxt, () => {
   if( !logTxt.value )
-    return 'fetching...';
+    logs.value = 'fetching...';
   
   // change the date to local time and highlight if updated  
-  return logTxt.value.replace(
+  logs.value = logTxt.value.replace(
     /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2}) \+\d+$/mg,
     (m, $1) => {
       const commitDate = new Date(m);
@@ -44,7 +45,8 @@ async function getChangeLog(url: string) {
   const txt = await fetch(url, {
     headers: {
         'Accept': 'application/vnd.github.v3+json'
-    }
+    },
+    cache: 'no-cache',
   }).then(res => res.ok ? res.text() : null);
 
   if( txt ) {
@@ -53,9 +55,11 @@ async function getChangeLog(url: string) {
   }
 }
 
-function onClickChangelog(show) {
+function updateLastCheckedDate(show) {
+  /*
   if( show )
     return;
+  */
   if( changeLogLatestTime.value > UserSettings.changeLogCheckedDate ) {
     UserSettings.changeLogCheckedDate = changeLogLatestTime.value;
   }
@@ -67,7 +71,7 @@ function onClickChangelog(show) {
 <template>
 <n-popover
   trigger="click" placement="bottom" arrow-point-to-center
-  @update:show="onClickChangelog"
+  @update:show="updateLastCheckedDate"
   style="margin-left:-1em; max-width:80%; white-space:initial;"
 >
   <template #trigger>
