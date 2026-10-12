@@ -116,8 +116,8 @@ registerRoute(
 
     // Use manual cache if not found in precache
     console.log('manual caching');
-    //return defaultStrategy.handle({event, request});
-    return netFirstStrategy.handle({event, request});
+    return defaultStrategy.handle({event, request});
+    //return netFirstStrategy.handle({event, request});
   }
 );
 
@@ -159,7 +159,7 @@ registerRoute(
     // check lang-indivisual index.html
     try {
       return await netFirstStrategy.handle({
-        request: new Request(normalizedUrl),
+        request: new Request(normalizedUrl, { cache: 'no-cache' }),
         event,
       });
     } catch(e) {}
@@ -172,7 +172,7 @@ registerRoute(
     else {
       console.log('manually cached index.html');
       return netFirstStrategy.handle({
-        request: new Request(ROOT_INDEX_PATH),
+        request: new Request(ROOT_INDEX_PATH, { cache: 'no-cache' }),
         event,
       });
     }
@@ -185,7 +185,7 @@ async function ensureBaseIndexCached() {
       return;
     }
     
-    const response = await fetch(ROOT_INDEX_PATH)
+    const response = await fetch(ROOT_INDEX_PATH, { cache: 'no-cache' })
     if (response.ok) {
       await cache.put(ROOT_INDEX_PATH, response);
     }
