@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useRegisterSW } from 'virtual:pwa-register/vue';
 import { ref, onMounted } from 'vue';
-import { AppsSharp } from '@vicons/ionicons5';
 
 const deferredPrompt = ref(null);
 const beforeinstallpromptFired = ref(false);
@@ -170,7 +169,7 @@ async function updateSW() {
   <n-tooltip v-else-if="isPWAInstalled === true" placement="bottom">
     <template #trigger>
       <n-flex id="app-installed" align="center" :size="1">
-        <n-icon :component="AppsSharp"/>PWA
+        <n-icon><IonAppsSharp/></n-icon>PWA
       </n-flex>
     </template>
     <template #default>
@@ -185,7 +184,7 @@ async function updateSW() {
     <template #trigger>
       <n-button @click="showPWAInstallationPrompt" size="tiny">
         <template #icon>
-          <n-icon :component="AppsSharp"/>
+          <n-icon><IonAppsSharp/></n-icon>
         </template>
         {{$t('installAsApp')}}
       </n-button>

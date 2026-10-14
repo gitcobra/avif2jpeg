@@ -16,7 +16,7 @@
                   <n-popover placement="bottom-end">
                     <template #trigger>
                     <span style="color:#666666;">
-                      <n-icon style="vertical-align: middle;"><FolderOpenOutline /></n-icon>
+                      <n-icon style="vertical-align: middle;"><IonFolderOpenOutline /></n-icon>
                       Folders
                     </span>
                     </template>
@@ -51,7 +51,6 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowRedoSharp, FolderOpenOutline } from '@vicons/ionicons5';
 import { GlobalValsKey } from "../Avif2Jpeg.vue";
 
 

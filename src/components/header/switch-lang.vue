@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head';
-import { GlobeOutline, Close } from '@vicons/ionicons5';
 import { useI18n } from "vue-i18n";
 import { LANG_ID_LIST, LANG_FULL_NAMES, loadLocaleMessages, I18n } from '@/i18n';
 import { GlobalValsKey } from "../../Avif2Jpeg.vue";
@@ -339,7 +338,7 @@ function changeRoute(val: string) {
               @click="emit('lang-change-by-user', '')"
               style="color: gray; line-height: 0px; font-size:1.2em;"
             >
-              <n-icon :component="Close"/>
+              <n-icon><IonClose/></n-icon>
             </router-link>
           </template>
           <template #default>
@@ -362,7 +361,7 @@ function changeRoute(val: string) {
               @update:value="changeRoute"
             >
               <template #arrow>
-                <n-icon><GlobeOutline /></n-icon>
+                <n-icon><IonGlobeOutline /></n-icon>
               </template>
             </n-select>
           </template>

@@ -1,13 +1,12 @@
 <template>
   <span class="container">
-    <n-icon><Archive /></n-icon>
+    <n-icon><IonArchive /></n-icon>
     <span class="text">ZIP</span>
   </span>
 </template>
 
 <script setup>
 import {NIcon} from 'naive-ui';
-import {Archive} from '@vicons/ionicons5';
 </script>
 
 <style scoped lang="scss">

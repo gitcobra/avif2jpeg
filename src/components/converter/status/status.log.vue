@@ -2,7 +2,6 @@
 import { getThumbnailedSize, getUnitSize, useTimeoutRef } from '@/components/util';
 import { NScrollbar } from 'naive-ui';
 import { ComponentInternalInstance, type CSSProperties } from 'vue';
-import { Filter, SwapVertical } from '@vicons/ionicons5';
 
 // common components
 const { t } = useI18n();
@@ -684,7 +683,7 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
 
           style="width:auto;" :consistent-menu-width="false" :show-on-focus="false" size="tiny"
         >
-          <template #arrow><n-icon :component="SwapVertical"/></template>
+          <template #arrow><n-icon><IonSwapVertical/></n-icon></template>
         </n-select>
         <!-- filter completed item -->
         <n-select
@@ -693,7 +692,7 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
           @update:value="resetLogTableViewRange()"
           :placeholder="$t('status.filterLogSelect')" size="tiny" style="width:auto;" :consistent-menu-width="false" :show-on-focus="false"
         >
-          <template #arrow><n-icon :component="Filter"/></template>
+          <template #arrow><n-icon><IonFilter/></n-icon></template>
         </n-select>
         
         <!-- auto scroll -->
@@ -752,7 +751,7 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
     
     
     <!-- contents -->
-    <n-flex class="log-table-container" :size="1" :wrap="false">
+    <n-flex class="log-table-container" :size="2" :wrap="false">
       
       <!-- filelist -->
       <Transition>
@@ -895,12 +894,12 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
 
       <!-- scroll buttons -->
       <n-flex
-        class="overlay-buttons"
+        class="overlay-buttons hide-on-mobile"
         vertical
         :size="0"
         justify="space-between"
       >
-        <n-button-group vertical class="overlay-button-group">
+        <n-button-group vertical class="overlay-button-group" size="large">
           <n-tooltip placement="left" :keep-alive-on-hover="false" :duration="100">
             <template #trigger>
               <n-button @click="onScrollButtonPress('Top')"
@@ -936,7 +935,7 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
 
         </n-button-group>
         
-        <n-button-group vertical class="overlay-button-group bottom-part">
+        <n-button-group vertical class="overlay-button-group bottom-part" size="large">
           <n-tooltip placement="left" :keep-alive-on-hover="false" :duration="0">
             <template #trigger>
               <n-button @click="onScrollButtonPress('Down')" round
@@ -1077,9 +1076,7 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
     flex-grow: 0;
     align-items: flex-end;
     pointer-events: none;
-    overflow: hidden;
     font-size: 1em;
-    padding-left: 4px;
 
     .overlay-bottom-controls {
       height: 50%;

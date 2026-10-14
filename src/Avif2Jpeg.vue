@@ -27,7 +27,6 @@ import 'vfonts/Roboto.css';
 //import 'vfonts/RobotoSlab.css';
 import 'vfonts/FiraCode.css';
 
-import { ArrowDown, Settings } from '@vicons/ionicons5';
 
 import Header from './components/header/header.vue';
 import Title from './components/title.vue';
@@ -243,7 +242,7 @@ function onInputClick(flag: boolean) {
         <n-flex vertical align="center">
           <n-popover trigger="manual" placement="top" :keep-alive-on-hover="false" :duration="0" :delay="0">
           <template #trigger>
-            <n-icon size="5vh" color="#DADADA" style="margin:0px;"><ArrowDown/></n-icon>
+            <n-icon size="5vh" color="#DADADA" style="margin:0px;"><IonArrowDown/></n-icon>
           </template>
           <span>CONVERT TO👇</span>
           </n-popover>

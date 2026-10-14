@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { onMounted, computed, watch, ref, inject } from "vue";
-import { ImageSharp, ImageOutline } from '@vicons/ionicons5';
 import { useI18n } from "vue-i18n";
 import { GlobalValsKey } from "../Avif2Jpeg.vue";
 import { OutputMethods } from "@/user-settings";
@@ -213,7 +212,7 @@ function clearTargetFolder() {
         <template #trigger>
           <n-flex align="center" :wrap="false">
             <n-flex align="center" :wrap="false" :size="4">
-              <n-icon><ImageOutline /></n-icon>
+              <n-icon><IonImageOutline /></n-icon>
               {{t('settings.outputType')}}:
             </n-flex>
             <n-select
@@ -236,7 +235,7 @@ function clearTargetFolder() {
           <n-flex align="center">
             <n-flex align="start" :wrap="false">
               <n-flex align="center" :size="4">
-                <n-icon><ImageSharp /></n-icon>
+                <n-icon><IonImage /></n-icon>
                 <span style="white-space: nowrap;">{{t('settings.outputQuality')}}:</span>
               </n-flex>
               <n-flex align="center" justify="space-between">

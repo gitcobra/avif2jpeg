@@ -2,7 +2,6 @@
 import { NTooltip } from 'naive-ui';
 import { getThumbnailedSize } from '@/components/util';
 import { RefSymbol } from '@vue/reactivity';
-import { ArrowBack, ArrowForward, DownloadOutline } from '@vicons/ionicons5';
 
 const { t } = useI18n();
 

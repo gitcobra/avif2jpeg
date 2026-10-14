@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { watch, computed, onMounted } from "vue";
 import { resetUserSettings, MaxThreads, _deleteLocalStorage, UserSettings } from "@/user-settings";
-import { SettingsOutline, BuildOutline, ArchiveOutline, DocumentTextOutline, HardwareChipOutline,
-  FolderOpen, ImagesOutline, FolderOpenOutline } from "@vicons/ionicons5";
 import { NTooltip } from "naive-ui";
 import { GlobalValsKey } from "../Avif2Jpeg.vue";
 
@@ -118,8 +116,8 @@ async function onResetClick() {
     >
       <template #arrow>
         <span style="font-size:1.1em;">
-        <n-icon :style="expanded && {top:'8px'}"><BuildOutline /></n-icon>
-        <n-icon><SettingsOutline /></n-icon>
+        <n-icon :style="expanded && {top:'8px'}"><IonBuildOutline /></n-icon>
+        <n-icon><IonSettingsOutline /></n-icon>
         </span>
       </template>
 
@@ -151,7 +149,7 @@ async function onResetClick() {
             <n-flex vertical>
               <n-flex :wrap="false" align="center">
                 <n-button text :disabled="!MaxThreads" style="font-size:smaller;" :bordered="false" :focusable="false" @click="multithread = !multithread">
-                  <template #icon><n-icon><HardwareChipOutline /></n-icon></template>
+                  <template #icon><n-icon><IonHardwareChipOutline /></n-icon></template>
                   {{ $t('settings.enableMultiThreads') }}
                 </n-button>
                 <n-switch v-model:value="multithread" :disabled="!MaxThreads" size="small" />
@@ -216,7 +214,7 @@ async function onResetClick() {
             <n-flex vertical>
               <n-flex :wrap="false" align="center">
                 <n-button text :focusable="false" style="white-space: nowrap; font-size:smaller;">
-                  <template #icon><n-icon style="vertical-align: middle;"><ArchiveOutline /></n-icon></template>
+                  <template #icon><n-icon style="vertical-align: middle;"><IonArchiveOutline /></n-icon></template>
                   {{$t('settings.maxZipFileSize')}}:
                 </n-button>
               </n-flex>
@@ -234,7 +232,7 @@ async function onResetClick() {
             <template #trigger>
             <n-flex :wrap="false" align="center">
               <n-button text style="font-size:smaller;" :bordered="false" :focusable="false" @click="useFolderNameForZip = !useFolderNameForZip">
-                <template #icon><n-icon><FolderOpenOutline /></n-icon></template>
+                <template #icon><n-icon><IonFolderOpenOutline /></n-icon></template>
                 {{$t('settings.useFolderNameForZip')}}
               </n-button>
               <n-switch v-model:value="useFolderNameForZip" size="small" />
@@ -248,7 +246,7 @@ async function onResetClick() {
             <template #trigger>
             <n-flex :wrap="false" align="center">
               <n-button text style="font-size:smaller;" :bordered="false" :focusable="false" @click="retainExtension = !retainExtension">
-                <template #icon><n-icon><DocumentTextOutline /></n-icon></template>
+                <template #icon><n-icon><IonDocumentTextOutline /></n-icon></template>
                 {{$t('settings.retainOriginalExtension')}}
               </n-button>
               <n-switch v-model:value="retainExtension" size="small" />
@@ -263,7 +261,7 @@ async function onResetClick() {
             <n-flex vertical>
               <n-flex :wrap="false" align="center">
                 <n-button :disabled="!enableNewFeatures" text style="font-size:smaller;" :bordered="false" :focusable="false" @click="shrinkImage=!shrinkImage">
-                  <template #icon><n-icon><ImagesOutline /></n-icon></template>
+                  <template #icon><n-icon><IonImagesOutline /></n-icon></template>
                   {{ $t('settings.shrinkImage') }}
                 </n-button>
                 <n-switch :disabled="!enableNewFeatures" v-model:value="shrinkImage" size="small" />
@@ -296,7 +294,7 @@ async function onResetClick() {
                   :bordered="false" :focusable="false"
                   @click="UserSettings.useFileSystemAPI = !UserSettings.useFileSystemAPI"
                 >
-                  <template #icon><n-icon :component="FolderOpen"/></template>
+                  <template #icon><n-icon><IonFolderOpen/></n-icon></template>
                   {{ $t('settings.useFileSystemAPI') }}
                 </n-button>
                 <n-switch v-model:value="UserSettings.useFileSystemAPI" :disabled="false" size="small" />

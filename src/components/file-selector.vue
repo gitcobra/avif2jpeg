@@ -22,7 +22,7 @@
               style="width:100%; background-color:white; font-size: 1.3em;"
             >
               <template #icon>
-                <n-icon size="large" color="gray"><ImageOutline /></n-icon>
+                <n-icon size="large" color="gray"><IonImageOutline /></n-icon>
               </template>
               {{$t('loadbutton')}}
             </n-button>
@@ -47,7 +47,7 @@
                 style="width:100%; background-color:white; font-size: 1.3em;"
               >
                 <template #icon>
-                  <n-icon size="large" color="gray"><FolderOpenOutline /></n-icon>
+                  <n-icon size="large" color="gray"><IonFolderOpenOutline /></n-icon>
                 </template>
                 {{$t('loadfolderbutton')}}
               </n-button>
@@ -178,7 +178,6 @@ export type FileWithId = File & {
 
 
 <script setup lang="ts">
-import { ImageOutline, FolderOpenOutline, SearchCircle, ArrowUp, ArrowDown, ChevronDown } from '@vicons/ionicons5';
 import { NCheckbox, NEmpty, NImage, NTooltip, SelectOption } from "naive-ui";
 import { GlobalValsKey } from "../Avif2Jpeg.vue";
 import { useI18n } from 'vue-i18n';

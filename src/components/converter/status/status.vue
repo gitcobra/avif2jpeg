@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ComponentInstance, ComponentInternalInstance, Directive, type CSSProperties } from 'vue';
 import { dataTableDark, type DropdownOption, NIcon, NScrollbar, NSpin, useThemeVars } from 'naive-ui';
-import { ImageSharp, Archive, Warning, WarningOutline, DocumentTextOutline, DownloadOutline, Filter } from '@vicons/ionicons5';
 import { useI18n } from 'vue-i18n';
 import ImageViewer from './image-viewer.vue';
 import Progress from './status.progress.vue';

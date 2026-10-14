@@ -4,7 +4,10 @@ import { ref, render } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { getStatusByPercentage, getThumbnailedSize, getUnitSize } from '@/components/util';
 import Thumbnail from './thumbnail.vue';
-import { ArrowForward, ArrowBack, ArrowRedoOutline, ArrowUndoOutline, ChevronForward, ChevronBack, Close } from '@vicons/ionicons5';
+import IconArrowForward from '~icons/ion/arrow-forward';
+import IconArrowBack from '~icons/ion/arrow-back';
+import IconArrowRedoOutline from '~icons/ion/arrow-redo-outline';
+import IconArrowUndoOutline from '~icons/ion/arrow-undo-outline';
 import { title } from 'process';
 import { RefSymbol } from '@vue/reactivity';
 import { GlobalValsKey } from '@/Avif2Jpeg.vue';
@@ -476,11 +479,11 @@ function renderToolbar({ nodes }: ImageRenderToolbarProps) {
     textColor:'white',
     size:'small',
     style: { marginLeft: '4px' },
-  }, {icon: () => h(isPreviewingConvertedImg.value ? ArrowRedoOutline : ArrowUndoOutline)}));
+  }, {icon: () => h(isPreviewingConvertedImg.value ? IconArrowRedoOutline : IconArrowUndoOutline)}));
   
   // add increasing and decreasing index buttons
-  nodes.next = h(NButton, {onClick(){moveIndex(1); }, disabled:!allowNext.value, circle:true, textColor:'white', size:'tiny', style: { marginLeft: '4px' }}, {icon: () => h(ArrowForward)});
-  nodes.prev = h(NButton, {onClick(){moveIndex(-1); }, disabled:!allowPrev.value, circle:true, textColor:'white', size:'tiny', style: { marginLeft: '4px' }}, {icon: () => h(ArrowBack)});
+  nodes.next = h(NButton, {onClick(){moveIndex(1); }, disabled:!allowNext.value, circle:true, textColor:'white', size:'tiny', style: { marginLeft: '4px' }}, {icon: () => h(IconArrowForward)});
+  nodes.prev = h(NButton, {onClick(){moveIndex(-1); }, disabled:!allowPrev.value, circle:true, textColor:'white', size:'tiny', style: { marginLeft: '4px' }}, {icon: () => h(IconArrowBack)});
   
   // NOTE: need to edit download button because the default download button opens the blob url in a new tab instead of downloading.
   // HACK: could not find a proper way to edit the download button
@@ -569,7 +572,7 @@ function cleanup() {
     <n-flex :wrap="false" align="center" justify="space-between" style="overflow:visible;">
       <!-- left button -->
       <n-button @click="moveIndex(-1)" :bordered="false" :disabled="!allowPrev" :class="{'thumb-arrow':true, pale: !allowPrev}" :title="$t('Prev')">
-        <template #icon><n-icon size="30"><ChevronBack/></n-icon></template>
+        <template #icon><n-icon size="30"><IonChevronBack/></n-icon></template>
       </n-button>
 
       <n-flex justify="center" ref="viewerItemContainer" class="viewer-item-container" style="width:100%;">
@@ -632,7 +635,7 @@ function cleanup() {
 
 
                 <n-flex vertical align="center" class="original-thumb" style="overflow: visible;">
-                  <n-icon size="20" color="silver" :component="ArrowForward"/>
+                  <n-icon size="20" color="silver" :component="IconArrowForward"/>
                   <n-tag :type="sizePercType" round>
                     {{ sizePerc }} %
                   </n-tag>
@@ -727,7 +730,7 @@ function cleanup() {
 
       <!-- right button -->
       <n-button :bordered="false" @click="moveIndex(1)" :disabled="!allowNext" :class="{'thumb-arrow':true, next:true, pale: !allowNext}" :title="$t('Next')">
-        <template #icon><n-icon size="30"><ChevronForward/></n-icon></template>
+        <template #icon><n-icon size="30"><IonChevronForward/></n-icon></template>
       </n-button>
     </n-flex>
 
@@ -748,7 +751,7 @@ function cleanup() {
     <!-- close button -->
     <!--
     <n-button @click="emit('close');" circle size="tiny" color="silver" class="close-button" :title="$t('close')">
-      <template #icon><n-icon size="12"><Close/></n-icon></template>
+      <template #icon><n-icon size="12"><IonClose/></n-icon></template>
     </n-button>
     -->
 

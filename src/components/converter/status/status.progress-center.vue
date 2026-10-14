@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useThemeVars } from 'naive-ui';
-import { Checkmark } from '@vicons/ionicons5';
 
 const props = defineProps<{
   processing: boolean
@@ -107,7 +106,7 @@ watch(() => props.processing, (val) => {
         <tr>
           <td colspan="2">
             <n-flex :size="0" align="center" justify="center" :style="{color: processing ? statusColor : mainColor}" :wrap="false" class="percent">
-              <n-icon v-if="completedAll" :component="Checkmark"></n-icon>
+              <n-icon v-if="completedAll"><IonCheckmark/></n-icon>
               <n-number-animation
                 :duration="interval * 3 | 0"
                 :from="successPercFrom |0"

@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import { NIcon, NSpin, useThemeVars } from 'naive-ui';
-import { Archive, DocumentTextOutline, DownloadOutline, WarningOutline, ImageSharp, Warning } from '@vicons/ionicons5';
+import IconArchive from '~icons/ion/archive';
+import IconDocumentTextOutline from '~icons/ion/document-text-outline';
+import IconDownloadOutline from '~icons/ion/download-outline';
 import { getUnitSize } from '@/components/util';
 
 // common components
@@ -73,21 +75,21 @@ const PopSelectErrorItems = computed<{key: string, label:any, icon:any, onSelect
   {
     key: 'open',
     label: t('status.openFailedList'),
-    icon: () => h(NIcon, () => h(DocumentTextOutline)),
+    icon: () => h(NIcon, () => h(IconDocumentTextOutline)),
     onSelect() {
       createFailedFileLink();
     }
   }, {
     key: 'download',
     label: t('status.saveFailedList'),
-    icon: () => h(NIcon, () => h(DownloadOutline)),
+    icon: () => h(NIcon, () => h(IconDownloadOutline)),
     onSelect() {
       createFailedFileLink(true);
     }
   }, {
     key: 'zip',
     label: `${t('status.zipFailedList')}` + (props.failedZipDone ? `(✔${t('status.done')})` : ``),
-    icon: () =>  h(NSpin, {show: demandedFailedZips.value && !props.failedZipDone, size:'small'}, () => h(NIcon, () => h(Archive))),
+    icon: () =>  h(NSpin, {show: demandedFailedZips.value && !props.failedZipDone, size:'small'}, () => h(NIcon, () => h(IconArchive))),
     disabled: demandedFailedZips.value,
     onSelect(ev) {
       demandedFailedZips.value = true;
@@ -274,7 +276,7 @@ function createFailedFileLink(download = false) {
                 @click.stop="download(item)"
                 round
               >
-                <n-icon size="tiny"><Archive /></n-icon>ZIP{{ item.number || '' }}
+                <n-icon size="tiny"><IonArchive /></n-icon>ZIP{{ item.number || '' }}
               </n-button>
               </a>
 
@@ -318,7 +320,7 @@ function createFailedFileLink(download = false) {
             </n-button>
             <a v-else :href="props.imgUrl" :download="props.imgName" class="in-button-anchor">
               <n-button size="medium" :color="c.successColor" round>
-                <n-icon size="tiny" :component="ImageSharp"/>
+                <n-icon size="tiny"><IonImage/></n-icon>
                 {{$t('save')}}
               </n-button>
             </a>
@@ -382,7 +384,7 @@ function createFailedFileLink(download = false) {
         <template #trigger>
           <n-badge :value="props.unconvertedFileCount.toLocaleString()" :color="c.errorColorHover" :offset="[-0,-3]">
           <n-button size="small" :color="c.errorColor">
-            <n-icon size="medium" style="vertical-align: middle;" :component="WarningOutline" />
+            <n-icon size="medium" style="vertical-align: middle;"><IonWarningOutline/></n-icon>
           </n-button>
           </n-badge>
         </template>
@@ -439,7 +441,7 @@ function createFailedFileLink(download = false) {
               @click.stop="download(item)"
               round
             >
-              <n-icon size="tiny" :component="Warning"/>ZIP{{item.number || ''}}
+              <n-icon size="tiny"><IonWarning/></n-icon>ZIP{{item.number || ''}}
             </n-button>
             </a>
 

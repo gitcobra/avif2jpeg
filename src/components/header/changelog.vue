@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { UserSettings } from '@/user-settings';
-import { NotificationsCircleOutline } from "@vicons/ionicons5";
 import { sleep } from '../util';
 
 
@@ -76,11 +75,11 @@ function updateLastCheckedDate(show) {
 >
   <template #trigger>
     <n-flex align="center" :size="1" style="cursor:pointer;">
-      <n-icon :component="NotificationsCircleOutline"
+      <n-icon
         size="1.5em"
         :color="updated ? 'blue' : 'silver'"
         style="transition: color 0.5s;"
-      />
+      ><IonNotificationsCircleOutline/></n-icon>
       {{ $t('changelog') }}
     </n-flex>
   </template>
