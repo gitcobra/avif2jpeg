@@ -44,6 +44,7 @@
   "confirmCloseDialogTitle": "I dati non sono stati salvati",
   "copiedDataURLMessage": "L'immagine convertita è stata copiata negli appunti come DataURL.",
   "status": {
+    "logResizingTooltip": "Trascina per ridimensionare",
     "scrollToTop": "Vai all'inizio del log",
     "scrollUp": "Su",
     "scrollDown": "Giù",

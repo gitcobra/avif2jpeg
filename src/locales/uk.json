@@ -44,6 +44,7 @@
   "confirmCloseDialogTitle": "Дані не збережено",
   "copiedDataURLMessage": "Перетворене зображення було скопійовано до буфера обміну як DataURL.",
   "status": {
+    "logResizingTooltip": "Перетягніть, щоб змінити розмір",
     "scrollToTop": "Перейти на початок журналу",
     "scrollUp": "Вгору",
     "scrollDown": "Вниз",

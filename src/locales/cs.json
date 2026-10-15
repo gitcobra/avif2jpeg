@@ -50,6 +50,7 @@
   "convertedImageDataUrlTooltip": "Zkopírovat převedený obrázek jako DataURL",
   "convertAgain": "Převést znovu",
   "status": {
+    "logResizingTooltip": "Změňte velikost přetažením",
     "scrollToTop": "Přejít na začátek protokolu",
     "scrollUp": "Nahoru",
     "scrollDown": "Dolů",

@@ -50,6 +50,7 @@
   "convertedImageDataUrlTooltip": "Copiați imaginea convertită ca DataURL",
   "convertAgain": "Convertiți din nou",
   "status": {
+    "logResizingTooltip": "Trageți pentru a redimensiona",
     "scrollToTop": "Mergeți la începutul jurnalului",
     "scrollUp": "În sus",
     "scrollDown": "În jos",

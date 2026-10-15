@@ -44,6 +44,7 @@
   "confirmCloseDialogTitle": "Data belum disimpan",
   "copiedDataURLMessage": "Gambar yang dikonversi disalin ke clipboard Anda sebagai DataURL.",
   "status": {
+    "logResizingTooltip": "Seret untuk mengubah ukuran",
     "scrollToTop": "Ke bagian atas log",
     "scrollUp": "Ke atas",
     "scrollDown": "Ke bawah",

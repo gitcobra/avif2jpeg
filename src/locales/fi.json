@@ -98,6 +98,7 @@
     "permissionDenied": "Kansion käyttöoikeuden saaminen epäonnistui."
   },
   "status": {
+    "logResizingTooltip": "Muuta kokoa vetämällä",
     "scrollToTop": "Siirry lokin alkuun",
     "scrollUp": "Ylös",
     "scrollDown": "Alas",

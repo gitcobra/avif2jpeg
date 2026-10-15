@@ -50,6 +50,7 @@
   "convertedImageDataUrlTooltip": "Kopiera den konverterade bilden som DataURL",
   "convertAgain": "Konvertera igen",
   "status": {
+    "logResizingTooltip": "Dra för att ändra storlek",
     "scrollToTop": "Gå till början av loggen",
     "scrollUp": "Upp",
     "scrollDown": "Ned",

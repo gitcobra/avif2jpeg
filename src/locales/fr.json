@@ -44,6 +44,7 @@
   "confirmCloseDialogTitle": "Les données n'ont pas été sauvegardées",
   "copiedDataURLMessage": "L'image convertie a été copiée dans votre presse-papiers en tant que DataURL.",
   "status": {
+    "logResizingTooltip": "Faites glisser pour redimensionner",
     "scrollToTop": "Aller au début du journal",
     "scrollUp": "Haut",
     "scrollDown": "Bas",

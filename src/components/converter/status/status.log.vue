@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { getThumbnailedSize, getUnitSize, useTimeoutRef } from '@/components/util';
-import { NScrollbar } from 'naive-ui';
+import { NScrollbar, sliderProps } from 'naive-ui';
 import { ComponentInternalInstance, type CSSProperties } from 'vue';
 
 // common components
@@ -38,14 +38,6 @@ const props = defineProps<{
   //thumbnail: ImageBitmap | HTMLImageElement | null;
 }>();
 
-defineExpose({
-  expand() {
-    if( isLogLargerThanContainer.value ) {
-      expanded.value = true;
-    }
-  },
-  shrink() {expanded.value = false},
-});
 
 // v-model
 const expanded = defineModel<boolean>('expanded', {required: false});
@@ -76,8 +68,8 @@ const currentSelectedLogNode = ref<HTMLTableRowElement>(null);
 
 const logMaxHeightPX = ref(40);
 const logDefHeight = 100;
-const logTableViewHeight = computed(() => expanded.value? logMaxHeightPX.value : logDefHeight);
-const expandedLogMinHeight = ref(logDefHeight);
+const logTableViewHeight = ref(100);//computed(() => expanded.value? logMaxHeightPX.value : logDefHeight);
+const expandedLogMinHeight = computed(() => logItemHeight.value * 3);
 const filteredLogList = computed(() => {
   let list = props.logs;
   switch( filterLogValue.value ) {
@@ -95,6 +87,10 @@ const logSizeSliderShow = useTimeoutRef(false);
 const showOverlayScrollButtons = ref(false);
 const canScrollUp = ref(true);
 const canScrollDown = ref(true);
+
+const splitSize = ref(logTableViewHeight.value + 'px');
+const bottomMargin = ref(30);
+const expandTransitionEnabled = ref(true);
 
 // sort options
 const SortOptions: {label:() => any, readonly value: 'processed'|'zipped'|'status'|'name'|'size'|'outputsize'}[] = [
@@ -159,6 +155,15 @@ const filterLogValue = ref<typeof FilterOptions[number]['value']>(FilterOptions[
 
 
 
+defineExpose({
+  expand() {
+    if( isLogLargerThanContainer.value ) {
+      expanded.value = true;
+    }
+  },
+  shrink() {expanded.value = false},
+  bottomMargin: bottomMargin,
+});
 
 
 let inst: ComponentInternalInstance;
@@ -266,8 +271,8 @@ let _tid;
 const availDocumentHeight = ref(document.documentElement.clientHeight);
 const availDialogHeight = ref(100);
 function changeLogMaxHeight() {
-  clearTimeout(_tid);
-  _tid = setTimeout(() => {
+  //clearTimeout(_tid);
+  //_tid = setTimeout(() => {
     if( !props.opened || !scrollref.value )
       return;
     
@@ -281,9 +286,10 @@ function changeLogMaxHeight() {
     if( !props.opened /*|| !expanded.value*/ )
       return;
     logMaxHeightPX.value = Math.max(availModalHeight, expandedLogMinHeight.value);
+    //logMaxHeightPX.value = Math.max(Number(splitSize.value));
 
     updateScrollButtonAvailability();
-  }, 100);
+  //}, 100);
 }
 
 function onExpandClick() {
@@ -327,9 +333,9 @@ function scrollLogViewToBottom(instant = false) {
 const logTopMarginStyle = ref<CSSProperties>({height: '0px'});
 const logBottomMarginStyle = ref<CSSProperties>({height: '0px'});
 const logStartIndex = ref(0);
-const logDisplayQuantity = computed(
-  () => logTableViewHeight.value / logItemHeight.value + LOG_INVISIBLE_ITEM_MARGIN*2 |0
-);
+const logDisplayQuantity = computed(() => {
+  return logTableViewHeight.value / logItemHeight.value + LOG_INVISIBLE_ITEM_MARGIN*2 |0
+});
 const logItemHeight = ref(15);
 const isLogLargerThanContainer = ref(false);/*computed<boolean>(
   () => logTableViewHeight.value < (props.logs.length + 3) * logItemHeight.value
@@ -357,7 +363,8 @@ function calculateLogTableViewRange(force?: any/*ev: Event*/) {
 
   
   if( !realLogHeight && props.logs.length ) {
-    realLogHeight = logtbody.value.rows[1].offsetHeight;
+    const row = logtbody.value.rows[1];
+    realLogHeight = row.offsetHeight;
     logItemHeight.value = realLogHeight;
   }
 
@@ -381,7 +388,8 @@ function calculateLogTableViewRange(force?: any/*ev: Event*/) {
   const viewStartIndex = Math.max(0, (scrtop / logItemHeight.value | 0) - LOG_INVISIBLE_ITEM_MARGIN);
   logStartIndex.value = viewStartIndex;
   logTopMarginStyle.value.height = (viewStartIndex * logItemHeight.value) + 'px';
-  logBottomMarginStyle.value.height = Math.max(0, loglen - (viewStartIndex + logDisplayQuantity.value)) * logItemHeight.value + 'px';
+  logBottomMarginStyle.value.height =
+    Math.max(0, loglen - (viewStartIndex + logDisplayQuantity.value)) * logItemHeight.value + 'px';
 
   //console.log("updated", "logDisplayQuantity", logDisplayQuantity.value, "topmargin", logTopMarginStyle.value, "bottommargin", logBottomMarginStyle.value);
 }
@@ -542,7 +550,7 @@ function onKeyPressInLogTable(arg: string | KeyboardEvent) {
 }
 
 function onScrollButtonPress(action: string) {
-  const pageHeight = logTableViewHeight.value - logItemHeight.value * 2;
+  const pageHeight = logTableViewHeight.value - logItemHeight.value * 3;
   switch(action) {
     case 'Top':
       scrollref.value?.scrollTo({
@@ -559,7 +567,7 @@ function onScrollButtonPress(action: string) {
     case 'Up':
       scrollref.value?.scrollBy({
         behavior: 'smooth',
-        top: -logItemHeight.value,
+        top: -(logItemHeight.value),
       });
       break;
     
@@ -660,6 +668,55 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
 }
 
 
+let splitHandleDragged = false;
+let dragstartedSplitSize = '';
+function onDragResizeHandle() {
+  logTableViewHeight.value = parseInt(splitSize.value);
+  updateScrollButtonAvailability();
+  splitHandleDragged = true;
+}
+function onDragStartHandle() {
+  splitHandleDragged = false;
+  dragstartedSplitSize = splitSize.value;
+  logSizeSliderShow.value = true;
+  expandTransitionEnabled.value = false;
+}
+function onDragEndHandle() {
+  expandTransitionEnabled.value = true;
+  if( splitHandleDragged && dragstartedSplitSize !== splitSize.value )
+    return;
+
+  //scrollLogViewToBottom(true);
+  changeLogMaxHeight();
+  const maxHeight = logMaxHeightPX.value;
+  const splitSizeNum = parseInt(splitSize.value);
+  const min = logItemHeight.value * 1.5;
+
+  console.log("before:", {logMaxHeightPx:maxHeight, splitSize:splitSizeNum});  
+
+  if( Math.abs(splitSizeNum - maxHeight) < min || splitSizeNum > logDefHeight + min )
+    splitSize.value = logDefHeight + 'px';
+  else if( Math.abs(splitSizeNum - logDefHeight) < min || splitSizeNum < maxHeight + min )
+    splitSize.value = maxHeight + 'px';
+
+  console.log("after:", {splitSize:splitSize.value});
+
+  onDragResizeHandle();
+}
+
+function showByPriority(priority: number) {
+  const height = parseInt(splitSize.value) + logItemHeight.value;
+  
+  if( height >= 100 ) {
+    return true;
+  }
+  if( height >= 65 ) {
+    return priority >= 2;
+  }
+  
+  return priority >= 3;
+}
+
 </script>
 
 <template>
@@ -751,9 +808,34 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
     
     
     <!-- contents -->
-    <n-flex class="log-table-container" :size="2" :wrap="false">
-      
+    <n-flex :size="2" :wrap="false"
+      :class="{
+        'log-table-container': 1,
+        'resize-animation': expandTransitionEnabled,
+      }"
+      :style="{height:(parseInt(splitSize) + bottomMargin + logItemHeight) + 'px'}"
+    >
+      <n-split
+        direction="vertical"
+        :class="{'log-container': 1}"
+        _:style="{height:(parseInt(splitSize) + logItemHeight) + 'px'}"
+        
+        @drag-start="onDragStartHandle"
+        @drag-end="onDragEndHandle"
+        @drag-move="onDragResizeHandle"
+
+        @keydown="onKeyPressInLogTable"
+        @mouseenter="showOverlayScrollButtons = true"
+        @mouseleave="showOverlayScrollButtons = false"
+        v-model:size="splitSize"
+        :resize-trigger-size="logItemHeight"
+        :min="String(expandedLogMinHeight)"
+      >
+        <template #1>
+          
+
       <!-- filelist -->
+      <!--
       <Transition>
       <n-flex :wrap="false" align="stretch"
         vertical
@@ -765,7 +847,10 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
         :size="1"
         tabindex="-1"
       >
-        <n-flex class="log-scrollbar-container">
+      -->
+        <n-flex class="log-scrollbar-container"
+          :style="{height:(logTableViewHeight) + 'px'}"
+        >
           <n-scrollbar
             ref="scrollref"
             :distance="10"
@@ -777,7 +862,7 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
             trigger="none"
             :size="50"
             class="log-scrollbar"
-            :style="{height:logTableViewHeight + 'px'}"
+            :style="{height: '100%'}"
           >
             <table v-if="props.opened" class="log-table" ref="logtable">
             <thead>
@@ -868,6 +953,7 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
         </n-flex>
 
         <!-- expand button -->
+        <!--
         <n-flex
           justify="center"
           :style="{marginBottom: (logItemHeight) + 'px'}"
@@ -888,9 +974,41 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
             {{ expanded ? $t('status.shrinkLog') : $t('status.expandLog') }}
           </n-tooltip>
         </n-flex>
+        
 
       </n-flex>
-      </Transition>
+      
+      -->
+        </template>
+        
+        <template #2>
+          <div :style="{height: bottomMargin + 'px', lineHeight: '1px' }">
+            <!-- Pane 2 -->
+          </div>
+        </template>
+        
+        <template #resize-trigger>
+          <n-tooltip placement="bottom" :keep-alive-on-hover="false" :duration="0">
+            <template #trigger>
+              <n-flex style="width: 100%" justify="center" align="center">
+                <n-button
+                  :style="{
+                    width: '60%',
+                    maxWidth: '600px',
+                    height: logItemHeight + 'px',
+                    fontSize: '0.7em',
+                    cursor: 'ns-resize',
+                  }"
+                >
+                  <FluentArrowBidirectionalUpDown12Filled/>
+                </n-button>
+              </n-flex>
+            </template>
+            {{ $t('status.logResizingTooltip') }}
+          </n-tooltip>
+        </template>
+
+      </n-split>
 
       <!-- scroll buttons -->
       <n-flex
@@ -898,6 +1016,9 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
         vertical
         :size="0"
         justify="space-between"
+        :style="{
+          marginBottom: bottomMargin + 'px',
+        }"
       >
         <n-button-group vertical class="overlay-button-group" size="large">
           <n-tooltip placement="left" :keep-alive-on-hover="false" :duration="100">
@@ -905,6 +1026,7 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
               <n-button @click="onScrollButtonPress('Top')"
                 round class="edge"
                 :disabled="!canScrollUp"
+                v-show="showByPriority(2)"
               >
                 <PhCaretLineUpFill/>
               </n-button>
@@ -916,6 +1038,7 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
               <n-button @click="onScrollButtonPress('PageUp')"
                 class="page"
                 :disabled="!canScrollUp"
+                v-show="showByPriority(1)"
               >
                 <FaSolidAngleDoubleUp/>
               </n-button>
@@ -926,6 +1049,7 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
             <template #trigger>
               <n-button @click="onScrollButtonPress('Up')" round
                 :disabled="!canScrollUp"
+                v-show="showByPriority(3)"
               >
                 <F7ArrowUp/>
               </n-button>
@@ -940,6 +1064,7 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
             <template #trigger>
               <n-button @click="onScrollButtonPress('Down')" round
                 :disabled="!canScrollDown"
+                v-show="showByPriority(3)"
               >
                 <F7ArrowDown/>
               </n-button>
@@ -950,6 +1075,7 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
             <template #trigger>
               <n-button @click="onScrollButtonPress('PageDown')" class="page"
                 :disabled="!canScrollDown"
+                v-show="showByPriority(1)"
               >
                 <FaSolidAngleDoubleDown/>
               </n-button>
@@ -960,6 +1086,7 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
             <template #trigger>
               <n-button @click="onScrollButtonPress('Bottom')" round class="edge"
                 :disabled="!canScrollDown"
+                v-show="showByPriority(2)"
               >
                 <PhCaretLineDownFill/>
               </n-button>
@@ -970,6 +1097,7 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
       </n-flex>
 
     </n-flex>
+    
   </n-collapse-item>
 
 </template>
@@ -984,9 +1112,8 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
     flex-grow: 1;
     position: relative;
     overflow: hidden;
-    font-size: 1rem;
-    height: 110px;
-    transition: all .2s ease;
+    font-size: 1em;
+    width: 100%;
 
     &:focus {
       outline: 0px;
@@ -1143,6 +1270,10 @@ function onLogTableClick(ev: MouseEvent, dbl?: boolean) {
     max-width: 800px;
     width: 50%;
   }
+}
+
+.resize-animation {
+  transition: height .2s ease;
 }
 
 @media screen and (max-width: 580px) {

@@ -44,6 +44,7 @@
   "confirmCloseDialogTitle": "No se han guardado los datos",
   "copiedDataURLMessage": "La imagen convertida se copió a su portapapeles como DataURL.",
   "status": {
+    "logResizingTooltip": "Arrastra para cambiar el tamaño",
     "scrollToTop": "Ir al principio del registro",
     "scrollUp": "Arriba",
     "scrollDown": "Abajo",

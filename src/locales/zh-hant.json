@@ -45,6 +45,7 @@
   "confirmCloseDialogTitle": "尚未保存數據",
   "copiedDataURLMessage": "轉換後的影像已複製為 DataURL 到剪貼簿。",
   "status": {
+    "logResizingTooltip": "拖曳以調整大小",
     "scrollToTop": "移至日誌頂端",
     "scrollUp": "往上",
     "scrollDown": "往下",

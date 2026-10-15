@@ -44,6 +44,7 @@
   "confirmCloseDialogTitle": "Dane nie zostały zapisane",
   "copiedDataURLMessage": "Przekonwertowany obraz został skopiowany do schowka jako DataURL.",
   "status": {
+    "logResizingTooltip": "Przeciągnij, aby zmienić rozmiar",
     "scrollToTop": "Przejdź na początek dziennika",
     "scrollUp": "W górę",
     "scrollDown": "W dół",

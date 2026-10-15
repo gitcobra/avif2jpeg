@@ -50,6 +50,7 @@
   "convertedImageDataUrlTooltip": "変換した画像をDataURLとしてコピー",
   "convertAgain": "もう一度変換",
   "status": {
+    "logResizingTooltip": "ドラッグでリサイズ",
     "scrollToTop": "ログの先頭へ移動",
     "scrollUp": "上へ",
     "scrollDown": "下へ",

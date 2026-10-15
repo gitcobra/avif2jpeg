@@ -44,6 +44,7 @@
   "confirmCloseDialogTitle": "数据尚未保存",
   "copiedDataURLMessage": "转换后的图像已作为 DataURL 复制到剪贴板。",
   "status": {
+    "logResizingTooltip": "拖动以调整大小",
     "scrollToTop": "转到日志顶部",
     "scrollUp": "向上",
     "scrollDown": "向下",

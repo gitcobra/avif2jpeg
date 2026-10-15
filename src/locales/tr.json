@@ -44,6 +44,7 @@
   "confirmCloseDialogTitle": "Veriler kaydedilmedi",
   "copiedDataURLMessage": "Dönüştürülen görüntü panonuza DataURL olarak kopyalandı.",
   "status": {
+    "logResizingTooltip": "Yeniden boyutlandırmak için sürükleyin",
     "scrollToTop": "Günlüğün en üstüne git",
     "scrollUp": "Yukarı",
     "scrollDown": "Aşağı",

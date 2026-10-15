@@ -570,7 +570,11 @@ function cleanup() {
       @change-index="changeImgViewerIndexBySelectedLogItem"
       @open-preview="imageViewer?.openPreview()"
       
-      name="log" style="white-space:nowrap;"
+      name="log"
+      :style="{
+        whiteSpace: 'nowrap',
+        marginBottom: ( logOpened ? -(logTableRef?.bottomMargin || 0) : 0) + 'px',
+      }"
     />
     
     <n-collapse-item :title="$t('status.PreviewImage')" name="preview" style="white-space:nowrap;" :disabled="!(success[0] > 0)">

@@ -44,6 +44,7 @@
   "confirmCloseDialogTitle": "Gegevens zijn niet opgeslagen",
   "copiedDataURLMessage": "De geconverteerde afbeelding is als DataURL naar uw klembord gekopieerd.",
   "status": {
+    "logResizingTooltip": "Sleep om het formaat te wijzigen",
     "scrollToTop": "Naar het begin van het logboek",
     "scrollUp": "Omhoog",
     "scrollDown": "Omlaag",

@@ -44,6 +44,7 @@
   "confirmCloseDialogTitle": "डेटा सहेजा नहीं गया है",
   "copiedDataURLMessage": "परिवर्तित छवि को आपके क्लिपबोर्ड पर DataURL के रूप में कॉपी किया गया था।",
   "status": {
+    "logResizingTooltip": "आकार बदलने के लिए खींचें",
     "scrollToTop": "लॉग के शीर्ष पर जाएं",
     "scrollUp": "ऊपर",
     "scrollDown": "नीचे",

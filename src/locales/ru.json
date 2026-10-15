@@ -44,6 +44,7 @@
   "confirmCloseDialogTitle": "Данные не были сохранены",
   "copiedDataURLMessage": "Конвертированное изображение было скопировано в буфер обмена как DataURL.",
   "status": {
+    "logResizingTooltip": "Перетащите, чтобы изменить размер",
     "scrollToTop": "Перейти к началу журнала",
     "scrollUp": "Вверх",
     "scrollDown": "Вниз",

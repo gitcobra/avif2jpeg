@@ -50,6 +50,7 @@
   "convertedImageDataUrlTooltip": "Sao chép hình ảnh đã chuyển đổi dưới dạng DataURL",
   "convertAgain": "Chuyển đổi lại",
   "status": {
+    "logResizingTooltip": "Kéo để thay đổi kích thước",
     "scrollToTop": "Đi đến đầu nhật ký",
     "scrollUp": "Lên",
     "scrollDown": "Xuống",

@@ -44,6 +44,7 @@
   "confirmCloseDialogTitle": "Os dados não foram salvos",
   "copiedDataURLMessage": "A imagem convertida foi copiada para a área de transferência como DataURL.",
   "status": {
+    "logResizingTooltip": "Arraste para redimensionar",
     "scrollToTop": "Ir para o início do registro",
     "scrollUp": "Para cima",
     "scrollDown": "Para baixo",

@@ -51,6 +51,7 @@
   "convertedImageDataUrlTooltip": "Copy the converted image as DataURL",
   "convertAgain": "Convert Again",
   "status": {
+    "logResizingTooltip": "Drag to resize",
     "scrollToTop": "Go to top of log",
     "scrollUp": "Up",
     "scrollDown": "Down",

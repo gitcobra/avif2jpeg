@@ -44,6 +44,7 @@
   "confirmCloseDialogTitle": "변환 파일이 저장되지 않음",
   "copiedDataURLMessage": "변환된 이미지가 클립보드에 DataURL로 복사되었습니다.",
   "status": {
+    "logResizingTooltip": "드래그하여 크기 조절",
     "scrollToTop": "로그 맨 위로 이동",
     "scrollUp": "위로",
     "scrollDown": "아래로",

@@ -50,6 +50,7 @@
   "convertedImageDataUrlTooltip": "คัดลอกรูปภาพที่แปลงแล้วเป็น DataURL",
   "convertAgain": "แปลงอีกครั้ง",
   "status": {
+    "logResizingTooltip": "ลากเพื่อปรับขนาด",
     "scrollToTop": "ไปด้านบนของบันทึก",
     "scrollUp": "ขึ้น",
     "scrollDown": "ลง",

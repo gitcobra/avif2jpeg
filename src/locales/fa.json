@@ -50,6 +50,7 @@
   "convertedImageDataUrlTooltip": "کپی تصویر تبدیل‌شده به صورت DataURL",
   "convertAgain": "تبدیل دوباره",
   "status": {
+    "logResizingTooltip": "برای تغییر اندازه بکشید",
     "scrollToTop": "رفتن به ابتدای گزارش",
     "scrollUp": "بالا",
     "scrollDown": "پایین",

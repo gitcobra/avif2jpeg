@@ -44,6 +44,7 @@
   "confirmCloseDialogTitle": "Die Daten wurden noch nicht gespeichert",
   "copiedDataURLMessage": "Das konvertierte Bild wurde als DataURL in Ihre Zwischenablage kopiert.",
   "status": {
+    "logResizingTooltip": "Zum Ändern der Größe ziehen",
     "scrollToTop": "Zum Anfang des Protokolls",
     "scrollUp": "Nach oben",
     "scrollDown": "Nach unten",

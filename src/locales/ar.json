@@ -44,6 +44,7 @@
   "confirmCloseDialogTitle": "لم يتم حفظ البيانات",
   "copiedDataURLMessage": "تم نسخ الصورة المحولة إلى الحافظة الخاصة بك باسم DataURL.",
   "status": {
+    "logResizingTooltip": "اسحب لتغيير الحجم",
     "scrollToTop": "الانتقال إلى أعلى السجل",
     "scrollUp": "لأعلى",
     "scrollDown": "لأسفل",
