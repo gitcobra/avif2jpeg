@@ -111,6 +111,7 @@
     "shrinkLog": "로그 크기를 축소합니다",
     "autoScroll": "자동 스크롤",
     "sortByStatus": "상태",
+    "sort": "목록 정렬 기준",
     "sortByName": "이름",
     "sortBySize": "크기",
     "sortByOutputSize": "크기 (출력)",

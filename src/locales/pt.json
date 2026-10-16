@@ -111,6 +111,7 @@
     "shrinkLog": "Reduzir o tamanho do registo",
     "autoScroll": "rolagem automática",
     "sortByStatus": "status",
+    "sort": "Ordenar lista por",
     "sortByName": "nome",
     "sortBySize": "tamanho",
     "sortByOutputSize": "tamanho (saída)",

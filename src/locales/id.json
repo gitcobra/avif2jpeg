@@ -111,6 +111,7 @@
     "shrinkLog": "Perkecil ukuran log",
     "autoScroll": "gulir otomatis",
     "sortByStatus": "status",
+    "sort": "Urutkan daftar berdasarkan",
     "sortByName": "nama",
     "sortBySize": "ukuran",
     "sortByOutputSize": "ukuran (output)",

@@ -45,7 +45,7 @@ const langNoticeFlag = ref(false);
 // create language list
 const langOptions: SelectMixedOption[] = Object.entries( LANG_FULL_NAMES ).map(
   ([key, val]) => ({ label:val, value:key })
-);
+).filter(({label, value}) => value !== 'zh-hant'); // exclude 繁体字
 langOptions.sort((a, b) => {
   const c = a.label;
   const d = b.label;
@@ -58,8 +58,8 @@ let lastUserSelectedLangId = '';
 
 
 
-insertHeadForSSG();
 await initializeLanguage();
+insertHeadForSSG();
 emit('ready');
 
 // initialize on mounted 
@@ -270,7 +270,8 @@ async function setLocaleByBrowserLanguage() {
         switch( userlang ) {
           case 'zh-hant':
           case 'zh-mo':
-            lang = 'zh-hant';
+            //lang = 'zh-hant';
+            lang = 'zh-tw';
             break;
           case 'zh-hk':
             lang = 'zh-hk';

@@ -111,6 +111,7 @@
     "shrinkLog": "लॉग का आकार घटाएं",
     "autoScroll": "स्वतः स्क्रॉल",
     "sortByStatus": "स्थिति",
+    "sort": "सूची को इस आधार पर क्रमबद्ध करें",
     "sortByName": "नाम",
     "sortBySize": "आकार",
     "sortByOutputSize": "आकार (आउटपुट)",

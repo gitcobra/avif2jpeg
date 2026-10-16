@@ -111,6 +111,7 @@
     "shrinkLog": "Уменьшить размер журнала",
     "autoScroll": "Авторолль",
     "sortByStatus": "статус",
+    "sort": "Сортировать список по",
     "sortByName": "имя",
     "sortBySize": "размер",
     "sortByOutputSize": "размер (выход)",

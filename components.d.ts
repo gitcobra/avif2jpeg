@@ -98,8 +98,6 @@ declare module 'vue' {
     NTag: typeof import('naive-ui')['NTag']
     NText: typeof import('naive-ui')['NText']
     NTooltip: typeof import('naive-ui')['NTooltip']
-    OcticonTriangleDown16: typeof import('~icons/octicon/triangle-down16')['default']
-    OcticonTriangleUp16: typeof import('~icons/octicon/triangle-up16')['default']
     PhCaretLineDownFill: typeof import('~icons/ph/caret-line-down-fill')['default']
     PhCaretLineUpFill: typeof import('~icons/ph/caret-line-up-fill')['default']
     PromptOnDup: typeof import('./src/components/prompt-on-dup.vue')['default']

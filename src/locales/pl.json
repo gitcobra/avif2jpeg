@@ -111,6 +111,7 @@
     "shrinkLog": "zmniejsz rozmiar dziennika",
     "autoScroll": "Auto-Scroll",
     "sortByStatus": "status",
+    "sort": "Sortuj listę według",
     "sortByName": "nazwa",
     "sortBySize": "rozmiar",
     "sortByOutputSize": "rozmiar (wyjście)",

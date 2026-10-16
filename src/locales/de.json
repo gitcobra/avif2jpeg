@@ -111,6 +111,7 @@
     "shrinkLog": "Protokollgröße verkleinern",
     "autoScroll": "Auto-Scroll",
     "sortByStatus": "Status",
+    "sort": "Liste sortieren nach",
     "sortByName": "Name",
     "sortBySize": "Größe",
     "sortByOutputSize": "Größe (Ausgabe)",

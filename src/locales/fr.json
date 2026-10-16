@@ -111,6 +111,7 @@
     "shrinkLog": "Réduire la taille du journal",
     "autoScroll": "défilement automatique",
     "sortByStatus": "statut",
+    "sort": "Trier la liste par",
     "sortByName": "nom",
     "sortBySize": "taille",
     "sortByOutputSize": "taille (sortie)",

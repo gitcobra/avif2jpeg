@@ -111,6 +111,7 @@
     "shrinkLog": "Verklein de loggrootte",
     "autoScroll": "automatisch scrollen",
     "sortByStatus": "status",
+    "sort": "Lijst sorteren op",
     "sortByName": "naam",
     "sortBySize": "maat",
     "sortByOutputSize": "Grootte (uitvoer)",
