@@ -1,3 +1,9 @@
+2026-10-17 09:14:46 +0900
+v1.12.20
+
+2026-10-16 18:05:47 +0900
+chore: refine i18n translations
+
 2026-10-15 22:43:08 +0900
 v1.12.19
 
@@ -15,9 +21,3 @@ v1.12.18
 
 2026-10-12 13:18:36 +0900
 fix: Changelog update notification issue
-
-2026-10-12 13:15:06 +0900
-fix: service worker HTML caching issue
-
-2026-10-12 00:51:48 +0900
-v1.12.17
