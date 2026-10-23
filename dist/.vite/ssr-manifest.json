@@ -8805,6 +8805,9 @@
   "src/locales/ar.json": [
     "/avif2jpeg/dist/assets/ar-CqHWf8rD.js"
   ],
+  "src/locales/bn.json": [
+    "/avif2jpeg/dist/assets/bn-CpMX4W-j.js"
+  ],
   "src/locales/cs.json": [
     "/avif2jpeg/dist/assets/cs-DWykWt29.js"
   ],
@@ -8840,8 +8843,14 @@
   "src/locales/ja.json": [
     "/avif2jpeg/dist/assets/ja-__4GrDHu.js"
   ],
+  "src/locales/ka.json": [
+    "/avif2jpeg/dist/assets/ka-BwJxvKZI.js"
+  ],
   "src/locales/ko.json": [
     "/avif2jpeg/dist/assets/ko-BPIzedvH.js"
+  ],
+  "src/locales/ms.json": [
+    "/avif2jpeg/dist/assets/ms-GiEzcNvc.js"
   ],
   "src/locales/nl.json": [
     "/avif2jpeg/dist/assets/nl-c40RWNoQ.js"
@@ -8872,6 +8881,9 @@
   ],
   "src/locales/uk.json": [
     "/avif2jpeg/dist/assets/uk-DPJokB5Q.js"
+  ],
+  "src/locales/ur.json": [
+    "/avif2jpeg/dist/assets/ur-D0VznDQ_.js"
   ],
   "src/locales/vi.json": [
     "/avif2jpeg/dist/assets/vi-ByBZSThN.js"

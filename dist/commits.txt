@@ -1,3 +1,9 @@
+2026-10-23 23:44:50 +0900
+v1.12.21
+
+2026-10-23 17:08:28 +0900
+feat(i18n): add Bengali, Malay, Urdu, and Georgian locales
+
 2026-10-17 09:14:46 +0900
 v1.12.20
 
@@ -15,9 +21,3 @@ refactor: replace @vicons/ionicons5 with Iconify
 
 2026-10-12 16:55:55 +0900
 fix: minor issues with the log component expand button
-
-2026-10-12 13:20:51 +0900
-v1.12.18
-
-2026-10-12 13:18:36 +0900
-fix: Changelog update notification issue
