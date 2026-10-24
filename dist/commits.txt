@@ -1,3 +1,9 @@
+2026-10-24 19:51:37 +0900
+v1.12.22
+
+2026-10-24 19:49:18 +0900
+chore: update HTML head links
+
 2026-10-23 23:44:50 +0900
 v1.12.21
 
@@ -15,9 +21,3 @@ v1.12.19
 
 2026-10-15 22:41:42 +0900
 feat: make log component resizable by dragging
-
-2026-10-14 21:22:51 +0900
-refactor: replace @vicons/ionicons5 with Iconify
-
-2026-10-12 16:55:55 +0900
-fix: minor issues with the log component expand button
