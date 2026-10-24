@@ -154,8 +154,17 @@ function insertHeadForSSG() {
   
   // create <link rel="alternate" hreflang="...">
   const basepath = import.meta.env.BASE_URL;
+  const basehost = import.meta.env.VITE_BASE_URL || '';
+
+  const route = useRoute();
+  const pathlang = route.path.match(/[^/]+(?=\/?$)/)?.[0];
+  
   // insert appropriate language title (for SSG)
   useHead({
+    htmlAttrs: {
+      lang: pathlang || 'en',
+    },
+
     title: computed(() => t('title')),
 
     meta: [
@@ -171,21 +180,31 @@ function insertHeadForSSG() {
 
     link: computed(() => {
       const linkset = [];
+      
+      linkset.push({
+        rel: 'canonical',
+        href: basehost + basepath + (pathlang || 'en') + '/',
+      });
+      
       for(const lang of LANG_ID_LIST) {
+        /*
         if( router.currentRoute.value.path.includes(lang) )
           continue;
+        */
 
         linkset.push({
           rel: 'alternate',
           hreflang: lang,
-          href: basepath + lang + '/',
+          href: basehost + basepath + lang + '/',
         });
       }
+      
       linkset.push({
         rel: 'alternate',
         hreflang: 'x-default',
-        href: basepath,
+        href: basehost + basepath,
       });
+      
       return linkset;
     }),
   });
